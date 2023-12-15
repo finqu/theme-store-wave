@@ -1,0 +1,29 @@
+// Grid
+// -----------------------------------------------------------------------------------------
+
+@mixin row-scroll-cols($infix: '', $columns: $grid-row-columns) {
+
+	@for $i from 1 through $grid-row-columns {
+
+		.row-scroll-cols#{$infix}-#{$i} {
+			overflow-x: auto;
+			overflow-y: hidden;
+			-webkit-overflow-scrolling: touch;
+			-ms-scroll-snap-type: x mandatory;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+			scroll-snap-type: x mandatory;
+			flex-wrap: nowrap;
+			cursor: grab;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			& > * {
+				flex: 0 0 calc(100% / #{$i} * 0.90);
+				max-width: calc(100% / #{$i} * 0.90);
+			}
+		}
+	}
+}

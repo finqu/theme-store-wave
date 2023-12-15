@@ -1,0 +1,49 @@
+// Media
+// -----------------------------------------------------------------------------------------
+
+img.lazy {
+	opacity: 0;
+
+	&:not(.initial):not(.lazy-disable-transition) {
+		transition: opacity .5s;
+	}
+}
+
+img.lazy-disable-transition,
+img.initial,
+img.loaded,
+img.error {
+	opacity: 1;
+}
+
+img.border-radius {
+	border-radius: var(--style-image-border-radius) !important;
+}
+
+body.animations-enabled {
+	[data-aos] {
+		visibility: hidden;
+	}
+
+	[data-aos].animate__animated {
+		visibility: visible;
+	}
+}
+
+.img-indicator-zoom:has(img) {
+
+	img {
+		transition: transform .95s cubic-bezier(.25,.46,.45,.94);
+
+		&.lazy:not(.initial):not(.lazy-disable-transition) {
+			transition: opacity .5s, transform .95s cubic-bezier(.25,.46,.45,.94);
+		}
+	}
+
+	&:hover {
+
+		img {
+			transform: scale(1.07);
+		}
+	}
+}

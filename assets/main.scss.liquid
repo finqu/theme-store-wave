@@ -1,0 +1,279 @@
+{%- assign style = settings.styles | first -%}
+{%- assign styleformBgColorBrightness = settings.style_form_bg_color | color_brightness -%}
+{%- assign styleformBorderColorBrightness = settings.style_form_border_color | color_brightness -%}
+{%- assign styleTextColorBrightness = settings.style_text_color | color_brightness -%}
+{%- assign styleTableBgColorBrightness = settings.style_table_bg_color | color_brightness -%}
+{%- assign styleBgColorBrightness = settings.style_bg_color | color_brightness -%}
+{%- assign styleBorderColorBrightness = settings.style_border_color | color_brightness -%}
+{%- assign styleButtonBgColorColorBrightness = settings.style_btn_bg_color | color_brightness -%}
+{%- assign styleAccentColorBrightness = settings.style_accent_color | color_brightness -%}
+
+$font-size-base: 1rem * {{- settings.textScale -}};
+$font-family-base: {{- settings.bodyTextFont -}};
+$font-style: {{- settings.bodyTextFontStyle -}};
+$letter-spacing: {{- settings.bodyLetterSpacing -}};
+$line-height-base: {{- settings.textLineHeight -}};
+
+$h1-font-size: 1.85rem * {{- settings.headingFontScale -}};
+$h2-font-size: 1.55rem * {{- settings.headingFontScale -}};
+$h3-font-size: 1.35rem * {{- settings.headingFontScale -}};
+$h4-font-size: 1.15rem * {{- settings.headingFontScale -}};
+$h5-font-size: 1.05rem * {{- settings.headingFontScale -}};
+$h6-font-size: 0.82rem {{- settings.headingFontScale -}};
+	
+$headings-font-family: {{- settings.headingFont -}};
+$headings-font-weight: {{- settings.headingFontWeight -}};
+$headings-font-style: {{- settings.headingFontStyle -}};
+$headings-text-transform: {{- settings.headingTextTransform -}};
+$headings-letter-spacing: {{- settings.headingLetterSpacing -}};
+
+$subheadings-font-family: {{- settings.subheadingFont -}};
+$subheadings-font-weight: {{- settings.subheadingFontWeight -}};
+$subheadings-font-style: {{- settings.subheadingFontStyle -}};
+$subheadings-text-transform: {{- settings.subheadingTextTransform -}};
+$subheadings-letter-spacing: {{- settings.subheadingLetterSpacing -}};
+
+$accent-font-family: {{- settings.accentFont -}};
+$accent-font-weight: {{- settings.accentFontWeight -}};
+$accent-font-style: {{- settings.accentFontStyle -}};
+$accent-text-transform: {{- settings.accentTextTransform -}};
+
+$navigation-font-size: 1rem * {{- settings.navigationFontScale -}};
+$navigation-font-family: {{- settings.navigationFont -}};
+$navigation-font-weight: {{- settings.navigationFontWeight -}};
+$navigation-font-style: {{- settings.navigationFontStyle -}};
+$navigation-text-transform: {{- settings.navigationTextTransform -}};
+$navigation-letter-spacing: {{- settings.navigationLetterSpacing -}};
+	
+$btn-font-family: {{- settings.buttonFont -}};
+$btn-font-weight: {{- settings.buttonFontWeight -}};
+$btn-font-style: {{- settings.buttonFontStyle -}};
+$btn-text-transform: {{- settings.buttonTextTransform -}};
+$btn-letter-spacing: {{- settings.buttonLetterSpacing -}};
+$btn-primary-variant: {{- settings.styleButtonPrimaryVariant -}};
+$btn-secondary-variant: {{- settings.styleButtonSecondaryVariant -}};
+
+$container-max-widths: (
+	sm: {{ settings.styleGridContainerMaxWidthSm }},
+	md: {{ settings.styleGridContainerMaxWidthMd }},
+	lg: {{ settings.styleGridContainerMaxWidthLg }},
+	xl: {{ settings.styleGridContainerMaxWidthXl }},
+	xxl: {{ settings.styleGridContainerMaxWidthXxl }}
+);
+
+$container-padding-x: var(--style-grid-container-padding-x);
+
+$grid-columns: 12;
+$grid-gutter-width: var(--style-grid-gutter-width);
+$grid-row-columns: 10;
+
+$grid-breakpoints: (
+	xs: 0,
+	sm: {{ settings.styleGridBreakpointSm }},
+	md: {{ settings.styleGridBreakpointMd }},
+	lg: {{ settings.styleGridBreakpointLg }},
+	xl: {{ settings.styleGridBreakpointXl }},
+	xxl: {{ settings.styleGridBreakpointXxl }},
+);
+
+$aspect-ratios: (
+	'21-9': '21:9',
+	'16-10': '16:10',
+	'16-9': '16:9',
+	'9-13': '9:13',
+	'9-12': '9:12',
+	'4-5': '4:5',
+	'4-3': '4:3',
+	'3-5': '3:5',
+	'1-1': '1:1',
+	'product': '{{- settings.productImageAspectRatio -}}',
+	'article': '{{- settings.articleImageAspectRatio -}}'
+);
+
+$product-image-aspect-ratio-fit: {{- settings.productImageAspectRatioFit -}};
+$article-image-aspect-ratio-fit: {{- settings.articleImageAspectRatioFit -}};
+
+$product-wrap-name: {{- settings.productWrapName | yepnope: 'true', 'false' -}};
+
+$section-highlight-item-border: {{- settings.sectionHighlightItemBorder | yepnope: 'true', 'false' -}};
+$section-text-align: {{- settings.sectionTextAlign -}};
+
+$spacer: 1rem;
+$spacers: (
+	0: 0,
+	1: ($spacer * .28569),
+	2: ($spacer * .5),
+	3: $spacer,
+	4: ($spacer * 1.5),
+	5: ($spacer * 2),
+	6: ($spacer * 2.5715),
+	7: ($spacer * 3.5),
+	8: ($spacer * 4.5),
+	9: ($spacer * 5),
+	10: ($spacer * 6),
+	11: ($spacer * 7),
+	12: ($spacer * 8),
+	'g': var(--style-grid-gutter-width),
+	'c': var(--style-grid-container-padding-x)
+);
+
+$body-bg: {{ settings.style_bg_color }};
+$body-color: {{ settings.style_text_color }};
+
+$body-secondary-bg: {{ settings.style_bg_color | color_darken: 30 }};
+$body-secondary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.75 }};
+
+$body-tertiary-bg: {{ settings.style_bg_color | color_darken: 10 }};
+$body-tertiary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.5 }};
+
+$body-emphasis-color: {{ settings.style_accent_color }};
+
+$link-color: {{ settings.style_link_color }};
+$link-hover-color: {{ settings.style_link_color }};
+
+:root {
+	{%- for data in style -%}
+		{%- assign key = data[0] | handle | replace: '_', '-' -%}
+		{%- assign dataKey = 'style_' | append: data[0] -%}
+		{%- assign value = settings[dataKey] -%}	
+		--style-{{ key }}: {{ value }};
+	{%- endfor -%}
+
+	{%- if styleformBgColorBrightness > 190 -%}
+		--style-form-bg-hover-color: {{ settings.style_form_bg_color | color_darken: 5 }};
+		--style-form-bg-disabled-color: {{ settings.style_form_bg_color | color_darken: 10 }};
+	{%- else -%}
+		--style-form-bg-hover-color: {{ settings.style_form_bg_color | color_lighten: 5 }};
+		--style-form-bg-disabled-color: {{ settings.style_form_bg_color | color_lighten: 10 }};
+	{%- endif -%}
+
+	{%- if styleformBorderColorBrightness > 190 -%}
+		--style-form-border-focus-color: {{ settings.style_form_border_color | color_darken: 10 }};
+		--style-form-border-disabled-color: {{ settings.style_form_border_color | color_darken: 10 }};
+	{%- else -%}
+		--style-form-border-focus-color: {{ settings.style_form_border_color | color_lighten: 10 }};
+		--style-form-border-disabled-color: {{ settings.style_form_border_color | color_lighten: 10 }};
+	{%- endif -%}
+
+	{%- if styleTextColorBrightness > 190 -%}
+		--style-text-accent-color: {{ settings.style_text_color | color_darken: 10 }};
+		--style-text-muted-color: {{ settings.style_text_color | color_darken: 40 }};
+	{%- else -%}
+		--style-text-accent-color: {{ settings.style_text_color | color_lighten: 10 }};
+		--style-text-muted-color: {{ settings.style_text_color | color_lighten: 40 }};
+	{%- endif -%}
+
+	{%- if styleTableBgColorBrightness > 190 -%}
+		--style-table-bg-hover-color: {{ settings.style_table_bg_color | color_darken: 4 }};
+	{%- else -%}
+		--style-table-bg-hover-color: {{ settings.style_table_bg_color | color_lighten: 4 }};
+	{%- endif -%}
+
+	{%- if styleBgColorBrightness > 190 -%}
+		--pswp-bg: #000;
+		--pswp-placeholder-bg: #222;
+		--pswp-icon-color: #fff;
+		--swiper-btn-bg-color: {{ settings.style_bg_color }};
+		--swiper-btn-color: {{ settings.style_icon_color }};
+		--swiper-btn-border-color: {{ settings.style_bg_color | color_darken: 30 }};
+		--swiper-pagination-bullet-color: {{ settings.style_bg_color | color_darken: 70 }};
+        --swiper-pagination-bullet-active-color: {{ settings.style_accent_color }};
+		--swiper-pagination-bullet-border-color: {{ settings.style_bg_color | color_darken: 70 }};
+		--style-bg-hover-color: {{ settings.style_bg_color | color_darken: 5 }};
+		--style-bg-accent-color: {{ settings.style_bg_color | color_darken: 7 }};
+		--style-bg-disabled-color: {{ settings.style_bg_color | color_darken: 30 }};
+	{%- else -%}
+		--pswp-bg: #fff;
+		--pswp-placeholder-bg: #222;
+		--pswp-icon-color: #000;
+		--swiper-btn-bg-color: {{ settings.style_bg_color }};
+		--swiper-btn-color: {{ settings.style_icon_color }};
+		--swiper-btn-border-color: {{ settings.style_bg_color | color_lighten: 30 }};
+		--swiper-pagination-bullet-color: {{ settings.style_bg_color | color_lighten: 70 }};
+        --swiper-pagination-bullet-active-color: {{ settings.style_accent_color }};
+		--swiper-pagination-bullet-border-color: {{ settings.style_bg_color | color_lighten: 70 }};
+		--style-bg-hover-color: {{ settings.style_bg_color | color_lighten: 5 }};
+		--style-bg-accent-color: {{ settings.style_bg_color | color_lighten: 7 }};
+		--style-bg-disabled-color: {{ settings.style_bg_color | color_lighten: 30 }};
+	{%- endif -%}
+
+	{%- if styleBorderColorBrightness > 190 -%}
+		--style-border-accent-color: {{ settings.style_border_color | color_darken: 50 }};
+	{%- else -%}
+		--style-border-accent-color: {{ settings.style_border_color | color_lighten: 50 }};
+	{%- endif -%}
+
+	{%- if styleButtonBgColorColorBrightness > 190 -%}
+		--style-btn-bg-active-color: {{ settings.style_btn_bg_color | color_darken: 10 }};
+		--style-btn-bg-hover-color: {{ settings.style_btn_bg_color | color_darken: 8 }};
+		--style-btn-border-hover-color: {{ settings.style_btn_bg_color | color_darken: 8 }};
+		--style-btn-border-active-color: {{ settings.style_btn_bg_color | color_darken: 13 }};
+	{%- else -%}
+		--style-btn-bg-active-color: {{ settings.style_btn_bg_color | color_lighten: 10 }};
+		--style-btn-bg-hover-color: {{ settings.style_btn_bg_color | color_lighten: 8 }};
+		--style-btn-border-hover-color: {{ settings.style_btn_bg_color | color_lighten: 8 }};
+		--style-btn-border-active-color: {{ settings.style_btn_bg_color | color_lighten: 13 }};
+	{%- endif -%}
+
+	{%- if styleAccentColorBrightness > 190 -%}
+		--style-accent-text-color: #000;
+	{%- else -%}
+		--style-accent-text-color: #fff;
+	{%- endif -%}
+
+	--pswp-icon-stroke-width: 0px;
+	--pswp-icon-stroke-color: transparent;
+	--pswp-preloader-color-secondary: transparent;
+	--pswp-icon-color-secondary: transparent;
+	
+	--style-bg-light-color: {{ settings.style_bg_color | color_lighten: 35 }};
+	--style-border-focus-color: {{ settings.style_border_color | color_lighten: 25 }};
+	--style-btn-border-color: {{ settings.style_btn_bg_color }};
+	--style-form-bg-color: {{ settings.style_form_bg_color }};
+	--style-form-placeholder-color: {{ settings.style_form_text_color | color_lighten: 15 }};
+	--style-form-bg-readonly-color: {{ settings.style_form_bg_color | color_lighten: 15 }};
+	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 }};
+	--style-accent-faded-color: {{ settings.style_accent_color | color_lighten: 30 }};
+	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
+	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
+	--style-review-icon-color: {{ settings.style_review_icon_color | default: settings.style_icon_color }};
+
+	--style-header-bg-color: {{ settings.style_header_bg_color }};
+	--style-header-text-color: {{ settings.style_header_text_color }};
+	--style-header-accent-color: {{ settings.style_header_accent_color }};
+
+	--style-footer-bg-color: {{ settings.style_footer_bg_color }};
+	--style-footer-text-color: {{ settings.style_footer_text_color }};
+
+	--style-loader-color: {{ settings.style_icon_color }};
+	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 }};
+
+	--style-border-radius: {{ settings.styleBorderRadius }};
+	--style-btn-border-radius: {{ settings.styleButtonBorderRadius }};
+	--style-input-border-radius: {{ settings.styleInputBorderRadius }};
+	--style-component-border-radius: {{ settings.styleComponentBorderRadius }};
+	--style-image-border-radius: {{ settings.styleImageBorderRadius }};
+	--style-product-image-border-radius: {{ settings.styleProductImageBorderRadius }};
+
+	--style-announcement-height: {{ settings.styleAnnouncementHeight }};
+
+	--style-grid-container-padding-x: {{ settings.styleGridContainerPaddingX }};
+	--style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
+	--style-grid-gutter-width-mobile: {{ settings.styleGridGutterWidth | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
+
+	--style-icon-stroke-width: {{ settings.styleIconStrokeWidth }};
+
+	@each $key, $val in $spacers {
+		--style-spacer-#{$key}: #{$val};
+	}
+
+	@each $key, $val in $container-max-widths {
+		--style-container-max-width-#{$key}: #{$val};
+	}
+
+	@each $key, $val in $grid-breakpoints {
+		--style-grid-breakpoint-#{$key}: #{$val};
+	}
+}
+
+@import "scss/theme";

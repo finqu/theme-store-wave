@@ -1,0 +1,621 @@
+{%- if section.settings.layout == 1 -%}
+
+    {%- assign aspectRatio = '16-9' -%}
+    {%- assign imgSizeSm = '193,113' -%}
+    {%- assign imgSizeMd = '310,178' -%}
+    {%- assign imgSizeLg = '430,246' -%}
+
+{%- elsif section.settings.layout == 2 -%}
+
+    {%- assign aspectRatio = '9-13' -%}
+    {%- assign imgSizeSm = '386,550' -%}
+    {%- assign imgSizeMd = '620,886' -%}
+    {%- assign imgSizeLg = '860,1232' -%}
+
+{%- elsif section.settings.layout == 3 -%}
+
+    {%- assign aspectRatio = '4-3' -%}
+    {%- assign imgSizeSm = '193,147' -%}
+    {%- assign imgSizeMd = '310,235' -%}
+    {%- assign imgSizeLg = '430,325' -%}
+
+{%- elsif section.settings.layout == 4 -%}
+
+    {%- assign aspectRatio = '1-1' -%}
+    {%- assign imgSizeSm = '193,193' -%}
+    {%- assign imgSizeMd = '310,310' -%}
+    {%- assign imgSizeLg = '430,430' -%}
+
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+     <div class="row gy-g masonry gallery">
+
+        {% for item in section.settings.setting_blocks.items %}
+
+            {%- if section.settings.layout == 5 -%}
+
+                {%- capture aspectRatio -%}{%- cycle '9-13', '4-3', '1-1', '1-1', '4-3', '1-1' -%}{%- endcapture -%}
+                {%- assign aspectRatio = aspectRatio -%}
+
+            {%- elsif section.settings.layout == 6 -%}
+
+                {%- capture aspectRatio -%}{%- cycle '4-3', '1-1', '9-13', '4-3', '4-3', '1-1' -%}{%- endcapture -%}
+                {%- assign aspectRatio = aspectRatio -%}
+
+            {%- elsif section.settings.layout == 7 -%}
+
+                {%- capture aspectRatio -%}{%- cycle '1-1', '1-1', '1-1', '4-3', '16-9', '9-13' -%}{%- endcapture -%}
+                {%- assign aspectRatio = aspectRatio -%}
+
+            {%- elsif section.settings.layout == 8 -%}
+
+                {%- capture aspectRatio -%}{%- cycle '1-1', '9-13', '4-3', '1-1', '16-9', '1-1' -%}{%- endcapture -%}
+                {%- assign aspectRatio = aspectRatio -%}
+
+            {%- elsif section.settings.layout == 9 -%}
+
+                {%- capture aspectRatio -%}{%- cycle '1-1', '9-13', '4-3', '1-1', '4-3', '9-13' -%}{%- endcapture -%}
+                {%- assign aspectRatio = aspectRatio -%}
+
+            {%- elsif section.settings.layout == 'random' -%}
+
+                {%- assign aspectRatio = '16-9,9-13,4-3,1-1' | split: ',' | random -%}
+
+            {%- endif -%}
+
+            {%- if section.settings.layout > 5 -%}
+
+                {%- if aspectRatio == '16-9' -%}
+
+                    {%- assign imgSizeSm = '193,113' -%}
+                    {%- assign imgSizeMd = '310,178' -%}
+                    {%- assign imgSizeLg = '430,246' -%}
+        
+                {%- elsif aspectRatio == '9-13' -%}
+        
+                    {%- assign imgSizeSm = '386,550' -%} 
+                    {%- assign imgSizeMd = '620,886' -%}
+                    {%- assign imgSizeLg = '860,1232' -%}
+        
+                {%- elsif aspectRatio == '4-3' -%}
+        
+                    {%- assign imgSizeSm = '193,147' -%}
+                    {%- assign imgSizeMd = '310,235' -%}
+                    {%- assign imgSizeLg = '430,325' -%}
+        
+                {%- elsif aspectRatio == '1-1' -%}
+        
+                    {%- assign imgSizeSm = '193,193' -%}
+                    {%- assign imgSizeMd = '310,310' -%}
+                    {%- assign imgSizeLg = '430,430' -%}
+        
+                {%- endif -%}
+
+            {%- endif -%}
+
+            <div class="col-6 col-md-4 gallery-item">
+
+                <div class="aspect-ratio-{{ aspectRatio }}">
+
+                    <div class="aspect-ratio-container{% if item.settings.img %} img-indicator-zoom{% endif %}" data-gallery-init>
+
+                        {% if item.settings.img %}
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                    {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- item.settings.img | thumb: imgSizeMd }} 1x,
+                                    {{- item.settings.img | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- item.settings.img | thumb: imgSizeSm }} 1x,
+                                    {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item aspect-ratio-item-cover cursor-zoom-in"
+                                    alt="{{ item.settings.imgAlt }}"
+                                    data-gallery-img-src="{{ item.settings.img | thumb: '1920,1080' }}"
+                                    src="{{ item.settings.img | thumb: imgSizeSm }}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+                            </picture>
+
+                        {% else %}
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder"
+                                alt="{{ item.settings.imgAlt }}"
+                                data-src="{{- imgSrc | strip_newlines -}}">
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Image gallery",
+        "fi": "Kuvagalleria"
+    },
+    "tag": "section",
+    "class": "section section-image-gallery",
+    "category": "theme-basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Titles",
+                            "fi": "Otsikot"
+                        }
+                    },
+                    {
+                        "id": "sectionOverline",
+                        "type": "text",
+                        "label": {
+                            "en": "Top title",
+                            "fi": "Yläotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionTitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Main title",
+                            "fi": "Pääotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionSubtitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Subtitle",
+                            "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "View",
+                            "fi": "Näkymä"
+                        }
+                    },
+                    {
+                        "id": "layout",
+                        "type": "select",
+                        "label": {
+                            "en": "Layout",
+                            "fi": "Asettelu"
+                        },
+                        "default": 1,
+                        "options": [
+                            {
+                                "value": 1,
+                                "label": "16:9"
+                            },
+                            {
+                                "value": 2,
+                                "label": "9:13"
+                            },
+                            {
+                                "value": 3,
+                                "label": "4:3"
+                            },
+                            {
+                                "value": 4,
+                                "label": "1:1"
+                            },
+                            {
+                                "value": 5,
+                                "label": "9:13 | 4:3 | 1:1 | 1:1 | 4:3 | 1:1"
+                            },
+                            {
+                                "value": 6,
+                                "label": "4:3 | 1:1 | 9:13 | 4:3 | 4:3 | 1:1"
+                            },
+                            {
+                                "value": 7,
+                                "label": "1:1 | 1:1 | 1:1 | 4:3 | 16:9 | 9:13"
+                            },
+                            {
+                                "value": 8,
+                                "label": "1:1 | 9:13 | 4:3 | 1:1 | 16:9 | 1:1"
+                            },
+                            {
+                                "value": 9,
+                                "label": "1:1 | 9:13 | 4:3 | 1:1 | 4:3 | 9:13"
+                            },
+                            {
+                                "value": "random",
+                                "label": {
+                                    "en": "Random",
+                                    "fi": "Satunnainen"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Images",
+                    "fi": "Kuvat"
+                },
+                "id": "items",
+                "call_to_action": {
+                    "en": "Add a image",
+                    "fi": "Lisää kuva"
+                },
+                "is_sortable": true,
+                "display_icons": true,
+                "setting_blocks": [
+                    {
+                        "type": "image",
+                        "title": {
+                            "en": "Image",
+                            "fi": "Kuva"
+                        },
+                        "settings": [
+                            {
+                                "id": "img",
+                                "type": "image-picker",
+                                "adjustments": true
+                            },
+                            {
+                                "id": "imgAlt",
+                                "type": "text",
+                                "label": {
+                                    "en": "Image alt",
+                                    "fi": "Kuvan alt-teksti"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Content",
+                            "fi": "Sisältö"
+                        }
+                    },
+                    {
+                        "id": "sectionHeaderTextAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Heading text align",
+                            "fi": "Otsikon tekstin tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "SEO",
+                            "fi": "SEO"
+                        }
+                    },
+                    {
+                        "id": "sectionOverlineTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Top title SEO priority",
+                            "fi": "Yläotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionTitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Main title SEO priority",
+                            "fi": "Pääotsikon SEO-prioriteetti"
+                        },
+                        "default": "h2",
+                        "options": [
+                            {
+                                "value": "h1",
+                                "label": "H1"
+                            },
+                            {
+                                "value": "h2",
+                                "label": "H2"
+                            },
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionSubtitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Subtitle SEO priority",
+                            "fi": "Alaotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Section",
+                            "fi": "Osio"
+                        }
+                    },
+                    {
+                        "id": "sectionColorScheme",
+                        "type": "select",
+                        "label": {
+                            "en": "Color color scheme",
+                            "fi": "Värityyli"
+                        },
+                        "options": [
+                            {
+                                "value": false,
+                                "label": {
+                                    "en": "Disabled",
+                                    "fi": "Pois käytöstä"
+                                }
+                            },
+                            {
+                                "value": "1",
+                                "label": {
+                                    "en": "Color scheme 1",
+                                    "fi": "Värityyli 1"
+                                }
+                            },
+                            {
+                                "value": "2",
+                                "label": {
+                                    "en": "Color scheme 2",
+                                    "fi": "Värityyli 2"
+                                }
+                            },
+                            {
+                                "value": "3",
+                                "label": {
+                                    "en": "Color scheme 3",
+                                    "fi": "Värityyli 3"
+                                }
+                            },
+                            {
+                                "value": "4",
+                                "label": {
+                                    "en": "Color scheme 4",
+                                    "fi": "Värityyli 4"
+                                }
+                            },
+                            {
+                                "value": "5",
+                                "label": {
+                                    "en": "Color scheme 5",
+                                    "fi": "Värityyli 5"
+                                }
+                            },
+                            {
+                                "value": "light",
+                                "label": {
+                                    "en": "Light background / Dark content",
+                                    "fi": "Vaalea tausta / Tumma sisältö"
+                                }
+                            },
+                            {
+                                "value": "dark",
+                                "label": {
+                                    "en": "Dark background / Light content",
+                                    "fi": "Tumma tausta / Vaalea sisältö"
+                                }
+                            },
+                            {
+                                "value": "accent",
+                                "label": {
+                                    "en": "Accent background / Adaptive content",
+                                    "fi": "Korostus tausta / Mukautuva sisältö"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionBgImg",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Background image",
+                            "fi": "Taustakuva"
+                        },
+                        "adjustments": true
+                    },
+                    {
+                        "id": "sectionBgImgDimming",
+                        "label": {
+                            "en": "Image dimming",
+                            "fi": "Kuvan tummennus"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 90,
+                        "step": 5,
+                        "default": "0",
+                        "unit": "%"
+                    },
+                    {
+                        "id": "sectionBgImgBlur",
+                        "label": {
+                            "en": "Image blur",
+                            "fi": "Kuvan sumentaminen"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 10,
+                        "step": 1,
+                        "default": "0",
+                        "unit": " "
+                    }
+                ]
+            }
+        ]
+    },
+    "presets": [
+        {
+            "settings": {
+                "setting_blocks": {
+                    "items": [
+                        {
+                            "type": "image"
+                        },
+                        {
+                            "type": "image"
+                        },
+                        {
+                            "type": "image"
+                        },
+                        {
+                            "type": "image"
+                        },
+                        {
+                            "type": "image"
+                        },
+                        {
+                            "type": "image"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+{% endschema %}

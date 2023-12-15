@@ -1,0 +1,112 @@
+{% comment %}
+    Renders a Product schema
+
+    Accepts:
+    - product: {Object} Product Liquid object (required)
+
+    Usage:
+    Render this snippet on product page
+
+    {% render 'schemas/product' %}
+{% endcomment %}
+
+{%- capture imageArr -%}
+    {%- for image in product.images -%}
+        {{- image.original -}},
+    {%- endfor -%}
+    {%- if product.attributes -%}
+        {%- for attribute in product.attributes -%}
+            {%- for option in attribute.options -%}
+                {%- if option.image -%}
+                    {{- option.image -}},
+                {%- endif -%}
+                {%- if option.subattribute -%}
+                    {%- for option in option.subattribute.options -%}
+                        {%- if option.image -%}
+                            {{- option.image -}},
+                        {%- endif -%}
+                    {%- endfor -%}
+                {%- endif -%}
+            {%- endfor -%}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endcapture -%}
+
+{%- assign imageArr = imageArr | strip | split: ',' | compact -%}
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "id": {{ product.model | default: product.id | json }},
+    "productID": "{{ product.id }}",
+    {%- if product.meta_title or product.name -%}
+        "name": {{ product.meta_title | default: product.name | json }},
+    {%- endif -%}
+    {%- if imageArr -%}
+        "image": [
+        {%- for item in imageArr -%}
+            "{{- item | strip -}}"{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+        ],
+    {%- endif -%}
+    {%- if product.meta_description or product.short_description or product.description -%}
+        "description": {{ product.meta_description | default: product.short_description | default: product.description | strip_html | truncate: 4997, '...' | json }},
+    {%- endif -%}
+    {%- if product.gtin -%}
+        "gtin": {{ product.gtin | json }},
+    {%- endif -%}
+    {%- if product.model -%}
+        "mpn": {{ product.model | json }},
+    {%- endif -%}
+    {%- if product.manufacturer -%}
+        "brand": {
+            "@type": "Brand",
+            "name": {{ product.manufacturer.name | json }}
+        },
+    {%- endif -%}
+    {%- if product.review_count > 0 -%}
+        "review": [
+        {%- for review in product.reviews -%}
+            {
+                "@type": "Review",
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "{{ review.rating }}",
+                    "worstRating": "1",
+                    "bestRating": "{{ product.max_rating }}"
+                }{%- if review.name or review.title -%},
+                    "reviewBody": {{ review.review | json }},
+                    "datePublished": "{{ review.created_at | date: '%Y-%m-%d' }}",
+                    "author": {
+                        "@type": "Person",
+                        "name": {{ review.name | truncate: 100, '' | default: review.title | truncate: 100, '' | json }}
+                    }
+                {%- endif -%}
+            }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ product.rating }}",
+            "reviewCount": "{{ product.review_count }}"
+        },
+    {%- endif -%}
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ product | link | full_url }}",
+        "priceCurrency": "{{ store.currency.iso_code }}",
+        "price": "{{ product.price | money }}",
+        {%- if product.has_discount and product.discount_information and product.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
+            "priceValidUntil": "{{ product.discount_information.ends | date: '%Y-%m-%d' }}",
+        {%- endif -%}
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/{% if product.in_stock %}InStock{% else %}OutOfStock{% endif %}"{%- if store.name -%},
+            "seller": {
+                "@type": "Organization",
+                "name": {{ store.name | json }}
+            }
+        {%- endif -%}
+    }
+}
+</script>

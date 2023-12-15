@@ -1,0 +1,65 @@
+// Accordion
+// -----------------------------------------------------------------------------------------
+
+.accordion {
+    
+    .accordion-header {
+
+        .accordion-indicator {
+            display: block;
+            position: relative;
+            width: 1em;
+            height: 1em;
+            transition: all .3s ease-in-out;
+
+            &::before {
+                content: '';
+                width: 100%;
+                height: 1px;
+                background: var(--style-icon-color);
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                opacity: 1;
+                transform: translateY(-50%);
+                transition: opacity .3s ease-in-out;
+            }
+
+            &::after {
+                content: '';
+                width: 1px;
+                height: 100%;
+                background: var(--style-icon-color);
+                display: block;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                transition: all .3s ease-in-out;
+            }
+        }
+        
+        button[aria-expanded="true"] {
+
+            .accordion-indicator {
+                transform: rotate(45deg);
+                
+                &::before {
+                    opacity: 0;
+                }
+
+                &::after {
+                    transform: rotate(45deg);
+                }
+            }
+        }
+    }
+
+    .accordion-body {
+        padding-top: 0;
+    }
+
+    .accordion-indicator {
+        margin-left: auto;
+    }
+}

@@ -1,0 +1,35 @@
+// Accessibility
+// -----------------------------------------------------------------------------------------
+
+body.cookie-policy-visible #back-to-top-btn {
+    display: none;
+}
+
+#back-to-top-btn {
+    position: fixed;
+    right: 36px;
+    bottom: 36px;
+    cursor: pointer;
+    width: 2.4em;
+    height: 2.4em;
+    text-align: center;
+    border: 1px solid var(--style-border-color);
+    border-radius: var(--style-input-border-radius);
+    background-color: var(--style-bg-color);
+    opacity: 0.8;
+    padding: 0;
+    outline: 0;
+    z-index: 5;
+    @include media-breakpoint-down(lg) {
+        right: var(--style-grid-container-padding-x);
+        bottom: var(--style-grid-container-padding-x);
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+
+    .svg-icon {
+        color: var(--style-icon-color);
+    }
+}

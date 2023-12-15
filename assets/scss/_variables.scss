@@ -1,0 +1,635 @@
+// Variables
+// -----------------------------------------------------------------------------------------
+
+// Options
+$enable-caret: false;
+$enable-rounded: true;
+$enable-shadows: false;
+$enable-gradients: false;
+$enable-transitions: true;
+$enable-reduced-motion: false;
+$enable-smooth-scroll: true;
+$enable-grid-classes: true;
+$enable-container-classes: true;
+$enable-cssgrid: true;
+$enable-button-pointers: true;
+$enable-rfs: true;
+$enable-validation-icons: true;
+$enable-negative-margins: true;
+$enable-deprecation-messages: true;
+$enable-important-utilities: true;
+$enable-dark-mode: false;
+$color-mode-type: data;
+
+$rfs-base-value: 0.75rem;
+$rfs-unit: rem;
+$rfs-factor: 10;
+
+$prefix: bs-;
+
+// Sizing 
+$sizes-percentage: (
+	0: 0%,
+	10: 10%,
+	15: 15%,
+	20: 20%,
+	25: 25%,
+	30: 30%,
+	33: 33%,
+	40: 40%,
+	45: 45%,
+	50: 50%,
+	55: 55%,
+	60: 60%,
+	75: 75%,
+	80: 80%,
+	90: 90%,
+	100: 100%,
+	auto: auto
+);
+
+$sizes-px: (
+	40: 40px,
+	50: 50px,
+	60: 60px,
+	70: 70px,
+	80: 80px,
+	90: 90px,
+	100: 100px,
+	110: 110px,
+	120: 120px,
+	130: 130px,
+	140: 140px,
+	160: 160px,
+	180: 180px,
+	200: 200px,
+	220: 220px,
+	240: 240px,
+	260: 260px,
+	280: 280px,
+	300: 300px,
+	310: 310px,
+	320: 320px,
+	330: 330px,
+	340: 340px,
+	350: 350px,
+	360: 360px,
+	370: 370px,
+	380: 380px,
+	390: 390px,
+	400: 400px,
+	420: 420px,
+	440: 440px,
+	460: 460px,
+	480: 480px,
+	500: 500px
+);
+
+$sizes-vw: (
+	10: 10vw,
+	20: 20vw,
+	30: 30vw,
+	40: 40vw,
+	50: 50vw,
+	60: 60vw,
+	70: 70vw,
+	80: 80vw,
+	90: 90vw,
+	100: 100vw
+);
+
+$sizes-vh: (
+	10: 10vh,
+	20: 20vh,
+	30: 30vh,
+	40: 40vh,
+	50: 50vh,
+	60: 60vh,
+	70: 70vh,
+	80: 80vh,
+	90: 90vh,
+	100: 100vh
+);
+
+// Background
+$background-positions: (
+	"left-top": left top,
+	"left-center": left center,
+	"left-bottom": left bottom,
+	"right-top": right top,
+	"right-center": right center,
+	"right-bottom": right bottom,
+	"center-top": center top,
+	"center-center": center center,
+	"center-bottom": center bottom
+);
+
+// Border
+$border-width: 1px;
+$border-widths: (
+	1: 1px,
+	2: 2px,
+	3: 3px,
+	4: 4px,
+	5: 5px
+);
+$border-style: solid;
+$border-color: var(--style-border-color);
+$border-radius: var(--style-border-radius, inherit);
+$border-radius-sm: var(--style-border-radius, inherit);
+$border-radius-lg: var(--style-border-radius, inherit);
+$border-radius-xxl: var(--style-border-radius, inherit);
+$border-radius-pill: 50rem;
+
+// Font
+$font-size-root: 14px;
+$font-size-lg: $font-size-base * 1.15;
+$font-size-sm: $font-size-base * 0.85;
+
+$font-weight-light: 400;
+$font-weight-normal: 400;
+$font-weight-medium: 400;
+$font-weight-semibold: 700;
+$font-weight-bold: 700;
+
+$font-weight-base: $font-weight-normal;
+
+$line-height-lg: $line-height-base;
+$line-height-sm: $line-height-base * 0.85;
+$line-height-computed: floor(($font-size-base * $line-height-base));
+
+$headings-margin-bottom: 1rem;
+$headings-line-height: $line-height-base * 0.85;
+$headings-color: var(--style-heading-color);
+
+$display-font-sizes: (
+	1: 5rem,
+	2: 4.5rem,
+	3: 4rem,
+	4: 3.5rem,
+	5: 3rem,
+	6: 2.5rem
+);
+
+$display-font-family: $headings-font-family;
+$display-font-style: $headings-font-style;
+$display-font-weight: $headings-font-weight;
+$display-line-height: $headings-line-height;
+
+$lead-font-size: $font-size-base * 1.25;
+$lead-font-weight: $font-weight-light;
+
+$small-font-size: 80%;
+
+$text-muted: var(--style-text-muted-color);
+
+$link-decoration: none;
+$link-shade-percentage: 0;
+$link-hover-decoration: none;
+
+$hr-border-width: 1px;
+$hr-border-color: var(--style-border-color);
+$hr-margin-y: $spacer;
+$hr-opacity: 1;
+
+$mark-padding: .2em;
+$mark-color: var(--style-text-color);
+$mark-bg: var(--style-accent-faded-color);
+
+$list-inline-padding: .5rem;
+
+$blockquote-font-size: $font-size-base * 1.25;
+$blockquote-footer-font-size: 80%;
+$blockquote-margin-y: $spacer;
+$blockquote-footer-color: var(--style-text-color);
+
+$initialism-font-size: 90%;
+
+// Button + Form
+$input-btn-padding-y: 0.8rem;
+$input-btn-padding-x: 1rem;
+$input-btn-font-family: null;
+$input-btn-font-size: $font-size-base;
+$input-btn-line-height: $line-height-base;
+
+$input-btn-focus-width: 0px;
+$input-btn-focus-color-opacity: 1;
+$input-btn-focus-color: none;
+$input-btn-focus-blur: none;
+$input-btn-focus-box-shadow: none;
+
+$input-btn-padding-y-sm: $input-btn-padding-y * 0.85;
+$input-btn-padding-x-sm: $input-btn-padding-y * 0.85;
+$input-btn-font-size-sm: $font-size-sm;
+
+$input-btn-padding-y-lg: $input-btn-padding-y * 1.15;
+$input-btn-padding-x-lg: $input-btn-padding-x * 1.15;
+$input-btn-font-size-lg: $font-size-lg;
+
+$input-btn-border-width: 1px;
+
+// Component
+$component-active-color: var(--style-accent-text-color);
+$component-active-bg: var(--style-accent-color);
+
+// Dropdown
+$dropdown-min-width: 10rem;
+$dropdown-padding-x: 0;
+$dropdown-padding-y: spacer(1);
+$dropdown-spacer: .125rem;
+$dropdown-font-size: $font-size-base;
+$dropdown-color: var(--style-form-text-color);
+$dropdown-bg: var(--style-form-bg-color);
+$dropdown-border-color: var(--style-form-border-color);
+$dropdown-border-radius: var(--style-component-border-radius);
+$dropdown-border-width: $border-width;
+$dropdown-inner-border-radius: calc(#{$dropdown-border-radius} - #{$dropdown-border-width});
+$dropdown-divider-bg: var(--style-form-border-color);
+$dropdown-divider-margin-y: $spacer * .5;
+$dropdown-box-shadow: none;
+
+$dropdown-link-color: var(--style-form-text-color);
+$dropdown-link-hover-color: var(--style-form-text-color);
+$dropdown-link-hover-bg: var(--style-form-bg-hover-color);
+
+$dropdown-link-active-color: var(--style-form-text-color);
+$dropdown-link-active-bg: var(--style-form-bg-color);
+
+$dropdown-link-disabled-color: var(--style-form-text-color);
+
+$dropdown-item-padding-y: spacer(2);
+$dropdown-item-padding-x: spacer(3);
+
+$dropdown-header-color: var(--style-form-text-color);
+$dropdown-header-padding-x: $dropdown-item-padding-x;
+$dropdown-header-padding-y: $dropdown-padding-y;
+
+$zindex-dropdown: 5;
+
+// Table
+$table-cell-padding-y: .5rem;
+$table-cell-padding-x: .5rem;
+$table-cell-padding-y-sm: .25rem;
+$table-cell-padding-x-sm: .25rem;
+
+$table-cell-vertical-align: top;
+
+$table-color: var(--style-table-text-color);
+$table-bg: var(--style-table-bg-color);
+$table-accent-bg: transparent;
+
+$table-th-font-weight: null;
+
+$table-striped-color: $table-color;
+$table-striped-bg-factor: .05;
+$table-striped-bg: var(--style-table-bg-hover-color);
+
+$table-active-color: $table-color;
+$table-active-bg-factor: .1;
+$table-active-bg: var(--style-table-bg-hover-color);
+
+$table-hover-color: $table-color;
+$table-hover-bg-factor: .075;
+$table-hover-bg: var(--style-table-bg-hover-color);
+
+$table-border-factor: .2;
+$table-border-width: var(--#{$prefix}border-width);
+$table-border-color: var(--style-table-border-color);
+
+$table-striped-order: odd;
+$table-striped-columns-order: even;
+
+$table-group-separator-color: currentcolor;
+
+$table-caption-color: var(--#{$prefix}secondary-color);
+
+$table-bg-scale: -80%;
+
+// Input
+$input-padding-y: $input-btn-padding-y;
+$input-padding-x: $input-btn-padding-x;
+$input-font-family: $font-family-base;
+$input-font-size: $input-btn-font-size;
+$input-font-weight: $font-weight-base;
+$input-line-height: $input-btn-line-height;
+
+$input-padding-y-sm: $input-btn-padding-y-sm;
+$input-padding-x-sm: $input-btn-padding-x-sm;
+$input-font-size-sm: input-btn-font-size-sm;
+
+$input-padding-y-lg: $input-btn-padding-y-lg;
+$input-padding-x-lg: $input-btn-padding-x-lg;
+$input-font-size-lg: $input-btn-font-size-lg;
+
+$input-bg: var(--style-form-bg-color);
+$input-disabled-color: null;
+$input-disabled-bg: var(--style-form-bg-disabled-color);
+$input-disabled-border-color: var(--style-form-border-disabled-color);
+
+$input-color: var(--style-form-text-color);
+$input-border-color: var(--style-form-border-color);
+$input-border-width: $input-btn-border-width;
+$input-box-shadow: none;
+
+$input-border-radius: var(--style-input-border-radius);
+$input-border-radius-lg: var(--style-input-border-radius);
+$input-border-radius-sm: var(--style-input-border-radius);
+
+$input-focus-bg: $input-bg;
+$input-focus-border-color: var(--style-form-border-focus-color);
+$input-focus-color: $input-color;
+$input-focus-width: $input-btn-focus-width;
+$input-focus-box-shadow: none;
+
+$input-placeholder-color: var(--style-form-placeholder-color);
+$input-plaintext-color: var(--style-form-bg-readonly-color);
+
+$input-height-border: $input-border-width * 2;
+
+$input-height-inner: add($input-line-height * 1em, $input-padding-y * 2);
+$input-height-inner-half: add($input-line-height * .5em, $input-padding-y);
+$input-height-inner-quarter: dd($input-line-height * .25em, $input-padding-y / 2);
+
+$input-height: add($input-line-height * 1em, add($input-padding-y * 2, $input-height-border, false));
+$input-height-sm: add($input-line-height * 1em, add($input-padding-y-sm * 2, $input-height-border, false));
+$input-height-lg: add($input-line-height * 1em, add($input-padding-y-lg * 2, $input-height-border, false));
+
+$input-transition:  border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+// Button
+$btn-border-radius: var(--style-btn-border-radius);
+$btn-border-radius-lg: var(--style-btn-border-radius);
+$btn-border-radius-sm: var(--style-btn-border-radius);
+
+$btn-border-width: 2px;
+$btn-font-weight: 700;
+$btn-disabled-opacity: .65;
+
+$btn-padding-y: 0.8rem;
+$btn-padding-x: 1.6rem;
+$btn-font-size: $font-size-base;
+$btn-line-height: $line-height-base;
+
+$btn-padding-y-sm: $btn-padding-y * 0.85;
+$btn-padding-x-sm: $btn-padding-x * 0.85;
+$btn-font-size-sm: $font-size-sm;
+
+$btn-padding-y-lg: $btn-padding-y * 1.15;
+$btn-padding-x-lg: $btn-padding-y * 1.15;
+$btn-font-size-lg: $font-size-lg;
+
+$btn-color: $body-color;
+
+$btn-box-shadow: none;
+$btn-active-box-shadow: none;
+
+$btn-link-color: $link-color;
+$btn-link-hover-color: $link-hover-color;
+$btn-link-disabled-color: $text-muted;
+$btn-link-focus-shadow-rgb: none;
+
+// Form
+$form-floating-height: add(2.90rem, $input-height-border);
+$form-floating-line-height: 1;
+$form-floating-padding-x: $input-padding-x;
+$form-floating-padding-y: 0.8rem;
+$form-floating-input-padding-t: 1.525rem;
+$form-floating-input-padding-b: .525rem;
+$form-floating-label-height: 1.5em;
+$form-floating-label-opacity: .65;
+$form-floating-label-transform: scale(.75) translateY(-.5rem) translateX(.15rem);
+$form-floating-label-disabled-color: var(--style-form-placeholder-color);
+$form-floating-transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+
+$form-check-input-width: 1.4em;
+$form-check-min-height: $font-size-base * $line-height-base;
+$form-check-padding-start: $form-check-input-width + .6em;
+$form-check-margin-bottom: .125rem;
+$form-check-label-color: null;
+$form-check-label-cursor: null;
+$form-check-transition: null;
+
+$form-check-input-active-filter: brightness(90%);
+
+$form-check-input-bg: $input-bg;
+$form-check-input-border-width: 1px;
+$form-check-input-border-radius: .25em;
+$form-check-radio-border-radius: 50%;
+$form-check-input-focus-box-shadow: $input-btn-focus-box-shadow;
+$form-check-input-disabled-opacity: .5;
+
+$form-check-input-checked-color: var(--style-form-bg-color);
+$form-check-input-checked-bg-color: $component-active-bg;
+$form-check-input-checked-border-color: $form-check-input-checked-bg-color;
+$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>");
+$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='white'/></svg>");
+
+$form-check-input-indeterminate-color: var(--style-form-bg-color);
+$form-check-input-indeterminate-bg-color: $component-active-bg;
+$form-check-input-indeterminate-border-color: $form-check-input-indeterminate-bg-color;
+$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>");
+
+$form-check-input-disabled-opacity: .5 !default;
+$form-check-label-disabled-opacity: $form-check-input-disabled-opacity;
+$form-check-btn-check-disabled-opacity: $btn-disabled-opacity;
+
+$form-check-inline-margin-end: 1rem;
+
+$form-switch-color: var(--style-form-text-color);
+$form-switch-width: 2.4em;
+$form-switch-padding-start: $form-switch-width + .6em;
+$form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='white'/></svg>");
+$form-switch-border-radius: $form-switch-width;
+$form-switch-transition: background-position .15s ease-in-out;
+
+$form-switch-focus-color: var(--style-form-text-color);
+$form-switch-focus-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='white'/></svg>");
+
+$form-switch-checked-color: var(--style-form-bg-color);
+$form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='white'/></svg>");
+$form-switch-checked-bg-position: right center;
+
+$input-group-addon-padding-y: $input-padding-y;
+$input-group-addon-padding-x: $input-padding-x;
+$input-group-addon-font-weight: $input-font-weight;
+$input-group-addon-color: var(--style-form-text-color);
+$input-group-addon-bg: var(--style-form-bg-color);
+$input-group-addon-border-color: var(--style-form-border-color);
+
+$form-select-padding-y: $input-padding-y;
+$form-select-padding-x: $input-padding-x;
+$form-select-font-family: $input-font-family;
+$form-select-font-size: $input-font-size;
+$form-select-indicator-padding: $form-select-padding-x * 3;
+$form-select-font-weight: $input-font-weight;
+$form-select-line-height: $input-font-size;
+$form-select-color: var(--style-form-text-color);
+$form-select-bg: var(--style-form-bg-color);
+$form-select-bg-position: right $form-select-padding-x center;
+$form-select-bg-size: 16px 12px;
+$form-select-disabled-color: null;
+$form-select-disabled-bg: var(--style-form-bg-disabled-color);
+$form-select-disabled-border-color: var(--style-form-border-disabled-color);
+$form-select-indicator-color: var(--style-icon-color);
+$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+
+$form-select-feedback-icon-padding-end: $form-select-padding-x * 2.5 + $form-select-indicator-padding;
+$form-select-feedback-icon-position: center right $form-select-indicator-padding;
+$form-select-feedback-icon-size: $input-height-inner-half $input-height-inner-half;
+
+$form-select-border-width: $input-border-width;
+$form-select-border-color: var(--style-form-border-color);
+$form-select-border-radius: var(--style-input-border-radius);
+$form-select-box-shadow: none;
+
+$form-select-focus-border-color: var(--style-form-border-color);
+$form-select-focus-width: $input-focus-width;
+$form-select-focus-box-shadow: none;
+
+$form-select-padding-y-sm: $input-padding-y-sm;
+$form-select-padding-x-sm: $input-padding-x-sm;
+$form-select-font-size-sm: $input-font-size-sm;
+$form-select-border-radius-sm: $input-border-radius-sm;
+
+$form-select-padding-y-lg: $input-padding-y-lg;
+$form-select-padding-x-lg: $input-padding-x-lg;
+$form-select-font-size-lg: $input-font-size-lg;
+$form-select-border-radius-lg: $input-border-radius-lg;
+
+$form-select-transition: $input-transition;
+
+$form-range-thumb-active-bg: $component-active-bg;
+$form-range-thumb-disabled-bg: var(--#{$prefix}secondary-color);
+
+// Progress
+$progress-bar-bg: var(--style-text-color);
+$progress-height: 0.5rem;
+$progress-box-shadow: none;
+
+// Tooltip
+$tooltip-border-radius: var(--style-component-border-radius);
+
+// Popover
+$popover-border-radius: var(--style-component-border-radius);
+$popover-border-width: $border-width;
+$popover-inner-border-radius: calc(var(--style-component-border-radius) - $popover-border-width);
+
+// Toasts
+$toast-border-radius: var(--style-component-border-radius);
+
+// Badge
+$badge-border-radius: var(--style-btn-border-radius);
+
+// Modal
+$modal-content-border-width: $border-width;
+$modal-content-border-radius: var(--style-component-border-radius);
+$modal-content-inner-border-radius: calc(var(--style-component-border-radius) - $modal-content-border-width);
+
+// Alert
+$alert-border-radius: var(--style-component-border-radius);
+
+// List group
+$list-group-border-radius: var(--style-component-border-radius);
+
+// Image thumbnails
+$thumbnail-border-radius: var(--style-component-border-radius);
+
+// Breadcrumbs
+$breadcrumb-border-radius: var(--style-component-border-radius);
+
+// Accordion
+$accordion-padding-y: 1rem;
+$accordion-padding-x: 0;
+$accordion-color: var(--style-text-color);
+$accordion-bg: transparent;
+$accordion-border-width: var(--#{$prefix}border-width);
+$accordion-border-color: var(--#{$prefix}border-color);
+$accordion-border-radius: var(--#{$prefix}border-radius);
+$accordion-inner-border-radius: subtract($accordion-border-radius, $accordion-border-width);
+
+$accordion-body-padding-y: $accordion-padding-y;
+$accordion-body-padding-x: $accordion-padding-x;
+
+$accordion-button-padding-y: $accordion-padding-y;
+$accordion-button-padding-x: $accordion-padding-x;
+$accordion-button-color: var(--style-text-color);
+$accordion-button-bg: transparent;
+$accordion-transition: none;
+$accordion-button-active-bg: var(--style-bg-color);
+$accordion-button-active-color: var(--style-text-color);
+
+$accordion-button-focus-border-color: transparent;
+$accordion-button-focus-box-shadow: none;
+
+$accordion-icon-width: 1.25rem;
+$accordion-icon-color: var(--style-icon-color);
+$accordion-icon-active-color: var(--style-icon-color);
+$accordion-icon-transition: transform .2s ease-in-out;
+$accordion-icon-transform: rotate(-180deg);
+
+// Card
+$card-group-margin: calc($grid-gutter-width * .5);
+
+// Swiper
+$swiper-navigation-size: 2em;
+$swiper-navigation-icon-size: 1.2rem;
+
+// Awesome notifications
+$awn-container-z-index: 99998;
+$awn-container-offset-x: 24px;
+$awn-container-offset-y: 100px;
+
+$awn-primary-color: var(--style-text-darker-color);
+$awn-primary-background: var(--style-bg-color);
+$awn-primary-border-color: var(--style-border-color);
+
+$awn-success-color: var(--style-text-darker-color);
+$awn-success-background: var(--style-bg-color);
+$awn-success-border-color: var(--style-border-color);
+
+$awn-info-color: var(--style-text-darker-color);
+$awn-info-background: var(--style-bg-color);
+$awn-info-border-color: var(--style-border-color);
+
+$awn-alert-color: var(--style-text-darker-color);
+$awn-alert-background: var(--style-bg-color);
+$awn-alert-border-color: var(--style-border-color);
+
+$awn-warning-color: var(--style-text-darker-color);
+$awn-warning-background: var(--style-bg-color);
+$awn-warning-border-color: var(--style-border-color);
+
+$awn-toast-width: 320px;
+$awn-toast-padding: 14px;
+$awn-toast-margin: 14px;
+$awn-toast-border-width: 1px;
+$awn-toast-border-style: solid;
+$awn-toast-border-color: $awn-primary-border-color;
+$awn-toast-border-radius: var(--style-component-border-radius);
+$awn-border: $awn-toast-border-width $awn-toast-border-style $awn-toast-border-color;
+$awn-progress-bar-height: 6px;
+$awn-toast-font-size: 14px;
+$awn-toast-title-font-size: 18px;
+$awn-toast-icon-size: 44px;
+
+$awn-popup-wrapper-bg: var(--style-text-color);
+$awn-popup-wrapper-z-index: 99999;
+$awn-popup-bg: var(--style-text-color);
+$awn-popup-min-width: 320px;
+$awn-popup-max-width: 500px;
+$awn-popup-font-size: 14px;
+$awn-popup-icon-size: 44px;
+$awn-popup-padding: 24px;
+$awn-popup-border-radius: var(--style-component-border-radius);
+$awn-popup-btn-height: 32px;
+$awn-popup-btn-color: #fff;
+$awn-popup-btn-border-radius: var(--style-btn-border-radius);
+
+$awn-popup-show-animation: awn-fade-in;
+$awn-popup-hide-animation: awn-fade-out;
+$awn-popup-animation-timing: ease-out;
+
+$awn-toast-left-show-animation: awn-slide-left;
+$awn-toast-right-show-animation: awn-slide-right;
+$awn-toast-hide-animation: awn-fade-out;
+$awn-toast-animation-timing: linear;

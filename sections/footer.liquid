@@ -1,0 +1,400 @@
+{%- assign footerBgColorBrightness = settings.style_footer_bg_color | color_brightness -%}
+{%- assign footerContentColorBrightness = settings.style_footer_text_color | color_brightness -%}
+{%- assign footerAccentColorBrightness = settings.style_footer_accent_color | color_brightness -%}
+
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} {
+        --style-bg-color: {{ settings.style_footer_bg_color }};
+        --style-text-color: {{ settings.style_footer_text_color }};
+        --style-link-color: {{ settings.style_footer_text_color }};
+        --style-icon-color: {{ settings.style_footer_text_color }};
+        --style-form-placeholder-color: {{ settings.style_footer_text_color }};
+        --style-form-text-color: {{ settings.style_footer_text_color }};
+        --style-form-border-color: {{ settings.style_footer_text_color }};
+        --style-form-bg-color: {{ settings.style_footer_bg_color }};
+        --style-form-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
+        --style-form-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
+        --style-form-border-disabled-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 10 }};
+        --style-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
+        --style-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
+        --style-border-accent-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 50 }};
+        --style-btn-bg-color: {{ settings.style_footer_accent_color }};
+        --style-btn-border-color: {{ settings.style_footer_accent_color }};
+
+        {%- if footerAccentColorBrightness > 190 -%}
+            --style-btn-text-color: #000;
+            --style-accent-text-color: #000;
+        {%- else -%}
+            --style-btn-text-color: #fff;
+            --style-accent-text-color: #fff;
+        {%- endif -%}
+
+        {%- if footerContentColorBrightness > 190 -%}
+            --style-btn-bg-active-color: {{ settings.style_footer_accent_color | color_darken: 10 }};
+            --style-btn-bg-hover-color: {{ settings.style_footer_accent_color | color_darken: 8 }};
+            --style-btn-border-hover-color: {{ settings.style_footer_accent_color | color_darken: 8 }};
+            --style-btn-border-active-color: {{ settings.style_footer_accent_color | color_darken: 13 }};
+        {%- else -%}
+            --style-btn-bg-active-color: {{ settings.style_footer_accent_color | color_lighten: 10 }};
+            --style-btn-bg-hover-color: {{ settings.style_footer_accent_color | color_lighten: 8 }};
+            --style-btn-border-hover-color: {{ settings.style_footer_accent_color | color_lighten: 8 }};
+            --style-btn-border-active-color: {{ settings.style_footer_accent_color | color_lighten: 13 }};
+        {%- endif -%}
+
+        {%- if footerBgColorBrightness > 190 -%}
+            --style-heading-color: {{ settings.style_footer_text_color | color_darken: 10 }};
+            --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_darken: 5 }};
+            --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_darken: 10 }};
+        {%- else -%}
+            --style-heading-color: {{ settings.style_footer_text_color | color_lighten: 10 }};
+            --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_lighten: 5 }};
+            --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_lighten: 10 }};
+        {%- endif -%}
+
+        --bs-body-bg: {{ settings.style_footer_bg_color }};
+        --bs-body-bg-rgb: {{ settings.style_footer_bg_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-body-color: {{ settings.style_footer_text_color }};
+        --bs-body-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+        --bs-secondary-bg: {{ settings.style_footer_bg_color | color_darken: 30 }};
+        --bs-secondary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-secondary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.75 }};
+        --bs-secondary-color-rgb: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+
+        --bs-tertiary-bg: {{ settings.style_footer_bg_color | color_darken: 10 }};
+        --bs-tertiary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-tertiary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 }};
+        --bs-tertiary-color-rgb: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+
+        --bs-emphasis-color: {{ settings.style_footer_accent_color }};
+        --bs-emphasis-color-rgb: {{ settings.style_footer_accent_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+        --bs-link-color: {{ settings.style_footer_text_color }};
+        --bs-link-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-link-hover-color: {{ settings.style_footer_text_color }};
+        --bs-link-hover-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+        --bs-border-color: var(--style-border-color);
+        --bs-heading-color: var(--style-heading-color);
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- if section.settings.footerLayout == '1' -%}
+
+    {%- render 'footers/layout-1', section: section, sectionClasses: 'site-footer-layout-1' -%}
+
+{%- elsif section.settings.footerLayout == '2' -%}
+
+    {%- render 'footers/layout-2', section: section, sectionClasses: 'site-footer-layout-2' -%}
+
+{%- elsif section.settings.footerLayout == '3' -%}
+
+    {%- render 'footers/layout-3', section: section, sectionClasses: 'site-footer-layout-3' -%}
+
+{%- elsif section.settings.footerLayout == '4' -%}
+
+    {%- render 'footers/layout-4', section: section, sectionClasses: 'site-footer-layout-4' -%}
+
+{%- endif -%}
+
+{% schema %}
+    {
+        "name": {
+            "en": "Footer",
+            "fi": "Alatunniste"
+        },
+        "tag": "section",
+        "is_creatable": false,
+        "is_removable": false,
+        "class": "section section-site-footer",
+        "settings": {
+            "list_type": "tabs",
+            "groups": [
+                {
+                    "title": {
+                        "en": "Content",
+                        "fi": "Sisältö"
+                    },
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Introduction text",
+                                "fi": "Esittelyteksti"
+                            }
+                        },
+                        {
+                            "id": "footerTextArea1Title",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerTextArea1Content",
+                            "type": "richtext",
+                            "label": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Additional text",
+                                "fi": "Lisäteksti"
+                            }
+                        },
+                        {
+                            "id": "footerTextArea2Title",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerTextArea2Content",
+                            "type": "richtext",
+                            "label": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Nesletter",
+                                "fi": "Uutiskirje"
+                            }
+                        },
+                        {
+                            "id": "footerNewsletterTitle",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerNewsletterContent",
+                            "type": "richtext",
+                            "label": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Social media",
+                                "fi": "Sosiaalinen media"
+                            }
+                        },
+                        {
+                            "id": "footerSocialMediaTitle",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerSocialMediaContent",
+                            "type": "richtext",
+                            "label": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Payment methods",
+                                "fi": "Maksutavat"
+                            }
+                        },
+                        {
+                            "id": "footerPaymentMethodsImgSrc",
+                            "type": "image-picker"
+                        }
+                    ]
+                },
+                {   
+                    "title": {
+                        "en": "Navigation",
+                        "fi": "Navigointi"
+                    },
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Navigation 1",
+                                "fi": "Navigaatio 1"
+                            }
+                        },
+                        {
+                            "id": "footerMenu1Title",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerMenu1",
+                            "type": "menu",
+                            "label": {
+                                "en": "Menu",
+                                "fi": "Valikko"
+                            },
+                            "default": "footer"
+                        },
+                        
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Navigation 2",
+                                "fi": "Navigaatio 2"
+                            }
+                        },
+                        {
+                            "id": "footerMenu2Title",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerMenu2",
+                            "type": "menu",
+                            "label": {
+                                "en": "Menu",
+                                "fi": "Valikko"
+                            },
+                            "default": "footer"
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Navigation 3",
+                                "fi": "Navigaatio 3"
+                            }
+                        },
+                        {
+                            "id": "footerMenu3Title",
+                            "type": "text",
+                            "label": {
+                                "en": "Title",
+                                "fi": "Otsikko"
+                            }
+                        },
+                        {
+                            "id": "footerMenu3",
+                            "type": "menu",
+                            "label": {
+                                "en": "Menu",
+                                "fi": "Valikko"
+                            },
+                            "default": "footer"
+                        }
+                    ]
+                },
+                {   
+                    "title": {
+                        "en": "Settings",
+                        "fi": "Asetukset"
+                    },
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "View",
+                                "fi": "Asettelu"
+                            }
+                        },
+                        {
+                            "id": "footerLayout",
+                            "type": "radio-pill",
+                            "default": "1",
+                            "options": [
+                                {
+                                    "value": "1",
+                                    "label": "1"
+                                },
+                                {
+                                    "value": "2",
+                                    "label": "2"
+                                },
+                                {
+                                    "value": "3",
+                                    "label": "3"
+                                },
+                                {
+                                    "value": "4",
+                                    "label": "4"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Show",
+                                "fi": "Näytä"
+                            }
+                        },
+                        {
+                            "id": "footerTextArea1Status",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Introduction text",
+                                "fi": "Esittelyteksti"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "footerTextArea2Status",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Additional text",
+                                "fi": "Lisäteksti"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "footerNewsletterStatus",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Newsletter subscribe",
+                                "fi": "Uutiskirjeen tilaus"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "footerSocialMediaButtonsStatus",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Social media buttons",
+                                "fi": "Sosiaalisen median kuvakkeet"
+                            },
+                            "default": false
+                        },
+                        {
+                            "id": "footerPaymentMethodsStatus",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Payment methods",
+                                "fi": "Maksutavat"
+                            },
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+{% endschema %}

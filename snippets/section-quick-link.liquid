@@ -1,0 +1,75 @@
+{% comment %}
+	Renders a section quick link
+
+	Accepts:
+	- section: {String} (Required)
+    - style {String
+    - text {String}
+    - url {String}
+    - openInNewTab {Boolean}
+    - class {String}
+
+	Usage:
+	Render this snippet inside of liquid capture and pass it to section snippet as sectionAction.
+
+	{% render 'section-quick-link', section: section %}
+{% endcomment %}
+
+{%- assign style = style | default: section.settings.sectionQuickLinkStyle -%}
+{%- assign text = text | default: section.settings.sectionQuickLinkText -%}
+{%- assign url = url | default: section.settings.sectionQuickLinkResource.url -%}
+
+{%- if text | strip -%}
+
+    {%- if style == 'nil' -%}
+        {%- assign style = settings.sectionQuickLinkStyle -%}
+    {%- endif -%}
+
+     {%- case style -%}
+        {% when 'primary' %}
+            {%- assign classes = 'btn btn-primary btn-sm' -%}
+        {% when 'secondary' %}
+            {%- assign classes = 'btn btn-secondary btn-sm' -%}
+        {% when 'link' %}
+            {%- assign classes = 'text-reset text-underline-indicator fw-bold' -%}
+        {% when 'link-with-icon' %}
+            {%- assign classes = 'text-reset text-icon-with-underline-indicator fw-bold' -%}
+    {%- endcase -%}
+
+    {%- if class -%}
+        {%- assign classes = classes | append: ' ' | append: class -%}
+    {%- endif -%}
+
+    {%- capture content -%}
+
+        {{- text -}}
+
+        {%- if style == 'link-with-icon' -%}
+            {%- render 'icon', icon: 'arrow-right' -%}
+        {%- endif -%}
+
+    {%- endcapture -%}
+
+    {%- if style == 'link-with-icon' -%}
+        <div class="text-icon-with-underline-indicator-container">
+    {%- endif -%}
+
+    {%- if url -%}
+
+        <a href="{{ url | default: '#' }}" class="{{ classes }}"{% if openInNewTab %} target="_blank"{% endif %}>
+            {{- content -}}
+        </a>
+
+    {%- else -%}
+
+        <span class="{{ classes }}">
+            {{- content -}}
+        </span>
+
+    {% endif %}
+
+    {%- if style == 'link-with-icon' -%}
+        </div>
+    {%- endif -%}
+
+{%- endif -%}

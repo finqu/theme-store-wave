@@ -1,0 +1,31 @@
+{%- capture sectionCustomContent -%}
+
+	<div data-cart-container>
+
+        <div class="section-content">
+
+            <div class="container-tiny d-flex justify-content-center align-items-center min-vh-40">
+
+                <div class="loader loader-md"></div>
+
+            </div>
+
+        </div>
+
+	</div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionCustomContent: sectionCustomContent, sectionOverlay: settings.sectionOverlay, sectionAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Cart",
+        "fi": "Ostoskori"
+    },
+    "tag": "section",
+    "class": "section section-cart",
+    "is_creatable": false
+}
+{% endschema %}

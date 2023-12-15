@@ -1,0 +1,49 @@
+{% comment %}
+	Renders a placeholder svg
+
+	Accepts:
+	- type: {String} category | background | product | image
+	- class: {String} Classes
+	- width: {String} Width
+	- height: {String} Height
+	- fill: {String} Fill
+	- stroke: {String} Stroke
+	- base64: {Booean} As base64,
+
+	Usage:
+	{% render 'placeholder-svg', type: 'image', class: class %}
+{% endcomment %}
+
+{%- capture output -%}
+
+	{%- assign type = type | default: 'image' -%}
+	{%- assign classes = 'svg-placeholder ' | append: class | rstrip -%}
+
+	{%- if width -%}
+		{%- assign classes = classes | append: ' has-width' | rstrip -%}
+	{%- endif -%}
+
+	{%- if height -%}
+		{%- assign classes = classes | append: ' has-height' | rstrip -%}
+	{%- endif -%}
+
+	{%- case type -%}
+		{% when 'category' %}
+			{%- assign placeholders = "category-1, category-2, category-3, category-4, category-5, category-6, category-7" | split: ", " -%}
+		{% when 'background' %}
+			{%- assign placeholders = "background-1, background-2, background-3" | split: ", " -%}
+		{% when 'product' %}
+			{%- assign placeholders = "product-1, product-2, product-3, product-4, product-5, product-6, product-7, product-8, product-9, product-10, product-11, product-12" | split: ", " -%}
+		{% when 'image' %}
+			{%- assign placeholders = "image" | split: ", " -%}
+	{%- endcase -%}
+
+	{%- if base64 -%}
+		data:image/svg+xml;base64,{{- placeholders | random | placeholder_svg_tag, class: classes, width: width, height: height, fill: fill, stroke: stroke | base64_encode -%}}
+	{%- else -%}
+		{{- placeholders | random | placeholder_svg_tag, class: classes, width: width, height: height, fill: fill, stroke: stroke -%}}
+	{%- endif -%}
+
+{%- endcapture -%}
+
+{{- output | strip | strip_newlines -}}

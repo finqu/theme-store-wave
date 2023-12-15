@@ -1,0 +1,41 @@
+{% comment %}
+    Renders a Organization schema
+
+    Usage:
+    Render this snippet on frontpage
+
+    {% render 'schemas/organization' %}
+{% endcomment %}
+
+{%- capture sameAsArr -%}
+    {{- settings.facebookPageUrl -}},
+    {{- settings.instagramPageUrl -}},
+    {{- settings.xPageUrl -}},
+    {{- settings.pinterestPageUrl -}},
+    {{- settings.youtubePageUrl -}},
+    {{- settings.tiktokPageUrl -}},
+    {{- settings.ravelryPageUrl -}}
+{%- endcapture -%}
+
+{%- assign sameAsArr = sameAsArr | strip | split: ',' | compact -%}
+
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    	"@type": "Organization",
+    	"url": "{{ routes.root_url | full_url }}"{% if store.name or store.logo or sameAsArr %},{% endif %}
+    {%- if store.name -%}
+        "name": {{ store.name | json }}{% if store.logo or sameAsArr %},{% endif %}
+    {%- endif -%}
+    {%- if store.logo -%}
+        "logo": "{{ store.logo }}"{% if sameAsArr %},{% endif %}
+    {%- endif -%}
+    {%- if sameAsArr -%}
+        "sameAs": [
+        {%- for item in sameAsArr -%}
+            "{{- item -}}"{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+        ]
+    {%- endif -%}
+}
+</script>

@@ -1,0 +1,27 @@
+{% comment %}
+    Renders a Website schema
+
+    Usage:
+    Render this snippet on every page
+
+    {% render 'schemas/website' %}
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "WebSite",
+	{%- if store.name -%}
+	"name": {{ store.name | json }},
+	{%- endif -%}
+	"url": "{{ routes.root_url | full_url }}",
+	"potentialAction": {
+		"@type": "SearchAction",
+		"target": {
+			"@type": "EntryPoint",
+			"urlTemplate": "{{ routes.search_url | full_url }}?q={search_term_string}"
+		},
+		"query-input": "required name=search_term_string"
+	}
+}
+</script>

@@ -1,0 +1,403 @@
+{% comment %}
+	Renders a category carousel
+
+	Accepts:
+	- items: {Array} Categories to show (Required)
+	- sectionHandle: {String} Section handle (Required)
+    - carouselFreemode: {Boolean} true | false
+    - carouselAutoplaySpeed: {Int} Autoplay speed in seconds
+	- carouselStyle: {Int} Style of the carousel
+	- carouselPagination: {String} Show pagination '' | hover | on
+	- carouselNavigation: {String} Show navigation '' | hover | on
+	- categoryPerView: {Int} Categories per one slide
+	- categoryTextPosition: {String} Category text position
+	- categoryTextColor: {String} Category text color
+	- categoryImgDimming: {Int} Category image dimming percent
+    - categoryImgAspectRatio: {Int} Category image aspect ratio
+    - categoryImgFit: {Int} Category image fit
+    - categoryImgCircle: {String} Show category image as circle shape, works only with 1:1 aspect ratio and fit enabled
+
+	Usage:
+	{% render 'category-carousel', items: items, sectionHandle: '#finqu-section-category-template' %}
+{% endcomment %}
+
+{%- assign carouselCategories = items -%}
+{%- assign carouselCategoryPerView = categoryPerView | default: 6 -%}
+{%- assign carouselSlidesPerView = carouselCategoryPerView -%}
+{%- assign carouselAutoplaySpeed = carouselAutoplaySpeed | default: 0 -%}
+{%- assign carouselCategoryTextPosition = categoryTextPosition | default: 'below' -%}
+{%- assign carouselCategoryTextColor = categoryTextColor | default: '#ffffff' -%}
+{%- assign carouselCategoryImgDimming = categoryImgDimming | default: 0 -%}
+{%- assign carouselCategoryImgAspectRatio = categoryImgAspectRatio | default: '1:1' -%}
+{%- assign carouselCategoryImgFit = categoryImgFit -%}
+{%- assign carouselCategoryImgCircle = categoryImgCircle -%}
+
+{% if carouselCategoryImgFit != false %}
+    {%- assign carouselCategoryImgFit = carouselCategoryImgFit | default: true -%}
+{% endif %}
+
+{% if carouselCategoryImgAspectRatio == '16:9' %}
+
+    {%- assign imgSizeSm = '175,103' -%}
+    {%- assign imgSizeMd = '206,220' -%}
+
+    {%- case carouselCategoryPerView -%}
+        {% when '3' %}
+            {%- assign imgSizeLg = '430,246' -%}
+        {% when '4' %}
+            {%- assign imgSizeLg = '320,184' -%}
+        {% when '5' %}
+            {%- assign imgSizeLg = '254,147' -%}
+        {% when '6' %}
+            {%- assign imgSizeLg = '210,122' -%}
+        {% when '7' %}
+            {%- assign imgSizeLg = '178,104' -%}
+        {% when '8' %}
+            {%- assign imgSizeLg = '155,91' -%}
+    {%- endcase -%}
+
+{% elsif carouselCategoryImgAspectRatio == '9:13' %}
+
+    {%- assign imgSizeSm = '175,248' -%}
+    {%- assign imgSizeMd = '206,293' -%}
+
+    {%- case carouselCategoryPerView -%}
+        {% when '3' %}
+            {%- assign imgSizeLg = '430,616' -%}
+        {% when '4' %}
+            {%- assign imgSizeLg = '320,457' -%}
+        {% when '5' %}
+            {%- assign imgSizeLg = '254,362' -%}
+        {% when '6' %}
+            {%- assign imgSizeLg = '210,298' -%}
+        {% when '7' %}
+            {%- assign imgSizeLg = '178,253' -%}
+        {% when '8' %}
+            {%- assign imgSizeLg = '155,219' -%}
+    {%- endcase -%}
+
+{% elsif carouselCategoryImgAspectRatio == '4:3' %}
+
+    {%- assign imgSizeSm = '175,134' -%}
+    {%- assign imgSizeMd = '206,157' -%}
+
+    {%- case carouselCategoryPerView -%}
+        {% when '3' %}
+            {%- assign imgSizeLg = '430,325' -%}
+        {% when '4' %}
+            {%- assign imgSizeLg = '320,242' -%}
+        {% when '5' %}
+            {%- assign imgSizeLg = '254,193' -%}
+        {% when '6' %}
+            {%- assign imgSizeLg = '210,160' -%}
+        {% when '7' %}
+            {%- assign imgSizeLg = '178,136' -%}
+        {% when '8' %}
+            {%- assign imgSizeLg = '155,118' -%}
+    {%- endcase -%}
+
+{% elsif carouselCategoryImgAspectRatio == '1:1' %}
+
+    {%- assign imgSizeSm = '175,175' -%}
+    {%- assign imgSizeMd = '206,206' -%}
+
+    {%- case carouselCategoryPerView -%}
+        {% when '3' %}
+            {%- assign imgSizeLg = '430,430' -%}
+        {% when '4' %}
+            {%- assign imgSizeLg = '320,320' -%}
+        {% when '5' %}
+            {%- assign imgSizeLg = '254,254' -%}
+        {% when '6' %}
+            {%- assign imgSizeLg = '210,210' -%}
+        {% when '7' %}
+            {%- assign imgSizeLg = '178,178' -%}
+        {% when '8' %}
+            {%- assign imgSizeLg = '155,155' -%}
+    {%- endcase -%}
+
+{% endif %}
+
+{%- unless carouselCategories -%}
+    {%- assign carouselCategories = categories.root -%}
+{%- endunless -%}
+
+{%- if sectionHandle and carouselFreemode == true -%}
+    {%- assign carouselSlidesPerView = 'auto' -%}
+{%- elsif carouselFreemode == true and sectionHandle == false -%}
+    {%- assign carouselFreemode = false -%}
+{%- endif -%}
+
+{%- capture sectionStyle -%}
+    {% if carouselCategoryTextPosition == 'over' and sectionHandle and carouselCategoryTextColor %}
+        {{ sectionHandle }} .category-items-container {
+            --style-text-color: {{ carouselCategoryTextColor }};
+            --style-link-color: {{ carouselCategoryTextColor }};
+        }
+        {{ sectionHandle }} .category-item-text-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 2;
+            overflow: hidden;
+            padding: var(--style-spacer-4);
+        }
+        {{ sectionHandle }} .category-item-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0;
+            text-shadow: 1px 1px 0px rgb(0 0 0 / 10%);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+    {% endif %}
+    {% if carouselCategoryImgDimming and carouselCategoryTextPosition == 'over' and sectionHandle %}
+        {{ sectionHandle }} .category-items-container .aspect-ratio-container::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background: linear-gradient(0deg, rgb(0,0,0, {{ carouselCategoryImgDimming }}%), rgb(0,0,0, {{ carouselCategoryImgDimming }}%))
+        }
+    {% endif %}
+    {% if carouselCategoryTextPosition == 'below' and sectionHandle %}
+        {{ sectionHandle }} .category-item-text-container {
+            padding-bottom: 4px;
+        }
+    {% endif %}
+    {% if sectionHandle and carouselFreemode == true %}
+        {{ sectionHandle }} .swiper-slide {
+            --swiper-slide-width: 50;
+            --swiper-slide-width-sm: 25;
+            --swiper-slide-width-md: 33.333333;
+            --swiper-slide-width-lg: {{ 100 | divided_by: carouselCategoryPerView }};
+        }
+    {% endif %}
+    {% if sectionHandle %}
+        {{ sectionHandle }} {
+            --style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
+        }
+    {% endif %}
+{%- endcapture -%}
+
+{%- assign sectionStyle = sectionStyle | strip | replace: '  ', '' | strip_newlines -%}
+
+{%- if sectionStyle -%}
+    <style>{{ sectionStyle }}</style>
+{%- endif -%}
+
+{%- capture carouselSlides -%}
+
+    {% if carouselCategories.size == 0 and request.design_mode == 'edit' %}
+
+        {% for num in (1..carouselCategoryPerView) %}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="{{- sectionHandle -}}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {% if carouselCategoryTextPosition == 'over' %}
+
+                        <div class="category-item-text-container">
+
+                            <span class="category-item-text fs-2">
+                                {{- 'placeholder.category' | t -}}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="aspect-ratio-{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% if carouselCategoryImgAspectRatio == '1:1' and carouselCategoryImgFit and carouselCategoryImgCircle %} rounded-circle{% endif %}">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- capture class -%}
+                                aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}
+                            {%- endcapture -%}
+
+                            {% render 'placeholder-svg', type: 'category', class: class %}
+
+                        </div>
+
+                    </div>
+
+                    {% if carouselCategoryTextPosition == 'below' %}
+                    
+                        <div class="category-item-text-container mt-g">
+
+                            <div class="text-icon-with-underline-indicator-container text-center">
+
+                                <span class="category-item-text text-icon-with-underline-indicator fw-bold">
+
+                                    {{- 'placeholder.category' | t -}}
+                                    {%- render 'icon', icon: 'arrow-right' -%}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        {% for item in carouselCategories %}
+
+        	{%- if item.settings -%}
+
+        		{%- assign itemCategory = item.settings.category -%}
+
+        	{%- else -%}
+
+        		{%- assign itemCategory = item -%}
+
+        	{%- endif -%}
+
+            {%- if itemCategory -%}
+
+                {%- if item.settings.img -%}
+                    {%- assign img = item.settings.img-%}
+                {%- else -%}
+                    {%- assign img = itemCategory.image -%}
+                {%- endif -%}
+
+                {%- assign imgAlt = item.settings.imgAlt | default: itemCategory.title -%}
+                {%- assign resourceUrl = item.settings.resource.url | default: itemCategory | link -%}
+                {%- assign openResourceInNewWindow = item.settings.resourceOpenInNewTab | default: false -%}
+                {%- assign text = item.settings.text | default: itemCategory.title -%}
+
+            {%- else -%}
+
+                {%- assign img = item.settings.img -%}
+                {%- assign imgAlt = item.settings.imgAlt -%}
+                {%- assign resourceUrl = item.settings.resource.url -%}
+                {%- assign openResourceInNewWindow = item.settings.resourceOpenInNewTab -%}
+                {%- assign text = item.settings.text -%}
+
+            {%- endif -%}
+
+            {%- capture slideContent -%}
+
+                {% if carouselCategoryTextPosition == 'over' %}
+
+                    <div class="category-item-text-container">
+
+                        <span class="category-item-text fs-2">
+                            {{ text }}
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+                <div class="aspect-ratio-{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% if carouselCategoryImgAspectRatio == '1:1' and carouselCategoryImgFit and carouselCategoryImgCircle %} rounded-circle{% endif %}">
+
+                    <div class="aspect-ratio-container">
+
+                        {% if img %}
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- img | thumb: imgSizeLg }} 1x,
+                                    {{- img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- img | thumb: imgSizeMd }} 1x,
+                                    {{- img | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- img | thumb: imgSizeSm }} 1x,
+                                    {{- img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ imgAlt }}" 
+                                    data-src="{{ img | thumb: imgSizeSm }}"
+                                    data-srcset="{{ img | thumb: imgSizeSm }} 1x, {{ img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %} style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
+                            </picture>
+
+                        {% else %}
+
+                            {%- capture class -%}
+                                aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}
+                            {%- endcapture -%}
+
+                            {% render 'placeholder-svg', type: 'category', class: class %}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% if carouselCategoryTextPosition == 'below' %}
+
+                    <div class="category-item-text-container mt-g">
+
+                        <div class="text-icon-with-underline-indicator-container text-center">
+
+                            <span class="category-item-text text-icon-with-underline-indicator fw-bold">
+
+                                {{- text -}}
+                                {%- render 'icon', icon: 'arrow-right' -%}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {%- endcapture -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{- sectionHandle -}}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {% if resourceUrl %}
+
+                        <a href="{{- resourceUrl -}}" class="img-indicator-zoom"{% if openResourceInNewWindow %} target="_blank"{% endif %}>
+
+                            {{ slideContent }}
+
+                        </a>
+
+                    {% else %}
+
+                        {{ slideContent }}
+
+                    {% endif%}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{%- endcapture -%}
+
+{%- capture class -%}category-carousel category-items-container category-items-position-{{ carouselCategoryTextPosition }}{%- endcapture -%}
+
+{%- render 'swiper', class: class, slides: carouselSlides, pagination: carouselPagination, navigation: carouselNavigation, slidesPerView: carouselSlidesPerView, style: carouselStyle, paginationPosition: 'relative', evenHeightSlides: true, standalone: true, freemode: carouselFreemode, autoplaySpeed: carouselAutoplaySpeed -%}

@@ -1,0 +1,786 @@
+{%- assign dateFormat = 'general.date_format' | t -%}
+
+{%- capture sectionTitle -%}
+	{{ 'account.order_title_dynamic' | t, id: order.order_number }}
+{%- endcapture -%}
+
+{%- capture sectionSubtitle -%}
+
+	<div class="row">
+
+		<div class="col">
+
+			<div>
+
+				<span>
+					{% if order.is_refunded %}
+
+						{{ order.order_status_refunded | t }}
+
+					{% else %}
+
+						{{ order.order_status | prepend: 'account.order.order_statuses.' | t }}
+
+					{% endif %}
+				</span>
+
+			</div>
+
+			<div>
+
+				<span class="small text-muted">
+					{{ order.created_at | date: dateFormat }}
+				</span>
+
+			</div>
+
+		</div>
+
+		<div class="col-auto">
+
+			{% if order.financial_status == 'paid' %}
+
+				<div class="d-flex justify-content-md-end">
+
+                    <a href="{{ order.receipt_url }}" class="btn btn-secondary">
+                    	{{ 'account.order.download_receipt' | t }}
+                   	</a>
+
+                </div>
+
+            {% endif %}
+
+		</div>
+
+	</div>
+
+{%- endcapture -%}
+
+{%- assign sectionTitle = sectionTitle -%}
+{%- assign sectionSubtitle = sectionSubtitle -%}
+
+{%- if session.logged_in -%}
+
+	{%- capture sectionHeaderSecondaryAction -%}
+
+		<a href="{{ routes.account_orders_url }}">
+
+			{%- render 'icon', icon: 'arrow-left', class: 'me-1' -%}
+
+			<span>
+				{{ 'general.back' | t }}
+			</span>
+		</a>
+
+	{%- endcapture -%}
+
+	{%- assign sectionHeaderSecondaryAction = sectionHeaderSecondaryAction -%}
+
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+	<div class="order">
+
+		<div class="order-details-container section-highlight-item">
+
+			<div class="order-details">
+
+				<div class="row">
+
+					<div class="col">
+
+						<div class="order-shipping-address">
+
+							<div class="order-shipping-address-line mb-2">
+
+								<span class="order-shipping-address-line-text fw-bold">
+									{{ 'account.order.delivery_address' | t }}
+								</span>
+
+							</div>
+
+							{% if order.shipping_address.company %}
+
+								<div class="order-shipping-address-line">
+
+									<span class="order-shipping-address-line-text">
+										{{ order.shipping_address.company  }}
+									</span>
+
+								</div>
+
+								<div class="order-shipping-address-line">
+
+									<span class="order-shipping-address-line-text">
+										{{ order.shipping_address.vat_number  }} {{ order.shipping_address.company_id  }}
+									</span>
+
+								</div>
+
+							{% endif %}
+
+							<div class="order-shipping-address-line">
+
+								<span class="order-shipping-address-line-text">
+									{{ order.shipping_address.firstname }} {{ order.shipping_address.lastname }}
+								</span>
+
+							</div>
+
+							<div class="order-shipping-address-line">
+
+								<span class="order-shipping-address-line-text">
+									{{ order.shipping_address.address1 }}
+								</span>
+
+							</div>
+
+							<div class="order-shipping-address-line">
+
+								<span class="order-shipping-address-line-text">
+									{{ order.shipping_address.zipcode }} {{ order.shipping_address.city }}
+								</span>
+
+							</div>
+
+							<div class="order-shipping-address-line">
+
+								<span class="order-shipping-address-line-text">
+									{{ order.shipping_address.country.name }}
+								</span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="col">
+
+						<div class="order-billing-address">
+
+							<div class="order-billing-address-line mb-2">
+
+								<span class="order-billing-address-line-text fw-bold">
+									{{ 'account.order.billing_address' | t }}
+								</span>
+
+							</div>
+
+							{% if order.billing_address.company %}
+
+								<div class="order-shipping-address-line">
+
+									<span class="order-shipping-address-line-text">
+										{{ order.billing_address.company  }}
+									</span>
+
+								</div>
+
+								<div class="order-shipping-address-line">
+
+									<span class="order-shipping-address-line-text">
+										{{ order.billing_address.vat_number  }} {{ order.billing_address.company_id  }}
+									</span>
+
+								</div>
+
+							{% endif %}
+
+							<div class="order-billing-address-line">
+
+								<span class="order-billing-address-line-text">
+									{{ order.billing_address.firstname }} {{ order.billing_address.lastname }}
+								</span>
+
+							</div>
+
+							<div class="order-billing-address-line">
+
+								<span class="order-billing-address-line-text">
+									{{ order.billing_address.address1 }}
+								</span>
+
+							</div>
+
+							<div class="order-billing-address-line">
+
+								<span class="order-billing-address-line-text">
+									{{ order.billing_address.zipcode }} {{ order.billing_address.city }}
+								</span>
+
+							</div>
+
+							<div class="order-billing-address-line">
+
+								<span class="order-billing-address-line-text">
+									{{ order.billing_address.country.name }}
+								</span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					{% if order.shipping_methods.size %}
+
+						<div class="col">
+
+							<div class="mb-2">
+
+								<span class="fw-bold">
+
+									{% if order.shipping_methods.size > 1 %}
+										{{ 'account.order.shipping_method_plural' | t }}
+									{% else %}
+										{{ 'account.order.shipping_method' | t }}
+									{% endif %}
+								</span>
+
+							</div>
+
+							{% for shipping_method in order.shipping_methods %}
+
+								<div {%- unless forloop.last %} class="mb-4"{% endunless %}>
+
+									<div>
+
+										<span>
+											{{ shipping_method.title }}
+										</span>
+
+									</div>
+
+									{% if shipping_method.pickup_address %}
+
+										<div>
+
+											<span>
+												{{ shipping_method.pickup_address.name }}
+											</span>
+
+										</div>
+
+										<div>
+
+											<span>
+												{{ shipping_method.pickup_address.address1 }}
+											</span>
+
+										</div>
+
+										<div>
+
+											<span>
+												{{ shipping_method.pickup_address.zipcode }} {{ shipping_method.pickup_address.city }}
+											</span>
+
+										</div>
+
+										<div>
+
+											<span>
+												{{ shipping_method.pickup_address.country.name }}
+											</span>
+
+										</div>
+
+									{% endif %}
+
+								</div>
+
+							{% endfor %}
+
+						</div>
+
+					{% endif %}
+
+					{% if order.payment_methods.size %}
+
+						<div class="col">
+
+							<div class="mb-2">
+
+								<span class="fw-bold">
+
+									{% if order.payment_methods.size > 1 %}
+										{{ 'account.order.payment_method_plural' | t }}
+									{% else %}
+										{{ 'account.order.payment_method' | t }}
+									{% endif %}
+								</span>
+
+							</div>
+
+							{% for payment_method in order.payment_methods %}
+
+								<div {%- unless forloop.last %} class="mb-1"{% endunless %}>
+
+									<div>
+
+										<span>
+											{{ payment_method.title }}
+										</span>
+
+									</div>
+
+								</div>
+
+							{% endfor %}
+
+						</div>
+
+					{% endif %}
+
+				</div>
+
+			</div>
+
+		</div>
+
+		{% if order.shipments %}
+
+			<div class="order-shipments-container section-highlight-item">
+
+				<span class="fw-bold">
+					{{ 'account.order.shipment_plural' | t }}
+				</span>
+
+				<div class="order-shipment-packages">
+
+					{% for shipment in order.shipments %}
+
+						{% for package in shipment.packages %}
+
+							<div class="order-shipment-package">
+
+								<div class="row g-0">
+
+									<div class="col-auto">
+
+			                            <div class="order-shipment-package-media">
+
+			                               {%- render 'icon', icon: 'shipment', class: 'svg-icon-fw svg-icon-4x' -%}
+
+			                            </div>
+
+			                        </div>
+
+			                       <div class="col ps-4">
+
+			                       		<div class="row g-0">
+
+			                            	<div class="col">
+
+			                            		<div class="order-shipment-package-carrier-name">
+
+			                            			<span class="order-shipment-package-carrier-name-text">
+														{{ shipment.carrier }}
+													</span>
+
+			                                    </div>
+
+			                                    {% if package.tracking_code %}
+
+				                                    <div class="order-shipment-package-tracking-code">
+
+				                                        <span class="order-shipment-package-tracking-code-text">
+				                                        	{{ package.tracking_code }}
+				                                        </span>
+
+				                                    </div>
+
+			                                    {% endif %}
+
+			                            	</div>
+
+			                            	{% if package.tracking_url %}
+
+				                            	<div class="col-12 col-md-auto mt-2 mt-md-0 ps-md-2">
+
+				                            		<div class="order-shipment-package-tracking">
+
+				                                        <a href="{{ package.tracking_url }}" class="btn btn-secondary order-shipment-package-tracking-btn">
+				                                            {{ 'account.order.track_shipment' | t }}
+				                                        </a>
+
+				                                    </div>
+
+				                            	</div>
+
+			                            	{% endif %}
+
+			                            </div>
+
+			                       </div>
+
+								</div>
+
+							</div>
+
+						{% endfor %}
+
+					{% endfor %}
+
+				</div>
+
+			</div>
+
+		{% endif %}
+
+		<div class="section-highlight-item">
+
+			<div class="order-items-container">
+
+				<span class="fw-bold">
+					{{ 'account.order.product_plural' | t }}
+				</span>
+
+				<div class="order-items">
+
+					{% for item in order.items %}
+
+						<div class="order-item">
+
+							<div class="row align-items-centerg-0">
+
+								<div class="col-auto">
+
+									<div class="order-item-media aspect-ratio-product">
+
+										<div class="order-item-media-img-container aspect-ratio-container">
+
+											{% if item.image %}
+
+												{%- assign img = item.image -%}
+
+												{% if settings.productImageAspectRatio == '9:13' %}
+
+													{%- assign imgSize = '110,142' -%}
+
+												{% elsif settings.productImageAspectRatio == '4:3' %}
+
+													{%- assign imgSize = '110,93' -%}
+
+												{% elsif settings.productImageAspectRatio == '1:1' %}
+
+													{%- assign imgSize = '110,110' -%}
+
+												{% endif %}
+
+												<picture>
+													<img
+														alt="{{ item.name }}"
+														data-src="{{ img | thumb: imgSize }}"
+														data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+														class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+												</picture>
+
+											{% else %}
+
+												{%- capture img -%}
+													{%- render 'placeholder-svg', type: 'image', base64: true -%}
+												{%- endcapture -%}
+
+												<img
+													class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+													alt="{{ item.name }}"
+													data-src="{{- img | strip_newlines -}}">
+
+											{% endif %}
+
+										</div>
+
+									</div>
+
+								</div>
+
+							<div class="col ps-4">
+
+									<div class="row g-0">
+
+										<div class="col">
+
+											<div class="order-item-name">
+
+												{% if item.product_url %}
+
+													<a href="{{ item.product_url }}">
+
+														<span class="order-item-name-text">
+															{{ item.title }}
+														</span>
+
+													</a>
+
+												{% else %}
+
+													<span class="order-item-name-text">
+														{{ item.title }}
+													</span>
+
+												{% endif %}
+
+											</div>
+
+											<div class="order-item-quantity">
+
+												<span class="order-item-quantity-text">
+													{{ 'general.quantity' | t }}: {{ item.quantity }}
+												</span>
+
+											</div>
+
+											{% if item.model %}
+
+												<div class="order-item-product-number">
+
+													<span class="order-item-product-number-text">
+														{{ 'general.product_number' | t }}: {{ item.model }}
+													</span>
+
+												</div>
+
+											{% endif %}
+
+											{% if item.attributes_label %}
+
+												<div class="order-item-attributes">
+
+													{%- assign attributes = item.attributes_label | split: ',' -%}
+
+													{% for attribute in attributes %}
+
+														<div class="order-item-attribute">
+
+															<span class="order-item-attribute-text">
+																{{ 'general.selection' | t }}: {{ attribute }}
+															</span>
+
+														</div>
+
+													{% endfor %}
+
+												</div>
+
+											{% endif %}
+
+											{% if item.downloads %}
+
+												<div class="order-item-downloads">
+
+													{% for download in item.downloads %}
+
+														<div class="order-item-download">
+
+															<a href="{{ download.download_link }}" target="_blank">
+																{{ 'account.order.download_file' | t }}{% if item.downloads.size > 1 %}: {{ download.basename }}{% endif %}
+															</a>
+
+														</div>
+
+													{% endfor %}
+
+												</div>
+
+											{% endif %}
+
+											{% if item.product %}
+
+												{% if item.product.reviews_are_enabled and item.product.customer_has_reviewed == false %}
+
+													<a href="{{ item.product_url }}?create_review=true" class="btn btn-sm btn-secondary mt-3">
+														{{ 'account.order.write_review' | t }}
+													</a>
+
+												{% endif %}
+
+											{% endif %}
+
+										</div>
+
+										<div class="col-auto ps-2">
+
+											<div class="order-item-price">
+
+												<span class="order-item-price-text">
+													{{ item.price | money_with_currency }}
+												</span>
+
+											</div>
+
+										</div>
+
+									</div>
+
+							</div>
+
+							</div>
+
+						</div>
+
+					{% endfor %}
+
+				</div>
+
+			</div>
+
+			<div class="order-summary-container">
+
+				<div class="order-summary">
+
+					<div class="order-subtotal">
+
+						<div class="row">
+
+							<div class="col">
+
+								<span>
+									{{ 'general.subtotal' | t }}
+								</span>
+
+							</div>
+
+							<div class="col text-end">
+
+								<span>
+									{{ order.subtotal_price | money_with_currency }}
+								</span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					{% if order.payment_fee %}
+
+						<div class="order-payment-fee">
+
+							<div class="row">
+
+								<div class="col">
+
+									<span>
+										{{ 'general.payment_fee' | t }}
+									</span>
+
+								</div>
+
+								<div class="col text-end">
+
+									<span>
+										{{ order.payment_fee | money_with_currency }}
+									</span>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					{% endif %}
+
+					{% if order.shipping_price %}
+
+						<div class="order-shipping-price">
+
+							<div class="row">
+
+								<div class="col">
+
+									<span>
+										{{ 'general.shipping_price' | t }}
+									</span>
+
+								</div>
+
+								<div class="col text-end">
+
+									<span>
+										{{ order.shipping_price | money_with_currency }}
+									</span>
+
+								</div>
+
+							</div>
+
+						</div>
+
+					{% endif %}
+
+					{% if order.discounts %}
+
+						<div class="order-discounts">
+
+							{% for discount in order.discounts %}
+
+								<div class="order-discount">
+
+									<div class="row">
+
+										<div class="col">
+
+											<span>
+												{{ discount.title }}{% if discount.code %} - {{ discount.code }}{% endif %}
+											</span>
+
+										</div>
+
+										<div class="col text-end">
+
+											<span>
+												{{ discount.amount | money_with_currency }}
+											</span>
+
+										</div>
+
+									</div>
+
+								</div>
+
+							{% endfor %}
+
+						</div>
+
+					{% endif %}
+
+					<div class="order-total">
+
+						<div class="row">
+
+							<div class="col">
+
+								<span>
+									{{ 'general.total' | t }}
+								</span>
+
+							</div>
+
+							<div class="col text-end">
+
+								<span>
+									{{ order.total_price | money_with_currency }}
+								</span>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+{%- endcapture -%}
+
+<section class="section section-account-order">
+    {% render 'section', sectionHandle: '.section-account-order', sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionContent: sectionContent, sectionContainer: 'compact', sectionOverlay: settings.sectionOverlay, sectionInnerGap: '2rem' %}
+</section>

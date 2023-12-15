@@ -1,0 +1,280 @@
+{% if block.settings.imgAspectRatio == '16:9' %}
+
+    {%- assign imgSizeSm = '420,236' -%}
+    {%- assign imgSizeMd = '680,382' -%}
+    {%- assign imgSizeLg = '1300,726' -%}
+
+{% elsif block.settings.imgAspectRatio == '9:13' %}
+
+    {%- assign imgSizeSm = '420,606' -%}
+    {%- assign imgSizeMd = '680,982' -%}
+    {%- assign imgSizeLg = '1300,1882' -%}
+
+{% elsif block.settings.imgAspectRatio == '4:3' %}
+
+    {%- assign imgSizeSm = '420,315' -%}
+    {%- assign imgSizeMd = '680,510' -%}
+    {%- assign imgSizeLg = '1300,965' -%}
+
+{% elsif block.settings.imgAspectRatio == '1:1' %}
+
+    {%- assign imgSizeSm = '420,420' -%}
+    {%- assign imgSizeMd = '680,680' -%}
+    {%- assign imgSizeLg = '1300,1300' -%}
+
+{% elsif block.settings.imgAspectRatio == 'auto' %}
+
+    {%- assign imgSizeSm = '420,420' -%}
+    {%- assign imgSizeMd = '680,680' -%}
+    {%- assign imgSizeLg = '1300,1300' -%}
+
+{% endif %}
+
+{%- if block.settings.imgScaleRatio < 1 -%}
+    {%- capture imgSizeSm -%}{{- imgSizeSm | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeSm | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
+    {%- capture imgSizeMd -%}{{- imgSizeMd | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeMd | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
+    {%- capture imgSizeLg -%}{{- imgSizeLg | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeLg | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
+    {%- assign imgSizeSm = imgSizeSm -%}
+    {%- assign imgSizeMd = imgSizeMd -%}
+    {%- assign imgSizeLg = imgSizeLg -%}
+{%- endif -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.imgAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.imgAlign }}{%- endif -%};
+    }
+    #finqu-block-{{ block.id }} .block-inner img {
+        border-radius: var(--style-image-border-radius);
+    }
+    {%- if block.settings.blockPaddingMode == 'custom' -%}
+        #finqu-block-{{ block.id }} {
+            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
+            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    <div class="aspect-ratio-{{ block.settings.imgAspectRatio | replace: ':', '-' }}"{% if block.settings.imgScaleRatio < 1 %} style="--img-scale-ratio: {{ block.settings.imgScaleRatio }}{% endif %}">
+
+        <div class="aspect-ratio-container">
+
+            {% if block.settings.img %}
+
+                <picture>
+                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                        {{- block.settings.img | thumb: imgSizeLg }} 1x,
+                        {{- block.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                        {{- block.settings.img | thumb: imgSizeMd }} 1x,
+                        {{- block.settings.img | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                    <source data-srcset="
+                        {{- block.settings.img | thumb: imgSizeSm }} 1x,
+                        {{- block.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                    <img
+                        alt="{{ block.settings.imgAlt }}"
+                        data-src="{{ block.settings.img | thumb: imgSizeSm }}"
+                        data-srcset="{{ block.settings.img | thumb: imgSizeSm }} 1x, {{ block.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                        class="lazy aspect-ratio-item{% if block.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if block.settings.img.offset_left or block.settings.img.offset_top %} style="--object-position: {{ block.settings.img.offset_left }}% {{ block.settings.img.offset_top }}%"{% endif %}>
+                </picture>
+
+            {% elsif request.design_mode %}
+
+                {% render 'placeholder-svg', type: 'image', height: '400px', class: 'aspect-ratio-item' %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": {
+        "en": "Image",
+        "fi": "Kuva"
+    },
+    "tag": "div",
+    "class": "block block-image",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "img",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Image",
+                            "fi": "Kuva"
+                        },
+                        "adjustments": true
+                    },
+                    {
+                        "id": "imgAlt",
+                        "type": "text",
+                        "label": {
+                            "en": "Image alt",
+                            "fi": "Kuvan alt-teksti"
+                        }
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "blockPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "blockPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "blockPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "imgAspectRatio",
+                        "type": "select",
+                        "label": {
+                            "en": "Aspect ratio",
+                            "fi": "Kuvasuhde"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": {
+                                    "en": "Original",
+                                    "fi": "Alkuperäinen"
+                                }
+                            },
+                            {
+                                "value": "16:9",
+                                "label": "16:9"
+                            },
+                            {
+                                "value": "9:13",
+                                "label": "9:13"
+                            },
+                            {
+                                "value": "4:3",
+                                "label": "4:3"
+                            }, {
+                                "value": "1:1",
+                                "label": "1:1"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imgScaleRatio",
+                        "label": {
+                            "en": "Image scaling",
+                            "fi": "Kuvan skaalaus"
+                        },
+                        "type": "range",
+                        "min": 0.1,
+                        "max": 1,
+                        "step": 0.1,
+                        "default": 0.5
+                    },
+                    {
+                        "id": "imgFit",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Image area fill",
+                            "fi": "Kuva-alueen täyttö"
+                        },
+                        "default": false,
+                        "conditions": ["!imgAspectRatio eq auto"]
+                    },
+                    {
+                        "id": "imgAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image alignment",
+                            "fi": "Kuvan ryhmittyminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

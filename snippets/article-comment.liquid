@@ -1,0 +1,117 @@
+{% comment %}
+	Renders a article comment
+
+	Accepts:
+	- article: {Object} Article Liquid object
+	- comment: {Object} Comment Liquid object
+
+	Usage:
+	Render this snippet inside of element with a "section-article" class.
+
+	{% render 'article-comment', article: article, comment: comment %}
+{% endcomment %}
+
+{%- assign dateFormat = 'general.date_format' | t  -%}
+{%- assign commentDefaultTitle = 'general.unknown' | t -%}
+
+<div id="article-comment-{{ comment.id }}" class="article-comment">
+
+    <div class="article-comment-inner">
+
+        <div class="article-comment-header">
+
+            <span class="article-comment-title">
+            	{{- comment.name | default: commentDefaultTitle -}}
+            </span>
+
+        </div>
+
+        <div class="article-comment-date text-muted">
+
+            <time datetime="{{ comment.created_at | date: "%F" }}">
+                {{- comment.created_at | date: dateFormat -}}
+            </time>
+
+        </div>
+
+        <div class="article-comment-content">
+
+            <p class="mb-0">
+                {{- comment.comment -}}
+            </p>
+
+        </div>
+
+        {%- if article.comments_are_enabled and comment.parent_count < 3 -%}
+
+            {%- if session.logged_in or article.comments_require_account == false  -%}
+
+                {%- capture formId -%}comment-form-{{- comment.id -}}{%- endcapture -%}
+
+                <div class="article-comment-form-action">
+
+                    <button type="button" name="article-comment-form-show-action" class="btn btn-text text-underline-indicator fw-bold text-underline-indicator{% if submitted_form.id == formId and submitted_form.error %} d-none{% endif %}" value="{{ comment.id }}">
+                        {{- 'blog.reply_comment' | t -}}
+                    </button>
+
+                </div>
+
+                <div id="article-comment-form-{{ comment.id }}" class="article-comment-form{% unless submitted_form.id == formId and submitted_form.error %} d-none{% endunless %}">
+
+                    {%- form 'comment', comment, id: formId -%}
+
+                        <div class="mb-4 form-floating">
+
+                            <input name="name" type="text" id="comment-comment-{{ comment.id }}-name" class="form-control" placeholder="{{ 'general.name' | t }}" value="{{ form.submitted.name | default: form.name | escape }}" required>
+
+                            <label for="comment-comment-{{ comment.id }}-name">
+                                {{- 'general.name' | t -}}
+                            </label>
+
+                        </div>
+                        
+                        <div class="mb-4 form-floating">
+
+                            <textarea
+                                id="article-comment-{{ comment.id }}"
+                                name="comment"
+                                class="form-control"
+                                placeholder="{{ 'blog.comment' | t }}"></textarea>
+
+                            <label for="article-comment-{{ comment.id }}">
+                                {{- 'blog.comment' | t -}}
+                            </label>
+
+                        </div>
+
+                        {%- render 'form-error', error: form.error, class: 'mb-4' -%}
+
+                        <button type="button" name="article-comment-form-close-action" class="btn btn-secondary" value="{{ comment.id }}">
+                        	{{- 'general.cancel' | t -}}
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                        	{{- 'general.submit' | t -}}
+                        </button>
+
+                    {% endform %}
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+    {%- if comment.comments -%}
+
+        {%- for comment in comment.comments -%}
+
+            {%- render 'article-comment', article: article, comment: comment -%}
+
+        {%- endfor -%}
+
+    {%- endif -%}
+
+</div>

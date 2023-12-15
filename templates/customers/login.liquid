@@ -1,0 +1,53 @@
+{%- assign sectionTitle = 'login.title' | t -%}
+
+{%- capture sectionContent -%}
+
+    {% form 'login' %}
+
+        <div class="mb-4 form-floating">
+
+            <input type="email" class="form-control" name="email" id="login-email" placeholder="{{ 'login.email_placeholder' | t }}" value="{{ form.submitted.email | escape }}" required>
+
+            <label for="login-email">
+                {{- 'account.information.email' | t -}}
+            </label>
+
+        </div>
+
+        <div class="mb-4 form-floating">
+
+            <input type="password" class="form-control" name="password" id="login-password" placeholder="{{ 'account.information.password' | t }}" value="{{ form.submitted.password | escape }}" required>
+
+            <label for="login-password">
+                {{- 'account.information.password' | t -}}
+            </label>
+
+        </div>
+
+        {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+        <button type="submit" class="btn btn-primary d-block w-100 mb-4">
+            {{- 'login.cta' | t -}}
+        </button>
+
+        <a href="{{ routes.account_password_recover_url }}" class="fw-bold text-underline-indicator">
+            {{- 'login.forgot_password' | t -}}
+        </a>
+
+        <hr class="mt-5 mb-5">
+
+        <h3 class="mb-5">
+            {{- 'login.new_customer' | t -}}
+        </h3>
+
+        <a href="{{ routes.account_register_url }}" class="btn btn-secondary d-block w-100">
+            {{- 'login.register' | t -}}
+        </a>
+
+    {% endform %}
+
+{%- endcapture -%}
+
+<section class="section section-login">
+    {% render 'section', sectionHandle: '.section-login', sectionTitle: sectionTitle, sectionTitleTag: 'h2', sectionContent: sectionContent, sectionContainer: 'tiny', sectionOverlay: settings.sectionOverlay, sectionInnerGap: '2rem' %}
+</section>

@@ -1,0 +1,141 @@
+{% comment %}
+	Renders a section content
+
+	Accepts:
+	- sectionContent: {String}
+	- sectionContentWidth: {String}
+	- sectionContentAlign: {String}
+    - sectionContentClass: {String}
+    - sectionContentContainer: {String}
+    - sectionAnimation: {String}
+    - sectionAnimationRepeat: {Boolean}
+	- sectionHandle: {String}
+    - sectionTabs: {String}
+    - sectionTabsClass: {String}
+    - sectionAction: {String}
+
+	Usage:
+	Render this snippet inside of element with a "section" class.
+
+    Usage of section tabs:
+	Include section-tab snippets inside capture and pass it as sectionTabs to this snippet.
+    Include section-tab-content snippets inside sectionContent.
+
+	{% render 'section-content' %}
+{% endcomment %}
+
+{%- assign sectionContentWidth = sectionContentWidth | default: '12'  -%}
+{%- assign sectionContentAlign = sectionContentAlign | default: 'center' -%}
+{%- assign sectionContentContainer = sectionContentContainer | default: 'fixed' -%}
+{%- assign sectionTabs = sectionTabs | strip -%}
+
+{%- unless sectionAnimation == false -%}
+    {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}
+{%- endunless -%}
+
+{% assign sectionAnimationOrder = 0 %}
+
+{%- if sectionHeaderSecondaryAction -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionTitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionSubtitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionOverline -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionDescription -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionBreadcrumbs -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionTabs -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if sectionTabs -%}
+
+    <div class="section-tabs{% if sectionTabsClass %} {{ sectionTabsClass }}{% endif %}">
+
+        <div class="container{% if sectionContentContainer and sectionContentContainer != 'fixed' %}-{{- sectionContentContainer -}}{% endif %}">
+
+            <div class="section-tabs-inner"{% if sectionHeaderAnimation %} data-aos="{{ sectionHeaderAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+                {{- sectionTabs -}}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{%- endif -%}
+
+{%- if sectionAnimationOrder > 0 -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+<div class="section-content{% if sectionContentClass %} {{ sectionContentClass }}{% endif %}">
+
+     <div class="container{% if sectionContentContainer and sectionContentContainer != 'fixed' %}-{{- sectionContentContainer -}}{% endif %}">
+
+        {%- if sectionContentWidth == '12' -%}
+
+            <div{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+                
+                {{- sectionContent -}}
+
+                {% if sectionAction and sectionHeaderTextAlign == 'center' %}
+
+                    <div class="section-action mt-g">
+                        {{- sectionAction -}}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {%- else -%}
+
+            {%- case sectionContentAlign -%}
+                {% when 'start' %}
+                    {%- assign contentAlign = 'justify-content-start' -%}
+                {% when 'center' %}
+                    {%- assign contentAlign = 'justify-content-center' -%}
+                {% when 'end' %}
+                    {%- assign contentAlign = 'justify-content-end' -%}
+            {%- endcase -%}
+
+            <div class="row g-0 {{ contentAlign }}">
+
+                <div class="col-12 col-md-{{ sectionContentWidth }}"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+                    {{- sectionContent -}}
+
+                    {% if sectionAction and sectionHeaderTextAlign == 'center' %}
+
+                        <div class="section-action mt-g">
+                            {{- sectionAction -}}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+</div>

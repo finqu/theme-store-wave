@@ -1,0 +1,980 @@
+{%- assign videoType = 'video' -%}
+{%- assign sectionHeader = false -%}
+
+{%- if section.settings.videoSrc -%}
+
+    {%- if section.settings.videoSrc contains 'youtu.be' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign videoId = section.settings.videoSrc | split: '/' | last -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://www.youtube-nocookie.com/embed/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ section.settings.videoAutoplay | yepnope: 1, 0 }}&rel=0&modestbranding=1&playsinline=1&controls={{ section.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- elsif section.settings.videoSrc contains 'youtube.com' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign queryParams = section.settings.videoSrc | query_params -%}
+        {%- assign videoId = queryParams.v -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://www.youtube-nocookie.com/embed/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ section.settings.videoAutoplay | yepnope: 1, 0 }}&rel=0&modestbranding=1&playsinline=1&controls={{ section.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- elsif section.settings.videoSrc contains 'vimeo.com' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign videoId = section.settings.videoSrc | split: '/' | last -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://player.vimeo.com/video/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ section.settings.videoAutoplay | yepnope: 1, 0 }}&playsinline=0&controls={{ section.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if section.settings.sectionOverline -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionTitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionSubtitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionHighlightItems == 'nil' and settings.sectionHighlightItems == true or section.settings.sectionHighlightItems == true -%}
+    {%- assign sectionHighlightItems = true -%}
+{%- endif -%}
+
+{%- if sectionHighlightItems -%} 
+
+    {%- capture sectionStyle -%}
+        #finqu-section-{{ section.id }} .text-container {
+            z-index: 1;
+            {%- if section.settings.videoLayout == 1 -%}
+                transform: translateX(-15%);
+            {%- elsif section.settings.videoLayout == 2 -%}
+                transform: translateX(15%);
+            {%- endif -%}
+        }
+    {%- endcapture -%}
+
+    <style media="screen and (min-width: {{ settings.styleGridBreakpointLg }})">{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+    {% if section.settings.videoLayout == 1 %}
+
+        <div class="row gy-g align-items-center">
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="col-12 col-md">
+
+                <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {% if videoSrc %}
+
+                        {% if videoType == 'iframe' %}
+
+                            <div class="aspect-ratio-16-9">
+
+                                <div class="aspect-ratio-container">
+
+                                    <iframe
+                                        class="lazy aspect-ratio-item"
+                                        data-src="{{ videoSrc }}"
+                                        frameborder="0"
+                                        allowfullscreen></iframe>
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="aspect-ratio-16-9">
+
+                                <div class="aspect-ratio-container">
+
+                                    <video
+                                        class="lazy aspect-ratio-item"
+                                        data-src="{{ videoSrc }}"
+                                        {% if section.settings.videoControls %}
+                                        controls
+                                        {% endif %}
+                                        {% if section.settings.videoAutoplay %}
+                                        autoplay
+                                        {% endif %}></video>
+                                
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <div class="aspect-ratio-16-9">
+
+                            <div class="aspect-ratio-container">
+
+                                {% render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="col-12 col-md text-container">
+
+                <div class="section-highlight-item section-highlight-item-md" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {% render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionHeaderContainer: 'none', sectionHeaderClass: 'mb-g' %}
+
+                    {% if section.settings.richtext %}
+
+                        {{ section.settings.richtext }}
+
+                    {% endif %}
+
+                    {% if section.settings.btnLabel %}
+
+                        <div class="mt-3">
+
+                            {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLabel, url: section.settings.btnLink.url, openInNewTab: section.settings.btnLinkOpenInNewTab -%}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% elsif section.settings.videoLayout == 2 %}
+
+        <div class="row gy-g align-items-center">
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="col-12 col-md text-container">
+
+                <div class="section-highlight-item section-highlight-item-md" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {% render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionHeaderContainer: 'none', sectionHeaderClass: 'mb-g' %}
+
+                    {% if section.settings.richtext %}
+
+                        {{ section.settings.richtext }}
+
+                    {% endif %}
+
+                    {% if section.settings.btnLabel %}
+
+                        <div class="mt-3">
+
+                            {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLabel, url: section.settings.btnLink.url, openInNewTab: section.settings.btnLinkOpenInNewTab -%}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="col-12 col-md">
+
+                <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {% if videoSrc %}
+
+                        {% if videoType == 'iframe' %}
+
+                            <div class="aspect-ratio-16-9">
+
+                                <div class="aspect-ratio-container">
+
+                                    <iframe
+                                        class="lazy aspect-ratio-item"
+                                        data-src="{{ videoSrc }}"
+                                        frameborder="0"
+                                        allowfullscreen></iframe>
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="aspect-ratio-16-9">
+
+                                <div class="aspect-ratio-container">
+
+                                    <video
+                                        class="lazy aspect-ratio-item"
+                                        data-src="{{ videoSrc }}"
+                                        {% if section.settings.videoControls %}
+                                        controls
+                                        {% endif %}
+                                        {% if section.settings.videoAutoplay %}
+                                        autoplay
+                                        {% endif %}></video>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <div class="aspect-ratio-16-9">
+
+                            <div class="aspect-ratio-container">
+
+                                {% render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% elsif section.settings.videoLayout == 3 %}
+
+        {%- assign sectionHeader = true -%}
+        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+        <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+            {% if section.settings.richtext %}
+
+                {{ section.settings.richtext }}
+
+            {% endif %}
+
+            {% if section.settings.btnLabel %}
+
+                <div class="mt-3">
+
+                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLabel, url: section.settings.btnLink.url, openInNewTab: section.settings.btnLinkOpenInNewTab -%}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+        <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+            {% if videoSrc %}
+
+                {% if videoType == 'iframe' %}
+
+                    <div class="mt-g aspect-ratio-16-9">
+
+                        <div class="aspect-ratio-container">
+
+                            <iframe
+                                class="lazy aspect-ratio-item"
+                                data-src="{{ videoSrc }}"
+                                frameborder="0"
+                                allowfullscreen></iframe>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="mt-g aspect-ratio-16-9">
+
+                        <div class="aspect-ratio-container">
+
+                            <video
+                                class="lazy aspect-ratio-item"
+                                data-src="{{ videoSrc }}"
+                                {% if section.settings.videoControls %}
+                                controls
+                                {% endif %}
+                                {% if section.settings.videoAutoplay %}
+                                autoplay
+                                {% endif %}></video>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+
+                <div class="mt-g aspect-ratio-16-9">
+
+                    <div class="aspect-ratio-container">
+
+                        {% render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' %}
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% elsif section.settings.videoLayout == 4 %}
+
+        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+        {%- capture sectionDescription -%}
+
+            <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {% if section.settings.richtext %}
+
+                    {{ section.settings.richtext }}
+
+                {% endif %}
+
+                {% if section.settings.btnLabel %}
+
+                    <div class="mt-3">
+
+                        {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLabel, url: section.settings.btnLink.url, openInNewTab: section.settings.btnLinkOpenInNewTab -%}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {%- endcapture -%}
+
+        {%- assign sectionHeader = true -%}
+        {%- assign sectionContentContainer = 'none' -%}
+        {%- assign sectionDescription = sectionDescription -%}
+        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+        <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+            {% if videoSrc %}
+
+                {% if videoType == 'iframe' %}
+
+                    <div class="aspect-ratio-16-9">
+
+                        <div class="aspect-ratio-container">
+
+                            <iframe
+                                class="lazy aspect-ratio-item"
+                                data-src="{{ videoSrc }}"
+                                frameborder="0"
+                                allowfullscreen></iframe>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="aspect-ratio-16-9">
+
+                        <div class="aspect-ratio-container">
+
+                            <video
+                                class="lazy aspect-ratio-item"
+                                data-src="{{ videoSrc }}"
+                                {% if section.settings.videoControls %}
+                                controls
+                                {% endif %}
+                                {% if section.settings.videoAutoplay %}
+                                autoplay
+                                {% endif %}></video>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+
+                <div class="aspect-ratio-16-9">
+
+                    <div class="aspect-ratio-container">
+
+                        {% render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' %}
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionContentContainer: sectionContentContainer, sectionHeader: sectionHeader, sectionDescription: sectionDescription %}
+
+{% schema %}
+    {
+        "name": {
+            "en": "Video with text",
+            "fi": "Video tekstin kanssa"
+        },
+        "tag": "section",
+        "class": "section section-video-with-text",
+        "category": "theme-basic",
+        "settings": {
+            "list_type": "tabs",
+            "groups": [
+                {
+                    "title": {
+                        "en": "Content",
+                        "fi": "Sisältö"
+                    },
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Titles",
+                                "fi": "Otsikot"
+                            }
+                        },
+                        {
+                            "id": "sectionOverline",
+                            "type": "text",
+                            "label": {
+                                "en": "Top title",
+                                "fi": "Yläotsikko"
+                            }
+                        },
+                        {
+                            "id": "sectionTitle",
+                            "type": "text",
+                            "label": {
+                                "en": "Main title",
+                                "fi": "Pääotsikko"
+                            }
+                        },
+                        {
+                            "id": "sectionSubtitle",
+                            "type": "text",
+                            "label": {
+                                "en": "Subtitle",
+                                "fi": "Alaotsikko"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": "Video"
+                        },
+                        {
+                            "id": "videoSrc",
+                            "type": "text",
+                            "label": {
+                                "en": "Video URL",
+                                "fi": "Videon URL-osoite"
+                            }
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Text",
+                                "fi": "Teksti"
+                            }
+                        },
+                        {
+                            "id": "richtext",
+                            "type": "richtext",
+                            "label": {
+                                "en": "Text",
+                                "fi": "Teksti"
+                            }
+                        },
+                        {
+                            "id": "btnLabel",
+                            "type": "text",
+                            "label": {
+                                "en": "Button text",
+                                "fi": "Painikkeen teksti"
+                            }
+                        },
+                        {
+                            "id": "btnLink",
+                            "type": "url",
+                            "label": {
+                                "en": "Button link",
+                                "fi": "Painikkeen linkki"
+                            }
+                        },
+                        {
+                            "id": "btnLinkOpenInNewTab",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Open link in a new tab",
+                                "fi": "Avaa linkki uudessa välilehdessä"
+                            },
+                            "default": false
+                        }
+                    ]
+                },
+                {
+                    "title": {
+                        "en": "Settings",
+                        "fi": "Asetukset"
+                    },
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": "Video"
+                        },
+                        {
+                            "id": "videoLayout",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Style",
+                                "fi": "Tyyli"
+                            },
+                            "default": "1",
+                            "options": [
+                                {
+                                    "value": 1,
+                                    "label": "1"
+                                },
+                                {
+                                    "value": 2,
+                                    "label": "2"
+                                },
+                                {
+                                    "value": 3,
+                                    "label": "3"
+                                },
+                                {
+                                    "value": 4,
+                                    "label": "4"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "videoControls",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show controls",
+                                "fi": "Näytä säätimet"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "videoAutoplay",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Autoplay",
+                                "fi": "Automaattinen toisto"
+                            },
+                            "default": false
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Button",
+                                "fi": "Painike"
+                            }
+                        },
+                        {
+                            "id": "btnStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Style",
+                                "fi": "Tyyli"
+                            },
+                            "default": "primary",
+                            "options": [
+                                {
+                                    "value": "primary",
+                                    "label": "1"
+                                },
+                                {
+                                    "value": "secondary",
+                                    "label": "2"
+                                },
+                                {
+                                    "value": "link",
+                                    "label": "3"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            }
+                        },
+                        {
+                            "id": "sectionHighlightItems",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Content highlight",
+                                "fi": "Sisällön korostaminen"
+                            },
+                            "default": "nil",
+                            "options": [
+                                {
+                                    "value": "nil",
+                                    "label": "Auto"
+                                },
+                                {
+                                    "value": false,
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": true,
+                                    "label": "On"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sectionTextAlign",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Text align",
+                                "fi": "Tekstin tasaus"
+                            },
+                            "default": "nil",
+                            "options": [
+                                {
+                                    "value": "nil",
+                                    "label": "Auto"
+                                },
+                                {
+                                    "value": "start",
+                                    "label": "{# icon.align-start #}"
+                                },
+                                {
+                                    "value": "center",
+                                    "label": "{# icon.align-center #}"
+                                },
+                                {
+                                    "value": "end",
+                                    "label": "{# icon.align-end #}"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "SEO",
+                                "fi": "SEO"
+                            }
+                        },
+                        {
+                            "id": "sectionOverlineTag",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Top title SEO priority",
+                                "fi": "Yläotsikon SEO-prioriteetti"
+                            },
+                            "default": "h3",
+                            "options": [
+                                {
+                                    "value": "h3",
+                                    "label": "H3"
+                                },
+                                {
+                                    "value": "span",
+                                    "label": {
+                                        "en": "Text",
+                                        "fi": "Teksti"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sectionTitleTag",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Main title SEO priority",
+                                "fi": "Pääotsikon SEO-prioriteetti"
+                            },
+                            "default": "h2",
+                            "options": [
+                                {
+                                    "value": "h1",
+                                    "label": "H1"
+                                },
+                                {
+                                    "value": "h2",
+                                    "label": "H2"
+                                },
+                                {
+                                    "value": "h3",
+                                    "label": "H3"
+                                },
+                                {
+                                    "value": "span",
+                                    "label": {
+                                        "en": "Text",
+                                        "fi": "Teksti"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sectionSubtitleTag",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Subtitle SEO priority",
+                                "fi": "Alaotsikon SEO-prioriteetti"
+                            },
+                            "default": "h3",
+                            "options": [
+                                {
+                                    "value": "h3",
+                                    "label": "H3"
+                                }, {
+                                    "value": "span",
+                                    "label": {
+                                        "en": "Text",
+                                        "fi": "Teksti"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Section",
+                                "fi": "Osio"
+                            }
+                        },
+                        {
+                            "id": "sectionColorScheme",
+                            "type": "select",
+                            "label": {
+                                "en": "Color color scheme",
+                                "fi": "Värityyli"
+                            },
+                            "options": [
+                                {
+                                    "value": false,
+                                    "label": {
+                                        "en": "Disabled",
+                                        "fi": "Pois käytöstä"
+                                    }
+                                },
+                                {
+                                    "value": "1",
+                                    "label": {
+                                        "en": "Color scheme 1",
+                                        "fi": "Värityyli 1"
+                                    }
+                                },
+                                {
+                                    "value": "2",
+                                    "label": {
+                                        "en": "Color scheme 2",
+                                        "fi": "Värityyli 2"
+                                    }
+                                },
+                                {
+                                    "value": "3",
+                                    "label": {
+                                        "en": "Color scheme 3",
+                                        "fi": "Värityyli 3"
+                                    }
+                                },
+                                {
+                                    "value": "4",
+                                    "label": {
+                                        "en": "Color scheme 4",
+                                        "fi": "Värityyli 4"
+                                    }
+                                },
+                                {
+                                    "value": "5",
+                                    "label": {
+                                        "en": "Color scheme 5",
+                                        "fi": "Värityyli 5"
+                                    }
+                                },
+                                {
+                                    "value": "light",
+                                    "label": {
+                                        "en": "Light background / Dark content",
+                                        "fi": "Vaalea tausta / Tumma sisältö"
+                                    }
+                                },
+                                {
+                                    "value": "dark",
+                                    "label": {
+                                        "en": "Dark background / Light content",
+                                        "fi": "Tumma tausta / Vaalea sisältö"
+                                    }
+                                },
+                                {
+                                    "value": "accent",
+                                    "label": {
+                                        "en": "Accent background / Adaptive content",
+                                        "fi": "Korostus tausta / Mukautuva sisältö"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sectionPaddingMode",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Padding",
+                                "fi": "Välit"
+                            },
+                            "default": "auto",
+                            "options": [
+                                {
+                                    "value": "auto",
+                                    "label": "Auto"
+                                },
+                                {
+                                    "value": "custom",
+                                    "label": {
+                                        "en": "Custom",
+                                        "fi": "Mukautettu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sectionPaddingTop",
+                            "label": {
+                                "en": "Padding top",
+                                "fi": "Väli ylhäällä"
+                            },
+                            "type": "range",
+                            "min": 0,
+                            "max": 15,
+                            "step": 1,
+                            "default": "0",
+                            "unit": "rem",
+                            "conditions": ["sectionPaddingMode eq custom"]
+                        },
+                        {
+                            "id": "sectionPaddingBottom",
+                            "label": {
+                                "en": "Padding bottom",
+                                "fi": "Väli alhaalla"
+                            },
+                            "type": "range",
+                            "min": 0,
+                            "max": 15,
+                            "step": 1,
+                            "default": "0",
+                            "unit": "rem",
+                            "conditions": ["sectionPaddingMode eq custom"]
+                        },
+                        {
+                            "id": "sectionBgImg",
+                            "type": "image-picker",
+                            "label": {
+                                "en": "Background image",
+                                "fi": "Taustakuva"
+                            },
+                            "adjustments": true
+                        },
+                        {
+                            "id": "sectionBgImgDimming",
+                            "label": {
+                                "en": "Image dimming",
+                                "fi": "Kuvan tummennus"
+                            },
+                            "type": "range",
+                            "min": 0,
+                            "max": 90,
+                            "step": 5,
+                            "default": "0",
+                            "unit": "%"
+                        },
+                        {
+                            "id": "sectionBgImgBlur",
+                            "label": {
+                                "en": "Image blur",
+                                "fi": "Kuvan sumentaminen"
+                            },
+                            "type": "range",
+                            "min": 0,
+                            "max": 10,
+                            "step": 1,
+                            "default": "0",
+                            "unit": " "
+                        }
+                    ]
+                }
+            ]
+        },
+        "presets": [
+            {
+                "settings": {
+                    "richtext": "<p>Pair video with text to focus on your chosen product, article or brand and tell your customers about it.<\/p>"
+                }
+            }
+        ]
+    }
+{% endschema %}

@@ -1,0 +1,109 @@
+{% comment %}
+	Renders a product carousel
+
+	Accepts:
+	- items: {Array} Products to show (Required)
+    - sectionHandle: {String} Section handle
+    - carouselFreemode: {Boolean} true | false
+	- carouselPagination: {String} Show pagination '' | hover | on
+	- carouselNavigation: {String} Show navigation '' | hover | on
+    - carouselStyle: {Int} Style of carousel 1 | 2
+	- productAmount: {Int} How many products is displayed
+	- productPerView: {Int} Products per one slide
+	- showProductName: {Boolean} Show product name
+    - showManufacturer: {Boolean} Show product manufacturer
+	- showPricing: {Boolean} Show product pricing
+    - showRating: {Boolean} true | false
+    - showNewBadge: {Boolean} Show new product badge
+    - showDiscountBadge: {Boolean} Show discount product badge
+    - showOutOfStockBadge: {Boolean} Show out of stock product badge
+    - showAddToCart: {Boolean} Show add to cart
+    - showStockBalance: {Boolean} Show stock balance
+
+	Usage:
+	{% render 'product-carousel', items: items, sectionHandle: '#finqu-section-product-template' %}
+{% endcomment %}
+
+{%- assign carouselProductPerView = productPerView | default: settings.productPerRow -%}
+{%- assign carouselSlidesPerView = carouselProductPerView -%}
+
+{%- if carouselPagination == nil -%}
+    {%- assign carouselPagination = 'hover' -%}
+{%- endif -%}
+
+{%- if carouselNavigation == nil -%}
+    {%- assign carouselNavigation = 'hover' -%}
+{%- endif -%}
+
+{%- if productAmount -%}
+    {%- assign carouselProductAmount = productAmount -%}
+{%- else -%}
+    {%- assign carouselProductAmount = carouselProductPerView | times: 3 -%}
+{%- endif -%}
+
+{%- assign carouselProducts = items | slice: 0, carouselProductAmount -%}
+
+{%- if sectionHandle and carouselFreemode == true -%}
+
+    {%- assign carouselSlidesPerView = 'auto' -%}
+
+    {%- capture sectionStyle -%}
+        {{ sectionHandle }} .swiper-slide {
+            --swiper-slide-width: 50;
+            --swiper-slide-width-sm: 25;
+            --swiper-slide-width-md: 33.333333;
+            --swiper-slide-width-lg: {{ 100 | divided_by: carouselProductPerView }};
+        }
+    {%- endcapture -%}
+
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- elsif carouselFreemode == true and sectionHandle == false -%}
+
+    {%- assign carouselFreemode = false -%}
+
+{%- endif -%}
+
+{%- capture carouselSlides -%}
+
+    {%- if carouselProducts.size > 0 -%}
+
+       {%- for product in carouselProducts -%}
+
+            {%- if product.settings.product -%}
+                {%- assign product = product.settings.product -%}
+            {%- endif -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {%- render 'product-card-grid', product: product, productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showAddToCart: showAddToCart, showStockBalance: showStockBalance -%}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {%- elsif request.design_mode -%}
+
+        {%- for num in (1..carouselProductAmount) -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {%- render 'product-card-grid', productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showAddToCart: showAddToCart, showStockBalance: showStockBalance -%}
+
+                </div>
+
+            </div>
+
+        {%- endfor -%}
+
+    {%- endif -%}
+
+{%- endcapture -%}
+
+{%- render 'swiper', slides: carouselSlides, pagination: carouselPagination, navigation: carouselNavigation, slidesPerView: carouselSlidesPerView, style: carouselStyle, paginationPosition: 'relative', evenHeightSlides: true, standalone: true, freemode: carouselFreemode -%}

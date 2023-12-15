@@ -1,0 +1,261 @@
+// Social media
+// --------------------------------------------------
+
+$social-medias: (
+	"facebook": (
+		"color": #ffffff,
+		"background-color": #007bb7
+	),
+	"flickr": (
+		"color": #ffffff,
+		"background-color": #ff0084
+	),
+	"youtube": (
+		"color": #ffffff,
+		"background-color": #c4302b
+	),
+	"pinterest": (
+		"color": #ffffff,
+		"background-color": #c8232c
+	),
+	"instagram": (
+		"color": #ffffff,
+		"background-color": #3f729b
+	),
+	"snapchat": (
+		"color": #ffffff,
+		"background-color": #fffc00
+	),
+	"linkedin": (
+		"color": #ffffff,
+		"background-color": #007bb6
+	),
+	"tumblr": (
+		"color": #ffffff,
+		"background-color": #2c4762
+	),
+	"x": (
+		"color": #ffffff,
+		"background-color": #000000
+	),
+	"vimeo": (
+		"color": #ffffff,
+		"background-color": #1ab7ea
+	),
+	"soundcloud": (
+		"color": #ffffff,
+		"background-color": #ff8800
+	),
+	"whatsapp": (
+		"color": #ffffff,
+		"background-color": #3cbc4a
+	),
+	"reddit": (
+		"color": #ffffff,
+		"background-color": #ff4500
+	),
+	"tiktok": (
+		"color": #ffffff,
+		"background-color": #000000
+	),
+	"ravelry": (
+		"color": #ffffff,
+		"background-color": #ee6e62
+	),
+	"email": (
+		"color": #ffffff,
+		"background-color": #707070
+	),
+);
+
+$social-media-sizes: (
+	"xs": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 13px
+	),
+	"sm": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 17px
+	),
+	"md": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 22px
+	),
+	"lg": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 27px
+	),
+	"xl": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 31px
+	),
+	"xxl": (
+		"width": 2.5em,
+		"height": 2.5em,
+		"font-size": 36px
+	),
+	"inherit": (
+		"width": inherit,
+		"height": inherit,
+		"font-size": inherit
+	),
+);
+
+%style-default {
+	background-color: var(--social-media-btn-background-color) !important;
+	color: var(--social-media-btn-color) !important;
+	border-radius: 50%;
+
+	.svg-icon {
+		color: inherit !important;
+	}
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, var(--social-media-btn-background-color), #ffffff 5%) !important;
+	}
+}
+
+%style-text {
+	background-color: var(--social-media-btn-background-color) !important;
+	border: 1px solid rgba(0,0,0,0.1);
+	border-radius: 6px;
+	color: var(--social-media-btn-color) !important;
+	width: auto;
+	padding: 0 4px;
+
+	.svg-icon {
+		vertical-align: baseline;
+		color: inherit !important;
+	}
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, var(--social-media-btn-background-color), #ffffff 5%) !important;
+	}
+}
+
+%style-circle {
+	background-color: transparent;
+	border: 2px solid var(--social-media-btn-background-color) !important;
+	border-radius: 50%;
+	color: var(--social-media-btn-background-color) !important;
+	transition: color .15s linear, background-color .15s linear;
+
+	.svg-icon {
+		vertical-align: baseline;
+		color: inherit !important;
+	}
+
+	&:hover,
+	&:focus {
+		color: var(--social-media-btn-color) !important;
+		background-color: var(--social-media-btn-background-color) !important;
+	}
+}
+
+%style-box {
+	background-color: var(--social-media-btn-background-color) !important;
+	border: 1px solid rgba(0,0,0,0.1);
+	border-radius: 6px;
+	color: var(--social-media-btn-color) !important;
+
+	.svg-icon {
+		color: inherit !important;
+	}
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, var(--social-media-btn-background-color), #ffffff 5%) !important;
+	}
+}
+
+%style-bw {
+	background-color: #3b3b3b !important;
+	color: #ffffff !important;
+	border-radius: 50%;
+
+	.svg-icon {
+		color: inherit !important;
+	}
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, #3b3b3b, #ffffff 5%) !important;
+	}
+}
+
+%style-minimal {
+	border-radius: 50%;
+	color: var(--style-icon-color);
+
+	.svg-icon {
+		color: inherit !important;
+	}
+}
+
+.social-media-btn {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	text-align: center;
+
+	& + .social-media-btn {
+		margin-left: 4px;
+	}
+
+	&:last-child {
+		margin-right: auto;
+	}
+
+	@each $name, $data in $social-medias {
+
+		&.social-media-btn-#{$name} {
+			--social-media-btn-color: #{map-get($data, 'color')};
+			--social-media-btn-background-color: #{map-get($data, 'background-color')};
+
+			&.social-media-btn-style-default {
+				@extend %style-default;
+			}
+
+			&.social-media-btn-style-text {
+				@extend %style-text;
+			}
+
+			&.social-media-btn-style-circle {
+				@extend %style-circle;
+			}
+
+			&.social-media-btn-style-box {
+				@extend %style-box;
+			}
+
+			&.social-media-btn-style-bw {
+				@extend %style-bw;
+			}
+
+			&.social-media-btn-style-v {
+				@extend %style-minimal;
+			}
+		}
+    }
+
+	@each $name, $data in $social-media-sizes {
+		
+		&.social-media-btn-size-#{$name} {
+			width: map-get($data, 'width');
+			height: map-get($data, 'height');
+			@if map-get($data, 'font-size') != 'inherit' {
+				@include font-size(map-get($data, 'font-size'));
+			} @else {
+				font-size: inherit;
+			}
+		}
+	}
+}

@@ -1,0 +1,154 @@
+{%- assign searchTerm = search.search_term | rstrip -%}
+{%- assign activeSortOption = search.sort_by | default: search.default_sort_by -%}
+{%- assign animatedItemsCount = settings.productPerRow | times: 2 -%}
+
+{%- if search.results.size > 0 -%}
+    {%- assign itemCount = search.results.size -%}
+{%- elsif request.design_mode -%}
+    {%- assign itemCount = settings.productPerRow | times: 4 -%}
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+	{%- paginate search.results by 100 -%}
+
+		<div class="row mb-g position-relative z-1" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+            <div class="col-auto">
+
+                <span class="text-muted">
+                    {%- if itemCount == 1 -%}
+                        {{- 'general.product_count' | t: amount: itemCount -}}
+                    {%- else -%}
+                        {{- 'general.product_plural_count' | t: amount: itemCount -}}
+                    {%- endif -%}
+                </span>
+
+            </div>
+
+            <div class="col text-end">
+
+                <div class="dropdown">
+
+                    <button type="button" class="btn btn-text text-muted" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+
+                        <span class="me-1">
+
+                            {% for option in search.sort_options %}
+
+                                {% if option == activeSortOption %}
+                                    {{ option | prepend: 'filters.sort-by.' | t }}
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </span>
+
+                        {%- render 'icon', icon: 'angle-down' -%}
+
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+
+                        {% for option in search.sort_options %}
+
+                            <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
+                                {{ option | prepend: 'filters.sort-by.' | t }}
+                            </button>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+	    <div class="row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ settings.productPerRow }}">
+
+            {% if search.results.size > 0 %}
+
+                {% for product in search.results %}
+
+                    <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+
+                        {%- render 'product-card-grid', product: product -%}
+
+                    </div>
+
+                {% endfor %}
+
+            {% elsif request.design_mode %}
+
+                {% for num in (1..itemCount) %}
+
+                    <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+
+                        {%- render 'product-card-grid' -%}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+	    <div class="row" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+	        <div class="col">
+
+	            {% render 'pagination', paginate: paginate %}
+
+	        </div>
+
+	    </div>
+
+        {%- if settings.schemaItemList -%}
+            {% render 'schemas/itemlist', items: search.results, paginate: paginate %}
+        {%- endif -%}
+
+	{%- endpaginate -%}
+
+{%- endcapture -%}
+
+{%- if itemCount > 0 -%}
+
+	{% if searchTerm.size > 0 %}
+
+		{%- capture sectionTitle -%}{{ 'general.search_results_for' | t }} "{{ searchTerm }}"{%- endcapture -%}
+
+		{% assign sectionTitle = sectionTitle %}
+		{% assign sectionSubtitle = '' %}
+
+	{% else %}
+
+		{% assign sectionTitle = 'general.product_catalog' | t %}
+
+	{% endif %}
+
+{% else %}
+
+	{%- capture sectionTitle -%}{{ 'general.search_results_for' | t }} "{{ searchTerm }}"{%- endcapture -%}
+
+	{% assign sectionTitle = sectionTitle %}
+	{% assign sectionSubtitle = 'general.search_no_results' | t %}
+	{% assign sectionContent = false %}
+
+{%- endif -%}
+
+{% render 'section', section: section, sectionTitle: sectionTitle, sectionTitleTag: 'h1', sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Search",
+        "fi": "Haku"
+    },
+    "tag": "section",
+    "class": "section section-search",
+    "is_creatable": false
+}
+{% endschema %}

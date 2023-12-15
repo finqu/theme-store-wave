@@ -1,0 +1,568 @@
+{% comment %}
+    Renders a section
+
+    Accepts:
+    - section: {Object} Section Liquid object
+    - sectionContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionTitle: {String}
+    - sectionTitleClass: {String}
+    - sectionTitleTag {String}
+    - sectionSubtitle: {String}
+    - sectionSubtitleTag {String}
+    - sectionOverline: {String}
+    - sectionOverlineTag {String}
+    - sectionHeight {String}
+    - sectionMinHeight {String}
+    - sectionPaddingTop {String}
+    - sectionPaddingBottom {String}
+    - sectionInnerPadding {String}
+    - sectionDescription: {String}
+    - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
+    - sectionHeader {Boolean}
+    - sectionHeaderClass {String}
+    - sectionHeaderContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionHeaderSecondaryAction: {String}
+    - sectionHeaderAnimation: {Boolean}
+    - sectionHeaderGapScale: {Float}
+    - sectionTabs {String}
+    - sectionContent: {String}
+    - sectionContentTextAlign: {String} 'start', 'center', 'end'
+    - sectionCustomContent: {String}
+    - sectionBgImg: {String}
+    - sectionBgImgPos: {String}
+    - sectionBgImgDimming: {String}
+    - sectionBgImgBlur: {String}
+    - sectionColorScheme: {String}
+    - sectionOverlay: {Boolean}
+    - sectionContentClass {String}
+    - sectionContentContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionContentAnimation: {Boolean}
+    - sectionTextAlign: {String} 'start', 'center', 'end'
+    - sectionAnimation {String}
+    - sectionAnimationRepeat {Boolean}
+    - sectionAction {String}
+    - sectionHighlightItems {Boolean}
+
+    Usage:
+    {% render 'section', section: section %}
+{% endcomment %}
+
+{%- assign section = section -%}
+{%- assign sectionContainer = sectionContainer | default: 'fixed' -%}
+{%- assign sectionHeight = sectionHeight | default: section.settings.sectionHeight -%}
+{%- assign sectionInnerGap = sectionInnerGap | default: section.settings.sectionInnerGap | default: settings.sectionInnerGap -%}
+{%- assign sectionGutterWidth = section.settings.sectionGutterWidth -%}
+{%- assign sectionContent = sectionContent | default: nil -%}
+{%- assign sectionCustomContent = sectionCustomContent | default: nil -%}
+{%- assign sectionContentWidth = section.settings.sectionContentWidth | default: '12' -%}
+{%- assign sectionContentAlign = section.settings.sectionContentAlign | default: 'center' -%}
+{%- assign sectionContentContainer = sectionContentContainer | default: sectionContainer -%}
+{%- assign sectionContentOverflow = sectionContentOverflow | default: section.settings.sectionContentOverflow | default: nil -%}
+{%- assign sectionBgImgPos = section.settings.sectionBgImgPos | default: settings.sectionBgImgPos -%}
+{%- assign sectionBgImgDimming = section.settings.sectionBgImgDimming | default: '0' -%}
+{%- assign sectionBgImgBlur = section.settings.sectionBgImgBlur | default: '0' -%}
+{%- assign sectionBgImg = section.settings.sectionBgImg -%}
+{%- assign sectionColorScheme = sectionColorScheme | default: section.settings.sectionColorScheme -%}
+{%- assign sectionTitle = sectionTitle | default: section.settings.sectionTitle -%}
+{%- assign sectionTitleClass = sectionTitleClass | default: section.settings.sectionTitleClass -%}
+{%- assign sectionTitleTag = sectionTitleTag | default: section.settings.sectionTitleTag -%}
+{%- assign sectionSubtitle = sectionSubtitle | default: section.settings.sectionSubtitle -%}
+{%- assign sectionSubtitleTag = sectionSubtitleTag | default: section.settings.sectionSubtitleTag -%}
+{%- assign sectionOverline = sectionOverline | default: section.settings.sectionOverline -%}
+{%- assign sectionOverlineTag = sectionOverlineTag | default: section.settings.sectionOverlineTag -%}
+{%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
+{%- assign sectionBreadcrumbs = sectionBreadcrumbs | default: nil -%}
+{%- assign sectionHeaderContainer = sectionHeaderContainer | default: sectionContainer -%}
+{%- assign sectionHeaderSecondaryAction = sectionHeaderSecondaryAction | default: nil -%}
+{%- assign sectionHeaderGapScale = sectionHeaderGapScale | default: settings.sectionHeaderGapScale -%}
+{%- assign sectionOverlay = sectionOverlay | default: section.settings.sectionOverlay | default: false -%}
+{%- assign sectionOverlayPadding = sectionOverlayPadding | default: section.settings.sectionOverlayPadding | default: settings.sectionOverlayPadding -%}
+{%- assign sectionClasses = sectionClasses -%}
+
+{%- if sectionHandle == nil and section.id -%}
+    {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+{%- endif -%}
+
+{%- if sectionAnimation == false -%}
+
+    {%- assign sectionHeaderAnimation = false -%}
+    {%- assign sectionContentAnimation = false -%}
+    {%- assign sectionAnimationRepeat = false -%}
+
+{%- else -%}
+
+    {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}
+    {%- assign sectionAnimationRepeat = sectionAnimationRepeat | default: false -%}
+
+    {%- unless sectionHeaderAnimation == false -%}
+        {%- assign sectionHeaderAnimation = sectionHeaderAnimation | default: sectionAnimation -%}
+    {%- endunless -%}
+
+    {%- unless sectionContentAnimation == false -%}
+        {%- assign sectionContentAnimation = sectionContentAnimation | default: sectionAnimation -%}
+    {%- endunless -%}
+    
+{%- endif -%}
+
+{%- unless sectionHeader == false -%}
+    {%- assign sectionHeader = true -%}
+{%- endunless -%}
+
+{%- if sectionTextAlign == nil -%}
+
+    {%- if section.settings.sectionTextAlign != 'nil' -%}
+        {%- assign sectionTextAlign = section.settings.sectionTextAlign -%}
+    {%- elsif section.id != 'footer' and section.id != 'header' -%}
+        {%- assign sectionTextAlign = settings.sectionTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionHeaderTextAlign == nil -%}
+    
+    {%- if section.settings.sectionHeaderTextAlign and section.settings.sectionHeaderTextAlign != 'nil' -%}
+        {%- assign sectionHeaderTextAlign = section.settings.sectionHeaderTextAlign -%}
+    {%- elsif section.id != 'footer' and section.id != 'header' -%}
+        {%- assign sectionHeaderTextAlign = sectionTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionContentTextAlign == nil -%}
+
+    {%- if section.settings.sectionContentTextAlign and section.settings.sectionContentTextAlign != 'nil' -%}
+        {%- assign sectionContentTextAlign = section.settings.sectionContentTextAlign -%}
+    {%- elsif section.id != 'footer' and section.id != 'header' -%}
+        {%- assign sectionContentTextAlign = sectionTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionHighlightItems == nil -%}
+
+    {%- if section.settings.sectionHighlightItems != 'nil' -%}
+        {%- assign sectionHighlightItems = section.settings.sectionHighlightItems -%}
+    {%- elsif section.id != 'footer' and section.id != 'header' -%}
+        {%- assign sectionHighlightItems = settings.sectionHighlightItems -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionPaddingTop == nil -%}
+
+    {%- if section.settings.sectionPaddingTop != nil and section.settings.sectionPaddingMode == 'custom' -%}
+        {%- assign sectionPaddingTop = section.settings.sectionPaddingTop | append: 'rem' -%}
+    {%- elsif settings.sectionPaddingTop != nil -%}
+        {%- assign sectionPaddingTop = settings.sectionPaddingTop -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionPaddingBottom == nil -%}
+
+    {%- if section.settings.sectionPaddingBottom != nil and section.settings.sectionPaddingMode == 'custom' -%}
+        {%- assign sectionPaddingBottom = section.settings.sectionPaddingBottom | append: 'rem' -%}
+    {%- elsif settings.sectionPaddingBottom != nil -%}
+        {%- assign sectionPaddingBottom = settings.sectionPaddingBottom -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionOverlay -%}
+    {%- assign sectionClasses = sectionClasses | append: ' section-overlay' -%}
+{%- endif -%}
+
+{%- if sectionHighlightItems -%}
+    {%- assign sectionClasses = sectionClasses | append: ' section-highlight-items' -%}
+{%- endif -%}
+
+{%- if sectionHandle -%}
+
+    {%- capture sectionStyle -%}
+        {{ sectionHandle }} {
+
+            --section-padding-top: {{ sectionPaddingTop }};
+            --section-padding-bottom: {{ sectionPaddingBottom }};
+            --section-overlay-padding: {{ sectionOverlayPadding }};
+            --section-inner-gap: {{ sectionInnerGap }};
+            --section-inner-gap-mobile: {{ sectionInnerGap | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
+            --section-text-align: {{ sectionTextAlign }};
+            --section-header-gap-scale: {{ sectionHeaderGapScale }};
+            --section-header-text-align: {{ sectionHeaderTextAlign }};
+            --section-content-text-align: {{ sectionContentTextAlign }};
+            --section-bg-img-pos: {{ sectionBgImgPos | replace: '-', ' ' }};
+
+            {%- if sectionHeight -%}
+                --section-height: {{ sectionHeight }};
+            {%- endif -%}
+
+            {%- if sectionMinHeight -%}
+                --section-min-height: {{ sectionMinHeight }};
+            {%- endif -%}
+
+            {%- if sectionContentOverflow -%}
+                --section-content-overflow: {{ sectionContentOverflow }};
+            {%- endif -%}
+
+            {%- if sectionGutterWidth -%}
+                @media (min-width: {{ settings.styleGridBreakpointMd }}) {
+                    --style-grid-gutter-width: {{ sectionGutterWidth }};
+                }
+            {%- endif -%}
+
+            {%- if sectionHighlightItems -%}
+                --section-highlight-item-padding: var(--style-grid-gutter-width);
+            {%- endif %}
+
+            {%- if sectionColorScheme -%}
+
+                {%- assign style = settings.styles[sectionColorScheme] -%}
+
+                {%- if style -%}
+
+                    {%- assign styleformBgColorBrightness = style.form_bg_color | color_brightness -%}
+                    {%- assign styleformBorderColorBrightness = style.form_border_color | color_brightness -%}
+                    {%- assign styleTextColorBrightness = style.text_color | color_brightness -%}
+                    {%- assign styleTableBgColorBrightness = style.table_bg_color | color_brightness -%}
+                    {%- assign styleBgColorBrightness = style.bg_color | color_brightness -%}
+                    {%- assign styleBorderColorBrightness = style.border_color | color_brightness -%}
+                    {%- assign styleButtonBgColorColorBrightness = style.btn_bg_color | color_brightness -%}
+                    {%- assign styleAccentColorBrightness = style.accent_color | color_brightness -%}
+
+                    {%- for data in style -%}
+                        {%- assign key = data[0] | handle | replace: '_', '-' -%}
+                        {%- assign value = data[1] -%}
+                        {%- if value -%}
+                            --style-{{ key }}: {{ value }};
+                        {%- endif -%}
+                    {%- endfor -%}
+
+                    {%- if styleformBgColorBrightness > 190 -%}
+                        --style-form-bg-hover-color: {{ style.form_bg_color | color_darken: 5 }};
+                        --style-form-bg-disabled-color: {{ style.form_bg_color | color_darken: 10 }};
+                    {%- else -%}
+                        --style-form-bg-hover-color: {{ style.form_bg_color | color_lighten: 5 }};
+                        --style-form-bg-disabled-color: {{ style.form_bg_color | color_lighten: 10 }};
+                    {%- endif -%}
+
+                    {%- if styleformBorderColorBrightness > 190 -%}
+                        --style-form-border-focus-color: {{ style.form_border_color | color_darken: 10 }};
+                        --style-form-border-disabled-color: {{ style.form_border_color | color_darken: 10 }};
+                    {%- else -%}
+                        --style-form-border-focus-color: {{ style.form_border_color | color_lighten: 10 }};
+                        --style-form-border-disabled-color: {{ style.form_border_color | color_lighten: 10 }};
+                    {%- endif -%}
+
+                    {%- if styleTextColorBrightness > 190 -%}
+                        --style-text-accent-color: {{ style.text_color | color_darken: 10 }};
+                        --style-text-muted-color: {{ style.text_color | color_darken: 30 }};
+                    {%- else -%}
+                        --style-text-accent-color: {{ style.text_color | color_lighten: 10 }};
+                        --style-text-muted-color: {{ style.text_color | color_lighten: 30 }};
+                    {%- endif -%}
+
+                    {%- if styleTableBgColorBrightness > 190 -%}
+                        --style-table-bg-hover-color: {{ style.table_bg_color | color_darken: 4 }};
+                    {%- else -%}
+                        --style-table-bg-hover-color: {{ style.table_bg_color | color_lighten: 4 }};
+                    {%- endif -%}
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --pswp-bg-color: #000;
+                        --swiper-btn-bg-color: {{ style.bg_color }};
+                        --swiper-btn-color: {{ style.icon_color }};
+                        --swiper-btn-border-color: {{ style.bg_color | color_darken: 30 }};
+                        --swiper-pagination-bullet-color: {{ style.bg_color | color_darken: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ style.accent_color }};
+                        --swiper-pagination-bullet-border-color: {{ style.bg_color | color_darken: 70 }};
+                        --style-bg-hover-color: {{ style.bg_color | color_darken: 5 }};
+                        --style-bg-accent-color: {{ style.bg_color | color_darken: 10 }};
+                        --style-bg-disabled-color: {{ style.bg_color | color_darken: 30 }};
+                    {%- else -%}
+                        --pswp-bg-color: #fff;
+                        --swiper-btn-bg-color: {{ style.bg_color }};
+                        --swiper-btn-color: {{ style.icon_color }};
+                        --swiper-btn-border-color: {{ style.bg_color | color_lighten: 30 }};
+                        --swiper-pagination-bullet-color: {{ style.bg_color | color_lighten: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ style.accent_color }};
+                        --swiper-pagination-bullet-border-color: {{ style.bg_color | color_lighten: 70 }};
+                        --style-bg-hover-color: {{ style.bg_color | color_lighten: 5 }};
+                        --style-bg-accent-color: {{ style.bg_color | color_lighten: 10 }};
+                        --style-bg-disabled-color: {{ style.bg_color | color_lighten: 30 }};
+                    {%- endif -%}
+
+                    {%- if styleBorderColorBrightness > 190 -%}
+                        --style-border-accent-color: {{ style.border_color | color_darken: 50 }};
+                    {%- else -%}
+                        --style-border-accent-color: {{ style.border_color | color_lighten: 50 }};
+                    {%- endif -%}
+
+                    {%- if styleButtonBgColorColorBrightness > 190 -%}
+                        --style-btn-bg-active-color: {{ style.btn_bg_color | color_darken: 10 }};
+                        --style-btn-bg-hover-color: {{ style.btn_bg_color | color_darken: 8 }};
+                        --style-btn-border-hover-color: {{ style.btn_bg_color | color_darken: 8 }};
+                        --style-btn-border-active-color: {{ style.btn_bg_color | color_darken: 13 }};
+                    {%- else -%}
+                        --style-btn-bg-active-color: {{ style.btn_bg_color | color_lighten: 10 }};
+                        --style-btn-bg-hover-color: {{ style.style_btn_bg_color | color_lighten: 8 }};
+                        --style-btn-border-hover-color: {{ style.btn_bg_color | color_lighten: 8 }};
+                        --style-btn-border-active-color: {{ style.btn_bg_color | color_lighten: 13 }};
+                    {%- endif -%}
+
+                    {%- if styleAccentColorBrightness > 190 -%}
+                        --style-accent-text-color: #000;
+                    {%- else -%}
+                        --style-accent-text-color: #fff;
+                    {%- endif -%}
+
+                    --style-bg-light-color: {{ style.bg_color | color_lighten: 35 }};
+                    --style-border-focus-color: {{ style.border_color | color_lighten: 25 }};
+                    --style-btn-border-color: {{ style.btn_bg_color }};
+                    --style-form-placeholder-color: {{ style.form_text_color | color_lighten: 15 }};
+                    --style-form-bg-readonly-color: {{ style.form_bg_color | color_lighten: 15 }};
+                    --style-text-darker-color: {{ style.text_color | color_darken: 5 }};
+                    --style-accent-faded-color: {{ style.accent_color | color_lighten: 30 }};
+                    
+                    --style-loader-color: {{ style.icon_color }};
+                    --style-loader-faded-color: {{ style.icon_color | color_modify: 'alpha', 0.1 }};
+
+                    --bs-body-bg: {{ style.bg_color }};
+                    --bs-body-bg-rgb: {{ style.bg_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-color: {{ style.text_color }};
+                    --bs-body-color-rgb: {{ style.text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-secondary-bg: {{ style.bg_color | color_darken: 30 }};
+                    --bs-secondary-bg-rgb: {{ style.bg_color | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-secondary-color: {{ style.text_color | color_modify: 'alpha', 0.75 }};
+                    --bs-secondary-color-rgb: {{ style.text_color | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+
+                    --bs-tertiary-bg: {{ style.bg_color | color_darken: 10 }};
+                    --bs-tertiary-bg-rgb: {{ style.bg_color | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-tertiary-color: {{ style.text_color | color_modify: 'alpha', 0.5 }};
+                    --bs-tertiary-color-rgb: {{ style.text_color | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+
+                    --bs-emphasis-color: {{ style.accent_color }};
+                    --bs-emphasis-color-rgb: {{ style.accent_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-link-color: {{ style.link_color }};
+                    --bs-link-color-rgb: {{ style.link_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-hover-color: {{ style.link_color }};
+                    --bs-link-hover-color-rgb: {{ style.link_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-border-color: var(--style-border-color);
+                    --bs-heading-color: var(--style-heading-color);
+
+                {%- else -%}
+
+                    {%- if sectionColorScheme == 'light' -%}
+
+                        {%- assign bgColor = '#ffffff' -%}
+                        {%- assign contentColor = '#000000' -%}
+
+                    {%- elsif sectionColorScheme == 'dark' -%}
+
+                        {%- assign bgColor = '#000000' -%}
+                        {%- assign contentColor = '#ffffff' -%}
+
+                    {%- elsif sectionColorScheme == 'accent' -%}
+
+                        {%- assign bgColor = settings.style_accent_color -%}
+                        {%- assign bgColorBrightness = bgColor | color_brightness -%}
+
+                        {%- if bgColorBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' -%}
+                        {%- endif -%}
+
+                    {%- else -%}
+
+                        {%- assign bgColor = '#ffffff' -%}
+                        {%- assign contentColor = '#000000' -%}
+
+                    {%- endif -%}
+
+                    {%- assign styleformBgColorBrightness = bgColor | color_brightness -%}
+                    {%- assign styleformBorderColorBrightness = contentColor | color_brightness -%}
+                    {%- assign styleTextColorBrightness = contentColor | color_brightness -%}
+                    {%- assign styleTableBgColorBrightness = bgColor | color_brightness -%}
+                    {%- assign styleBgColorBrightness = bgColor | color_brightness -%}
+                    {%- assign styleBorderColorBrightness = contentColor | color_brightness -%}
+                    {%- assign styleButtonBgColorColorBrightness = contentColor | color_brightness -%}
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --style-secondary-bg-color: {{ bgColor | color_darken: 5 }};
+                    {%- else -%}
+                        --style-secondary-bg-color: {{ bgColor | color_lighten: 5 }};
+                    {%- endif -%}
+
+                    --style-bg-color: {{ bgColor }};
+                    --style-border-color: {{ contentColor }};
+                    --style-heading-color: {{ contentColor }};
+                    --style-subheading-color: {{ contentColor }};
+                    --style-text-color: {{ contentColor }};
+                    --style-link-color: {{ contentColor }};
+                    --style-accent-color: {{ contentColor }};
+                    --style-icon-color: {{ contentColor }};
+                    --style-btn-bg-color: {{ contentColor }};
+                    --style-btn-text-color: {{ bgColor }};
+                    --style-product-title-color: {{ contentColor }};
+                    --style-price-color: {{ contentColor }};
+                    --style-sale-price-color: {{ contentColor }};
+                    --style-badge-bg-color: {{ contentColor }};
+                    --style-badge-text-color: {{ bgColor }};
+                    --style-new-badge-bg-color: {{ contentColor }};
+                    --style-new-badge-text-color: {{ contentColor }};
+                    --style-discount-badge-bg-color: {{ contentColor }};
+                    --style-discount-badge-text-color: {{ contentColor }};
+                    --style-review-icon-color: {{ contentColor }};
+                    --style-table-bg-color: {{ bgColor }};
+                    --style-table-text-color: {{ contentColor }};
+                    --style-table-border-color: {{ contentColor }};
+
+                    {%- if styleformBgColorBrightness > 190 -%}
+                        --style-form-bg-hover-color: {{ bgColor | color_darken: 5 }};
+                        --style-form-bg-disabled-color: {{ bgColor | color_darken: 10 }};
+                    {%- else -%}
+                        --style-form-bg-hover-color: {{ bgColor | color_lighten: 5 }};
+                        --style-form-bg-disabled-color: {{ bgColor | color_lighten: 10 }};
+                    {%- endif -%}
+
+                    {%- if styleformBorderColorBrightness > 190 -%}
+                        --style-form-border-focus-color: {{ contentColor | color_darken: 10 }};
+                        --style-form-border-disabled-color: {{ contentColor | color_darken: 10 }};
+                    {%- else -%}
+                        --style-form-border-focus-color: {{ contentColor | color_lighten: 10 }};
+                        --style-form-border-disabled-color: {{ contentColor | color_lighten: 10 }};
+                    {%- endif -%}
+
+                    {%- if styleTextColorBrightness > 190 -%}
+                        --style-text-accent-color: {{ contentColor | color_darken: 10 }};
+                        --style-text-muted-color: {{ contentColor | color_darken: 30 }};
+                    {%- else -%}
+                        --style-text-accent-color: {{ contentColor | color_lighten: 10 }};
+                        --style-text-muted-color: {{ contentColor | color_lighten: 30 }};
+                    {%- endif -%}
+
+                    {%- if styleTableBgColorBrightness > 190 -%}
+                        --style-table-bg-hover-color: {{ bgColor | color_darken: 4 }};
+                    {%- else -%}
+                        --style-table-bg-hover-color: {{ bgColor | color_lighten: 4 }};
+                    {%- endif -%}
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --pswp-bg-color: {{ contentColor }};
+                        --swiper-btn-bg-color: {{ bgColor }};
+                        --swiper-btn-color: {{ contentColor }};
+                        --swiper-btn-border-color: {{ bgColor | color_darken: 30 }};
+                        --swiper-pagination-bullet-color: {{ bgColor | color_darken: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ contentColor }};
+                        --swiper-pagination-bullet-border-color: {{ bgColor | color_darken: 70 }};
+                        --style-bg-hover-color: {{ bgColor | color_darken: 5 }};
+                        --style-bg-accent-color: {{ bgColor | color_darken: 10 }};
+                        --style-bg-disabled-color: {{ bgColorbgColor | color_darken: 30 }};
+                    {%- else -%}
+                        --pswp-bg-color: {{ contentColor }};
+                        --swiper-btn-bg-color: {{ bgColor }};
+                        --swiper-btn-color: {{ contentColor }};
+                        --swiper-btn-border-color: {{ bgColor | color_lighten: 30 }};
+                        --swiper-pagination-bullet-color: {{ bgColor | color_lighten: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ contentColor }};
+                        --swiper-pagination-bullet-border-color: {{ bgColor | color_lighten: 70 }};
+                        --style-bg-hover-color: {{ bgColor | color_lighten: 5 }};
+                        --style-bg-accent-color: {{ bgColor | color_lighten: 10 }};
+                        --style-bg-disabled-color: {{ bgColor | color_lighten: 30 }};
+                    {%- endif -%}
+
+                    {%- if styleBorderColorBrightness > 190 -%}
+                        --style-border-accent-color: {{ contentColor | color_darken: 50 }};
+                    {%- else -%}
+                        --style-border-accent-color: {{ contentColor | color_lighten: 50 }};
+                    {%- endif -%}
+
+                    {%- if styleButtonBgColorColorBrightness > 190 -%}
+                        --style-btn-bg-active-color: {{ contentColor | color_darken: 10 }};
+                        --style-btn-bg-hover-color: {{ contentColor | color_darken: 8 }};
+                        --style-btn-border-hover-color: {{ contentColor | color_darken: 8 }};
+                        --style-btn-border-active-color: {{ contentColor | color_darken: 13 }};
+                    {%- else -%}
+                        --style-btn-bg-active-color: {{ contentColor | color_lighten: 10 }};
+                        --style-btn-bg-hover-color: {{ contentColor | color_lighten: 8 }};
+                        --style-btn-border-hover-color: {{ contentColor | color_lighten: 8 }};
+                        --style-btn-border-active-color: {{ contentColor | color_lighten: 13 }};
+                    {%- endif -%}
+
+                    --style-accent-text-color: {{ contentColor }};
+                    --style-bg-light-color: {{ bgColor | color_lighten: 35 }};
+                    --style-border-focus-color: {{ contentColor | color_lighten: 25 }};
+                    --style-btn-border-color: {{ contentColor }};
+                    --style-form-placeholder-color: {{ contentColor | color_lighten: 15 }};
+                    --style-form-bg-readonly-color: {{ bgColor | color_lighten: 15 }};
+                    --style-text-darker-color: {{ contentColor | color_darken: 5 }};
+                    --style-accent-faded-color: {{ bgColor | color_lighten: 30 }};
+                    
+                    --style-loader-color: {{ contentColor }};
+                    --style-loader-faded-color: {{ contentColor | color_modify: 'alpha', 0.1 }};
+
+                    --bs-body-bg: {{ bgColor }};
+                    --bs-body-bg-rgb: {{ bgColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-color: {{ contentColor }};
+                    --bs-body-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-secondary-bg: {{ bgColor | color_darken: 30 }};
+                    --bs-secondary-bg-rgb: {{ bgColor | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-secondary-color: {{ contentColor | color_modify: 'alpha', 0.75 }};
+                    --bs-secondary-color-rgb: {{ contentColor | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+
+                    --bs-tertiary-bg: {{ bgColor | color_darken: 10 }};
+                    --bs-tertiary-bg-rgb: {{ bgColor | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-tertiary-color: {{ contentColor | color_modify: 'alpha', 0.5 }};
+                    --bs-tertiary-color-rgb: {{ contentColor | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+
+                    --bs-emphasis-color: {{ bgColor }};
+                    --bs-emphasis-color-rgb: {{ bgColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-link-color: {{ contentColor }};
+                    --bs-link-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-hover-color: {{ contentColor }};
+                    --bs-link-hover-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+
+                    --bs-border-color: var(--style-border-color);
+                    --bs-heading-color: var(--style-heading-color);
+                {%- endif -%}
+
+            {%- endif -%}
+        }
+    {%- endcapture -%}
+
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+<div class="section-inner{% if sectionClasses %} {{ sectionClasses | strip }}{% endif %}">
+
+    {%- if sectionHeader -%}
+
+        {%- if sectionTitle or sectionSubtitle or sectionOverline or sectionDescription or sectionBreadcrumbs or sectionAction -%}
+
+            {%- render 'section-header', section: section, sectionTitle: sectionTitle, sectionTitleClass: sectionTitleClass, sectionTitleTag: sectionTitleTag, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionSubtitle: sectionSubtitle, sectionSubtitleTag: sectionSubtitleTag, sectionOverline: sectionOverline, sectionOverlineTag: sectionOverlineTag, sectionDescription: sectionDescription, sectionBreadcrumbs: sectionBreadcrumbs, sectionHeaderClass: sectionHeaderClass, sectionHeaderContainer: sectionHeaderContainer, sectionAnimation: sectionHeaderAnimation, sectionAnimationRepeat: sectionAnimationRepeat, sectionHandle: sectionHandle, sectionHeaderAction: sectionAction, sectionHeaderTextAlign: sectionHeaderTextAlign -%}
+
+        {%- endif -%}
+
+    {%- endif -%}
+
+    {%- if sectionContent -%}
+
+        {%- render 'section-content', section: section, sectionTitle: sectionTitle, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionSubtitle: sectionSubtitle, sectionOverline: sectionOverline, sectionDescription: sectionDescription, sectionBreadcrumbs: sectionBreadcrumbs, sectionContent: sectionContent, sectionContentWidth: sectionContentWidth, sectionContentAlign: sectionContentAlign, sectionContentClass: sectionContentClass, sectionContentContainer: sectionContentContainer, sectionHandle: sectionHandle, sectionAnimation: sectionContentAnimation, sectionAnimationRepeat: sectionAnimationRepeat, sectionTabs: sectionTabs, sectionHeaderTextAlign: sectionHeaderTextAlign, sectionHeaderAnimation: sectionHeaderAnimation, sectionAction: sectionAction -%}
+
+    {%- endif -%}
+
+    {%- if sectionCustomContent -%}
+
+        {{- sectionCustomContent -}}
+
+    {%- endif -%}
+
+    {%- render 'section-bg'sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur -%}
+
+</div>

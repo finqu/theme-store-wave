@@ -1,0 +1,464 @@
+{% comment %}
+    Renders a product card as grid item
+
+    Accepts:
+    - product: {Object} Product Liquid object (required)
+    - url {String} Product url
+    - wishlist: {String} 'toggle' | 'remove' | 'add'
+    - productPerRow {Number} Number of product card grid siblings
+    - showProductName: {Boolean} true | false
+    - showManufacturer: {Boolean} true | false
+    - showPromotion: {Boolean} true | false
+    - showPricing: {Boolean} true | false
+    - showRating: {Boolean} true | false
+    - showNewBadge: {Boolean} true | false
+    - showPromotionBadge: {Boolean} true | false
+    - showDiscountBadge: {Boolean} true | false
+    - showOutOfStockBadge: {Boolean} true | false
+    - showAddToCart: {Boolean} true | false
+
+    Usage:
+    {% render 'product-card-grid', product: product %}
+{% endcomment %}
+
+{%- if wishlist != false -%}
+    {%- assign wishlist = 'toggle' -%}
+{%- endif -%}
+
+{%- unless productPerRow -%}
+    {%- assign productPerRow = settings.productPerRow -%}
+{%- endunless -%}
+
+{%- if showProductName != false -%}
+    {%- assign showProductName = showProductName | default: settings.productShowName -%}
+{%- endif -%}
+
+{%- if showManufacturer != false -%}
+    {%- assign showManufacturer = showManufacturer | default: settings.productShowManufacturer -%}
+{%- endif -%}
+
+{%- if showPromotion != false -%}
+    {%- assign showPromotion = showPromotion | default: settings.productShowPromotion -%}
+{%- endif -%}
+
+{%- if showPricing != false -%}
+    {%- assign showPricing = showPricing | default: settings.productShowPricing -%}
+{%- endif -%}
+
+{%- if showRating != false -%}
+    {%- assign showRating = showRating | default: settings.productShowRating -%}
+{%- endif -%}
+
+{%- if showNewBadge != false -%}
+    {%- assign showNewBadge = showNewBadge | default: settings.productShowNewBadge -%}
+{%- endif -%}
+
+{%- if showDiscountBadge != false -%}
+    {%- assign showDiscountBadge = showDiscountBadge | default: settings.productShowDiscountBadge -%}
+{%- endif -%}
+
+{%- if showOutOfStockBadge != false -%}
+    {%- assign showOutOfStockBadge = showOutOfStockBadge | default: settings.productShowOutOfStockBadge -%}
+{%- endif -%}
+
+{%- if showAddToCart != false -%}
+    {%- assign showAddToCart = showAddToCart | default: settings.productShowAddToCart -%}
+{%- endif -%}
+
+{%- if showStockBalance != false -%}
+    {%- assign showStockBalance = showStockBalance | default: settings.productShowStockBalance -%}
+{%- endif -%}
+
+{%- if store.customer_accounts_optional == true or store.customer_accounts_require_approval == true and customer.has_access -%}
+    {%- assign accountHasApproval = true -%}
+{%- endif -%}
+
+{% unless store.customer_accounts_require_approval == false or accountHasApproval %}
+    {%- assign showPricing = false -%}
+    {%- assign showStockBalance = false -%}
+    {%- assign showAddToCart = false -%}
+{% endunless %}
+
+{%- if product.only_preview -%}
+    {%- assign showStockBalance = false -%}
+    {%- assign showAddToCart = false -%}
+{%- endif -%}
+
+{% unless product.inventory_policy == 'continue' or product.in_stock and product.buy_directly %}
+    {%- assign showAddToCart = false -%}
+{% endunless %}
+
+{%- assign productName = product.name | default: '' -%}
+{%- assign productManufacturerName = product.manufacturer.name | default: '' -%}
+{%- assign productPrice = product.price | default: '' -%}
+{%- assign productNetPrice = product.net_price | default: '' -%}
+{%- assign productOriginalNetPrice = product.original_net_price | default: '' -%}
+{%- assign productOriginalPrice = product.original_price | default: '' -%}
+{%- assign productRating = product.rating -%}
+{%- assign productMaxRating = product.max_rating -%}
+{%- assign productHasDiscount = product.has_discount | default: false -%}
+{%- assign productUrl = product | link | default: '' -%}
+
+{% if url %}
+    {%- assign productUrl = url -%}
+{% endif %}
+
+{%- unless product -%}
+
+    {%- assign productName = 'placeholder.product' | t -%}
+    {%- assign productManufacturerName = 'placeholder.manufacturer' | t -%}
+    {%- assign productRating = '0,1,2,3,4,5' | split: ',' | random -%}
+    {%- assign productMaxRating = 5 -%}
+    {%- assign productHasDiscount = 'true,false' | split: ',' | random -%}
+    {%- assign productIsNew = 'true,false' | split: ',' | random -%}
+    {%- assign productPriceValues = '4.90,10.50,24.90,39.90,54.90,74.90,80.90,99.90,124.90' | split: ',' -%}
+
+    {%- if productIsNew == 'true' %}
+        {%- assign productIsNew = true %}
+    {%- else %}
+        {%- assign productIsNew = false %}
+    {% endif %}
+
+    {%- if productHasDiscount == 'true' %}
+
+        {%- assign productHasDiscount = true %}
+        {%- assign productOriginalPrice =  productPriceValues | random -%}
+        {%- assign productOriginalNetPrice = productOriginalPrice -%}
+        {%- assign productPrice = productOriginalPrice | times: 0.75 -%}
+        {%- assign productNetPrice = productPrice -%}
+        {%- assign productDiscountPercent = 25 -%}
+
+    {%- else %}
+
+        {%- assign productHasDiscount = false %}
+        {%- assign productPrice = productPriceValues | random -%}
+        {%- assign productNetPrice = productPrice -%}
+        {%- assign productDiscountPercent = 0 -%}
+
+    {% endif %}
+
+{%- endunless -%}
+
+<div class="product-card-grid-item section-highlight-item{% if productHasDiscount %} product-has-discount{% endif %}">
+
+    <div class="product-media-container">
+    
+        {%- if showDiscountBadge or showOutOfStockBadge or showNewBadge or showPromotionBadge -%}
+
+            {%- if product -%}
+
+                {%- render 'product-badges', product: product, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge -%}
+
+            {%- else -%}
+
+                {%- render 'product-badges', productHasDiscount: productHasDiscount, productDiscountPercent: productDiscountPercent, productIsNew: productIsNew, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge -%}
+
+            {%- endif -%}
+
+        {%- endif -%}
+
+        {%- if product -%}
+
+            {%- if wishlist and session.logged_in -%}
+
+                <div class="product-wishlist-action-container">
+
+                    <button
+                        type="button"
+                        class="product-wishlist-action"
+                        data-wishlist-{{- wishlist -}}="{{ product.id }}"
+                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                        {%- render 'icon', icon: 'like', class: 'svg-icon-fw' -%}
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+        {%- if showAddToCart -%}
+
+            <div class="product-quick-add-action-container">
+
+                <button
+                    type="button"
+                    class="product-quick-add-action btn btn-text"
+                    data-cart-add="{{ product.id }}"
+                    data-cart-quantity="{{ product.min_amount }}">
+
+                        <div class="product-quick-add-action-inner">
+
+                            {%- render 'icon', icon: 'cart', class: 'svg-icon-fw product-quick-add-action-icon' -%}
+
+                            <span class="product-quick-add-action-text">
+                                {{- 'cart.quick_add' | t -}}
+                            </span>
+
+                        </div>
+
+                </button>
+
+            </div>
+
+        {%- endif -%}
+
+        {%- capture productMedia -%}
+
+            <div class="product-media aspect-ratio-product">
+
+                {%- if product.images -%}
+
+                    {% assign images = product.images | slice: 0,2 | compact %}
+
+                    {%- for image in images -%}
+
+                        <div class="product-media-img-container aspect-ratio-container">
+
+                            {%- if settings.productImageAspectRatio == '9:13' -%}
+
+                                {%- assign imgSizeSm = '388,388' -%}
+                                {%- assign imgSizeMd = '330,330' -%}
+
+                                {%- case productPerRow -%}
+                                    {% when '2' %}
+                                        {%- assign imgSizeLg = '850,850' -%}
+                                    {% when '3' %}
+                                        {%- assign imgSizeLg = '560,560' -%}
+                                    {% when '4' %}
+                                        {%- assign imgSizeLg = '416,416' -%}
+                                    {% when '5' %}
+                                        {%- assign imgSizeLg = '330,330' -%}
+                                    {% when '6' %}
+                                        {%- assign imgSizeLg = '272,272' -%}
+                                {%- endcase -%}
+
+                            {%- elsif settings.productImageAspectRatio == '4:3' -%}
+
+                                {%- assign imgSizeSm = '280,220' -%}
+                                {%- assign imgSizeMd = '240,190' -%}
+
+                                {%- case productPerRow -%}
+                                    {% when '2' %}
+                                        {%- assign imgSizeLg = '600,460' -%}
+                                    {% when '3' %}
+                                        {%- assign imgSizeLg = '400,310' -%}
+                                    {% when '4' %}
+                                        {%- assign imgSizeLg = '400,235' -%}
+                                    {% when '5' %}
+                                        {%- assign imgSizeLg = '240,190' -%}
+                                    {% when '6' %}
+                                        {%- assign imgSizeLg = '200,160' -%}
+                                {%- endcase -%}
+
+                            {%- elsif settings.productImageAspectRatio == '1:1' -%}
+
+                                {%- assign imgSizeSm = '280,280' -%}
+                                {%- assign imgSizeMd = '240,240' -%}
+
+                                {%- case productPerRow -%}
+                                    {% when '2' %}
+                                        {%- assign imgSizeLg = '600,600' -%}
+                                    {% when '3' %}
+                                        {%- assign imgSizeLg = '400,400' -%}
+                                    {% when '4' %}
+                                        {%- assign imgSizeLg = '300,300' -%}
+                                    {% when '5' %}
+                                        {%- assign imgSizeLg = '240,240' -%}
+                                    {% when '6' %}
+                                        {%- assign imgSizeLg = '200,200' -%}
+                                {%- endcase -%}
+
+                            {%- endif -%}
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- image.original | thumb: imgSizeLg }} 1x,
+                                    {{- image.original | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- image.original | thumb: imgSizeMd }} 1x,
+                                    {{- image.original | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- image.original | thumb: imgSizeSm }} 1x,
+                                    {{- image.original | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ productName }}" 
+                                    data-src="{{ image.original | thumb: imgSizeSm }}"
+                                    data-srcset="{{ image.original | thumb: imgSizeSm }} 1x, {{ image.original | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                            </picture>
+
+                        </div>
+
+                    {%- endfor -%}
+
+                {%- else -%}
+
+                    <div class="product-media-img-container aspect-ratio-container">
+
+                        {%- if product -%}
+                            {%- render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' -%}
+                        {% else %}
+                            {%- render 'placeholder-svg', type: 'product', class: 'aspect-ratio-item' -%}
+                        {%- endif -%}
+
+                    </div>
+
+                {%- endif -%}
+
+            </div>
+
+        {%- endcapture -%}
+
+        {%- if productUrl -%}
+
+            <a href="{{ productUrl }}">
+                {{- productMedia -}}
+            </a>
+
+        {%- else -%}
+
+            <div>
+                {{- productMedia -}}
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+    <div class="product-caption">
+
+        {%- capture productCaptionInner -%}
+
+            {%- if showManufacturer -%}
+
+                <div class="product-manufacturer">
+
+                    <span class="product-manufacturer-name">
+                        {{- productManufacturerName -}}
+                    </span>
+
+                </div>
+
+            {%- endif -%}
+
+            {%- if showProductName -%}
+
+                <div class="product-name">
+
+                    <h3 class="product-name-text">
+                        {{- productName -}}
+                    </h3>
+
+                </div>
+
+            {%- endif -%}
+
+            {%- if showRating and productRating > 0  -%}
+
+                <div class="product-rating">
+
+                    {%- for rating in (1..productMaxRating) -%}
+
+                        {%- if productRating >= rating -%}
+
+                            {%- render 'icon', icon: 'rating', class: 'svg-icon-gap-xs text-review-icon' -%}
+
+                        {%- else -%}
+
+                            {%- render 'icon', icon: 'rating-empty', class: 'svg-icon-gap-xs text-muted' -%}
+
+                        {%- endif -%}
+
+                    {%- endfor -%}
+
+                </div>
+
+            {% endif %}
+
+            {%- if showPricing -%}
+
+                <div class="product-price">
+
+                    {%- if productHasDiscount -%}
+
+                        <span class="text-sale-price fw-bold me-2">
+                            {{- settings.taxFreeShopping == true | yepnope: productNetPrice, productPrice | money_with_currency -}}
+                        </span>
+
+                        <span class="text-decoration-line-through text-muted">
+                            {{- settings.taxFreeShopping == true | yepnope: productOriginalNetPrice, productOriginalPrice | money_with_currency -}}
+                        </span>
+
+                    {%- else -%}
+
+                        <span class="text-price">
+                            {{- settings.taxFreeShopping == true | yepnope: productNetPrice, productPrice | money_with_currency -}}
+                        </span>
+
+                    {%- endif -%}
+
+                    {%- if showPromotion and product.promotion -%}
+
+                        <div class="product-promotion mt-1">
+
+                            <span class="text-sale-price small">
+                                {{- product.promotion.title | strip -}}{% if product.promotion.description %}: {{ product.promotion.description -}}{%- endif -%}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+            {%- if showStockBalance -%}
+
+                <div class="product-stock-balance">
+
+                    {%- if product.in_stock == false and product.inventory_policy == 'deny' -%}
+
+                        <span class="product-stock-balance-out-of-stock">
+                            {{- 'product.out_of_stock' | t -}}
+                        </span>
+
+                    {%- elsif product.stock_alarm and product.stock and product.inventory_policy == 'deny' -%}
+
+                        <span class="product-stock-balance-low-on-stock">
+                            {{- 'product.low_on_stock_dynamic' | t: amount: product.stock -}}
+                        </span>
+
+                    {%- else -%}
+
+                        <span class="product-stock-balance-in-stock">
+                            {{- 'product.in_stock' | t -}}
+                        </span>
+
+                    {%- endif -%}
+
+                </div>
+
+            {%- endif -%}
+
+        {%- endcapture -%}
+
+        {%- if product -%}
+
+            <a href="{{ productUrl }}">
+                {{- productCaptionInner -}}
+            </a>
+
+        {%- else -%}
+
+            {{- productCaptionInner -}}
+
+        {%- endif -%}
+
+    </div>
+
+</div>

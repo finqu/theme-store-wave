@@ -1,0 +1,827 @@
+{% assign sectionAnimationOrder = 0 %}
+
+{%- if section.settings.sectionOverline -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionTitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionSubtitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+    {% if section.settings.contactLayout == 1 %}
+
+        {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+        {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+
+        {% if section.settings.richtext %}
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="text-{{ section.settings.sectionTextAlign }}{% if section.settings.sectionTitle or section.settings.sectionSubtitle or section.settings.sectionOverline %} mt-4{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {{ section.settings.richtext }}
+
+            </div>
+
+        {% endif %}
+
+        {% if section.settings.showSocialMediaIcons %}
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            {%- capture class -%}
+                social-media-buttons-container mt-4 text-{{ section.settings.sectionTextAlign }}
+            {%- endcapture -%}
+
+            {%- capture attrs -%}
+                data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"
+            {%- endcapture -%}
+
+            {% render 'social-media-buttons' class: class, attrs: attrs %}
+
+        {% endif %}
+
+        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+        <div class="mt-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+            {% form 'contact' %}
+
+                {% if form.posted_successfully? %}
+
+                    <script type="application/javascript">
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
+                        });
+                    </script>
+
+                {% endif %}
+
+                <div class="row">
+
+                    <div class="col-12 col-md mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="text"
+                                id="{{ section.id }}-contact-name"
+                                class="form-control"
+                                name="name"
+                                placeholder="{{ 'contact.name' | t }}"
+                                value="{{ form.submitted.name | escape }}"
+                                required>
+
+                            <label for="{{ section.id }}-contact-name">
+                                {{- 'contact.name' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-md mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="email"
+                                id="{{ section.id }}-contact-email"
+                                class="form-control"
+                                name="email"
+                                placeholder="{{ 'contact.email' | t }}"
+                                value="{{ form.submitted.email | escape }}"
+                                required>
+
+                            <label for="{{ section.id }}-contact-email">
+                                {{- 'contact.email' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% if section.settings.showPhonenumber or section.settings.showSubject %}
+
+                    <div class="row">
+
+                        {% if section.settings.showPhonenumber %}
+
+                            <div class="col-12 col-md mb-4">
+
+                                <div class="form-floating">
+
+                                    <input
+                                        type="text"
+                                        id="{{ section.id }}-contact-phonenumber"
+                                        class="form-control"
+                                        name="phonenumber"
+                                        placeholder="{{ 'contact.phone' | t }}"
+                                        value="{{ form.submitted.phonenumber | escape }}">
+
+                                    <label for="{{ section.id }}-contact-phonenumber">
+                                        {{- 'contact.phone' | t -}}
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if section.settings.showSubject %}
+
+                            <div class="col-12 col-md mb-4">
+
+                                <div class="form-floating">
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="{{ section.id }}-contact-subject"
+                                        name="subject"
+                                        placeholder="{{ 'contact.subject' | t }}"
+                                        value="{{ form.submitted.subject | escape }}">
+
+                                    <label for="{{ section.id }}-contact-subject">
+                                        {{- 'contact.subject' | t -}}
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+                <div class="form-floating mb-4">
+
+                    <textarea
+                        id="contact-message-{{ section.id }}"
+                        name="message"
+                        class="form-control"
+                        placeholder="{{ 'contact.message' | t }}"
+                        required>{{ form.submitted.message | escape }}</textarea>
+
+                    <label for="contact-message-{{ section.id }}">
+                        {{- 'contact.message' | t -}}
+                    </label>
+
+                </div>
+
+                {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                <button type="submit" class="btn btn-primary d-block w-100">
+                    {{- 'contact.cta' | t -}}
+                </button>
+
+                {% if form.posted_successfully? %}
+
+                    <span class="d-block fw-bold text-center mt-4">
+
+                        {{- 'contact.success' | t -}}
+
+                    </span>
+
+                {% endif %}
+
+            {% endform %}
+
+        </div>
+
+    {% elsif section.settings.contactLayout == 2 %}
+
+        <div class="row align-items-center">
+
+            <div class="col-12 col-md mb-4 mb-md-0">
+
+                {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+
+                {% if section.settings.richtext %}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="text-{{ section.settings.sectionTextAlign }}{% if section.settings.sectionTitle or section.settings.sectionSubtitle or section.settings.sectionOverline %} mt-4{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                        {{ section.settings.richtext }}
+
+                    </div>
+
+                {% endif %}
+
+                {% if section.settings.showSocialMediaIcons %}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    {%- capture class -%}
+                        social-media-buttons-container mt-4 text-{{ section.settings.sectionTextAlign }}
+                    {%- endcapture -%}
+        
+                    {%- capture attrs -%}
+                        data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"
+                    {%- endcapture -%}
+
+                    {% render 'social-media-buttons' class: class, attrs: attrs %}
+
+                {% endif %}
+
+            </div>
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="col-12 col-md" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {% form 'contact' %}
+
+                    {% if form.posted_successfully? %}
+
+                        <script type="application/javascript">
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
+                            });
+                        </script>
+
+                    {% endif %}
+
+                    <div class="mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="text"
+                                id="{{ section.id }}-contact-name"
+                                class="form-control"
+                                name="name"
+                                placeholder="{{ 'contact.name' | t }}"
+                                value="{{ form.submitted.name | escape }}"
+                                required>
+
+                            <label for="{{ section.id }}-contact-name">
+                                {{- 'contact.name' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="email"
+                                id="{{ section.id }}-contact-email"
+                                class="form-control"
+                                name="email"
+                                placeholder="{{ 'contact.email' | t }}"
+                                value="{{ form.submitted.email | escape }}"
+                                required>
+
+                            <label for="{{ section.id }}-contact-email">
+                                {{- 'contact.email' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    {% if section.settings.showPhonenumber %}
+
+                        <div class="mb-4">
+
+                            <div class="form-floating">
+
+                                <input
+                                    type="text"
+                                    id="{{ section.id }}-contact-phonenumber"
+                                    class="form-control"
+                                    name="phonenumber"
+                                    placeholder="{{ 'contact.phone' | t }}"
+                                    value="{{ form.submitted.phonenumber | escape }}">
+
+                                <label for="{{ section.id }}-contact-phonenumber">
+                                    {{- 'contact.phone' | t -}}
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if section.settings.showSubject %}
+
+                        <div class="mb-4">
+
+                            <div class="form-floating">
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="{{ section.id }}-contact-subject"
+                                    name="subject"
+                                    placeholder="{{ 'contact.subject' | t }}"
+                                    value="{{ form.submitted.subject | escape }}">
+
+                                <label for="{{ section.id }}-contact-subject">
+                                    {{- 'contact.subject' | t -}}
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="form-floating mb-4">
+
+                        <textarea
+                            id="contact-message-{{ section.id }}"
+                            name="message"
+                            class="form-control"
+                            placeholder="{{ 'contact.message' | t }}"
+                            required>{{ form.submitted.message | escape }}</textarea>
+
+                        <label for="contact-message-{{ section.id }}">
+                            {{- 'contact.message' | t -}}
+                        </label>
+
+                    </div>
+
+                    {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                    <button type="submit" class="btn btn-primary d-block w-100">
+                        {{- 'contact.cta' | t -}}
+                    </button>
+
+                    {% if form.posted_successfully? %}
+
+                        <span class="d-block fw-bold text-center mt-4">
+
+                            {{- 'contact.success' | t -}}
+
+                        </span>
+
+                    {% endif %}
+
+                {% endform %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionHeader: false, sectionAnimation: false %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Contact",
+        "fi": "Yhteydenotto"
+    },
+    "tag": "section",
+    "class": "section section-contact",
+    "category": "theme-form",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Titles",
+                            "fi": "Otsikot"
+                        }
+                    },
+                    {
+                        "id": "sectionOverline",
+                        "type": "text",
+                        "label": {
+                            "en": "Top title",
+                            "fi": "Yläotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionTitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Main title",
+                            "fi": "Pääotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionSubtitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Subtitle",
+                            "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "View",
+                            "fi": "Näkymä"
+                        }
+                    },
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "label": {
+                            "en": "Content",
+                            "fi": "Sisältö"
+                        }
+                    },
+                    {
+                        "id": "contactLayout",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Style",
+                            "fi": "Tyyli"
+                        },
+                        "default": 1,
+                        "options": [
+                            {
+                                "value": 1,
+                                "label": "1"
+                            },
+                            {
+                                "value": 2,
+                                "label": "2"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "showPhonenumber",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Phone number",
+                            "fi": "Puhelinnumero"
+                        },
+                        "default": false
+                    },
+                    {
+                        "id": "showSubject",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Subject",
+                            "fi": "Aihe"
+                        },
+                        "default": false
+                    },
+                    {
+                        "id": "showSocialMediaIcons",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Social media icons",
+                            "fi": "Sosiaalisen median kuvakkeet"
+                        },
+                        "default": true
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Content",
+                            "fi": "Sisältö"
+                        }
+                    },
+                    {
+                        "id": "sectionHighlightItems",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content highlight",
+                            "fi": "Sisällön korostaminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": false,
+                                "label": "Off"
+                            },
+                            {
+                                "value": true,
+                                "label": "On"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionTextAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content align",
+                            "fi": "Sisällön tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "SEO",
+                            "fi": "SEO"
+                        }
+                    },
+                    {
+                        "id": "sectionOverlineTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Top title SEO priority",
+                            "fi": "Yläotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionTitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Top title SEO priority",
+                            "fi": "Pääotsikon SEO-prioriteetti"
+                        },
+                        "default": "h2",
+                        "options": [
+                            {
+                                "value": "h1",
+                                "label": "H1"
+                            },
+                            {
+                                "value": "h2",
+                                "label": "H2"
+                            },
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionSubtitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Subtitle SEO priority",
+                            "fi": "Alaotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Section",
+                            "fi": "Osio"
+                        }
+                    },
+                    {
+                        "id": "sectionColorScheme",
+                        "type": "select",
+                        "label": {
+                            "en": "Color color scheme",
+                            "fi": "Värityyli"
+                        },
+                        "options": [
+                            {
+                                "value": false,
+                                "label": {
+                                    "en": "Disabled",
+                                    "fi": "Pois käytöstä"
+                                }
+                            },
+                            {
+                                "value": "1",
+                                "label": {
+                                    "en": "Color scheme 1",
+                                    "fi": "Värityyli 1"
+                                }
+                            },
+                            {
+                                "value": "2",
+                                "label": {
+                                    "en": "Color scheme 2",
+                                    "fi": "Värityyli 2"
+                                }
+                            },
+                            {
+                                "value": "3",
+                                "label": {
+                                    "en": "Color scheme 3",
+                                    "fi": "Värityyli 3"
+                                }
+                            },
+                            {
+                                "value": "4",
+                                "label": {
+                                    "en": "Color scheme 4",
+                                    "fi": "Värityyli 4"
+                                }
+                            },
+                            {
+                                "value": "5",
+                                "label": {
+                                    "en": "Color scheme 5",
+                                    "fi": "Värityyli 5"
+                                }
+                            },
+                            {
+                                "value": "light",
+                                "label": {
+                                    "en": "Light background / Dark content",
+                                    "fi": "Vaalea tausta / Tumma sisältö"
+                                }
+                            },
+                            {
+                                "value": "dark",
+                                "label": {
+                                    "en": "Dark background / Light content",
+                                    "fi": "Tumma tausta / Vaalea sisältö"
+                                }
+                            },
+                            {
+                                "value": "accent",
+                                "label": {
+                                    "en": "Accent background / Adaptive content",
+                                    "fi": "Korostus tausta / Mukautuva sisältö"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionBgImg",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Background image",
+                            "fi": "Taustakuva"
+                        },
+                        "adjustments": true
+                    },
+                    {
+                        "id": "sectionBgImgDimming",
+                        "label": {
+                            "en": "Image dimming",
+                            "fi": "Kuvan tummennus"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 90,
+                        "step": 5,
+                        "default": "0",
+                        "unit": "%"
+                    },
+                    {
+                        "id": "sectionBgImgBlur",
+                        "label": {
+                            "en": "Image blur",
+                            "fi": "Kuvan sumentaminen"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 10,
+                        "step": 1,
+                        "default": "0",
+                        "unit": " "
+                    }
+                ]
+            }
+        ]
+    },
+    "presets": [
+        {
+            "settings": {
+                "sectionTitle": "Contact us",
+                "richtext": "<p>Want to get in touch with us? Just fill out the form below and we'll get back to you as soon as possible.<\/p>"
+            }
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,111 @@
+// Functions
+// -----------------------------------------------------------------------------------------
+
+@function spacer($key) {
+
+	@if map-has-key($spacers, $key) {
+		@return map-get($spacers, $key);
+	}
+
+	@warn "Unknown `#{$key}` in $spacers.";
+	@return null;
+}
+
+@function aspect-ratio($key) {
+
+    @if map-has-key($aspect-ratios, $key) {
+        $ratio-arr: str-split(map-get($aspect-ratios, $key), ':');
+        @return #{nth($ratio-arr, 1)}/#{nth($ratio-arr, 2)};
+	}
+
+	@warn "Unknown `#{$key}` in $aspect-ratios.";
+	@return null;
+}
+
+@function aspect-ratio-percentage($key) {
+
+    @if map-has-key($aspect-ratios, $key) {
+        $ratio-arr: str-split(map-get($aspect-ratios, $key), ':');
+        @return to-number(nth($ratio-arr, 1)) / to-number(nth($ratio-arr, 2)) * 100%;
+	}
+
+	@warn "Unknown `#{$key}` in $aspect-ratios.";
+	@return null;
+}
+
+@function str-split($string, $separator) {
+
+    $split-arr: ();
+    $index : str-index($string, $separator);
+
+    @while $index != null {
+        $item: str-slice($string, 1, $index - 1);
+        $split-arr: append($split-arr, $item);
+        $string: str-slice($string, $index + 1);
+        $index : str-index($string, $separator);
+    }
+
+    $split-arr: append($split-arr, $string);
+
+    @return $split-arr;
+}
+
+@function to-number($value) {
+
+	@if type-of($value) == 'number' {
+		@return $value;
+	} @else if type-of($value) != 'string' {
+		@warn 'Value for `to-number` should be a number or a string.';
+	}
+
+	$result: 0;
+	$digits: 0;
+	$minus: str-slice($value, 1, 1) == '-';
+	$numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
+
+	@for $i from if($minus, 2, 1) through str-length($value) {
+
+		$character: str-slice($value, $i, $i);
+
+		@if (index(map-keys($numbers), $character) or $character == '.') {
+			@if $character == '.' {
+				$digits: 1;
+			} @else if $digits == 0 {
+				$result: $result * 10 + map-get($numbers, $character);
+			} @else {
+				$digits: $digits * 10;
+				$result: $result + map-get($numbers, $character) / $digits;
+			}
+		}
+	}
+
+	@return if($minus, -$result, $result);
+}
+
+@function map-reverse($map) {
+
+    $result: null;
+
+    @if type-of($map) == 'map' {
+        $keys: map-keys($map);
+        $map-reversed: ();
+        
+        @for $i from length($keys) through 1 {
+            $map-reversed: map-merge(
+                $map-reversed,
+                (nth($keys, $i): map-get($map, nth($keys, $i)))
+            );
+        }
+
+        @if type-of($map-reversed) == 'map' {
+            $result: $map-reversed;
+        } @else {
+            @warn 'There was an error reversing the order of "#{$map}"';
+        }
+
+    } @else {
+        @warn '"#{$map}" is not a valid map';
+    }
+
+    @return $result;
+}

@@ -1,0 +1,45 @@
+{% comment %}
+    Renders a BlogPosting schema
+
+    Accepts:
+	- article: {Object} Article Liquid object (required)
+
+    Usage:
+    Render this snippet on article page
+
+    {% render 'schemas/blogposting' %}
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "BlogPosting",
+	{%- if article.title -%}
+	"headline": {{ article.title | json }},
+	{%- endif -%}
+	{%- if article.header_image -%}
+	"image": "{{ article.header_image }}",
+	{%- endif -%}
+	{%- if settings.articleShowAuthor and article.author -%}
+	"author": {
+		"@type": "Person",
+		"name": {{ article.author | truncate: 100 | json }},
+		"url": "{{ article.user.homepage | default: routes.root_url | full_url }}"
+	},
+	{%- elsif store.name -%}
+	"author": {
+		"@type": "Organization",
+		"name": {{ store.name | truncate: 100 | json }},
+		"url": "{{ routes.root_url | full_url }}"
+	},
+	{%- endif -%}
+	"datePublished": "{{ article.published_at | date: '%Y-%m-%d' }}",
+	"dateModified": "{{ article.updated_at | date: '%Y-%m-%d' }}"{% if article.summary or article.content %},{% endif %}
+	{%- if article.summary or article.content -%}
+	"description": {{ article.summary | default: article.content | strip_html | truncate: 140 | json }}{% if article.content %},{% endif %}
+	{%- endif -%}
+	{%- if article.content -%}
+	"articleBody": {{ article.content | strip_html | json }}
+	{%- endif -%}
+}
+</script>

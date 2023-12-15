@@ -1,0 +1,92 @@
+<div class="product-attribute-container product-attribute-radio mb-4{% if inline %} d-md-flex{% endif %}">
+
+    {% if attribute.name %}
+
+        {% if highlightLabel %}
+            <label class="form-label fw-bold{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ attribute.name }}:</label>
+        {% else %}
+            <label class="form-label{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ attribute.name }}</label>
+        {% endif %}
+
+    {% endif %}
+
+    <div{% if style == 'badge' %} class="form-check-badge-container"{% elsif style == 'color' %} class="form-check-color-swatch-container"{% endif %}>
+
+        {% for option in attribute.options %}
+
+            {%- if settings.taxFreeShopping -%}
+                {% assign itemPrice = option.net_price %}
+            {%- else -%}
+                {% assign itemPrice = option.price %}
+            {%- endif -%}
+
+            <div class="{% if style == 'badge' %}form-check-badge{% elsif style == 'color' %}form-check-color-swatch form-check-color-swatch-inline{% else %}mb-4 form-check{% endif %}"{% if style == 'color' %} style="--swatch-color: {{ option.name }}"{% endif %}>
+
+                {% if itemPrice > 0 and showOptionPrice and showOptionTotalPrice and option.in_stock == true %}
+
+                    {% assign arg1 = true %}
+
+                {% endif %}
+
+                {% if itemPrice > 0 and showOptionPrice and showOptionTotalPrice and inventoryPolicy == 'continue' %}
+
+                    {% assign arg2 = true %}
+
+                {% endif %}
+
+                <input class="product-attribute form-check-input{% if arg1 or arg2 %} has-price{% endif %}"
+                type="radio"
+                data-attribute="{{ attribute.id }}"
+                id="product-option-{{ option.id }}"
+                name="{{ attribute.id }}"
+                value="{{ option.id }}"
+                {% if option.image %} data-has-image{% endif %}
+                {% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% else %} data-is-usable{% endif %}>
+
+                {% if style == 'color' %}
+
+                    <label for="product-option-{{ option.id }}" class="form-check-label"></label>
+
+                {% else %}
+
+                    <label for="product-option-{{ option.id }}" class="form-check-label">
+
+                        {{ option.name }}
+
+                        {% if showOptionStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock == true and option.subattribute == false %}
+
+                            ({{ option.stock }} {{ unit }})
+
+                        {% endif %}
+
+                        {% if option.in_stock == false and inventoryPolicy == 'deny' %}
+
+                            ({{ 'product.out_of_stock' | t }})
+
+                        {% elsif itemPrice > 0 and showOptionPrice and showOptionTotalPrice == false %}
+
+                            (+{{ itemPrice | money_with_currency }})
+
+                        {% endif %}
+
+                    </label>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% for option in attribute.options %}
+
+    {% if option.subattribute %}
+
+        {% render 'product-attributes/subattribute', option: option, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, style: style %}
+
+    {% endif %}
+
+{% endfor %}

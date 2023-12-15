@@ -1,0 +1,205 @@
+{% comment %}
+    Renders a article card as grid item
+
+    Accepts:
+    - article: {Object} article Liquid object (required)
+    - articlePerRow {Number} Number of product card grid siblings
+    - aspectRatio {String} Aspect ratio of the article image
+
+    Usage:
+    {% render 'article-card-grid', article: article %}
+{% endcomment %}
+
+{%- if articlePerRow == 'nil' or articlePerRow == nil -%}
+    {%- assign articlePerRow = settings.articlePerRow -%}
+{%- endif -%}
+
+{% assign aspectRatio = aspectRatio | default: settings.articleImageAspectRatio %}
+{% assign dateFormat = 'general.date_format' | t %}
+
+<div class="article-card-grid-item section-highlight-item">
+
+    <div class="article-media aspect-ratio-{{ aspectRatio | replace: ':', '-' }} img-indicator-zoom">
+
+        <div class="article-img-container aspect-ratio-container">
+
+            <a href="{{ article | link }}">
+
+                {%- if article.header_image -%}
+
+                    {%- if aspectRatio == '9:13' -%}
+
+                        {%- assign imgSizeSm = '388,388' -%}
+                        {%- assign imgSizeMd = '330,330' -%}
+
+                        {%- case articlePerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '850,850' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '560,560' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '416,416' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '330,330' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '272,272' -%}
+                        {%- endcase -%}
+
+                    {%- elsif aspectRatio == '4:3' -%}
+
+                        {%- assign imgSizeSm = '280,220' -%}
+                        {%- assign imgSizeMd = '240,190' -%}
+
+                        {%- case articlePerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,460' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,310' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '400,235' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,190' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,160' -%}
+                        {%- endcase -%}
+
+                    {%- elsif aspectRatio == '1:1' -%}
+
+                        {%- assign imgSizeSm = '280,280' -%}
+                        {%- assign imgSizeMd = '240,240' -%}
+
+                        {%- case articlePerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,600' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,400' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,300' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,240' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,200' -%}
+                        {%- endcase -%}
+
+                    {%- endif -%}
+
+                    <picture>
+                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                            {{- article.header_image | thumb: imgSizeLg }} 1x,
+                            {{- article.header_image | thumb: imgSizeLg | thumb: '@2x' }} 2x">
+
+                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                            {{- article.header_image | thumb: imgSizeMd }} 1x,
+                            {{- article.header_image | thumb: imgSizeMd | thumb: '@2x' }} 2x">
+
+                        <source data-srcset="
+                            {{- article.header_image | thumb: imgSizeSm }} 1x,
+                            {{- article.header_image | thumb: imgSizeSm | thumb: '@2x' }} 2x">
+
+                        <img
+                            alt="{{ article.title }}"
+                            data-src="{{ article.header_image | thumb: imgSizeSm }}"
+                            data-srcset="{{ article.header_image | thumb: imgSizeSm }} 1x, {{ article.header_image | thumb: imgSizeSm | thumb: '@2x' }} 2x"
+                            class="lazy d-block mx-auto img-fluid aspect-ratio-item{% if settings.articleImageAspectRatioFit == 'cover' %} aspect-ratio-item-cover{% endif %}">
+                    </picture>
+
+                {%- else -%}
+
+                    {%- capture placeholderSrc -%}
+                        {%- render 'placeholder-svg', type: 'image', base64: true -%}
+                    {%- endcapture -%}
+
+                    <img
+                        class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder{% if settings.articleImageAspectRatioFit == 'cover' %} aspect-ratio-item-cover{% endif %}"
+                        alt="{{ article.title }}"
+                        data-src="{{- placeholderSrc | strip_newlines -}}">
+
+                {%- endif -%}
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="article-body">
+
+        <div class="article-title">
+
+            {%- if article -%}
+
+                <a href="{{ article | link }}">
+
+                    <h3 class="article-title-text">
+                        {{- article.title -}}
+                    </h3>
+
+                </a>
+
+            {%- else -%}
+
+                <h3 class="article-title-text">
+                    {{- 'placeholder.article' | t -}}
+                </h3>
+
+            {%- endif -%}
+
+        </div>
+
+        <div class="article-info">
+
+            <ul class="list-separator">
+
+                <li class="article-date list-inline-item">
+
+                    <i>
+                        {%- if article -%}
+                            <time datetime="{{ article.published_at | date: "%F" }}">{{ article.published_at | date: dateFormat }}</time>
+                        {%- else -%}
+                            <time datetime="{{ 'now' | date: "%F" }}">{{ 'now' | date: dateFormat }}</time>
+                        {%- endif -%}
+                    </i>
+
+                </li>
+
+                {% if settings.articleShowAuthor and article.author %}
+
+                    <li class="article-author list-inline-item">
+
+                        {{- article.author -}}
+
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+        <div class="article-content">
+
+            {%- if article and article.summary -%}
+
+                <p class="article-content-text mb-0">
+                    {{- article.summary -}}
+                </p>
+
+            {%- else -%}
+
+                <p class="article-content-text mb-0">
+
+                    {%- if article and article.content -%}
+                        {{- article.content | strip_html | truncate: 140 -}}
+                    {%- elsif request.design_mode -%}
+                        {{- 'placeholder.article_summary' | t -}}
+                    {%- endif -%}
+                    
+                </p>
+
+            {%- endif -%}
+
+        </div>
+
+    </div>
+
+</div>

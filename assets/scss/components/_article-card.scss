@@ -1,0 +1,55 @@
+// Article card
+// -----------------------------------------------------------------------------------------
+
+.article-card-grid-item {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	color: var(--style-text-color);
+	background-color: var(--style-bg-color);
+
+	.article-body {
+		padding-top: spacer(3);
+		border-bottom-left-radius: var(--style-image-border-radius);
+		border-bottom-right-radius: var(--style-image-border-radius);
+		overflow: hidden;
+
+		.article-title {
+
+			.article-title-text {
+				display: -webkit-box;
+			    -webkit-line-clamp: 2;
+			    -webkit-box-orient: vertical;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+                @include font-size($font-size-base);
+                font-weight: $font-weight-bold;
+                line-height: $line-height-base;
+                margin: 0;
+                letter-spacing: 0;
+			}
+
+			& + .article-content {
+				padding-top: spacer(2);
+			}
+		}
+
+		.article-info {
+
+			& + .article-content {
+				padding-top: spacer(2);
+			}
+		}
+
+		.article-content {
+
+			.article-content-text {
+				display: -webkit-box;
+			    -webkit-line-clamp: 2;
+			    -webkit-box-orient: vertical;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			}
+		}
+	}
+}

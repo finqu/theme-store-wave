@@ -1,0 +1,35 @@
+{% comment %}
+	Renders a section bg
+
+	Accepts:
+	- sectionBgImg: {String}
+	- sectionBgImgDimming: {String}
+	- sectionBgBlur {String}
+	- sectionHandle: {String}
+
+	Usage:
+	Render this snippet inside of element with a "section" class.
+
+	{% render 'section-bg', sectionBgImg: src, sectionBgImgDimming: '0' %}
+{% endcomment %}
+
+{%- if sectionHandle and sectionBgImgBlur != '0' -%}
+
+    {%- capture sectionBgStyle -%}
+        {{ sectionHandle }} .section-bg {
+    		transform: scale(1.0{{ sectionBgImgBlur | divided_by: 2 | plus: 2 }});
+        	filter: blur({{ sectionBgImgBlur }}px);
+		}
+	{%- endcapture -%}
+
+	{%- assign sectionBgStyle = sectionBgStyle | strip_newlines -%}
+
+	<style>{{ sectionBgStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+<div class="section-bg-container">
+
+	<div class="section-bg{% if sectionBgImg %} lazy{% endif %}"{% if sectionBgImg %} data-bg-set="{% if sectionBgImgDimming > 0 %}linear-gradient(0deg, rgb(0,0,0, {{- sectionBgImgDimming -}}%), rgb(0,0,0, {{- sectionBgImgDimming -}}%)) | {% endif %}url('{{- sectionBgImg | thumb: '1920,1080' -}}') 1x, url('{{- sectionBgImg | thumb: '1920,1080' | thumb: '@2x' -}}') 2x"{% endif %}{% if sectionBgImg.offset_left or sectionBgImg.offset_top %} style="--section-bg-img-pos: {{ sectionBgImg.offset_left }}% {{ sectionBgImg.offset_top }}%"{% endif %}></div>
+
+</div>

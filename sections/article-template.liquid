@@ -1,0 +1,185 @@
+{%- assign dateFormat = 'general.date_format' | t  -%}
+
+{%- if blogpost.comments -%}
+    {%- assign comments = blogpost.comments | reverse -%}
+{%- endif -%}
+
+{%- capture sectionSubtitle -%}
+
+    <ul class="list-separator small">
+
+        <li class="article-date list-inline-item">
+
+            {% assign format = 'general.date_format' | t  %}
+            <i><time datetime="{{ blogpost.published_at | date: "%F" }}">{{ blogpost.published_at | date: dateFormat }}</time></i>
+
+        </li>
+
+        {% if settings.articleShowAuthor and blogpost.author %}
+
+            <li class="article-author list-inline-item">
+
+                {{ blogpost.author }}
+
+            </li>
+
+        {% endif %}
+
+    </ul>
+
+{%- endcapture -%}
+
+{%- capture sectionContent -%}
+
+    {% if blogpost.header_image %}
+
+    	<div class="article-media">
+
+    		<div class="article-img-container aspect-ratio-container">
+
+                {%- assign imgSizeSm = '747,456' -%}
+                {%- assign imgSizeLg = '1320,520' -%}
+
+                <picture>
+                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                        {{- blogpost.header_image | thumb: imgSizeLg }} 1x,
+                        {{- blogpost.header_image| thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                    <img
+                        alt="{{ blogpost.title }}"
+                        data-src="{{ blogpost.header_image | thumb: imgSizeSm }}"
+                        data-srcset="{{ blogpost.header_image | thumb: imgSizeSm }} 1x, {{ blogpost.header_image | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                        class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                </picture>
+
+    	    </div>
+
+    	</div>
+
+    {% endif %}
+
+	<div class="article-content">
+
+		{{ blogpost.content }}
+
+	</div>
+
+	<div class="article-share">
+
+		{% render 'social-media-share-buttons', facebook: true, x: true, whatsapp: true, email: true %}
+
+	</div>
+
+    {% if blogpost.comments_are_enabled %}
+
+    	<div class="article-comments{% if comments.size > 0 %} has-comments{% endif %}">
+
+    		<span class="d-block h2 mb-4">
+            	{{- 'blog.comment_plural' | t -}}
+            </span>
+
+            {% if session.logged_in == false and blogpost.comments_require_account %}
+
+                {%- capture loginLink -%}<a href="{{ 'login' | link }}" class="fw-bold text-underline-indicator">
+                    {{- 'blog.comment_login_link_text' | t -}}
+                </a>{%- endcapture -%}
+
+                <p>
+                    {{- 'blog.comment_login' | t, link: loginLink -}}
+                </p>
+
+            {% else %}
+
+                {% form 'comment', blogpost, id: 'comment-form-root' %}
+
+                    <div class="article-comment-form-action">
+
+                        <button type="button" name="article-comment-form-show-action" class="btn btn-secondary{% if form.error %} d-none{% endif %}" value="root">
+                            {{- 'blog.leave_comment' | t -}}
+                        </button>
+
+                    </div>
+
+                    <div id="article-comment-form-root" class="article-comment-form{% unless form.error %} d-none{% endunless %}">
+
+                        <div class="mb-4 form-floating">
+
+                            <input name="name" type="text" id="comment-article-{{ blogpost.id }}-name" class="form-control" placeholder="{{ 'general.name' | t }}" value="{{ form.submitted.name | escape }}" required>
+
+                            <label for="comment-article-{{ blogpost.id }}-name">
+                                {{- 'general.name' | t -}}
+                            </label>
+
+                        </div>
+
+                        <div class="form-floating mb-4">
+
+                            <textarea
+                                id="comment-form-root"
+                                name="comment"
+                                class="form-control"
+                                placeholder="{{ 'blog.comment' | t }}"></textarea>
+
+                            <label for="comment-form-root">
+                                {{- 'blog.comment' | t -}}
+                            </label>
+
+                        </div>
+
+                        {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                        <button type="button" name="article-comment-form-close-action" class="btn btn-secondary" value="root">
+                        	{{- 'general.cancel' | t -}}
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                        	{{- 'general.submit' | t -}}
+                        </button>
+
+                    </div>
+
+                {% endform %}
+
+                {% if submitted_form.id == 'comment-form-root' and submitted_form.posted_successfully? and blogpost.comments_require_approval %}
+
+                    <p class="mt-4 mb-0">
+                        {{- 'blog.comment_publish_pending' | t -}}
+                    </p>
+
+                {% endif %}
+
+            {% endif %}
+
+            {% if comments.size > 0 %}
+
+                {% for comment in comments %}
+
+                	{% render 'article-comment', article: blogpost, comment: comment %}
+
+                {% endfor %}
+
+            {% endif %}
+
+    	</div>
+
+    {% endif %}
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionTitle: blogpost.title, sectionTitleTag: 'h1', sectionSubtitle: sectionSubtitle, sectionSubtitleTag: 'div', sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
+
+{%- if settings.schemaBlogPosting -%}
+    {% render 'schemas/blogposting', article: blogpost %}
+{%- endif -%}
+
+{% schema %}
+{
+    "name": {
+        "en": "Article",
+        "fi": "Artikkeli"
+    },
+    "tag": "section",
+    "class": "section section-article",
+    "is_creatable": false
+}
+{% endschema %}

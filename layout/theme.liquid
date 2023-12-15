@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="{{ request.locale.iso_code }}">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="format-detection" content="telephone=no, date=no, email=no, address=no">
+
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+		<link rel="preload" href="{{ 'main.css' | asset_url }}" as="style">
+
+		{%- for item in store.theme.cache_manifest -%}
+			{%- if item.name contains '.js' -%}
+				<link rel="preload" href="{{ item.resource | asset_url }}" as="script">
+			{%- endif -%}
+		{%- endfor -%}
+
+		{%- capture fontsStr -%}
+			{{- settings.bodyTextFont -}},{{- settings.headingFont -}},{{- settings.subheadingFont -}},{{- settings.accentFont -}},{{- settings.buttonFont -}},{{- settings.navigationFont -}}
+		{%- endcapture -%}
+		
+		{%- assign fonts = fontsStr | replace: ' ', '+' | split: ',' | uniq -%}
+		
+		{%- for font in fonts -%}
+		
+			<link rel="preload" href="https://fonts.googleapis.com/css2?family={{- font -}}:ital,wght@0,400;0,700;1,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		
+		{%- endfor -%}
+
+		<link rel="stylesheet" href="{{ 'main.css' | asset_url }}" type="text/css" media="all">
+
+		{%- assign escaped_page_title = page_title | escape -%}
+
+		{%- capture seo_title -%}
+			{{- page_title -}}{%- unless escaped_page_title contains store.name %} &ndash; {{ store.name }}{% endunless -%}
+		{%- endcapture -%}
+
+		<title>{{ seo_title | strip_newlines }}</title>
+
+		{%- if store.favicon -%}
+
+			{%- assign isIcon = store.favicon | is_ico -%}
+
+			{%- if isIcon -%}
+
+				<link rel="shortcut icon" href="{{ store.favicon }}" sizes="16x16 32x32 57x57 72x72 114x114 120x120 144x144 152x152" type="image/x-icon">
+
+			{%- else -%}
+
+				<link rel="icon" type="image/png" href="{{ store.favicon }}">
+				<link rel="apple-touch-icon-precomposed" href="{{ store.favicon }}">
+
+			{%- endif -%}
+
+		{%- endif -%}
+
+		{%- render 'store-settings' -%}
+		{%- render 'hbs-templates' -%}
+
+		{%- for item in store.theme.cache_manifest -%}
+			{%- if item.name == 'main.js' -%}
+				<script defer="defer" src="{{ item.resource | asset_url }}"></script>
+			{%- elsif item.name contains '.js' -%}
+				<script async="async" src="{{ item.resource | asset_url }}"></script>
+			{%- endif -%}
+		{%- endfor -%}
+
+		{%- if canonical_url != blank -%}
+    		<link rel="canonical" href="{{ canonical_url }}">
+  		{%- endif -%}
+
+		{{- content_for_header -}}
+
+		{%- if submitted_form.id == 'register-form' and submitted_form.posted_successfully? -%}
+            <script type="application/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.dispatchEvent(new CustomEvent('theme:customer:register'));
+                });
+            </script>
+        {%- endif -%}
+
+	</head>
+
+	{%- capture bodyClasses -%}
+		{%- if request.design_mode -%}design-mode-{{ request.design_mode }},{%- endif -%}
+		{%- if store.customer_accounts_enabled -%}customer-accounts-enabled,{%- endif -%}
+		{%- if settings.accessibilityShowAnimations and request.design_mode != 'edit' -%}animations-enabled,{%- endif -%}
+		{%- if request.design_mode == false and session.cookie_policy == nil -%}cookie-policy-visible,{%- endif -%}
+		{%- if request.design_mode == false and session.cookie_policy == nil and settings.cookiesPolicyPosition == 'middle' -%}disable-scroll,{%- endif -%}
+		{{- 'template-' | append: request.page_type | handle | append: ',' -}}
+	{%- endcapture -%}
+
+	<body class="{{ bodyClasses | strip_newlines | split: ',' | compact | join: ' ' }}">
+
+		{% section 'announcement' %}
+		{% section 'header' %}
+
+		{{- content_for_layout -}}
+
+		{% section 'footer' %}
+		{% render 'cookie-policy' %}
+
+	</body>
+
+</html>

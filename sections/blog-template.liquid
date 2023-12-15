@@ -1,0 +1,96 @@
+{%- assign sectionTitle = 'blog.title' | t -%}
+{%- assign animatedItemsCount = settings.articlePerRow | times: 2 -%}
+
+{%- capture sectionContent -%}
+
+	{% if blog.recent.size == 0 and request.design_mode != 'edit' %}
+
+		{%- assign sectionHeader = false -%}
+
+		<div class="text-center">
+
+			{%- render 'icon', icon: 'blog', class: 'svg-icon-5x mb-3' -%}
+
+			<h1 class="h5 d-block mb-3">
+				{{- sectionTitle -}}
+			</h1>
+
+			<p class="mb-6">
+				{{- 'blog.empty_description' | t -}}
+			</p>
+
+			<a href="{{ routes.root_url }}" class="btn btn-primary">
+				{{- 'blog.continue_browsing' | t -}}
+			</a>
+
+		</div>
+
+	{% else %}
+
+		{%- paginate blog.recent by 20 -%}
+
+			<div class="row gy-g row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ settings.articlePerRow }}">
+
+				{% if blog.recent.size > 0 %}
+
+					{% for article in blog.recent %}
+
+						<div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+
+							{%- render 'article-card-grid', article: article -%}
+
+						</div>
+
+					{% endfor %}
+
+				{% elsif request.design_mode %}
+
+					{%- assign itemCount = settings.articlePerRow | times: 3 -%}
+
+					{% for num in (1..itemCount) %}
+
+						<div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+
+							{%- render 'article-card-grid' -%}
+
+						</div>
+
+					{% endfor %}
+
+				{% endif %}
+
+			</div>
+
+			<div class="row" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+				<div class="col">
+
+					{% render 'pagination', paginate: paginate %}
+
+				</div>
+
+			</div>
+
+			{%- if settings.schemaItemList -%}
+				{% render 'schemas/itemlist', items: blog.recent, paginate: paginate %}
+			{%- endif -%}
+
+		{%- endpaginate -%}
+
+	{% endif %}
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionTitle: sectionTitle, sectionHeader: sectionHeader, sectionTitleTag: 'h1', sectionContentAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Blog",
+        "fi": "Blogi"
+    },
+    "tag": "section",
+    "class": "section section-blog",
+    "is_creatable": false
+}
+{% endschema %}

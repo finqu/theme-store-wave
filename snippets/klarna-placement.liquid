@@ -1,0 +1,76 @@
+{% comment %}
+	Renders a Klarna placement
+
+	Accepts:
+	- type: {String} Type of placement (Required)
+	- amount: {Float} Purchase amount
+	- theme: {String} default | dark
+
+	Usage:
+	{% render 'klarna-placement', type: type, purchaseAmount: 20.20, theme: 'dark' %}
+{% endcomment %}
+
+{%- unless theme == 'dark' -%}
+	{%- assign theme = '' -%}
+{%- endunless -%}
+
+{%- case type -%}
+
+  {% when 'info-page' %}
+    {%- assign key = 'info-page' -%}
+
+  {% when 'footer-promotion-auto-size' %}
+    {%- assign key = 'footer-promotion-auto-size' -%}
+
+  {% when 'sidebar-promotion-auto-size' %}
+    {%- assign key = 'sidebar-promotion-auto-size' -%}
+
+  {% when 'credit-promotion-auto-size' %}
+    {%- assign key = 'credit-promotion-auto-size' -%}
+    {%- assign amount = purchaseAmount -%}
+
+  {% when 'credit-promotion-badge' %}
+    {%- assign key = 'credit-promotion-badge' -%}
+    {%- assign amount = purchaseAmount -%}
+
+  {% when 'top-strip-promotion-auto-size' %}
+    {%- assign key = 'top-strip-promotion-auto-size' -%}
+
+  {% when 'top-strip-promotion-badge' %}
+    {%- assign key = 'top-strip-promotion-badge' -%}
+
+  {% when 'homepage-promotion-tall' %}
+    {%- assign key = 'homepage-promotion-tall' -%}
+
+  {% when 'homepage-promotion-wide' %}
+    {%- assign key = 'homepage-promotion-wide' -%}
+
+  {% when 'homepage-promotion-box' %}
+    {%- assign key = 'homepage-promotion-box' -%}
+
+{%- endcase -%}
+
+{%- assign locales = 'de-DE en-DE da-DK en-DK en-FI fi-FI sv-FI en-GB en-NO no-NO en-SE sv-SE en-NL nl-NL de-AT en-AT' | split: ' ' -%}
+{%- assign requestLocaleArr = request.locale | split: '-' -%}
+{%- assign country = requestLocaleArr[1] | default: request.country.iso_code | upcase -%}
+{%- assign builtLocale = requestLocaleArr[0] | append: '-' | append: country  -%}
+{%- assign klarnaLocale = locales | find: builtLocale %}
+
+{%- if klarnaLocale and key -%}
+
+	<div class="klarna-placement-container animate__animated animate__fadeIn animate__delay-1s">
+
+		<klarna-placement
+			data-key="{{ key }}"
+			data-locale="{{ klarnaLocale }}"
+			{%- if theme -%}
+			data-theme="{{ theme }}"
+			{%- endif -%}
+			{%- if amount -%}
+			data-purchase-amount="{{ amount | money_in_smallest }}"
+			{%- endif -%}
+		></klarna-placement>
+
+	</div>
+
+{%- endif -%}

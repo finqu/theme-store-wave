@@ -1,0 +1,22 @@
+{% comment %}
+	Renders a form error
+
+	Accepts:
+	- error: {String} Name of error (required)
+	- class: {String} Classes
+
+	Usage:
+	{% render 'form-error', error: form.error, class: class %}
+{% endcomment %}
+
+{%- if error -%}
+
+	<div class="form-error{% if class %} {{ class }}{% endif %}">
+
+        <span class="d-block">
+        	{{- error | prepend: 'error.' | t -}}
+        </span>
+
+    </div>
+
+{%- endif -%}

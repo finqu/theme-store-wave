@@ -1,0 +1,206 @@
+{% if customer.orders.size > 0 %}
+
+    {%- capture sectionHeaderSecondaryAction -%}
+
+        <a href="{{ routes.account_url }}">
+
+            {%- render 'icon', icon: 'arrow-left', class: 'me-1' -%}
+
+            <span>
+                {{ 'general.back' | t }}
+            </span>
+        </a>
+
+    {%- endcapture -%}
+
+    {%- assign sectionTitle = 'account.orders_title' | t -%}
+    {%- assign sectionHeaderSecondaryAction = sectionHeaderSecondaryAction -%}
+    {%- assign dateFormat = 'general.date_format' | t -%}
+
+{% endif %}
+
+{%- capture sectionContent -%}
+
+    {% if customer.orders.size > 0 %}
+
+        {%- paginate customer.orders by 10 -%}
+
+            <div class="orders">
+
+                {% for order in customer.orders %}
+
+                    {%- assign item = order.items | first -%}
+                    {%- assign otherProductsCount = order.items.size | minus: 1 -%}
+
+                    <div class="order section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom{% else %}{% unless forloop.last %} mb-g{% endunless %}{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account-orders" data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                        <a href="{{ order | link }}">
+
+                            <div class="row g-0">
+
+                                <div class="col-auto">
+
+                                    <div class="order-media aspect-ratio-product">
+
+                                        <div class="order-media-img-container aspect-ratio-container">
+
+                                            {% if item.image %}
+
+                                                {%- assign img = item.image -%}
+
+                                                {% if settings.productImageAspectRatio == '9:13' %}
+
+                                                    {%- assign imgSize = '110,142' -%}
+
+                                                {% elsif settings.productImageAspectRatio == '4:3' %}
+
+                                                    {%- assign imgSize = '110,93' -%}
+
+                                                {% elsif settings.productImageAspectRatio == '1:1' %}
+
+                                                    {%- assign imgSize = '110,110' -%}
+
+                                                {% endif %}
+
+                                                <picture>
+                                                    <img
+                                                        alt="{{ item.name }}"
+                                                        data-src="{{ img | thumb: imgSize }}"
+                                                        data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                        class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                                </picture>
+
+                                            {% else %}
+
+                                                {%- capture img -%}
+                                                    {%- render 'placeholder-svg', type: 'image', base64: true -%}
+                                                {%- endcapture -%}
+
+                                                <img
+                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+                                                    alt="{{ item.name }}"
+                                                    data-src="{{- img | strip_newlines -}}">
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col ps-4">
+
+                                    <div class="row g-0">
+
+                                        <div class="col pe-4">
+
+                                            <div class="order-name">
+
+                                                <span class="order-name-text">
+
+                                                    {{ item.title }}
+
+                                                    {% if otherProductsCount > 0 %}
+
+                                                        <span class="text-muted">
+
+                                                            {%- if otherProductsCount == 1 -%}
+
+                                                                {{ 'account.order.other_product_dynamic' | t, amount: otherProductsCount }}
+
+                                                            {%- else -%}
+
+                                                                {{ 'account.order.other_product_plural_dynamic' | t, amount: otherProductsCount}}
+
+                                                            {%- endif -%}
+
+                                                        </span>
+
+                                                    {% endif %}
+
+                                                </span>
+
+                                            </div>
+
+                                            <div class="order-number">
+
+                                                <span class="order-number-text">
+                                                    {{ 'account.order.order_number' | t }}: {{ order.order_number }}
+                                                </span>
+
+                                            </div>
+
+                                            <div class="order-date">
+
+                                                {{ 'account.order.order_date' | t }}: <i><time datetime="{{ order.created_at | date: "%F" }}">{{ order.created_at | date: dateFormat }}</time></i>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-auto">
+
+                                            <div class="order-status">
+
+                                                <span class="order-status-text">
+                                                    {{ order.order_status | prepend: 'account.order.order_statuses.' | t }}
+                                                </span>
+
+                                            </div>
+
+                                            <div class="order-total-price">
+
+                                                <span class="order-total-price-text">
+                                                    {{ order.total_price | money_with_currency }}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% render 'pagination', paginate: paginate %}
+
+        {%- endpaginate -%}
+
+    {% else %}
+
+        <div class="text-center">
+
+            {%- render 'icon', icon: 'order-details', class: 'svg-icon-5x mb-3' -%}
+
+            <span class="h5 d-block mb-3">
+                {{- 'account.orders_title' | t -}}
+            </span>
+
+            <p class="mb-6">
+                {{- 'account.order.no_orders' | t -}}
+            </p>
+
+            <a href="{{ routes.account_url }}" class="btn btn-primary">
+                {{- 'general.back' | t -}}
+            </a>
+
+        </div>
+
+    {% endif %}
+
+{%- endcapture -%}
+
+<section class="section section-account-orders">
+    {% render 'section', sectionHandle: '.section-account-orders', sectionTitle: sectionTitle, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionContent: sectionContent, sectionContainer: 'compact', sectionContentAnimation: false, sectionOverlay: settings.sectionOverlay, sectionInnerGap: '2rem' %}
+</section>

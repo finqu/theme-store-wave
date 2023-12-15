@@ -1,0 +1,24 @@
+// Background
+// -----------------------------------------------------------------------------------------
+
+[data-bg-set],
+[data-bg] {
+    background-size: var(--bg-size, cover);
+    background-position: var(--bg-position, 50% 50%);
+}
+
+.bg-size-cover {
+    background-size: var(--bg-size, cover);
+}
+
+.bg-size-contain {
+    background-size: var(--bg-size, contain);
+}
+
+@each $key, $val in map-keys($background-positions) {
+
+    .bg-position-#{$key} {
+        background-position: var(--bg-position, val);
+    }
+}
+

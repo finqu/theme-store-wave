@@ -1,0 +1,57 @@
+{%- capture sectionContent -%}
+
+    {% if wishlist.products %}
+
+        <div class="row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ settings.productPerRow }}">
+
+            {% for product in wishlist.products %}
+
+                <div class="col" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ forloop.index }}" data-wishlist-item="{{ product.id }}">
+
+                    {%- render 'product-card-grid', product: product, wishlist: 'remove' -%}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="text-center">
+
+            {%- render 'icon', icon: 'like', class: 'svg-icon-5x mb-3' -%}
+
+            <span class="h5 d-block mb-3">
+                {{- 'wishlist.empty_title' | t -}}
+            </span>
+
+            <p class="mb-6">
+                {{- 'wishlist.empty_description' | t -}}
+            </p>
+
+            <a href="{{ routes.root_url }}" class="btn btn-primary">
+                {{- 'wishlist.continue_browsing' | t -}}
+            </a>
+
+        </div>
+
+    {% endif %}
+
+{%- endcapture -%}
+
+<section class="section section-wishlist">
+
+    {% if wishlist.products %}
+
+        {%- assign sectionTitle = 'wishlist.title' | t -%}
+
+        {% render 'section', sectionHandle: '.section-wishlist', sectionTitle: sectionTitle, sectionContent: sectionContent, sectionContentAnimation: false, sectionInnerGap: '2rem' %}
+
+    {% else %}
+
+        {% render 'section', sectionHandle: '.section-wishlist', sectionContent: sectionContent, sectionTextAlign: 'center', sectionInnerGap: '2rem' %}
+
+    {% endif %}
+    
+</section>

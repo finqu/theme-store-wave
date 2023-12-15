@@ -1,0 +1,24 @@
+<div class="product-subattribute-container mb-4" data-attribute="{{ option.attribute.id }}" data-option="{{ option.id }}" style="display: none;">
+
+    {%- assign attribute = option.subattribute -%}
+    {%- assign subOption = option.id -%}
+
+    {%- if attribute.input_type == 'select' -%}
+
+        {% render 'product-attributes/select', attribute: attribute, subOption, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- elsif attribute.input_type == 'radio' -%}
+
+        {% render 'product-attributes/radio', attribute: attribute, subOption, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, style: 'badge' %}
+
+    {%- elsif attribute.input_type == 'checkbox' -%}
+
+        {% render 'product-attributes/checkbox', attribute: attribute, subOption, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- elsif attribute.input_type == 'text' -%}
+
+        {% render 'product-attributes/text', attribute: attribute, subOption, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- endif -%}
+
+</div>

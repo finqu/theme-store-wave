@@ -1,0 +1,327 @@
+{%- assign sectionTitle = 'register.title' | t -%}
+
+{%- capture sectionContent -%}
+
+    {% form 'create_customer', id: 'register-form' %}
+
+        {% if settings.registerCompanyInformation %}
+
+            <div class="mb-4 form-floating">
+
+                <input type="text" class="form-control" name="company" id="register-company" value="{{ form.submitted.company }}" placeholder="{{ 'account.information.company' | t }}">
+
+                <label for="register-company">
+                    {{- 'account.information.company' | t -}}
+                </label>
+
+            </div>
+
+            <div class="row">
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="text" class="form-control" name="company_id" id="register-company-id" value="{{ form.submitted.company_id }}" placeholder="{{ 'account.information.company_id' | t }}">
+
+                        <label for="register-company-id">
+                            {{- 'account.information.company_id' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="text" class="form-control" name="vat_number" id="register-vat-number" value="{{ form.submitted.vat_number }}" placeholder="{{ 'account.information.vat_number' | t }}">
+
+                        <label for="register-vat-number">
+                            {{- 'account.information.vat_number' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if settings.registerAdditionalInformation %}
+
+            <div class="row">
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                         <input type="text" class="form-control" name="first_name" id="register-firstname" placeholder="{{ 'account.information.firstname' | t }}" value="{{ form.submitted.first_name | escape }}" required>
+
+                         <label for="register-firstname">
+                            {{- 'account.information.firstname' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="text" class="form-control" name="last_name" id="register-lastname" placeholder="{{ 'account.information.firstname' | t }}" value="{{ form.submitted.last_name | escape }}" required>
+
+                        <label for="register-lastname">
+                            {{- 'account.information.lastname' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="email" class="form-control" name="email" id="register-email" placeholder="{{ 'account.information.email' | t }}" value="{{ form.submitted.email | escape }}" required>
+
+                        <label for="register-email">
+                            {{- 'account.information.email' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="tel" class="form-control" name="phonenumber" id="register-phone" placeholder="{{ 'account.information.phone' | t }}" value="{{ form.submitted.phonenumber | escape }}" required>
+
+                        <label for="register-phone">
+                            {{- 'account.information.phone' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mb-4 form-floating">
+
+                <input type="text" class="form-control" name="address_1" id="register-address-1" placeholder="{{ 'account.information.street_address' | t }}" value="{{ form.submitted.address_1 }}">
+
+                <label for="register-address-1">
+                    {{- 'account.information.street_address' | t -}}
+                </label>
+
+            </div>
+
+            <div class="row">
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <select name="country" class="form-select" id="register-country">
+
+                            {{ country_option_tags }}
+
+                        </select>
+
+                        <label for="register-country">
+                            {{- 'account.information.country' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4 col-12 col-md">
+
+                    <div class="form-floating">
+
+                        <input type="text" class="form-control" name="zipcode" id="register-zipcode" placeholder="{{ 'account.information.zipcode' | t }}" value="{{ form.submitted.zipcode }}">
+
+                        <label for="register-zipcode">
+                            {{- 'account.information.zipcode' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-4 col-12 col-md-6">
+
+                    <div class="form-floating">
+
+                        <input type="text" class="form-control" name="city" id="register-city" placeholder="{{ 'account.information.city' | t }}" value="{{ form.submitted.city }}">
+
+                        <label for="register-city">
+                            {{- 'account.information.city' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mb-4 form-floating">
+
+                <input type="password" pattern=".{8,}" class="form-control" name="password" id="register-password" placeholder="{{ 'account.information.password' | t }}" value="{{ form.submitted.password | escape }}" required title="8 {{ 'error.min_length' | t }}">
+
+                <label for="register-password">
+                    {{- 'account.information.password' | t -}}
+                </label>
+
+            </div>
+
+        {% else %}
+
+            <div class="mb-4 form-floating">
+
+                 <input type="text" class="form-control" name="first_name" id="register-firstname" placeholder="{{ 'account.information.firstname' | t }}" value="{{ form.submitted.first_name | escape }}" required>
+
+                 <label for="register-firstname">
+                    {{- 'account.information.firstname' | t -}}
+                </label>
+
+            </div>
+
+            <div class="mb-4 form-floating">
+
+                <input type="text" class="form-control" name="last_name" id="register-lastname" placeholder="{{ 'account.information.firstname' | t }}" value="{{ form.submitted.last_name | escape }}" required>
+
+                <label for="register-lastname">
+                    {{- 'account.information.lastname' | t -}}
+                </label>
+
+            </div>
+
+            <div class="mb-4 form-floating">
+
+                <input type="email" class="form-control" name="email" id="register-email" placeholder="{{ 'account.information.email' | t }}" value="{{ form.submitted.email | escape }}" required>
+
+                <label for="register-email">
+                    {{- 'account.information.email' | t -}}
+                </label>
+
+            </div>
+
+            <div class="mb-4 form-floating">
+
+                <input type="password" pattern=".{8,}" class="form-control" name="password" id="register-password" placeholder="{{ 'account.information.password' | t }}" value="{{ form.submitted.password | escape }}" required title="8 {{ 'error.min_length' | t }}">
+
+                <label for="register-password">
+                    {{- 'account.information.password' | t -}}
+                </label>
+
+            </div>
+
+        {% endif %}
+
+        {% if settings.showPolicyAgreementAsText == false %}
+
+            {% if store.terms_and_conditions %}
+
+                <div class="mb-4 form-check">
+
+                    <input type="checkbox" name="terms_and_conditions" id="register-terms-conditions" class="form-check-input">
+
+                    <label for="register-terms-conditions" class="form-check-label">
+
+                        {%- capture policyLink -%}<a href="{{- store.terms_and_conditions.url -}}" target="_blank" class="fw-bold text-underline-indicator">
+                            {{- 'general.policies.terms_and_conditions' | t -}}
+                        </a>{%- endcapture -%}
+
+                        {{- 'general.policy_accept_text' | t, policy: policyLink -}}
+
+                    </label>
+
+                </div>
+
+            {% endif %}
+
+            {% if store.privacy_policy %}
+
+                <div class="mb-4 form-check">
+
+                    <input type="checkbox" name="privacy_policy" id="register-privacy-policy" class="form-check-input">
+
+                    <label for="register-privacy-policy" class="form-check-label">
+
+                        {%- capture policyLink -%}<a href="{{- store.privacy_policy.url -}}" target="_blank" class="fw-bold text-underline-indicator">
+                            {{- 'general.policies.privacy_policy' | t -}}
+                        </a>{%- endcapture -%}
+
+                        {{- 'general.policy_accept_text' | t, policy: policyLink -}}
+
+                    </label>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+        {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+        <button type="submit" id="register-cta" class="btn btn-primary d-block w-100"{% if settings.showPolicyAgreementAsText == false %} disabled{% endif %}>
+            {{- 'register.cta' | t -}}
+        </button>
+
+        {% if settings.showPolicyAgreementAsText and store.terms_and_conditions %}
+
+            <p class="d-block small text-muted mt-4">
+
+                {% assign actionText = 'register.cta' | t %}
+
+                {%- capture termsLink -%}<a href="{{- store.terms_and_conditions.url -}}" target="_blank" class="fw-bold text-underline-indicator">
+                    {{- 'general.policies.terms_and_conditions' | t -}}
+                </a>{%- endcapture -%}
+
+                {% if store.privacy_policy %}
+
+                    {%- capture policyLink -%}<a href="{{- store.privacy_policy.url -}}" target="_blank" class="fw-bold text-underline-indicator">
+                        {{- 'general.policies.privacy_policy' | t -}}
+                    </a>{%- endcapture -%}
+
+                    {{- 'register.inline_terms_with_policy' | t, action: actionText, terms: termsLink, policy: policyLink -}}
+
+                {% else %}
+
+                   {{- 'register.inline_terms' | t, action: actionText, terms: termsLink -}}
+
+                {% endif %}
+
+            </p>
+
+        {% endif %}
+
+        <hr class="mt-5 mb-5">
+
+        <h3 class="mb-5">
+            {{- 'register.returning_customer' | t -}}
+        </h3>
+
+        <a href="{{ routes.account_login_url }}" class="btn btn-secondary d-block w-100">
+            {{- 'register.login' | t -}}
+        </a>
+
+    {% endform %}
+
+{%- endcapture -%}
+
+<section class="section section-register">
+    {% render 'section', sectionHandle: '.section-register', sectionTitle: sectionTitle, sectionTitleTag: 'h2', sectionContent: sectionContent, sectionContainer: 'tiny', sectionOverlay: settings.sectionOverlay, sectionInnerGap: '2rem' %}
+</section>

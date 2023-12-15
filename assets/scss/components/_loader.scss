@@ -1,0 +1,48 @@
+// Loader
+// -----------------------------------------------------------------------------------------
+
+.loader {
+    position: relative;
+    --style-loader-size: 0.75rem;
+    
+    &:before {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: var(--style-loader-size);
+        height: var(--style-loader-size);
+        border-radius: 50%;
+        background-color: var(--style-loader-color);
+        box-shadow: calc(var(--style-loader-size) * 2) 0 var(--style-loader-faded-color), calc(var(--style-loader-size) * -2) 0 var(--style-loader-color);
+        animation: loaderAnimation 0.6s ease-out infinite alternate;
+        content: '';
+    }
+
+    &.loader-sm {
+        --style-loader-size: 0.65rem;
+    }
+
+    &.loader-md {
+        --style-loader-size: 0.95rem;
+    }
+
+    &.loader-lg {
+        --style-loader-size: 1.2rem;
+    }
+}
+  
+@keyframes loaderAnimation {
+    0% {
+        background-color: var(--style-loader-faded-color);
+        box-shadow: calc(var(--style-loader-size) * 2) 0 var(--style-loader-faded-color), calc(var(--style-loader-size) * -2) 0 var(--style-loader-color);
+    }
+    50% {
+        background-color: var(--style-loader-color);
+        box-shadow: calc(var(--style-loader-size) * 2) 0 var(--style-loader-faded-color), calc(var(--style-loader-size) * -2) 0 var(--style-loader-faded-color);
+    }
+    100% {
+        background-color: var(--style-loader-faded-color);
+        box-shadow: calc(var(--style-loader-size) * 2) 0 var(--style-loader-color), calc(var(--style-loader-size) * -2) 0 var(--style-loader-faded-color);
+    }
+}

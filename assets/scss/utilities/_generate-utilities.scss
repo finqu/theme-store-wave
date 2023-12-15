@@ -1,0 +1,133 @@
+// Generate utilities
+// -----------------------------------------------------------------------------------------
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "cursor": (
+            property: cursor,
+            class: cursor,
+            responsive: true,
+            values: auto pointer grab zoom-in
+        ),
+        "background-color": map-merge(
+            map-get($utilities, "background-color"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "background-color"), "values"),
+                    (
+                        "accent": var(--style-bg-accent-color)
+                    )
+                )
+            )
+        ),
+        "width": (
+            property: width,
+            class: w,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "max-width": (
+            property: max-width,
+            class: max-w,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "min-width": (
+            property: min-width,
+            class: min-w,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "width-px": (
+            property: width,
+            class: w-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "max-width-px": (
+            property: max-width,
+            class: max-w-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "min-width-px": (
+            property: min-width,
+            class: min-w-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "viewport-width": (
+            property: width,
+            class: vw,
+            responsive: true,
+            values: $sizes-vw
+        ),
+        "max-viewport-width": (
+            property: max-width,
+            class: max-vw,
+            responsive: true,
+            values: $sizes-vw
+        ),
+        "min-viewport-width": (
+            property: min-width,
+            class: min-vw,
+            responsive: true,
+            values: $sizes-vw
+        ),
+        "height": (
+            property: height,
+            class: h,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "max-height": (
+            property: max-height,
+            class: max-h,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "min-height": (
+            property: min-height,
+            class: min-h,
+            responsive: true,
+            values: $sizes-percentage
+        ),
+        "height-px": (
+            property: height,
+            class: h-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "max-height-px": (
+            property: max-height,
+            class: max-h-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "min-height-px": (
+            property: min-height,
+            class: min-h-px,
+            responsive: true,
+            values: $sizes-px
+        ),
+        "viewport-height": (
+            property: height,
+            class: vh,
+            responsive: true,
+            values: $sizes-vh
+        ),
+        "max-viewport-height": (
+            property: max-height,
+            class: max-vh,
+            responsive: true,
+            values: $sizes-vh
+        ),
+        "min-viewport-height": (
+            property: min-height,
+            class: min-vh,
+            responsive: true,
+            values: $sizes-vh
+        )
+    )
+);

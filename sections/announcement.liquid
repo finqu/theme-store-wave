@@ -1,0 +1,247 @@
+{%- if section.settings.announcementVisibility == 'frontpage' and request.page_type == 'frontpage' and section.settings.announcementStatus -%}
+    {%- assign announcementIsVisible = true -%}
+{% elsif section.settings.announcementVisibility == 'all' and section.settings.announcementStatus %}
+    {%- assign announcementIsVisible = true -%}
+{%- else -%}
+    {%- assign announcementIsVisible = false -%}
+{%- endif -%}
+
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} {
+        --style-announcement-align: {%- if section.settings.announcementTextAlign == 'nil' -%}{{ settings.sectionTextAlign }}{%- else -%}{{ section.settings.announcementTextAlign }}{%- endif -%};
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{% if announcementIsVisible or request.design_mode == 'edit' -%}
+
+    {%- capture slides -%}
+
+        {%- for item in section.settings.setting_blocks.items -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner container{% if item.settings.announcementText | size > 50 %} has-long-text{% endif %}">
+
+                    {% if item.settings.announcementLink.url %}
+
+                        <a
+                            href="{{- item.settings.announcementLink.url -}}"
+                            class="site-announcement-text"
+                            {% if item.settings.announcementLinkOpenInNewWindowStatus %}
+                            target="_blank"
+                            {% endif %}>
+
+                            {{ item.settings.announcementText }}
+
+                        </a>
+
+                    {% else %}
+
+                        <span class="site-announcement-text">
+
+                            {{ item.settings.announcementText }}
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {%- endfor -%}
+
+    {%- endcapture -%}
+
+    {%- if section.settings.setting_blocks.items.size > 1 -%}
+        {%- assign autoplaySpeed = section.settings.carouselAutoplaySpeed -%}
+    {%- else -%}
+        {%- assign autoplaySpeed = 0 -%}
+    {%- endif -%}
+
+    <div class="site-announcement-container">
+
+        <div class="site-announcement">
+
+            {%- render 'swiper', slides: slides, slidesPerView: 1, style: 1, evenHeightSlides: true, standalone: true, class: 'w-100', noSwiping: true, autoplaySpeed: autoplaySpeed, loop: true, speed: 700, slidesGap: '0' -%}
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+    {
+        "name": {
+            "en": "Announcement",
+            "fi": "Ilmoitus"
+        },
+        "tag": "section",
+        "is_creatable": false,
+        "is_removable": false,
+        "class": "section section-site-announcement",
+        "settings": {
+            "list_type": "tabs",
+            "groups": [
+                {
+                    "title": {
+                        "en": "Content",
+                        "fi": "Sisältö"
+                    },
+                    "id": "items",
+                    "call_to_action": {
+                        "en": "Add a announcement",
+                        "fi": "Lisää ilmoitus"
+                    },
+                    "is_sortable": true,
+                    "setting_blocks": [
+                        {
+                            "type": "text",
+                            "title": {
+                                "en": "Announcement",
+                                "fi": "ilmoitus"
+                            },
+                            "settings": [
+                                {
+                                    "id": "announcementText",
+                                    "type": "text",
+                                    "label": {
+                                        "en": "Text",
+                                        "fi": "Teksti"
+                                    }
+                                },
+                                {
+                                    "id": "announcementLink",
+                                    "type": "url",
+                                    "label": {
+                                        "en": "Link",
+                                        "fi": "Linkki"
+                                    }
+                                },
+                                {
+                                    "id": "announcementLinkOpenInNewWindowStatus",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Open link in a new tab",
+                                        "fi": "Avaa linkki uudessa välilehdessä"
+                                    },
+                                    "default": false
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "title": {
+                        "en": "Settings",
+                        "fi": "Asetukset"
+                    },
+                    "settings": [
+                        {
+                            "id": "announcementTextAlign",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Content align",
+                                "fi": "Sisällön tasaus"
+                            },
+                            "default": "nil",
+                            "options": [
+                                {
+                                    "value": "nil",
+                                    "label": "Auto"
+                                },
+                                {
+                                    "value": "start",
+                                    "label": "{# icon.align-start #}"
+                                },
+                                {
+                                    "value": "center",
+                                    "label": "{# icon.align-center #}"
+                                },
+                                {
+                                    "value": "end",
+                                    "label": "{# icon.align-end #}"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "announcementVisibility",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Visibility",
+                                "fi": "Näkyvyys"
+                            },
+                            "default": "all",
+                            "options": [
+                                {
+                                    "value": "all",
+                                    "label": {
+                                        "en": "On all pages",
+                                        "fi": "Kaikilla sivuilla"
+                                    }
+                                }, {
+                                    "value": "frontpage",
+                                    "label": {
+                                        "en": "On frontpage",
+                                        "fi": "Etusivulla"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "carouselAutoplaySpeed",
+                            "label": {
+                                "en": "Autoplay",
+                                "fi": "Automaattinen toisto"
+                            },
+                            "type": "radio-pill",
+                            "default": 3,
+                            "options": [
+                                {
+                                    "value": 3,
+                                    "label": "3 s"
+                                },
+                                {
+                                    "value": 5,
+                                    "label": "5 s"
+                                },
+                                {
+                                    "value": 10,
+                                    "label": "10 s"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "announcementStatus",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show announcement",
+                                "fi": "Näytä ilmoitus"
+                            },
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "presets": [
+            {
+                "settings": {
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementText": "Tell your customers about your promotions."
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+{% endschema %}

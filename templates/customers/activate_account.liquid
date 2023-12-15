@@ -1,0 +1,13 @@
+{%- assign sectionTitle = 'activate_account.title' | t -%}
+
+{%- capture sectionContent -%}
+
+	<p class="mb-0">
+		{{- 'activate_account.description' | t -}}
+	</p>
+
+{%- endcapture -%}
+
+<section class="section section-activate-account">
+    {% render 'section', sectionHandle: '.section-activate-account', sectionTitle: sectionTitle, sectionContent: sectionContent, sectionContainer: 'tiny', sectionOverlay: settings.sectionOverlay, sectionInnerGap: '2rem' %}
+</section>

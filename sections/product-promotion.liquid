@@ -1,0 +1,709 @@
+{%- assign product = section.settings.product -%}
+{%- assign productName = product.name | default: '' -%}
+{%- assign productManufacturerName = product.manufacturer.name | default: '' -%}
+{%- assign productPrice = product.price | default: '' -%}
+{%- assign productNetPrice = product.net_price | default: '' -%}
+{%- assign productOriginalNetPrice = product.original_net_price | default: '' -%}
+{%- assign productOriginalPrice = product.original_price | default: '' -%}
+{%- assign productRating = product.rating -%}
+{%- assign productMaxRating = product.max_rating -%}
+{%- assign productHasDiscount = product.has_discount | default: false -%}
+{%- assign productLinkUrl = product | link | default: '' -%}
+{%- assign productLinkText = 'product.view' | t -%}
+
+{%- if product.description.size > 0 -%}
+    {%- assign productDescription = product.description | strip_html | strip | truncate: 300 -%}
+{%- endif -%}
+
+{%- unless product -%}
+    {%- assign productName = 'placeholder.product' | t -%}
+    {%- assign productManufacturerName = 'placeholder.manufacturer' | t -%}
+    {%- assign productRating = '0,1,2,3,4,5' | split: ',' | random -%}
+    {%- assign productMaxRating = 5 -%}
+    {%- assign productPriceValues = '4.90,10.50,24.90,39.90,54.90,74.90,80.90,99.90,124.90' | split: ',' -%}
+    {%- assign productPrice = productPriceValues | random -%}
+    {%- assign productNetPrice = productPrice -%}
+    {%- assign productDescription = 'placeholder.product_description' | t -%}
+{%- endunless -%}
+
+{%- assign sectionAnimationOrder = 0 -%}
+
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} .product-media-img-container + div {
+        transform: translateX(70%);
+    }
+    #finqu-section-{{ section.id }} .product-media-img-container + div .aspect-ratio-item {
+        box-shadow: 0 2px 6px #0003;
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- capture sectionContent -%}    
+
+     <div class="row gy-g">
+
+        <div class="col-12 col-md-6 order-2 order-md-1 d-flex flex-column justify-content-center">
+
+            {%- if section.settings.showManufacturer and productManufacturerName -%}
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="product-manufacturer" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    <span class="text-subtitle">
+                        {{- productManufacturerName -}}
+                    </span>
+
+                </div>
+
+            {%- endif -%}
+
+            <div class="product-title" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {%- if product -%}
+                    <a href="{{ productLinkUrl }}">
+                {%- endif -%}
+
+                <{{ section.settings.sectionTitleTag }} class="display-6 text-title">
+                    {{- productName -}}
+                </{{ section.settings.sectionTitleTag }}>
+
+                {%- if product -%}
+                    </a>
+                {%- endif -%}
+
+            </div>
+
+            {%- if section.settings.showRating and productRating > 0  -%}
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="product-rating mt-1 fs-3" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {%- for rating in (1..productMaxRating) -%}
+
+                        {%- if productRating >= rating -%}
+
+                            {%- render 'icon', icon: 'rating', class: 'svg-icon-gap-xs text-review-icon' -%}
+
+                        {%- else -%}
+
+                            {%- render 'icon', icon: 'rating-empty', class: 'svg-icon-gap-xs text-muted' -%}
+
+                        {%- endif -%}
+
+                    {%- endfor -%}
+
+                </div>
+
+            {% endif %}
+
+            {%- if section.settings.showPricing -%}
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="product-price mt-4" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    {%- if productHasDiscount -%}
+
+                        <span class="text-sale-price fw-bold me-2 fs-2">
+                            {{- settings.taxFreeShopping == true | yepnope: productNetPrice, productPrice | money_with_currency -}}
+                        </span>
+
+                        <span class="text-decoration-line-through text-muted fs-2">
+                            {{- settings.taxFreeShopping == true | yepnope: productOriginalNetPrice, productOriginalPrice | money_with_currency -}}
+                        </span>
+
+                    {%- else -%}
+
+                        <span class="text-price fs-2">
+                            {{- settings.taxFreeShopping == true | yepnope: productNetPrice, productPrice | money_with_currency -}}
+                        </span>
+
+                    {%- endif -%}
+
+                    {%- if section.settings.showPromotion and product.promotion -%}
+
+                        <div class="product-promotion mt-1">
+
+                            <span class="text-sale-price">
+                                {{- product.promotion.title | strip -}}{% if product.promotion.description %}: {{ product.promotion.description -}}{%- endif -%}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+            {%- if section.settings.showDescription -%}
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="product-description text-richtext mt-4 fs-5" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    <p>
+                        {{- productDescription -}}
+                    </p>
+
+                </div>
+
+            {%- endif -%}
+
+            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+            <div class="product-action mt-4" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {%- render 'section-quick-link', style: section.settings.btnStyle, text: productLinkText, url: productLinkUrl -%}
+
+            </div>
+
+        </div>
+
+        <div class="col-12 col-md-6 order-1 order-md-2 position-relative">
+
+            {%- if product -%}
+                <a href="{{ productLinkUrl }}">
+            {%- endif -%}
+
+            <div class="product-media d-flex">
+
+                {%- if product.images -%}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    {% assign img1 = product.images[0] %}
+                    {% assign img2 = product.images[1] %}
+                    
+                    {%- if settings.productImageAspectRatio == '9:13' -%}
+
+                        {%- assign imgSizeSm = '236,336' -%}
+                        {%- assign imgSizeMd = '286,418' -%}
+                        {%- assign imgSizeLg = '394,564' -%}
+
+                    {%- elsif settings.productImageAspectRatio == '4:3' -%}
+
+                        {%- assign imgSizeSm = '236,179' -%}
+                        {%- assign imgSizeMd = '286,217' -%}
+                        {%- assign imgSizeLg = '394,298' -%}
+
+                    {%- elsif settings.productImageAspectRatio == '1:1' -%}
+
+                        {%- assign imgSizeSm = '236,236' -%}
+                        {%- assign imgSizeMd = '286,286' -%}
+                        {%- assign imgSizeLg = '394,394' -%}
+
+                    {%- endif -%}
+
+                    <div class="aspect-ratio-product w-60 overflow-visible">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-aos="animate__fadeInLeft" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- img1.original | thumb: imgSizeLg }} 1x,
+                                    {{- img1.original | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- img1.original | thumb: imgSizeMd }} 1x,
+                                    {{- img1.original | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- img1.original | thumb: imgSizeSm }} 1x,
+                                    {{- img1.original | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ productName }}" 
+                                    data-src="{{ img1.original | thumb: imgSizeSm }}"
+                                    data-srcset="{{ img1.original | thumb: imgSizeSm }} 1x, {{ img1.original | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                            </picture>
+
+                        </div>
+
+                        {% if img2 %}
+
+                            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                            {%- if settings.productImageAspectRatio == '9:13' -%}
+
+                                {%- assign imgSizeSm = '118,168' -%}
+                                {%- assign imgSizeMd = '143,209' -%}
+                                {%- assign imgSizeLg = '197,282' -%}
+
+                            {%- elsif settings.productImageAspectRatio == '4:3' -%}
+
+                                {%- assign imgSizeSm = '118,90' -%}
+                                {%- assign imgSizeMd = '143,109' -%}
+                                {%- assign imgSizeLg = '197,149' -%}
+
+                            {%- elsif settings.productImageAspectRatio == '1:1' -%}
+
+                                {%- assign imgSizeSm = '118,118' -%}
+                                {%- assign imgSizeMd = '143,143' -%}
+                                {%- assign imgSizeLg = '197,197' -%}
+
+                            {%- endif -%}
+
+                            <div class="position-absolute top-0 end-0 bottom-0 d-flex align-items-center">
+
+                                <div class="aspect-ratio-product overflow-visible" data-aos="animate__fadeInRight" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                    <div class="product-media-img-container aspect-ratio-container">
+
+                                        <picture>
+                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                {{- img2.original | thumb: imgSizeLg }} 1x,
+                                                {{- img2.original | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                {{- img2.original | thumb: imgSizeMd }} 1x,
+                                                {{- img2.original | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                            <source data-srcset="
+                                                {{- img2.original | thumb: imgSizeSm }} 1x,
+                                                {{- img2.original | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                alt="{{ productName }}" 
+                                                data-src="{{ img2.original | thumb: imgSizeSm }}"
+                                                data-srcset="{{ img2.original | thumb: imgSizeSm }} 1x, {{ img2.original | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                                class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                        </picture>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {%- else -%}
+
+                    {%- if settings.productImageAspectRatio == '9:13' -%}
+                        {%- assign img1Size = '394,564' -%}
+                        {%- assign img2Size = '197,282' -%}
+                    {%- elsif settings.productImageAspectRatio == '4:3' -%}
+                        {%- assign img1Size = '465,350' -%}
+                        {%- assign img2Size = '233,175' -%}
+                    {%- elsif settings.productImageAspectRatio == '1:1' -%}
+                        {%- assign img1Size = '400,400' -%}
+                        {%- assign img2Size = '200,200' -%}
+                    {%- endif -%}
+
+                    {%- assign img1Width = img1Size | split: ',' | first -%}
+                    {%- assign img1Height = img1Size | split: ',' | last -%}
+                    {%- assign img2Width = img2Size | split: ',' | first -%}
+                    {%- assign img2Height = img2Size | split: ',' | last -%}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="aspect-ratio-product overflow-visible">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-aos="animate__fadeInLeft" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                            {%- if product -%}
+                                {%- render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item', width: img1Width, height: img1Height -%}
+                            {% else %}
+                                {%- render 'placeholder-svg', type: 'product', class: 'aspect-ratio-item', width: img1Width, height: img1Height -%}
+                            {%- endif -%}
+
+                        </div>
+
+                        <div class="position-absolute top-0 end-0 bottom-0 d-flex align-items-center">
+
+                            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                            <div class="aspect-ratio-product overflow-visible" data-aos="animate__fadeInRight" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                <div class="product-media-img-container aspect-ratio-container">
+
+                                    {%- if product -%}
+                                        {%- render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item', width: img2Width, height: img2Height -%}
+                                    {% else %}
+                                        {%- render 'placeholder-svg', type: 'product', class: 'aspect-ratio-item', width: img2Width, height: img2Height -%}
+                                    {%- endif -%}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {%- endif -%}
+
+            </div>
+            
+            {%- if product -%}
+                </a>
+            {%- endif -%}
+
+        </div>
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionHeader: false, sectionContentAnimation: false %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Product promotion",
+        "fi": "Tuotemainos"
+    },
+    "tag": "section",
+    "class": "section section-product-promotion",
+    "category": "theme-product",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "View",
+                            "fi": "Näkymä"
+                        }
+                    },
+                    {
+                        "id": "product",
+                        "type": "product",
+                        "label": {
+                            "en": "Product",
+                            "fi": "Tuote"
+                        }
+                    },
+                    {
+                        "id": "showManufacturer",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Manufacturer",
+                            "fi": "Valmistaja"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "showPromotion",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Promotion",
+                            "fi": "Kampanja"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "showPricing",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Price information",
+                            "fi": "Hintatiedot"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "showRating",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Rating",
+                            "fi": "Tuotearvosteluluokitus"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "showDescription",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Description",
+                            "fi": "Tuotekuvaus"
+                        },
+                        "default": true
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Content",
+                            "fi": "Sisältö"
+                        }
+                    },
+                    {
+                        "id": "sectionTextAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content align",
+                            "fi": "Sisällön tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionTitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Article title SEO priority",
+                            "fi": "Artikkelin otsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h1",
+                                "label": "H1"
+                            },
+                            {
+                                "value": "h2",
+                                "label": "H2"
+                            },
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnStyle",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Button style",
+                            "fi": "Painikkeen tyyli"
+                        },
+                        "default": "primary",
+                        "options": [
+                            {
+                                "value": "primary",
+                                "label": {
+                                    "en": "Style 1",
+                                    "fi": "Tyyli 1"
+                                }
+                            },
+                            {
+                                "value": "secondary",
+                                "label": {
+                                    "en": "Style 2",
+                                    "fi": "Tyyli 2"
+                                }
+                            },
+                            {
+                                "value": "link",
+                                "label": {
+                                    "en": "Style 3",
+                                    "fi": "Tyyli 3"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Section",
+                            "fi": "Osio"
+                        }
+                    },
+                    {
+                        "id": "sectionColorScheme",
+                        "type": "select",
+                        "label": {
+                            "en": "Color color scheme",
+                            "fi": "Värityyli"
+                        },
+                        "options": [
+                            {
+                                "value": false,
+                                "label": {
+                                    "en": "Disabled",
+                                    "fi": "Pois käytöstä"
+                                }
+                            },
+                            {
+                                "value": "1",
+                                "label": {
+                                    "en": "Color scheme 1",
+                                    "fi": "Värityyli 1"
+                                }
+                            },
+                            {
+                                "value": "2",
+                                "label": {
+                                    "en": "Color scheme 2",
+                                    "fi": "Värityyli 2"
+                                }
+                            },
+                            {
+                                "value": "3",
+                                "label": {
+                                    "en": "Color scheme 3",
+                                    "fi": "Värityyli 3"
+                                }
+                            },
+                            {
+                                "value": "4",
+                                "label": {
+                                    "en": "Color scheme 4",
+                                    "fi": "Värityyli 4"
+                                }
+                            },
+                            {
+                                "value": "5",
+                                "label": {
+                                    "en": "Color scheme 5",
+                                    "fi": "Värityyli 5"
+                                }
+                            },
+                            {
+                                "value": "light",
+                                "label": {
+                                    "en": "Light background / Dark content",
+                                    "fi": "Vaalea tausta / Tumma sisältö"
+                                }
+                            },
+                            {
+                                "value": "dark",
+                                "label": {
+                                    "en": "Dark background / Light content",
+                                    "fi": "Tumma tausta / Vaalea sisältö"
+                                }
+                            },
+                            {
+                                "value": "accent",
+                                "label": {
+                                    "en": "Accent background / Adaptive content",
+                                    "fi": "Korostus tausta / Mukautuva sisältö"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionBgImg",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Background image",
+                            "fi": "Taustakuva"
+                        },
+                        "adjustments": true
+                    },
+                    {
+                        "id": "sectionBgImgDimming",
+                        "label": {
+                            "en": "Image dimming",
+                            "fi": "Kuvan tummennus"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 90,
+                        "step": 5,
+                        "default": "0",
+                        "unit": "%"
+                    },
+                    {
+                        "id": "sectionBgImgBlur",
+                        "label": {
+                            "en": "Image blur",
+                            "fi": "Kuvan sumentaminen"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 10,
+                        "step": 1,
+                        "default": "0",
+                        "unit": " "
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

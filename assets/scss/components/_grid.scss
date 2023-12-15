@@ -1,0 +1,70 @@
+// Grid
+// -----------------------------------------------------------------------------------------
+
+@include media-breakpoint-down(lg) {
+	:root {
+		--style-grid-gutter-width: var(--style-grid-gutter-width-mobile);
+	}
+}
+
+.container,
+.container-fluid {
+	--style-grid-container-width: calc(100% - 2 * var(--style-grid-container-padding-x));
+}
+
+.container-compact {
+	@include make-container();
+	@include media-breakpoint-up(md) {
+		max-width: 850px;
+		--style-grid-container-width: 850px;
+		--style-grid-container-width: calc(850px - 2 * var(--style-grid-container-padding-x));
+	}
+}
+
+.container-tiny {
+	@include make-container();
+	@include media-breakpoint-up(md) {
+		max-width: 650px;
+		--style-grid-container-width: calc(650px - 2 * var(--style-grid-container-padding-x));
+	}
+}
+
+@each $breakpoint, $container-max-width in $container-max-widths {
+	.container-#{$breakpoint} {
+		--style-grid-container-width: calc(100% - 2 * var(--style-grid-container-padding-x));
+	}
+
+	@include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+		%responsive-container-#{$breakpoint} {
+			--style-grid-container-width: calc(#{$container-max-width} - 2 * var(--style-grid-container-padding-x));
+		}
+	}
+}
+
+@include media-breakpoint-up(xxl) {
+	@include row-scroll-cols('-xxl')
+}
+
+@include media-breakpoint-down(xxl) {
+	@include row-scroll-cols('-xl')
+}
+
+@include media-breakpoint-down(xl) {
+	@include row-scroll-cols('-lg');
+}
+
+@include media-breakpoint-down(lg) {
+	@include row-scroll-cols('-md');
+}
+
+@include media-breakpoint-down(lg) {
+	@include row-scroll-cols('-md');
+}
+
+@include media-breakpoint-down(md) {
+	@include row-scroll-cols('-sm');
+}
+
+@include media-breakpoint-down(sm) {
+	@include row-scroll-cols();
+}

@@ -1,0 +1,226 @@
+{% comment %}
+	Renders a section header
+
+	Accepts:
+	- sectionTitle: {String}
+	- sectionTitleClass: {String}
+	- sectionTitleTag: {String}
+	- sectionSubtitle: {String}
+	- sectionSubtitleTag: {String}
+	- sectionOverline: {String}
+	- sectionOverlineTag: {String}
+	- sectionDescription: {String}
+	- sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
+	- sectionHeaderClass: {String}
+	- sectionHeaderContainer {String}
+	- sectionHeaderGapScale: {Float}
+	- sectionHeaderAction: {String}
+	- sectionHeaderSecondaryAction: {String}
+	- sectionAnimation: {String}
+	- sectionAnimationRepeat: {Boolean}
+	- sectionHandle: {String}
+
+	Usage:
+	Render this snippet inside of element with a "section" class.
+
+	{% render 'section-header' %}
+{% endcomment %}
+
+{% assign sectionTitleTag = sectionTitleTag | default: 'span' %}
+{% assign sectionSubtitleTag = sectionSubtitleTag | default: 'span' %}
+{% assign sectionOverlineTag = sectionOverlineTag | default: 'span' %}
+
+{%- unless sectionAnimation == false -%}
+    {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}
+{%- endunless -%}
+
+{% assign sectionAnimationOrder = 0 %}
+
+{%- if sectionHandle and sectionHeaderGapScale -%}
+
+    {%- capture sectionHeaderStyle -%}
+        {{ sectionHandle }} .section-header {
+            --section-header-gap-scale: {{ sectionHeaderGapScale -}};
+		}
+	{%- endcapture -%}
+
+	{%- assign sectionHeaderStyle = sectionHeaderStyle | strip_newlines -%}
+
+	<style>{{ sectionHeaderStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+<div class="section-header{% if sectionHeaderClass %} {{ sectionHeaderClass }}{% endif %}{% if sectionHeaderContainer == 'none' %} d-block{% endif %}">
+
+	<div class="container{% if sectionHeaderContainer and sectionHeaderContainer != 'fixed' %}-{{- sectionHeaderContainer -}}{% endif %}">
+
+		{% if sectionHeaderSecondaryAction %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="action-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				{{- sectionHeaderSecondaryAction -}}
+
+			</div>
+
+		{% endif %}
+
+		{% if sectionBreadcrumbs %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="breadcrumbs-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				<nav>
+
+					<ul class="breadcrumbs">
+
+						{% for breadcrumb in sectionBreadcrumbs %}
+
+							<li class="item">
+
+								{%- if forloop.last == true -%}
+
+									<a href="{{ breadcrumb | link }}" class="item-link fw-bold">
+										{{ breadcrumb.name }}
+									</a>
+
+								{%- else -%}
+
+									<a href="{{ breadcrumb | link }}" class="item-link fw-bold">
+										{{ breadcrumb.name }}
+									</a>
+
+									{%- render 'icon', icon: 'angle-right', class: 'item-separator' -%}
+
+								{%- endif -%}
+
+							</li>
+
+						{% endfor %}
+
+					</ul>
+
+				</nav>
+
+			</div>
+
+		{% endif %}
+
+		{% if sectionOverline %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="overline-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				<{{ sectionOverlineTag }} class="overline">
+					{{- sectionOverline -}}
+				</{{ sectionOverlineTag }}>
+
+			</div>
+
+		{% endif %}
+
+		{% if sectionHeaderTextAlign != 'center' and sectionHeaderAction or sectionTitle %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="title-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				{% if sectionHeaderAction and sectionHeaderTextAlign == 'end' %}
+
+					<div class="section-action me-g">
+						{{- sectionHeaderAction -}}
+					</div>
+
+				{% endif %}
+
+				{% if sectionTitle %}
+
+					<{{ sectionTitleTag }} class="title{% if sectionTitleClass %} {{ sectionTitleClass }}{% endif %}">
+						{{- sectionTitle -}}
+					</{{ sectionTitleTag }}>
+
+				{% endif %}
+
+				{% if sectionHeaderAction and sectionHeaderTextAlign == 'start' %}
+
+					<div class="section-action ms-g">
+						{{- sectionHeaderAction -}}
+					</div>
+
+				{% endif %}
+
+			</div>
+
+		{% endif %}
+
+		{% if sectionSubtitle %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="subtitle-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				<{{ sectionSubtitleTag }} class="subtitle">
+					{{- sectionSubtitle -}}
+				</{{ sectionSubtitleTag }}>
+
+			</div>
+
+		{% endif %}
+
+		{% if sectionDescription %}
+
+			{%- if sectionAnimation -%}
+				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+			{%- endif -%}
+
+			<div class="description-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+
+				{% if sectionDescription.size > 220 %}
+
+					{%- assign descriptionCollapseId = sectionDescription | md5 -%}
+
+					<div id="collapse-{{- descriptionCollapseId -}}" class="description-collapse collapse{% if sectionDescription.size < 751 %} show-lg{% endif %}{% if sectionDescription.size < 404 %} show-md{% endif %}{% if sectionDescription.size < 391 %} show-sm{% endif %}">
+
+						<div class="description">
+							{{- sectionDescription -}}
+						</div>
+
+					</div>
+
+					<button type="button"
+						class="btn-text text-underline-indicator fw-bold mt-g"
+						data-bs-toggle="collapse"
+						data-bs-target="#collapse-{{- descriptionCollapseId -}}"
+						aria-expanded="false"
+						aria-controls="collapse-{{- descriptionCollapseId -}}">
+							{{- 'general.collapse_show_more' | t -}}
+					</button>
+
+				{% else %}
+
+					<div class="description">
+						{{- sectionDescription -}}
+					</div>
+
+				{% endif %}
+
+			</div>
+
+		{% endif %}
+
+    </div>
+
+</div>

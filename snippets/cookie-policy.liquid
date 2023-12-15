@@ -1,0 +1,62 @@
+{% comment %}
+    Renders a cookie policy banner
+
+    Usage:
+    {% render 'cookie-policy' %}
+{% endcomment %}
+
+{%- unless request.design_mode -%}
+
+    <div class="cookie-policy cookie-policy-position-{{ settings.cookiesPolicyPosition }}{% if session.cookie_policy %} d-none{% endif %}">
+
+        {%- form 'cookie_policy', id: 'cookie-policy-form' -%}
+
+            <input type="hidden" name="cookie_policy" value="{{ session.cookie_policy }}">
+
+            <div class="cookie-policy-inner">
+
+                <div class="cookie-policy-content">
+
+                    <span class="cookie-policy-title">
+                        {{- 'cookie_policy.title' | t -}}
+                    </span>
+
+                    <span class="cookie-policy-description">
+
+                        {{- 'cookie_policy.description' | t -}}
+
+                        {%- if store.privacy_policy -%}
+                            <a href="{{ store.privacy_policy.url }}" target="_blank" class="fw-bold text-reset text-underline-indicator">{{ 'cookie_policy.privacy_policy' | t }}</a>.
+                        {%- endif -%}
+
+                    </span>
+
+                </div>
+
+                <div class="cookie-policy-actions">
+
+                    <button type="button"
+                        id="cookie-policy-required-cta"
+                        class="btn btn-secondary"
+                        value="required"
+                        {% if session.cookie_policy == 'required' %} data-cookie-policy-close{% else %} data-cookie-policy-submit{% endif %}>
+                        {{- 'cookie_policy.required_cta' | t -}}
+                    </button>
+
+                    <button type="button"
+                        id="cookie-policy-all-cta"
+                        class="btn btn-primary"
+                        value="all"
+                        {% if session.cookie_policy == 'all' %} data-cookie-policy-close{% else %} data-cookie-policy-submit{% endif %}>
+                        {{- 'cookie_policy.all_cta' | t -}}
+                    </button>
+
+                </div>
+
+            </div>
+
+        {%- endform -%}
+
+    </div>
+
+{%- endunless -%}

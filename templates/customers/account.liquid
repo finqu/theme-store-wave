@@ -1,0 +1,394 @@
+{%- assign sectionTitle = 'account.information_title' | t -%}
+{%- assign sectionSubtitle = 'account.information_subtitle' | t -%}
+{%- assign dateFormat = 'general.date_format' | t -%}
+{%- assign loyalty = customer.loyalty_discount_progress -%}
+ 
+{%- capture sectionContent -%}
+
+	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom pb-4 pb-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 3">
+
+		<div class="row g-0">
+
+			<div class="col-auto">
+
+				{%- render 'icon', icon: 'user', class: 'svg-icon-4x' -%}
+
+			</div>
+
+			<div class="col ps-4">
+
+				<div class="row">
+
+					<div class="col">
+
+						<div class="row">
+
+							<div class="col">
+
+								<div class="mb-6">
+
+					                <span class="d-block fw-bold mb-2">
+					                	{{ 'account.information.name' | t }}
+					                </span>
+
+					                <div>
+
+					                	<span>
+					                		{% if customer.firstname or customer.lastname %}
+						                		{{ customer.firstname }} {{ customer.lastname }}
+						                	{% else %}
+						                		{{ 'general.no_information_found' | t }}
+						                	{% endif %}
+						                </span>
+
+					                </div>
+
+					            </div>
+
+					            <div>
+
+					                <span class="d-block fw-bold mb-2">
+					                	{{ 'account.information.phone' | t }}
+					                </span>
+
+					                <div>
+
+						                <span>
+						                	{% if customer.phonenumber %}
+						                		{{ customer.phonenumber }}
+						                	{% else %}
+						                		{{ 'general.no_information_found' | t }}
+						                	{% endif %}
+						                </span>
+
+						            </div>
+
+					            </div>
+
+							</div>
+
+							<div class="col">
+
+								{% form 'localization', customer id: 'account-localization-form' %}
+
+									<div class="mb-6">
+
+										<span class="d-block fw-bold mb-2">
+											{{ 'account.information.currency' | t }}
+										</span>
+
+						                <div>
+
+						                	<select name="currency_code" class="form-control-text" id="edit-account-currency">
+
+										        {% for currency in form.available_currencies %}
+
+										            <option value="{{ currency.iso_code }}"{% if currency.iso_code == form.current_currency.iso_code %} selected{% endif %}>
+										            	{{ currency.iso_code }}
+										            </option>
+
+										        {% endfor %}
+
+										    </select>
+
+										    {%- render 'icon', icon: 'angle-down' -%}
+
+						                </div>
+
+						            </div>
+
+						            <div>
+
+						                <span class="d-block fw-bold mb-2">
+						                	{{ 'account.information.language' | t }}
+						                </span>
+
+						                <div>
+
+							                <select name="locale_code" class="form-control-text" id="edit-account-locale">
+
+										        {% for locale in form.available_locales %}
+
+										            <option value="{{ locale.iso_code }}"{% if locale.iso_code == form.current_locale.iso_code %} selected{% endif %}>
+										            	{{ locale.endonym_name }}
+										            </option>
+
+										        {% endfor %}
+
+										    </select>
+
+										    {%- render 'icon', icon: 'angle-down' -%}
+
+										</div>
+
+						            </div>
+
+					            {% endform %}
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+
+						<a href="{{ routes.account_edit_url }}" class="btn btn-secondary d-block w-100">
+							{{ 'general.edit' | t }}
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	{% if loyalty %}
+
+		<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 4">
+
+			<div class="row g-0">
+
+				<div class="col-auto">
+
+					{%- render 'icon', icon: 'loyalty', class: 'svg-icon-4x' -%}
+
+				</div>
+
+				<div class="col ps-4">
+
+					<div class="row">
+
+						<div class="col">
+
+							<div class="row">
+
+								<div class="col">
+
+									<div>
+
+										<span class="d-block fw-bold mb-2">
+											{{ loyalty.title }}
+										</span>
+
+										<div>
+
+											{{ loyalty.description }}
+
+											{% if loyalty.is_combinable == false and loyalty.is_stackable == false %}
+												<br><br>
+												{{ 'account.loyalty_discount.not_combinable_not_stackable' | t }}
+											{% elsif loyalty.is_combinable and loyalty.is_stackable == false %}
+												<br><br>
+												{{ 'account.loyalty_discount.combinable_not_stackable' | t }}
+											{% elsif loyalty.is_combinable == false and loyalty.is_stackable %}
+												<br><br>
+												{{ 'account.loyalty_discount.not_combinable_stackable' | t }}
+											{% else %}
+												<br><br>
+												{{ 'account.loyalty_discount.combinable_stackable' | t }}
+											{% endif %}
+
+										</div>
+
+									</div>
+
+								</div>
+
+								<div class="col-12 col-md-5 mt-g mt-md-0">
+
+									{{ 'account.loyalty_discount.current_level_title' | t }}
+
+									<h3 class="mb-0">
+										{% if loyalty.is_fixed_discount %}
+											{{ loyalty.current_level.discount | money_with_currency }}
+										{% else %}
+											{{ loyalty.current_level.discount }}%
+										{% endif %}
+									</h3>
+
+									{% if loyalty.current_level.valid_until %}
+										{%- assign expiry = loyalty.current_level.valid_until | date: dateFormat -%}
+
+										<span class="small text-muted">{{ 'account.loyalty_discount.level_expiry_info' | t: expiry: expiry }}</span>
+
+									{% endif %}
+
+									{% if loyalty.next_level %}
+
+										<div class="progress mb-3 mt-3">
+											{%- assign total = loyalty.next_level.threshold | minus: loyalty.current_level.threshold -%}
+											{%- assign progress = loyalty.total_spent | minus: loyalty.current_level.threshold -%}
+											{%- assign percentage = progress | divided_by: total | times: 100 -%}
+
+											<div class="progress-bar" role="progressbar" style="width: {{ percentage }}%" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+
+										{%- assign amount = loyalty.next_level.threshold | minus: loyalty.total_spent | money_with_currency -%}
+										<span>{{ 'account.loyalty_discount.spend_gap_info' | t: amount: amount }}</span>
+
+									{% endif %}
+
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	{% endif %}
+
+	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 5, 4 }}">
+
+		<div class="row g-0">
+
+			<div class="col-auto">
+
+				{%- render 'icon', icon: 'lock', class: 'svg-icon-4x' -%}
+
+			</div>
+
+			<div class="col ps-4">
+
+				<div class="row">
+
+					<div class="col">
+
+						<span class="d-block fw-bold mb-2">
+		                	{{ 'account.information.password' | t }}
+		                </span>
+
+		                <div>
+
+			                <span>
+			                	***************
+			                </span>
+
+			            </div>
+
+					</div>
+
+					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+
+						<a href="{{ routes.account_password_change_url }}" class="btn btn-secondary d-block w-100">
+							{{ 'general.edit' | t }}
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 6, 5 }}">
+
+		<div class="row g-0">
+
+			<div class="col-auto">
+
+				{%- render 'icon', icon: 'order-details', class: 'svg-icon-4x' -%}
+
+			</div>
+
+			<div class="col ps-4">
+
+				<div class="row">
+
+					<div class="col">
+
+						<span class="d-block fw-bold mb-2">
+		                	{{ 'account.order_plural' | t }}
+		                </span>
+
+		                <div>
+
+			                <span>
+			                	{{ customer.orders.size }}
+			                </span>
+
+			            </div>
+
+					</div>
+
+					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+
+						<a href="{{ routes.account_orders_url }}" class="btn btn-secondary d-block w-100">
+							{{ 'account.view_order_plural' | t }}
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} pt-4 pt-md-6{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 7, 6 }}">
+
+		<div class="row g-0">
+
+			<div class="col-auto">
+
+				{%- render 'icon', icon: 'login', class: 'svg-icon-4x' -%}
+
+			</div>
+
+			<div class="col ps-4">
+
+				<div class="row">
+
+					<div class="col">
+
+						<span class="d-block fw-bold mb-2">
+		                	{{ 'general.account' | t }}
+		                </span>
+
+		                <div>
+
+			                <span>
+			                	{{ customer.email }}
+			                </span>
+
+			            </div>
+
+					</div>
+
+					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+
+						<a href="{{ routes.account_logout_url }}" class="btn btn-secondary d-block w-100">
+							{{ 'account.logout' | t }}
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+{%- endcapture -%}
+
+<section class="section section-account">
+    {% render 'section', sectionHandle: '.section-account', sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContainer: 'compact', sectionContentAnimation: false, sectionOverlay: settings.sectionOverlay, sectionInnerGap: '3.5rem' %}
+</section>

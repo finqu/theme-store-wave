@@ -1,0 +1,260 @@
+{%- assign title = block.settings.title | default: 'placeholder.title' | t -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        --section-header-text-align: {%- if block.settings.textAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.textAlign }}{%- endif -%};
+    }
+    {%- if block.settings.blockPaddingMode == 'custom' -%}
+        #finqu-block-{{ block.id }} {
+            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
+            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    {%- render 'section-header', sectionOverline: block.settings.overline, sectionOverlineTag: block.settings.overlineTag, sectionTitle: title, sectionTitleClass: block.settings.titleClass, sectionTitleTag: block.settings.titleTag, sectionSubtitle: block.settings.subtitle, sectionSubtitleTag: block.settings.subtitleTag, sectionHeaderContainer: 'none' -%}
+
+</div>
+
+{% schema %}
+{
+    "name": {
+        "en": "Heading",
+        "fi": "Otsikko"
+    },
+    "tag": "div",
+    "class": "block block-heading",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "overline",
+                        "type": "text",
+                        "label": {
+                            "en": "Top title",
+                            "fi": "Yläotsikko"
+                        }
+                    },
+                    {
+                        "id": "title",
+                        "type": "text",
+                        "label": {
+                            "en": "Main title",
+                            "fi": "Pääotsikko"
+                        }
+                    },
+                    {
+                        "id": "subtitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Subtitle",
+                            "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "id": "textAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Text align",
+                            "fi": "Tekstin tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "blockPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "blockPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "blockPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "overlineTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Top title SEO priority",
+                            "fi": "Yläotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "titleClass",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Main title size",
+                            "fi": "Pääotsikon koko"
+                        },
+                        "default": "",
+                        "options": [
+                            {
+                                "value": "",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "display-1",
+                                "label": "D1"
+                            },
+                            {
+                                "value": "display-2",
+                                "label": "D2"
+                            },
+                            {
+                                "value": "display-3",
+                                "label": "D3"
+                            },
+                            {
+                                "value": "display-4",
+                                "label": "D4"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "titleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Main title SEO priority",
+                            "fi": "Pääotsikon SEO-prioriteetti"
+                        },
+                        "default": "h2",
+                        "options": [
+                            {
+                                "value": "h1",
+                                "label": "H1"
+                            },
+                            {
+                                "value": "h2",
+                                "label": "H2"
+                            },
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "subtitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Subtitle SEO priority",
+                            "fi": "Alaotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

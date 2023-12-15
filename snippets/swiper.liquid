@@ -1,0 +1,58 @@
+{% comment %}
+	Renders a swiper
+
+	Accepts:
+	- slides: {String} Swiper slides (Required)
+	- pagination: {String} Show pagination '' | hover | on
+    - paginationPosition: {String} relative | fixed
+	- navigation: {String} Show navigation '' | hover | on
+    - freemode: {Boolean} Freemode
+    - autoplay: {Boolean} Autoplay 
+    - autoplaySpeed: {Int} Autoplay speed
+    - speed: {Int} Speed of swiper
+    - loop: {Boolean} Loop the swiper
+    - effect: {String} Effect of swiper slide
+    - style: {Int} Style of carousel 1 | 2s
+    - class: {String} Classes to add to the swiper
+    - attrs: {String} Attributes to add to the swiper
+	- slidesPerView: {Int} Slides per view
+    - slidesGap: {Int} Slides gap
+    - standalone: {Boolean} Render the swiper as a standalone component
+    - centeredSlides: {Boolean} Centered slides
+    - centeredSlidesBounds {Boolean} If true, then active slide will be centered without adding gaps to the Slider. Required centeredSlides: true.
+    - centerInsufficientSlides: {Boolean} When enabled it center slides if the amount of slides less than slidesPerView. Not intended to be used loop mode.
+    - evenHeightSlides: {Boolean} Same height slides
+    - highlightActiveSlide: {Boolean} Highlight active slide
+    - noSwiping: {Boolean} Disable swiping
+
+	Usage:
+	{% render 'swiper', slides: slides %}
+{% endcomment %}
+
+<div class="swiper{% if style %} swiper-style-{{ style }}{% endif %}{% if class %} {{ class }}{% endif %}{% if pagination == 'hover' %} swiper-pagination-hover{% endif %}{% if navigation == 'hover' %} swiper-navigation-hover{% endif %}{% if standalone %} swiper-standalone{% endif %}{% if evenHeightSlides %} swiper-even-height-slides{% endif %}{% if highlightActiveSlide %} swiper-highlight-active-slide{% endif %}"{% if freemode %} data-swiper-freemode="true"{% endif %}{% if centeredSlides %} data-swiper-centered-slides="true"{% if centeredSlidesBounds %} data-swiper-centered-slides-bounds="true"{% endif %}{% endif %}{% if centerInsufficientSlides %} data-swiper-center-insufficient-slides="true"{% endif %}{% if autoplaySpeed and autoplaySpeed != '0' %} data-swiper-autoplay="true" data-swiper-autoplay-speed="{{- autoplaySpeed -}}"{% endif %}{% if speed %} data-swiper-speed="{{- speed -}}"{% endif %}{% if loop %} data-swiper-loop="true"{% endif %}{% if effect %} data-swiper-effect="{{- effect -}}"{% endif %}{% if pagination %} data-swiper-pagination="{{- pagination -}}"{% endif %}{% if slidesPerView %} data-swiper-slides-per-view="{{- slidesPerView -}}"{% endif %}{% if slidesGap %} data-swiper-slides-gap="{{- slidesGap -}}"{% endif %}{% if noSwiping %} data-swiper-no-swiping="true"{% endif %}{% if attrs %} {{ attrs }}{% endif %}>
+
+    <div class="swiper-wrapper">
+
+        {{- slides -}}
+
+    </div>
+
+    {%- if navigation -%}
+
+        <div class="swiper-button-prev">
+            {%- render 'icon', icon: 'angle-left' -%}
+        </div>
+
+        <div class="swiper-button-next">
+            {%- render 'icon', icon: 'angle-right' -%}
+        </div>
+
+    {%- endif -%}
+
+    {%- if pagination -%}
+
+        <div class="swiper-pagination{% if paginationPosition == 'relative' %} swiper-pagination-relative{% endif %}"></div>
+
+    {%- endif -%}
+
+</div>

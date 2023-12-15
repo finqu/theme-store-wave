@@ -1,0 +1,178 @@
+{% comment %}
+	Renders store data so it can be accessed from javascript later on
+
+	Usage:
+	Render this snippet inside of head element.
+
+	{% render 'store-settings' %}
+{% endcomment %}
+
+{%- capture locale -%}
+	{%- assign localeParts = request.locale | split: '-' -%}
+	{%- if localeParts.size < 2 %}{{- request.locale.iso_code -}}-{{- request.country | upcase -}}{%else%}{{- request.locale.iso_code -}}{% endif %}
+{%- endcapture -%}
+{%- assign locale = locale | strip_newlines -%}
+
+<script>
+	window.store = {
+		template: {{ request.page_type | handle | json }},
+		locale: {{ locale | json }},
+		designMode: {{ request.design_mode | json }},
+		taxFreeShopping: {{ settings.taxFreeShopping | json }},
+		klarna: {
+			clientId: {{ settings.klarnaClient | json }},
+			libSrc: 'https://eu-library.klarnaservices.com/lib.js'	
+		},
+		accessibility: {
+			showAnimations: {{ settings.accessibilityShowAnimations | json }},
+			showBackToTopButton: {{ settings.accessibilityShowBackToTopButton | json }},
+			showSearch: {{ settings.accessibilityShowSearch | json }},
+			showSearchAutocomplete: {{ settings.accessibilityShowSearchAutocomplete | json }}
+		},
+		customer: {
+			catalogBrowsingRequiresAccount: {{ store.catalog_browsing_requires_account | json }},
+			accountsEnabled: {{ store.customer_accounts_enabled | json }},
+			accountsOptional: {{ store.customer_accounts_optional | json }},
+			accountsRequireApproval: {{ store.customer_accounts_require_approval | json }},
+			loggedIn: {{ customer | yepnope: 'true', 'false' }},
+			hasAccess: {{ customer.has_access | yepnope: 'true', 'false' }}
+		},
+		cookiePolicy: {
+			status: {{ session.cookie_policy | json }},
+			position: {{ settings.cookiesPolicyPosition | json }}
+		},
+		cart: {
+			showAddNotification: {{ settings.cartShowAddNotification | json }},
+			styleVariant: {{ settings.styleCartVariant | json }}
+		},
+		product: {
+            showName: {{ settings.productShowName | json }},
+            showManufacturer: {{ settings.productShowManufacturer | json }},
+            showPromotion: {{ settings.productShowPromotion | json }},
+            showPricing: {{ settings.productShowPricing | json }},
+            showRating: {{ settings.productShowRating | json }},
+            showNewBadge: {{ settings.productShowNewBadge | json }},
+            showDiscountBadge: {{ settings.productShowDiscountBadge | json }},
+            showOutOfStockBadge: {{ settings.productShowOutOfStockBadge | json }},
+			showAddToCart: {{ settings.productShowAddToCart | json }},
+            wrapName: {{ settings.productWrapName | json }},
+			imageAspectRatio: {{ settings.productImageAspectRatio | json }},
+			imageAspectRatioFit: {{ settings.productImageAspectRatioFit | json }},
+			perRow: {{ settings.productPerRow | json }}
+		},
+		currency: {
+			code: {{ store.currency.code | json }},
+			decimalPlaces: {{ store.currency.decimal_places | json }}
+		},
+		routes: {
+			rootUrl: {{ routes.root_url | json }},
+			accountUrl: {{ routes.account_url | json }},
+			accountEditUrl: {{ routes.account_edit_url | json }},
+			accountLoginUrl: {{ routes.account_login_url | json }},
+			accountLogoutUrl: {{ routes.account_logout_url | json }},
+			accountRegisterUrl: {{ routes.account_register_url | json }},
+			accountPasswordRecoverUrl: {{ routes.account_password_recover_url | json }},
+			accountPasswordChangeUrl: {{ routes.account_password_change_url | json }},
+			accountOrdersUrl: {{ routes.account_orders_url | json }},
+			searchUrl: {{ routes.search_url | json }},
+			cartUrl: {{ routes.cart_url | json }},
+			checkoutUrl: {{ routes.checkout_url | json }},
+			assetUrl: {{ request.asset_url | json }},
+			termsAndConditionsUrl: {{ store.terms_and_conditions | yepnope: store.terms_and_conditions.url, 'null' | json }},
+			privacyPolicyUrl: {{ store.privacy_policy | yepnope: store.privacy_policy.url, 'null' | json }}
+		},
+		translations: {
+			'general.quantity': {{ 'general.quantity'  | t | json }},
+			'general.selection': {{ 'general.selection'  | t | json }},
+			'general.total': {{ 'general.total'  | t | json }},
+			'general.subtotal': {{ 'general.subtotal' | t | json }},
+			'general.tax_free_price': {{ 'general.tax_free_price' | t | json }},
+			'general.tax': {{ 'general.tax' | t | json }},
+			'general.back_to_home_page': {{ 'general.back_to_home_page' | t | json }},
+			'general.payment_fee': {{ 'general.payment_fee' | t | json }},
+			'general.shipping_price': {{ 'general.shipping_price' | t | json }},
+			'general.vat_included': {{ 'general.vat_included' | t | json }},
+			'general.search_no_results': {{ 'general.search_no_results' | t | json }},
+			'general.collapse_show_more': {{ 'general.collapse_show_more' | t | json }},
+			'general.collapse_show_less': {{ 'general.collapse_show_less' | t | json }},
+			'filters.show_result': {{ 'filters.show_result' | t | json }},
+		    'filters.show_result_plural': {{ 'filters.show_result_plural' | t | json }},
+			'wishlist.add': {{ 'wishlist.add' | t | json }},
+			'wishlist.remove': {{ 'wishlist.remove' | t | json }},
+			'cart.title': {{ 'cart.title' | t | json }},
+			'cart.product_added_to_cart': {{ 'cart.product_added_to_cart' | t | json }},
+			'cart.proceed_to_checkout': {{ 'cart.proceed_to_checkout' | t | json }},
+			'cart.empty_title': {{ 'cart.empty_title' | t | json }},
+			'cart.empty_description': {{ 'cart.empty_description' | t | json }},
+			'cart.continue_shopping': {{ 'cart.continue_shopping' | t | json }},
+			'cart.summary_info': {{ 'cart.summary_info' | t | json }},
+			'cart.view_cart': {{ 'cart.view_cart' | t | json }},
+			'cart.free_shipping_achieved': {{ 'cart.free_shipping_achieved' | t | json }},
+			'cart.amount_to_free_shipping_dynamic': {{ 'cart.amount_to_free_shipping_dynamic' | t | json }},
+			'cart.remove': {{ 'cart.remove' | t | json }},
+			'cookie_notification.content': {{ 'cookie_notification.content' | t | json }},
+			'cookie_notification.cta': {{ 'cookie_notification.cta' | t | json }},
+			'cookie_notification.privacy_policy': {{ 'cookie_notification.privacy_policy' | t | json }},
+			'error.general': {{ 'error.general' | t | json }},
+			'error.key': {{ 'error.key' | t | json }},
+			'error.comment': {{ 'error.comment' | t | json }},
+			'error.stock_variant': {{ 'error.stock_variant' | t | json }},
+			'error.not_buyable': {{ 'error.not_buyable' | t | json }},
+			'error.min_amount': {{ 'error.min_amount' | t | json }},
+			'error.max_amount': {{ 'error.max_amount' | t | json }},
+			'error.attribute': {{ 'error.attribute' | t | json }},
+			'error.invalid_data': {{ 'error.invalid_data' | t | json }},
+			'error.name': {{ 'error.name' | t | json }},
+			'error.email': {{ 'error.email' | t | json }},
+			'error.message': {{ 'error.message' | t | json }},
+			'error.confirm_password': {{ 'error.confirm_password' | t | json }},
+			'error.password': {{ 'error.password' | t | json }},
+			'error.invalid_credentials': {{ 'error.invalid_credentials' | t | json }},
+			'error.invalid_product': {{ 'error.invalid_product' | t | json }},
+			'error.already_reviewed': {{ 'error.already_reviewed' | t | json }},
+			'error.not_purchased': {{ 'error.not_purchased' | t | json }},
+			'error.review_title': {{ 'error.review_title' | t | json }},
+			'error.review_comment': {{ 'error.review_comment' | t | json }},
+			'error.rating': {{ 'error.rating' | t | json }},
+			'error.not_reviewed': {{ 'error.not_reviewed' | t | json }},
+			'error.username_taken': {{ 'error.username_taken' | t | json }},
+			'error.stock': {{ 'error.stock' | t | json }},
+			'error.terms_of_use': {{ 'error.terms_of_use' | t | json }},
+			'error.min_length': {{ 'error.min_length' | t | json }},
+			'error.privacy_policy': {{ 'error.privacy_policy' | t | json }},
+			'error.requires_account': {{ 'error.requires_account' | t | json }},
+			'error.attribute_text_min_length': {{ 'error.attribute_text_min_length' | t | json }},
+			'error.attribute_text_max_lengt': {{ 'error.attribute_text_min_length' | t | json }},
+			'placeholder.product': {{ 'placeholder.product' | t | json }},
+			'placeholder.category': {{ 'placeholder.category' | t | json }},
+			'placeholder.article': {{ 'placeholder.article' | t | json }},
+			'placeholder.article_summary': {{ 'placeholder.article_summary' | t | json }},
+			'placeholder.manufacturer': {{ 'placeholder.manufacturer' | t | json }}
+		},
+		placeholderSvgs: {
+			'category-1': {{ 'category-1' | placeholder_svg_tag | base64_encode | json }},
+			'category-2': {{ 'category-2' | placeholder_svg_tag | base64_encode | json }},
+			'category-3': {{ 'category-3' | placeholder_svg_tag | base64_encode | json }},
+			'category-4': {{ 'category-4' | placeholder_svg_tag | base64_encode | json }},
+			'category-5': {{ 'category-5' | placeholder_svg_tag | base64_encode | json }},
+			'category-6': {{ 'category-6' | placeholder_svg_tag | base64_encode | json }},
+			'category-7': {{ 'category-7' | placeholder_svg_tag | base64_encode | json }},
+			'background-1': {{ 'background-1' | placeholder_svg_tag | base64_encode | json }},
+			'background-2': {{ 'background-2' | placeholder_svg_tag | base64_encode | json }},
+			'background-3': {{ 'background-3' | placeholder_svg_tag | base64_encode | json }},
+			'product-1': {{ 'product-1' | placeholder_svg_tag | base64_encode | json }},
+			'product-2': {{ 'product-2' | placeholder_svg_tag | base64_encode | json }},
+			'product-3': {{ 'product-3' | placeholder_svg_tag | base64_encode | json }},
+			'product-4': {{ 'product-4' | placeholder_svg_tag | base64_encode | json }},
+			'product-5': {{ 'product-5' | placeholder_svg_tag | base64_encode | json }},
+			'product-6': {{ 'product-6' | placeholder_svg_tag | base64_encode | json }},
+			'product-7': {{ 'product-7' | placeholder_svg_tag | base64_encode | json }},
+			'product-8': {{ 'product-8' | placeholder_svg_tag | base64_encode | json }},
+			'product-9': {{ 'product-9' | placeholder_svg_tag | base64_encode | json }},
+			'product-10': {{ 'product-10' | placeholder_svg_tag | base64_encode | json }},
+			'product-11': {{ 'product-11' | placeholder_svg_tag | base64_encode | json }},
+			'product-12': {{ 'product-12' | placeholder_svg_tag | base64_encode | json }},
+			'image': {{ 'image' | placeholder_svg_tag | base64_encode | json }}
+		}
+	};
+</script>

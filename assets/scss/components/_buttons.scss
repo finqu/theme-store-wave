@@ -1,0 +1,633 @@
+// Buttons
+// -----------------------------------------------------------------------------------------
+
+// Btn
+.btn {
+    --#{$prefix}btn-padding-x: #{$btn-padding-x};
+    --#{$prefix}btn-padding-y: #{$btn-padding-y};
+    --#{$prefix}btn-font-family: #{$btn-font-family};
+    @include rfs($btn-font-size, --#{$prefix}btn-font-size);
+    --#{$prefix}btn-font-weight: #{$btn-font-weight};
+    --#{$prefix}btn-line-height: #{$btn-line-height};
+    --#{$prefix}btn-color: #{$btn-color};
+    display: inline-block;
+    font-family: var(--#{$prefix}btn-font-family);
+    @include font-size(var(--#{$prefix}btn-font-size));
+    font-weight: var(--#{$prefix}btn-font-weight);
+    line-height: var(--#{$prefix}btn-line-height);
+    color: var(--#{$prefix}btn-color);
+    text-align: center;
+    white-space: $btn-white-space;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: $btn-border-width solid transparent;
+    padding: var(--#{$prefix}btn-padding-y) var(--#{$prefix}btn-padding-x);
+    @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+
+    &:hover {
+        color: inherit;
+    }
+
+    &:focus,
+    &.focus {
+        outline: 0;
+    }
+
+    &.disabled,
+    &:disabled,
+    fieldset:disabled & {
+        opacity: $btn-disabled-opacity;
+        pointer-events: none;
+    }
+
+    &:not(:disabled):not(.disabled) {
+        cursor: if($enable-button-pointers, pointer, null);
+    }
+}
+
+// Btn primary
+@if $btn-primary-variant == 1 {
+    .btn.btn-primary {
+        color: var(--style-btn-text-color);
+        background-color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-border-color);
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+        .svg-icon {
+            color: var(--style-btn-text-color);
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-hover-color);
+            border-color: var(--style-btn-border-hover-color);
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-color);
+            border-color: var(--style-btn-border-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-active-color);
+            border-color: var(--style-btn-border-active-color);
+        }
+    }
+} @else if $btn-primary-variant == 2 {
+    $anim-duration: 5;
+    $anim-speed: 0.65;
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+            transition-property: left;
+        }
+        #{($anim-speed / ($anim-duration + $anim-speed) * 100%)},
+        100% {
+            left: 100%;
+            transition-property: left;
+        }
+    }
+
+    .btn.btn-primary {
+        color: var(--style-btn-text-color);
+        background: var(--style-btn-bg-color);
+        border-color: var(--style-btn-border-color);
+        overflow: hidden;
+        position: relative;
+        transition-property: background, border-color;
+        transition-duration: 200ms;
+        transition-timing-function: ease-in-out;
+
+        .svg-icon {
+            color: var(--style-btn-text-color);
+        }
+
+        &:after {
+            background-image: linear-gradient(90deg, transparent, hsla(0,0%,100%,.25), transparent);
+            content: '';
+            height: 100%;
+            left: 150%;
+            position: absolute;
+            top: 0;
+            transform: skew(-20deg);
+            width: 200%;
+            transition: all #{$anim-speed}s ease-in-out;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            background: var(--style-btn-bg-hover-color);
+            border-color: var(--style-btn-border-hover-color);
+
+            &:after {
+                animation: shine #{$anim-duration}s ease-in-out;
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-color);
+            border-color: var(--style-btn-border-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-active-color);
+            border-color: var(--style-btn-border-active-color);
+        }
+    }
+} @else if $btn-primary-variant == 3 {
+    .btn.btn-primary {
+        color: var(--style-btn-text-color);
+        border-color: transparent;
+        transition: all .3s;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+
+        .svg-icon {
+            color: var(--style-btn-text-color);
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--style-btn-bg-color);
+            z-index: -2;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: var(--style-btn-bg-hover-color);
+            transition: all .3s;
+            z-index: -1;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            &:before {
+                width: 100%;
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-color);
+            border-color: var(--style-btn-border-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--style-btn-text-color);
+            background-color: var(--style-btn-bg-active-color);
+            border-color: var(--style-btn-border-active-color);
+        }
+    }
+} @else if $btn-primary-variant == 4 {
+    .btn.btn-primary {
+        position: relative;
+        overflow: hidden;
+        transition: color 0.3s ease, background 0s 0.3s ease;
+        color: var(--style-btn-text-color);
+        border-color: var(--style-btn-border-color);
+        z-index: 0;
+        background: transparent;
+
+        .svg-icon {
+            color: var(--style-btn-text-color);
+        }
+
+        &:before {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            bottom: auto;
+            left: auto;
+            width: 50%;
+            height: 100%;
+            opacity: 1;
+        }
+
+        &:after {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            opacity: 1;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+            transition: color 0.3s ease, background 0s ease;
+
+            .svg-icon {
+                color: var(--style-btn-bg-color);
+            }
+
+            &:before {
+                width: 0;
+            }
+
+            &:after {
+                width: 0;
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-text-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+            transition: color 0.3s ease, background 0s ease;
+
+            .svg-icon {
+                color: var(--style-btn-bg-color);
+            }
+
+            &:before {
+                width: 0;
+            }
+
+            &:after {
+                width: 0;
+            }
+        }
+    }
+}
+
+// Btn secondary
+@if $btn-secondary-variant == 1 {
+    .btn.btn-secondary {
+        color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-bg-color);
+        transition: 0.25s;
+
+        .svg-icon {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            box-shadow: inset 0 0 0 2em var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color:  var(--style-btn-text-color);
+            box-shadow: inset 0 0 0 2em var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+    }
+} @else if $btn-secondary-variant == 2 {
+    .btn.btn-secondary {
+        color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-bg-color);
+        transition: color 0.3s ease, background 0s 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+
+        .svg-icon {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:before {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            left: 0;
+            width: 0;
+            height: 100%;
+            opacity: 1;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+            transition: color 0.3s ease, background 0s 0.3s ease;
+
+            &:before {
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color:  var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+
+            &:before {
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+    }
+} @else if $btn-secondary-variant == 3 {
+    .btn.btn-secondary {
+        color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-bg-color);
+        transition: color 0.3s ease, background 0s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+
+        .svg-icon {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:before {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: auto;
+            right: auto;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            opacity: 1;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+            transition: color 0.3s ease, background 0s 0.3s ease;
+
+            &:before {
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color:  var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+
+            &:before {
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+    }
+} @else if $btn-secondary-variant == 4 {
+    .btn.btn-secondary {
+        position: relative;
+        overflow: hidden;
+        transition: color 0.3s ease, background 0s ease;
+        color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-bg-color);
+        z-index: 0;
+        background: transparent;
+
+        .svg-icon {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:before {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            bottom: auto;
+            left: auto;
+            width: 0;
+            height: 100%;
+            opacity: 1;
+        }
+
+        &:after {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            left: 0;
+            width: 0;
+            height: 100%;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            background: var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+
+            &:before {
+                width: 50%;
+            }
+
+            &:after {
+                width: 50%;
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color:  var(--style-btn-text-color);
+            background: var(--style-btn-bg-color);
+            border-color: var(--style-btn-bg-color);
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+
+            &:before {
+                width: 50%;
+            }
+
+            &:after {
+                width: 50%;
+            }
+        }
+    }
+}
+
+.btn-lg {
+    @include button-size($btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-border-radius-lg);
+}
+
+.btn-sm {
+    @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+
+.btn-text {
+    display: inline;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+
+    &:hover {
+        color: inherit;
+    }
+}
+
+.btn-link {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    font-weight: $font-weight-normal;
+    color: var(--#{$prefix}btn-color);
+    background-color: transparent;
+
+    &:hover {
+        color: var(--#{$prefix}btn-color);
+    }
+
+    &:disabled,
+    &.disabled {
+        pointer-events: none;
+    }
+}
+
+.btn::not(.btn-link):not(.btn-text):not(.btn-icon) {
+    font-style: $btn-font-style;
+    @if $btn-letter-spacing != '0' {
+        letter-spacing: $btn-letter-spacing;
+    }
+    @if $btn-text-transform != 'none' {
+        text-transform: $btn-text-transform;
+    }
+}
+
+.btn,
+.btn-link,
+.btn-text {
+	outline: 0;
+}
+
+a.btn.disabled,
+fieldset:disabled a.btn {
+    pointer-events: none;
+}

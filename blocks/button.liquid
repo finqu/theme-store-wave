@@ -1,0 +1,213 @@
+{%- assign btnLabel = block.settings.btnLabel | default: 'placeholder.label' | t -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+    {%- if block.settings.blockPaddingMode == 'custom' -%}
+        #finqu-block-{{ block.id }} {
+            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
+            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    {% if block.settings.btnStyle == 'primary' %}
+
+        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-primary"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
+            {{ btnLabel }}
+        </a>
+
+    {% elsif block.settings.btnStyle == 'secondary' %}
+
+        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-secondary"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
+            {{ btnLabel }}
+        </a>
+
+    {% elsif block.settings.btnStyle == 'link' %}
+
+        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-link text-underline-indicator fw-bold"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
+
+            <span class="me-2">
+                {{ btnLabel }}
+            </span>
+
+            {%- render 'icon', icon: 'arrow-right', class: 'svg-icon-fw' -%}
+
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% schema %}
+{
+    "name": {
+        "en": "Button",
+        "fi": "Nappi"
+    },
+    "tag": "div",
+    "class": "block block-button",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "btnLabel",
+                        "type": "text",
+                        "label": {
+                            "en": "Label",
+                            "fi": "Teksti"
+                        }
+                    },
+                    {
+                        "id": "btnLink",
+                        "type": "url",
+                        "label": {
+                            "en": "Link",
+                            "fi": "Linkki"
+                        }
+                    },
+                    {
+                        "id": "openInNewWindowStatus",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Open link in a new tab",
+                            "fi": "Avaa linkki uudessa välilehdessä"
+                        },
+                        "default": false
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "blockPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "blockPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "blockPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "btnStyle",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Button style",
+                            "fi": "Painikkeen tyyli"
+                        },
+                        "default": "primary",
+                        "options": [
+                            {
+                                "value": "primary",
+                                "label": {
+                                    "en": "Style 1",
+                                    "fi": "Tyyli 1"
+                                }
+                            },
+                            {
+                                "value": "secondary",
+                                "label": {
+                                    "en": "Style 2",
+                                    "fi": "Tyyli 2"
+                                }
+                            },
+                            {
+                                "value": "link",
+                                "label": {
+                                    "en": "Style 3",
+                                    "fi": "Tyyli 3"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content alignment",
+                            "fi": "Sisällön ryhmittyminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

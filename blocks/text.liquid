@@ -1,0 +1,103 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} img {
+        border-radius: var(--style-image-border-radius);
+    }
+    {%- if block.settings.blockPaddingMode == 'custom' -%}
+        #finqu-block-{{ block.id }} {
+            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
+            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner text-break">{{ block.settings.richtext }}</div>
+
+{% schema %}
+{
+    "name": {
+        "en": "Text",
+        "fi": "Teksti"
+    },
+    "tag": "div",
+    "class": "block block-text",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "default": "Tell your customers about your brand. Promote a product, make announcements or share information about your store."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "blockPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "blockPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "blockPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

@@ -1,0 +1,24 @@
+{% if page.content %}
+
+	{%- capture sectionContent -%}
+		{{ page.content }}
+	{%- endcapture -%}
+
+	<section class="section section-page">
+		{% render 'section', sectionHandle: '.section-page', sectionTitle: page.title, sectionTitleTag: 'h1', sectionContent: sectionContent, sectionBreadcrumbs: page.breadcrumbs, sectionHeaderGapScale: 1 %}
+	</section>
+
+{% else %}
+
+	{{ content_for_index }}
+
+{% endif %}
+
+{% schema %}
+{
+	"name": {
+		"en": "Page",
+		"fi": "Sivu"
+	}
+}
+{% endschema %}

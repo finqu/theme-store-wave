@@ -1,0 +1,1040 @@
+{%- assign cols = section.settings.cols | split: ',' -%}
+{%- assign leftColSize = cols[0] -%}
+{%- assign rightColSize = cols[1] -%}
+
+{%- if section.settings.sectionOverline -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionTitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionSubtitle -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.richtext -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
+{%- if section.settings.sectionHighlightItems == 'nil' and settings.sectionHighlightItems == true or section.settings.sectionHighlightItems == true -%}
+    {%- assign sectionHighlightItems = true -%}
+{%- endif -%}
+
+{%- if sectionHighlightItems and section.settings.imgEffect -%}
+
+    {%- capture sectionStyle -%}
+        #finqu-section-{{ section.id }} .text-container {
+            z-index: 1;
+            {%- if section.settings.imgPosition == 'start' -%}
+                transform: translateX(-15%);
+            {%- elsif section.settings.imgPosition == 'end' -%}
+                transform: translateX(15%);
+            {%- endif -%}
+        }
+    {%- endcapture -%}
+
+    <style media="screen and (min-width: {{ settings.styleGridBreakpointLg }})">{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+{%- capture imgColContent -%}
+
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+    {% if section.settings.imgAspectRatio == '16:9' %}
+
+        {%- assign imgSizeSm = '414,251' -%}
+        {%- assign imgSizeMd = '360,220' -%}
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            {%- case leftColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,395' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,269' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,520' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,332' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,458' -%}
+            {%- endcase -%}
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            {%- case rightColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,950' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,628' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,1273' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,789' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,1112' -%}
+            {%- endcase -%}
+
+        {% endif %}
+
+    {% elsif section.settings.imgAspectRatio == '9:13' %}
+
+        {%- assign imgSizeSm = '414,581' -%}
+        {%- assign imgSizeMd = '360,503' -%}
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            {%- case leftColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,950' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,628' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,1273' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,789' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,1112' -%}
+            {%- endcase -%}
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            {%- case rightColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '6370,9150' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,5628' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,1273' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,789' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '7482,1112' -%}
+            {%- endcase -%}
+
+        {% endif %}
+
+    {% elsif section.settings.imgAspectRatio == '4:3' %}
+
+        {%- assign imgSizeSm = '414,321' -%}
+        {%- assign imgSizeMd = '360,280' -%}
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            {%- case leftColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,513' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,345' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,680' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,429' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,597' -%}
+            {%- endcase -%}
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            {%- case rightColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,513' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,345' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,680' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,429' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,597' -%}
+            {%- endcase -%}
+
+        {% endif %}
+
+    {% elsif section.settings.imgAspectRatio == '1:1' %}
+
+        {%- assign imgSizeSm = '414,414' -%}
+        {%- assign imgSizeMd = '360,360' -%}
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            {%- case leftColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,670' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,447' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,894' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,559' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,782' -%}
+            {%- endcase -%}
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            {%- case rightColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,670' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,447' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,894' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,559' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,782' -%}
+            {%- endcase -%}
+
+        {% endif %}
+
+    {% elsif section.settings.imgAspectRatio == 'auto' %}
+
+        {%- assign imgSizeSm = '414,414' -%}
+        {%- assign imgSizeMd = '360,360' -%}
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            {%- case leftColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,670' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,447' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,894' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,559' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,782' -%}
+            {%- endcase -%}
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            {%- case rightColSize -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '670,670' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '447,447' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '894,894' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '559,559' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '782,782' -%}
+            {%- endcase -%}
+
+        {% endif %}
+
+    {% endif %}
+
+    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }} justify-content-{{ section.settings.imgHorizontalAlign }}" data-aos="{% if section.settings.imgPosition == 'start' %}animate__fadeInLeft{% else %}animate__fadeInRight{% endif %}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+        <div class="aspect-ratio-container">
+
+            {%- if section.settings.img -%}
+
+                <picture>
+
+                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                        {{- section.settings.img | thumb: imgSizeLg }} 1x,
+                        {{- section.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                        {{- section.settings.img | thumb: imgSizeMd }} 1x,
+                        {{- section.settings.img | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                    <source data-srcset="
+                        {{- section.settings.img | thumb: imgSizeSm }} 1x,
+                        {{- section.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                    <img
+                        alt="{{ section.settings.imgAlt }}"
+                        data-src="{{ section.settings.img | thumb: imgSizeSm }}"
+                        data-srcset="{{ section.settings.img | thumb: imgSizeSm }} 1x,{{ section.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                        class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img.offset_left or section.settings.img.offset_top %} style="--object-position: {{ section.settings.img.offset_left }}% {{ section.settings.img.offset_top }}%"{% endif %}>
+
+                </picture>
+
+            {%- elsif request.design_mode -%}
+
+                {%- capture class -%}
+                    aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                {%- endcapture -%}
+
+                {% render 'placeholder-svg', type: 'image', class: class %}
+    
+            {%- endif -%}
+
+        </div>
+
+    </div>
+
+{%- endcapture -%}
+
+{%- capture textColContent -%}
+
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+    
+    {%- if section.settings.textHorizontalAlign == 'nil' -%}
+        {%- assign textHorizontalAlign = settings.sectionTextAlign -%}
+    {%- else -%}
+        {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
+    {%- endif -%}
+
+    {%- case textHorizontalAlign -%}
+        {% when 'start' %}
+            {%- assign textHorizontalAlignClass = 'text-start' -%}
+        {% when 'center' %}
+            {%- assign textHorizontalAlignClass = 'text-center' -%}
+        {% when 'end' %}
+            {%- assign textHorizontalAlignClass = 'text-end' -%}
+    {%- endcase -%}
+
+    <div class="section-highlight-item section-highlight-item-md {{ textHorizontalAlignClass }}">
+
+        {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+        {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionDescription: section.settings.richtext, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5 %}
+
+        {% if section.settings.btnLabel %}
+
+            <div class="mt-3" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLabel, url: section.settings.btnLink.url, openInNewTab: section.settings.btnLinkOpenInNewTab -%}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{%- endcapture -%}
+
+{%- capture sectionContent -%}
+
+    {%- case section.settings.imgVerticalAlign -%}
+        {% when 'top' %}
+            {%- assign imgVerticalAlignClass = 'align-self-start' -%}
+        {% when 'middle' %}
+            {%- assign imgVerticalAlignClass = 'align-self-center' -%}
+        {% when 'bottom' %}
+            {%- assign imgVerticalAlignClass = 'align-self-end' -%}
+    {%- endcase -%}
+
+    {%- case section.settings.textVerticalAlign -%}
+        {% when 'top' %}
+            {%- assign textVerticalAlignClass = 'align-self-start' -%}
+        {% when 'middle' %}
+            {%- assign textVerticalAlignClass = 'align-self-center' -%}
+        {% when 'bottom' %}
+            {%- assign textVerticalAlignClass = 'align-self-end' -%}
+    {%- endcase -%}
+
+    <div class="row gy-5">
+
+        {%- if section.settings.imgPosition == 'start' -%}
+
+            <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ imgVerticalAlignClass }}">
+                {{- imgColContent -}}
+            </div>
+
+            <div class="text-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ textVerticalAlignClass }}">
+                {{- textColContent -}}
+            </div>
+
+        {%- elsif section.settings.imgPosition == 'end' -%}
+
+            <div class="text-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ textVerticalAlignClass }} order-2 order-md-1">
+                {{- textColContent -}}
+            </div>
+
+            <div class="img-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ imgVerticalAlignClass }} order-1 order-md-2">
+                {{- imgColContent -}}
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Image with text",
+        "fi": "Kuva tekstin kanssa"
+    },
+    "tag": "section",
+    "class": "section section-image-with-text",
+    "category": "theme-basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Titles",
+                            "fi": "Otsikot"
+                        }
+                    },
+                    {
+                        "id": "sectionOverline",
+                        "type": "text",
+                        "label": {
+                            "en": "Top title",
+                            "fi": "Yläotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionTitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Main title",
+                            "fi": "Pääotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionSubtitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Subtitle",
+                            "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Text",
+                            "fi": "Teksti"
+                        }
+                    },
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "label": {
+                            "en": "Text",
+                            "fi": "Teksti"
+                        }
+                    },
+                    {
+                        "id": "btnLabel",
+                        "type": "text",
+                        "label": {
+                            "en": "Button text",
+                            "fi": "Painikkeen teksti"
+                        }
+                    },
+                    {
+                        "id": "btnLink",
+                        "type": "url",
+                        "label": {
+                            "en": "Button link",
+                            "fi": "Painikkeen linkki"
+                        }
+                    },
+                    {
+                        "id": "btnLinkOpenInNewTab",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Open link in a new tab",
+                            "fi": "Avaa linkki uudessa välilehdessä"
+                        },
+                        "default": false
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Image",
+                            "fi": "Kuva"
+                        }
+                    },
+                    {
+                        "id": "img",
+                        "type": "image-picker",
+                        "adjustments": true
+                    },
+                    {
+                        "id": "imgAlt",
+                        "type": "text",
+                        "label": {
+                            "en": "Image alt",
+                            "fi": "Kuvan alt-teksti"
+                        }
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Image",
+                            "fi": "Kuva"
+                        }
+                    },
+                    {
+                        "id": "imgPosition",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image position",
+                            "fi": "Kuvan sijainti"
+                        },
+                        "default": "start",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            }, {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imgHorizontalAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image horizontal align",
+                            "fi": "Kuvan tasaus vaakasuunnassa"
+                        },
+                        "default": "center",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imgVerticalAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image vertical align",
+                            "fi": "Kuvan tasaus pystysuunnassa"
+                        },
+                        "default": "middle",
+                        "options": [
+                            {
+                                "value": "top",
+                                "label": "{# icon.align-top #}"
+                            }, {
+                                "value": "middle",
+                                "label": "{# icon.align-middle #}"
+                            }, {
+                                "value": "bottom",
+                                "label": "{# icon.align-bottom #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imgAspectRatio",
+                        "type": "select",
+                        "label": {
+                            "en": "Aspect ratio",
+                            "fi": "Kuvasuhde"
+                        },
+                        "default": "1:1",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": {
+                                    "en": "Original",
+                                    "fi": "Alkuperäinen"
+                                }
+                            },
+                            {
+                                "value": "16:9",
+                                "label": "16:9"
+                            },
+                            {
+                                "value": "9:13",
+                                "label": "9:13"
+                            },
+                            {
+                                "value": "4:3",
+                                "label": "4:3"
+                            },
+                            {
+                                "value": "1:1",
+                                "label": "1:1"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imgFit",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Image area fill",
+                            "fi": "Kuva-alueen täyttö"
+                        },
+                        "default": true,
+                        "conditions": ["!imgAspectRatio eq auto"]
+                    },
+                    {
+                        "id": "imgEffect",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Image effect",
+                            "fi": "Kuvaefekti"
+                        },
+                        "default": true,
+                        "conditions": ["!imgAspectRatio eq auto"]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Text",
+                            "fi": "Teksti"
+                        }
+                    },
+                    {
+                        "id": "textHorizontalAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Text horizontal align",
+                            "fi": "Tekstin tasaus vaakasuunnassa"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "textVerticalAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Text vertical align",
+                            "fi": "Tekstin tasaus pystysuunnassa"
+                        },
+                        "default": "middle",
+                        "options": [
+                            {
+                                "value": "top",
+                                "label": "{# icon.align-top #}"
+                            },
+                            {
+                                "value": "middle",
+                                "label": "{# icon.align-middle #}"
+                            },
+                            {
+                                "value": "bottom",
+                                "label": "{# icon.align-bottom #}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnStyle",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Button style",
+                            "fi": "Painikkeen tyyli"
+                        },
+                        "default": "primary",
+                        "options": [
+                            {
+                                "value": "primary",
+                                "label": {
+                                    "en": "Style 1",
+                                    "fi": "Tyyli 1"
+                                }
+                            },
+                            {
+                                "value": "secondary",
+                                "label": {
+                                    "en": "Style 2",
+                                    "fi": "Tyyli 2"
+                                }
+                            },
+                            {
+                                "value": "link",
+                                "label": {
+                                    "en": "Style 3",
+                                    "fi": "Tyyli 3"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Content",
+                            "fi": "Sisältö"
+                        }
+                    },
+                    {
+                        "id": "cols",
+                        "type": "select",
+                        "label": {
+                            "en": "Columns",
+                            "fi": "Sarakkeet"
+                        },
+                        "default": "6,6",
+                        "options": [
+                            {
+                                "value": "6,6",
+                                "label": "50 % | 50 %"
+                            },
+                            {
+                                "value": "4,8",
+                                "label": "33 % | 66 %"
+                            },
+                            {
+                                "value": "8,4",
+                                "label": "66 % | 33 %"
+                            },
+                            {
+                                "value": "5,7",
+                                "label": "40 % | 60 %"
+                            },
+                            {
+                                "value": "7,5",
+                                "label": "60 % | 40 %"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionHighlightItems",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content highlight",
+                            "fi": "Sisällön korostaminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": false,
+                                "label": "Off"
+                            },
+                            {
+                                "value": true,
+                                "label": "On"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionHeaderTextAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Heading text align",
+                            "fi": "Otsikon tekstin tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "SEO",
+                            "fi": "SEO"
+                        }
+                    },
+                    {
+                        "id": "sectionOverlineTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Top title SEO priority",
+                            "fi": "Yläotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionTitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Main title SEO priority",
+                            "fi": "Pääotsikon SEO-prioriteetti"
+                        },
+                        "default": "h2",
+                        "options": [
+                            {
+                                "value": "h1",
+                                "label": "H1"
+                            },
+                            {
+                                "value": "h2",
+                                "label": "H2"
+                            },
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            },
+                            {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionSubtitleTag",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Subtitle SEO priority",
+                            "fi": "Alaotsikon SEO-prioriteetti"
+                        },
+                        "default": "h3",
+                        "options": [
+                            {
+                                "value": "h3",
+                                "label": "H3"
+                            }, {
+                                "value": "span",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Section",
+                            "fi": "Osio"
+                        }
+                    },
+                    {
+                        "id": "sectionColorScheme",
+                        "type": "select",
+                        "label": {
+                            "en": "Color color scheme",
+                            "fi": "Värityyli"
+                        },
+                        "options": [
+                            {
+                                "value": false,
+                                "label": {
+                                    "en": "Disabled",
+                                    "fi": "Pois käytöstä"
+                                }
+                            },
+                            {
+                                "value": "1",
+                                "label": {
+                                    "en": "Color scheme 1",
+                                    "fi": "Värityyli 1"
+                                }
+                            },
+                            {
+                                "value": "2",
+                                "label": {
+                                    "en": "Color scheme 2",
+                                    "fi": "Värityyli 2"
+                                }
+                            },
+                            {
+                                "value": "3",
+                                "label": {
+                                    "en": "Color scheme 3",
+                                    "fi": "Värityyli 3"
+                                }
+                            },
+                            {
+                                "value": "4",
+                                "label": {
+                                    "en": "Color scheme 4",
+                                    "fi": "Värityyli 4"
+                                }
+                            },
+                            {
+                                "value": "5",
+                                "label": {
+                                    "en": "Color scheme 5",
+                                    "fi": "Värityyli 5"
+                                }
+                            },
+                            {
+                                "value": "light",
+                                "label": {
+                                    "en": "Light background / Dark content",
+                                    "fi": "Vaalea tausta / Tumma sisältö"
+                                }
+                            },
+                            {
+                                "value": "dark",
+                                "label": {
+                                    "en": "Dark background / Light content",
+                                    "fi": "Tumma tausta / Vaalea sisältö"
+                                }
+                            },
+                            {
+                                "value": "accent",
+                                "label": {
+                                    "en": "Accent background / Adaptive content",
+                                    "fi": "Korostus tausta / Mukautuva sisältö"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "sectionPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["sectionPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "sectionBgImg",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Background image",
+                            "fi": "Taustakuva"
+                        },
+                        "adjustments": true
+                    },
+                    {
+                        "id": "sectionBgImgDimming",
+                        "label": {
+                            "en": "Image dimming",
+                            "fi": "Kuvan tummennus"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 90,
+                        "step": 5,
+                        "default": "0",
+                        "unit": "%"
+                    },
+                    {
+                        "id": "sectionBgImgBlur",
+                        "label": {
+                            "en": "Image blur",
+                            "fi": "Kuvan sumentaminen"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 10,
+                        "step": 1,
+                        "default": "0",
+                        "unit": " "
+                    }
+                ]
+            }
+        ]
+    },
+    "presets": [
+        {
+            "settings": {
+                "richtext": "<p>Pair image with text to focus on your chosen product, article or brand and tell your customers about it.<\/p>"
+            }
+        }
+    ]
+}
+{% endschema %}

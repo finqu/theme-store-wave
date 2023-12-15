@@ -1,0 +1,188 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+    {%- if block.settings.blockPaddingMode == 'custom' -%}
+        #finqu-block-{{ block.id }} {
+            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
+            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    {% form 'customer', customer %}
+
+        {% if form.posted_successfully? %}
+
+            <script type="application/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.dispatchEvent(new CustomEvent('theme:newsletter:subscribe', {
+                        detail: {
+                            email: {{ form.email | json }}
+                        }
+                    }));
+                });
+            </script>
+
+        {% endif %}
+
+        {% if customer and customer.accepts_marketing %}
+
+            <span class="d-block fw-bold">
+                {{- 'general.newsletter_subscribed' | t -}}
+            </span>
+
+        {% elsif form.posted_successfully? %}
+
+            <span class="d-block fw-bold">
+                {{- 'general.newsletter_subscribed' | t -}}
+            </span>
+
+        {% else %}
+
+            <div class="input-group max-w-px-370 mt-4">
+                                                    
+                <div class="form-floating">
+
+                    <input id="footer-middle-newsletter" class="form-control" type="email" name="email" value="" placeholder="{{ 'general.email' | t }}" required>
+
+                    <label for="footer-middle-newsletter">
+                        {{- 'general.email' | t -}}
+                    </label>
+
+                </div>
+
+                <button type="submit" class="btn btn-icon">
+
+                    <span class="text-hidden">
+                        {{- 'general.subscribe' | t -}}
+                    </span>
+
+                    {% render 'icon', icon: 'angle-right' %}
+
+                </button>
+
+            </div>
+
+            {% render 'form-error', error: form.error, class: 'mt-4' %}
+
+        {% endif %}
+
+    {% endform %}
+
+</div>
+
+{% schema %}
+{
+    "name": {
+        "en": "Newsletter form",
+        "fi": "Uutiskirje -lomake"
+    },
+    "tag": "div",
+    "class": "block block-newsletter",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Alignment",
+                            "fi": "Ryhmittyminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "blockPaddingMode",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Padding",
+                            "fi": "Välit"
+                        },
+                        "default": "auto",
+                        "options": [
+                            {
+                                "value": "auto",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "custom",
+                                "label": {
+                                    "en": "Custom",
+                                    "fi": "Mukautettu"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "blockPaddingTop",
+                        "label": {
+                            "en": "Padding top",
+                            "fi": "Väli ylhäällä"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    },
+                    {
+                        "id": "blockPaddingBottom",
+                        "label": {
+                            "en": "Padding bottom",
+                            "fi": "Väli alhaalla"
+                        },
+                        "type": "range",
+                        "min": 0,
+                        "max": 15,
+                        "step": 1,
+                        "default": "0",
+                        "unit": "rem",
+                        "conditions": ["blockPaddingMode eq custom"]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

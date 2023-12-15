@@ -1,0 +1,57 @@
+{% comment %}
+	Renders a pagination
+
+	Accepts:
+	- paginate: {Object} Paginate Liquid object (required)
+
+	Usage:
+	{% render 'pagination', paginate: paginate %}
+{% endcomment %}
+
+<ul class="pagination" data-aos="{{ settings.sectionAnimation }}">
+
+	<li class="pagination-item-container">
+
+		{%- if paginate.previous.url and paginate.current_page > 1 -%}
+
+			<a href="{{ paginate.previous.url }}" class="paginate-item-previous">
+				{%- render 'icon', icon: 'angle-left' -%}
+			</a>
+
+		{%- else -%}
+
+			<span class="paginate-item-previous disabled">
+				{%- render 'icon', icon: 'angle-left' -%}
+			</span>
+
+		{%- endif -%}
+
+	</li>
+
+	<li class="pagination-item-container">
+
+		<span clas="paginate-item-text">
+			{{- 'general.page' | t }} {{ paginate.current_page | default: 1 }} / {{ paginate.pages | default: 1 -}}
+		</span>
+
+	</li>
+
+	<li class="pagination-item-container">
+
+		{%- if paginate.next.url and paginate.current_page < paginate.pages | default: 1 -%}
+
+			<a href="{{ paginate.next.url }}" class="paginate-item-next">
+				{%- render 'icon', icon: 'angle-right' -%}
+			</a>
+
+		{%- else -%}
+
+			<span class="paginate-item-next disabled">
+				{%- render 'icon', icon: 'angle-right' -%}
+			</span>
+
+		{%- endif -%}
+
+	</li>
+
+</ul>

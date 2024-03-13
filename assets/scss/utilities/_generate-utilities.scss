@@ -4,6 +4,113 @@
 $utilities: map-merge(
     $utilities,
     (
+        "z-index": (
+            property: z-index,
+            class: z,
+            values: $zindex-levels
+        ),
+        "position": (
+            property: position,
+            class: position,
+            responsive: true,
+            values: (
+                "static": static,
+                "fixed": fixed,
+                "absolute": absolute,
+                "relative": relative,
+                "sticky": sticky
+            )
+        ),
+        "gap": (
+            property: gap,
+            class: gap,
+            responsive: true,
+            values: $spacers
+        ),
+        "row-gap": (
+            property: row-gap,
+            class: row-gap,
+            responsive: true,
+            values: $spacers
+        ),
+        "column-gap": (
+            property: column-gap,
+            class: column-gap,
+            responsive: true,
+            values: $spacers
+        ),
+        "place-content": (
+            property: place-content,
+            class: place-content,
+            responsive: true,
+            values: (
+                "center-start": center start,
+                "start-center": start center,
+                "center-normal": center normal,
+                "end": end,
+                "end-center": end center,
+                "end-left": end left,
+                "end-space-between": end space-between,
+                "flex-start-center": flex-start center,
+                "flex-end-center": flex-end center,
+                "baseline-center": baseline center,
+                "first-baseline-space-evenly": first baseline space-evenly,
+                "last-baseline-right": last baseline right,
+                "space-between-space-evenly": space-between space-evenly,
+                "space-around-space-evenly": space-around space-evenly,
+                "space-around-start": space-around start,
+                "space-evenly-stretch": space-evenly stretch,
+                "stretch-space-evenly": stretch space-evenly
+            )
+        ),
+        "place-items": (
+            property: place-items,
+            class: place-items,
+            responsive: true,
+            values: (
+                "center": center,
+                "center-stretch": center stretch,
+                "center-start": center start,
+                "normal-start": normal start,
+                "center-normal": center normal,
+                "start-end": start end,
+                "start-legacy": start legacy,
+                "end-center": end center,
+                "end-normal": end normal,
+                "self-start-legacy": self-start legacy,
+                "self-end-normal": self-end normal,
+                "flex-start-legacy": flex-start legacy,
+                "flex-end-normal": flex-end normal,
+                "baseline-normal": baseline normal,
+                "first-baseline-legacy": first baseline legacy,
+                "last-baseline-normal": last baseline normal,
+                "stretch-legacy": stretch legacy
+            )
+        ),
+        "place-self": (
+            property: place-self,
+            class: place-self,
+            responsive: true,
+            values: (
+                "center": center,
+                "auto-center": auto center,
+                "normal-start": normal start,
+                "center-normal": center normal,
+                "start-auto": start auto,
+                "start-end": start end,
+                "end-normal": end normal,
+                "end-center": end center,
+                "self-start-auto": self-start auto,
+                "self-end-normal": self-end normal,
+                "flex-start-auto": flex-start auto,
+                "flex-end-normal": flex-end normal,
+                "baseline-normal": baseline normal,
+                "first-baseline-auto": first baseline auto,
+                "last-baseline-normal": last baseline normal,
+                "stretch-auto": stretch auto,
+                "stretch-center": stretch center
+            )
+        ),
         "cursor": (
             property: cursor,
             class: cursor,
@@ -128,6 +235,17 @@ $utilities: map-merge(
             class: min-vh,
             responsive: true,
             values: $sizes-vh
+        ),
+        "line-height": (
+            property: line-height,
+            class: lh,
+            values: (
+                0: 0,
+                1: 1,
+                sm: $line-height-sm,
+                base: $line-height-base,
+                lg: $line-height-lg
+            )
         )
     )
 );

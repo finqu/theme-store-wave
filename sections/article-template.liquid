@@ -64,17 +64,11 @@
 
 	</div>
 
-	<div class="article-share">
-
-		{% render 'social-media-share-buttons', facebook: true, x: true, whatsapp: true, email: true %}
-
-	</div>
-
     {% if blogpost.comments_are_enabled %}
 
     	<div class="article-comments{% if comments.size > 0 %} has-comments{% endif %}">
 
-    		<span class="d-block h2 mb-4">
+    		<span class="d-block h2 mb-4 text-title">
             	{{- 'blog.comment_plural' | t -}}
             </span>
 

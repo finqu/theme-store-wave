@@ -1,0 +1,468 @@
+{%- assign footerMenu1 = linklists[section.settings.footerMenu1] -%}
+{%- assign footerMenu2 = linklists[section.settings.footerMenu2] -%}
+
+{%- capture sectionContent -%}
+
+    <div class="site-footer-container">
+
+        <div class="site-footer">
+
+            <div class="site-footer-top">
+
+                <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                    <div class="row gy-4">
+
+                        {% if section.settings.footerLogoStatus or section.settings.footerSocialMediaButtonsStatus %}
+
+                            <div class="d-flex flex-column col-12 col-md-6 col-lg-2 gap-4">
+
+                                {% if section.settings.footerLogoStatus %}
+
+                                    {% if section.settings.footerLogoImg %}
+
+                                        {%- assign imgSize = '120,60' -%}
+
+                                        <picture>
+                                            <img
+                                                alt=""
+                                                data-src="{{ section.settings.footerLogoImg | thumb: imgSize }}"
+                                                data-srcset="{{ section.settings.footerLogoImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMetfooterLogoImgodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                class="lazy d-block img-fluid">
+                                        </picture>
+
+                                    {% else %}
+
+                                        <span class="h2 mb-0 d-block text-title">
+                                            {{- store.name -}}
+                                        </span>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                                {% if section.settings.footerSocialMediaButtonsStatus %}
+
+                                    {% render 'social-media-buttons' class: 'site-footer-social-media-buttons-container', preview: request.design_mode %}
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if section.settings.footerTextArea1Status %}
+
+                            <div class="col-12 col-md-6 col-lg">
+
+                                <div class="site-footer-text-container">
+
+                                    {% if section.settings.footerTextArea1Title %}
+
+                                        <div class="site-footer-title">
+
+                                            {{ section.settings.footerTextArea1Title }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                    {% if section.settings.footerTextArea1Content %}
+
+                                        <div class="site-footer-text text-richtext">
+
+                                            {{ section.settings.footerTextArea1Content }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if section.settings.footerMenu1 %}
+
+                            <div class="col-12 col-md-6 col-lg-2">
+
+                                <div class="site-footer-menu-container">
+
+                                    <div class="site-footer-title">
+
+                                        {%- if section.settings.footerMenu1Title -%}
+
+                                            <span class="site-footer-menu-title-text">
+                                                {{ section.settings.footerMenu1Title }}
+                                            </span>
+
+                                        {%- endif -%}
+
+                                    </div>
+
+                                    <ul class="site-footer-menu">
+
+                                        {% for item in footerMenu1.links %}
+
+                                            <li class="site-footer-menu-item">
+
+                                                {%- if item.url -%}
+
+                                                    <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                        {{ item.title }}
+                                                    </a>
+
+                                                {%- else -%}
+
+                                                    <span class="site-footer-menu-item-text">
+                                                        {{ item.title }}
+                                                    </span>
+
+                                                {%- endif -%}
+
+                                            </li>
+
+                                            {% if item.links %}
+
+                                                {% for item in item.links %}
+
+                                                    <li class="site-footer-menu-item">
+
+                                                        {%- if item.url -%}
+
+                                                            <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                                {{ item.title }}
+                                                            </a>
+
+                                                        {%- else -%}
+
+                                                            <span class="site-footer-menu-item-text">
+                                                                {{ item.title }}
+                                                            </span>
+
+                                                        {%- endif -%}
+
+                                                    </li>
+
+                                                {% endfor %}
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if section.settings.footerMenu2 %}
+
+                            <div class="col-12 col-md-6 col-lg-2">
+
+                                <div class="site-footer-menu-container">
+
+                                    <div class="site-footer-title">
+
+                                        {%- if section.settings.footerMenu2Title -%}
+
+                                            <span class="site-footer-menu-title-text">
+                                                {{ section.settings.footerMenu2Title }}
+                                            </span>
+
+                                        {%- endif -%}
+
+                                    </div>
+
+                                    <ul class="site-footer-menu">
+
+                                        {% for item in footerMenu2.links %}
+
+                                            <li class="site-footer-menu-item">
+
+                                                {%- if item.url -%}
+
+                                                    <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                        {{ item.title }}
+                                                    </a>
+
+                                                {%- else -%}
+
+                                                    <span class="site-footer-menu-item-text">
+                                                        {{ item.title }}
+                                                    </span>
+
+                                                {%- endif -%}
+
+                                            </li>
+
+                                            {% if item.links %}
+
+                                                {% for item in item.links %}
+
+                                                    <li class="site-footer-menu-item">
+
+                                                        {%- if item.url -%}
+
+                                                            <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                                {{ item.title }}
+                                                            </a>
+
+                                                        {%- else -%}
+
+                                                            <span class="site-footer-menu-item-text">
+                                                                {{ item.title }}
+                                                            </span>
+
+                                                        {%- endif -%}
+
+                                                    </li>
+
+                                                {% endfor %}
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if section.settings.footerNewsletterStatus or section.settings.footerPaymentMethodsStatus %}
+
+                            <div class="d-flex flex-column col-12 col-md-6 col-lg gap-4">
+
+                                {% if section.settings.footerNewsletterStatus %}
+
+                                    <div class="site-footer-newsletter-container">
+
+                                        {% if section.settings.footerNewsletterTitle %}
+
+                                            <div class="site-footer-title">
+
+                                                {{ section.settings.footerNewsletterTitle }}
+
+                                            </div>
+
+                                        {% endif %}
+
+                                        <div class="site-footer-newsletter">
+
+                                            {% form 'customer', customer %}
+
+                                                {% if form.posted_successfully? %}
+
+                                                    <script type="application/javascript">
+                                                        document.addEventListener('DOMContentLoaded', function() {
+                                                            document.dispatchEvent(new CustomEvent('theme:newsletter:subscribe', {
+                                                                detail: {
+                                                                    email: {{ form.email | json }}
+                                                                }
+                                                            }));
+                                                        });
+                                                    </script>
+
+                                                {% endif %}
+
+                                                {% if section.settings.footerNewsletterContent %}
+
+                                                    <div class="text-richtext mb-4">
+
+                                                        {{ section.settings.footerNewsletterContent }}
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                                {% if customer and customer.accepts_marketing %}
+
+                                                    <span class="d-block fw-bold">
+                                                        {{- 'general.newsletter_subscribed' | t -}}
+                                                    </span>
+
+                                                {% elsif form.posted_successfully? %}
+
+                                                    <span class="d-block fw-bold">
+                                                        {{- 'general.newsletter_subscribed' | t -}}
+                                                    </span>
+
+                                                {% else %}
+
+                                                    <div class="input-group">
+                                                        
+                                                        <div class="form-floating">
+
+                                                            <input id="footer-middle-newsletter" class="form-control" type="email" name="email" value="" placeholder="{{ 'general.email' | t }}" required>
+
+                                                            <label for="footer-middle-newsletter">
+                                                                {{- 'general.email' | t -}}
+                                                            </label>
+
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-icon">
+
+                                                            <span class="text-hidden">
+                                                                {{- 'general.subscribe' | t -}}
+                                                            </span>
+
+                                                            {% render 'icon', icon: 'angle-right' %}
+
+                                                        </button>
+
+                                                    </div>
+
+                                                    {% render 'form-error', error: form.error, class: 'mt-4' %}
+
+                                                {% endif %}
+
+                                            {% endform %}
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                                {% if section.settings.footerPaymentMethodsStatus %}
+
+                                    <div class="site-footer-payment-methods-container">
+
+                                        {% if section.settings.footerPaymentMethodsImg %}
+
+                                            {%- assign imgSize = '540,190' -%}
+
+                                            <picture>
+                                                <img
+                                                    alt=""
+                                                    data-src="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }}"
+                                                    data-srcset="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMethodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                    class="lazy d-block mx-auto img-fluid">
+                                            </picture>
+
+                                        {% elsif settings.klarnaClientId %}
+
+                                            {% render 'klarna-placement', type: 'footer-promotion-auto-size' %}
+
+                                        {% else %}
+
+                                            {% for payment_method in store.payment_methods %}
+
+                                                {%- assign img = payment_method.logo -%}
+
+                                                {% if img %}
+
+                                                    {%- assign imgSize = '85,70' -%}
+
+                                                    <div class="site-footer-payment-method">
+
+                                                        <picture>
+                                                            <img
+                                                                alt="{{ payment_method.title }}"
+                                                                data-src="{{ img | thumb: imgSize }}"
+                                                                data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                                class="lazy d-block mx-auto img-fluid">
+                                                        </picture>
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        {% endif %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="site-footer-bottom">
+
+                <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                    <div class="row gy-4">
+
+                        <div class="col-12 col-md">
+
+                            {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                                <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> - 
+                            {%- endif -%}
+
+                            {{ powered_by_link }}
+
+                        </div>
+
+                        {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
+
+                            <div class="col-12 col-md site-footer-localization text-md-end">
+
+                                {% form 'localization', customer %}
+
+                                    {% if store.published_locales.size > 1 %}
+
+                                        <select name="locale_code" class="site-localization-locale-select">
+
+                                            {% for locale in store.published_locales %}
+                                                <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
+                                                    {{ locale.name }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+                                    {% endif %}
+
+                                    {% if store.enabled_currencies.size > 1 %}
+
+                                        <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
+
+                                            {% for currency in store.enabled_currencies %}
+                                                <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
+                                                    {{ currency.name }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+                                    {% endif %}
+
+                                {% endform %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionContainer: 'none', sectionClasses: sectionClasses, sectionAnimation: false, sectionGutterWidth: '4rem' %}

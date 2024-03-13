@@ -22,6 +22,7 @@
     user-select: none;
     background-color: transparent;
     border: $btn-border-width solid transparent;
+    border-radius: var(--#{$prefix}btn-border-radius);
     padding: var(--#{$prefix}btn-padding-y) var(--#{$prefix}btn-padding-x);
     @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
 
@@ -564,6 +565,73 @@
             }
         }
     }
+} @else if $btn-secondary-variant == 5 {
+    .btn.btn-secondary {
+        color: var(--style-btn-bg-color);
+        border-color: var(--style-btn-bg-color);
+        transition: color 0.3s ease, background 0s 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+
+        .svg-icon {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:before {
+            position: absolute;
+            content: '';
+            background: var(--style-btn-bg-color);
+            transition-duration: .3s;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            opacity: 1;
+        }
+
+        &:hover,
+        &:focus,
+        &.focus {
+            color: var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+            transition: color 0.3s ease, background 0s 0.3s ease;
+
+            &:before {
+                width: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--style-btn-bg-color);
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color:  var(--style-btn-text-color);
+            border-color: var(--style-btn-bg-color);
+
+            &:before {
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+
+            .svg-icon {
+                color: var(--style-btn-text-color);
+            }
+        }
+    }
 }
 
 .btn-lg {
@@ -611,7 +679,7 @@
     }
 }
 
-.btn::not(.btn-link):not(.btn-text):not(.btn-icon) {
+.btn:not(.btn-link):not(.btn-text):not(.btn-icon) {
     font-style: $btn-font-style;
     @if $btn-letter-spacing != '0' {
         letter-spacing: $btn-letter-spacing;

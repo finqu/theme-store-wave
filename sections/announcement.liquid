@@ -22,18 +22,16 @@
 
             <div class="swiper-slide">
 
-                <div class="swiper-slide-inner container{% if item.settings.announcementText | size > 50 %} has-long-text{% endif %}">
+                <div class="swiper-slide-inner container{% if item.settings.announcementLink.text | size > 50 %} has-long-text{% endif %}">
 
                     {% if item.settings.announcementLink.url %}
 
                         <a
                             href="{{- item.settings.announcementLink.url -}}"
                             class="site-announcement-text"
-                            {% if item.settings.announcementLinkOpenInNewWindowStatus %}
-                            target="_blank"
-                            {% endif %}>
+                            target="{{- item.settings.announcementLink.target -}}">
 
-                            {{ item.settings.announcementText }}
+                            {{ item.settings.announcementLink.text }}
 
                         </a>
 
@@ -41,7 +39,7 @@
 
                         <span class="site-announcement-text">
 
-                            {{ item.settings.announcementText }}
+                            {{ item.settings.announcementLink.text }}
 
                         </span>
 
@@ -106,29 +104,14 @@
                             },
                             "settings": [
                                 {
-                                    "id": "announcementText",
-                                    "type": "text",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    }
-                                },
-                                {
                                     "id": "announcementLink",
                                     "type": "url",
                                     "label": {
-                                        "en": "Link",
-                                        "fi": "Linkki"
-                                    }
-                                },
-                                {
-                                    "id": "announcementLinkOpenInNewWindowStatus",
-                                    "type": "checkbox",
-                                    "label": {
-                                        "en": "Open link in a new tab",
-                                        "fi": "Avaa linkki uudessa välilehdessä"
+                                        "en": "Text",
+                                        "fi": "Teksti"
                                     },
-                                    "default": false
+                                    "include_target": true,
+                                    "include_text": true
                                 }
                             ]
                         }
@@ -140,6 +123,25 @@
                         "fi": "Asetukset"
                     },
                     "settings": [
+                        {
+                            "id": "announcementStatus",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Show announcement",
+                                "fi": "Näytä ilmoitus"
+                            },
+                            "default": true,
+                            "options": [
+                                {
+                                    "value": false,
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": true,
+                                    "label": "On"
+                                }
+                            ]
+                        },
                         {
                             "id": "announcementTextAlign",
                             "type": "radio-pill",
@@ -165,7 +167,8 @@
                                     "value": "end",
                                     "label": "{# icon.align-end #}"
                                 }
-                            ]
+                            ],
+                            "conditions": ["announcementStatus eq true"]
                         },
                         {
                             "id": "announcementVisibility",
@@ -182,14 +185,16 @@
                                         "en": "On all pages",
                                         "fi": "Kaikilla sivuilla"
                                     }
-                                }, {
+                                },
+                                {
                                     "value": "frontpage",
                                     "label": {
                                         "en": "On frontpage",
                                         "fi": "Etusivulla"
                                     }
                                 }
-                            ]
+                            ],
+                            "conditions": ["announcementStatus eq true"]
                         },
                         {
                             "id": "carouselAutoplaySpeed",
@@ -212,16 +217,8 @@
                                     "value": 10,
                                     "label": "10 s"
                                 }
-                            ]
-                        },
-                        {
-                            "id": "announcementStatus",
-                            "type": "checkbox",
-                            "label": {
-                                "en": "Show announcement",
-                                "fi": "Näytä ilmoitus"
-                            },
-                            "default": true
+                            ],
+                            "conditions": ["announcementStatus eq true"]
                         }
                     ]
                 }
@@ -235,7 +232,9 @@
                             {
                                 "type": "text",
                                 "settings": {
-                                    "announcementText": "Tell your customers about your promotions."
+                                    "announcementLink": {
+                                        "text": "Kerro asiakkaillesi tulevista tapahtumista ja tarjouksista."
+                                    }
                                 }
                             }
                         ]

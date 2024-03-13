@@ -3,6 +3,7 @@
 
 	Accepts:
 	- sectionTab: {String} (Required)
+	- sectionTabValue: {String}
 
 	Usage:
 	Render this snippet inside of sectionTabs capture and pass it to section snippet.
@@ -12,7 +13,7 @@
 
 <div class="section-tab">
 
-    <button type="button" name="section-tab-action" class="btn btn-text">
+    <button type="button" name="section-tab-action" class="btn btn-text text-title"{% if sectionTabValue %} value="{{- sectionTabValue -}}"{% endif %}>
         {{- sectionTab -}}
     </button>
 

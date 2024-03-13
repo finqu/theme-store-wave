@@ -1,0 +1,51 @@
+// Marketing
+// -----------------------------------------------------------------------------------------
+
+#newsletter-popup-modal {
+
+    .modal-dialog {
+        --bs-modal-width: 500px;
+    }
+
+    &:has(#newsletter-popup-modal-img-container) {
+
+        &.show {
+
+            .modal-dialog {
+                --bs-modal-width: 700px;
+
+                #newsletter-popup-modal-img-container,
+                #newsletter-popup-modal-content-container {
+                    transform: translate3d(0, 0, 0);
+                }
+            }
+        }
+        
+        .modal-dialog {
+            transition: max-width .5s ease;
+            --bs-modal-width: 600px;
+
+            .modal-content {
+                border: 0;
+                background-color: transparent;
+                min-height: 45vh; 
+            }
+
+            #newsletter-popup-modal-img-container {
+                transition: transform .5s ease;
+                transform: translate3d(100%, 0, 0);
+            }
+
+            #newsletter-popup-modal-content-container {
+                z-index: 1;
+                background-color: var(--bs-modal-bg);
+                transition: transform .5s ease;
+                transform: translate3d(-33.33333333%, 0, 0);
+
+                @include media-breakpoint-up(md) {
+                    transform: translate3d(-41.66666667%, 0, 0);
+                }
+            }
+        }
+    }
+}

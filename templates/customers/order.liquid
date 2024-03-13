@@ -13,15 +13,7 @@
 			<div>
 
 				<span>
-					{% if order.is_refunded %}
-
-						{{ order.order_status_refunded | t }}
-
-					{% else %}
-
-						{{ order.order_status | prepend: 'account.order.order_statuses.' | t }}
-
-					{% endif %}
+					{{ order.order_status | prepend: 'account.order.order_statuses.' | t }}
 				</span>
 
 			</div>
@@ -123,7 +115,7 @@
 							<div class="order-shipping-address-line">
 
 								<span class="order-shipping-address-line-text">
-									{{ order.shipping_address.firstname }} {{ order.shipping_address.lastname }}
+									{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}
 								</span>
 
 							</div>
@@ -191,7 +183,7 @@
 							<div class="order-billing-address-line">
 
 								<span class="order-billing-address-line-text">
-									{{ order.billing_address.firstname }} {{ order.billing_address.lastname }}
+									{{ order.billing_address.first_name }} {{ order.billing_address.last_name }}
 								</span>
 
 							</div>
@@ -464,6 +456,10 @@
 
 													{%- assign imgSize = '110,93' -%}
 
+												{% elsif settings.productImageAspectRatio == '3:4' %}
+
+													{%- assign imgSize = '110,147' -%}
+
 												{% elsif settings.productImageAspectRatio == '1:1' %}
 
 													{%- assign imgSize = '110,110' -%}
@@ -472,7 +468,7 @@
 
 												<picture>
 													<img
-														alt="{{ item.name }}"
+														alt="{{ item.title }}"
 														data-src="{{ img | thumb: imgSize }}"
 														data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
 														class="lazy d-block mx-auto img-fluid aspect-ratio-item">
@@ -486,7 +482,7 @@
 
 												<img
 													class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
-													alt="{{ item.name }}"
+													alt="{{ item.title }}"
 													data-src="{{- img | strip_newlines -}}">
 
 											{% endif %}
@@ -556,7 +552,7 @@
 														<div class="order-item-attribute">
 
 															<span class="order-item-attribute-text">
-																{{ 'general.selection' | t }}: {{ attribute }}
+																{{ attribute }}
 															</span>
 
 														</div>
@@ -732,7 +728,7 @@
 										<div class="col text-end">
 
 											<span>
-												{{ discount.amount | money_with_currency }}
+												{{ discount.total_amount | money_with_currency }}
 											</span>
 
 										</div>

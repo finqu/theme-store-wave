@@ -15,49 +15,6 @@ export default {
 	init: function() {
 
         this.initSection();
-        
-        const mediaObserver = new MutationObserver((mutations) => {
-
-			for (const { addedNodes } of mutations) {
-
-				for (const node of addedNodes) {
-
-					if (node.tagName && node.nodeType === 1) {
-
-						for (const el of node.querySelectorAll('img')) {
-
-				        	if (el.classList.contains('svg-inline')) {
-
-				        		theme.SVGInject(el);
-
-				        	} else {
-
-				        		if (el.classList.contains('lazy')) {
-				        			theme.lazyLoad.update();
-				        		}
-					        }
-				        }
-					}
-			    }
-			}
-		});
-
-		mediaObserver.observe(document.querySelector('body'), {
-			childList: true,
-			subtree: true
-		});
-
-		for (const el of document.querySelectorAll('img')) {
-        	if (el.classList.contains('svg-inline')) {
-        		theme.SVGInject(el);
-        	}
-        }
-
-		if (theme.store.klarna.clientId && theme.store.klarna.libSrc) {
-			theme.utils.loadScript(theme.store.klarna.libSrc, {
-				'clientId': theme.store.klarna.clientId
-			});
-		}
 
         if (theme.store.designMode === 'edit') {
 
@@ -69,9 +26,17 @@ export default {
                 new Slider(el);
             }
 
+            document.addEventListener('theme:slider:init', e => {
+                new Slider(e.detail.el);
+            });
+
             for (const el of document.querySelectorAll('.gallery')) { 
                 new Gallery(el);
             }
+
+            document.addEventListener('theme:gallery:init', e => {
+                new Gallery(e.detail.el);
+            });
 
             for (const el of document.querySelectorAll('.masonry')) {
 
@@ -82,16 +47,24 @@ export default {
                 new Masonry(el, settings);
             }
 
-            this.initCookiePolicy();
-            this.initAccessibility();
+            document.addEventListener('theme:masonry:init', e => {
+
+                const settings = Object.assign({
+                    percentPosition: true
+                }, e.detail.el.dataset || {});
+
+                new Masonry(e.detail.el, settings);
+            });
         }
 
         if (theme.store.template !== 'password') {
             theme.cart.init();
             headerLayout();
-            this.initWishlist();
             this.initCartMini();
             this.initLocalization();
+            this.initCookiePolicy();
+            this.initAccessibility();
+            this.initMarketing();
         }
 
         switch (theme.store.template) {
@@ -120,7 +93,7 @@ export default {
 	},
     initCartMini: function() {
 
-        document.addEventListener('theme:cart:render', cartRenderEvent => {
+        document.addEventListener('theme:cart:render', () => {
 
             const cartMiniEls = document.querySelectorAll('.cart-mini');
 
@@ -166,212 +139,6 @@ export default {
             });
         });
     },
-	initWishlist: function() {
-
-        const isWishlistTemplate = document.querySelector('body').classList.contains('template-customers-wishlist');
-
-		document.querySelectorAll('[data-wishlist-add]').forEach(el => { el.addEventListener('click', e => {
-
-            const iconEl = el.querySelector('.svg-icon');
-    		const id = el.getAttribute('data-wishlist-add');
-            const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
-
-    		if (!id) {
-    			return;
-    		}
-
-            fetch('/api/wishlist/products/'+id, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => {
-                
-                itemCountEls.forEach(el => {
-
-                    const value = (parseInt(el.innerText) || 0) + 1;
-
-                    if (wishlistCount > 0 && !el.parentNode.classList.contains('has-items')) {
-                        el.parentNode.classList.add('has-items');
-                    }
-
-                    theme.utils.animate(el.parentNode, 'bounce');
-
-                    el.innerHTML = value;
-                });
-
-                if (iconEl) {
-                    theme.utils.animate(iconEl, 'pulse');
-                }
-
-                document.dispatchEvent(new CustomEvent('theme:wishlist:addItem', {
-                    detail: {
-                        id: id
-                    }
-                }));
-            });
-    	})});
-
-    	document.querySelectorAll('[data-wishlist-remove]').forEach(el => { el.addEventListener('click', e => {
-
-            const iconEl = el.querySelector('.svg-icon');
-    		const id = el.getAttribute('data-wishlist-remove');
-    		const itemEl = document.querySelector('[data-wishlist-item="'+id+'"]');
-            const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
-
-    		if (!id) {
-    			return;
-    		}
-
-            fetch('/api/wishlist/products/'+id, {
-                method: 'DELETE'
-            }).then(() => {
-
-                itemCountEls.forEach(el => {
-    
-                    const value = (parseInt(el.innerText) || 0) - 1;
-
-                    if (value < 0) {
-                        return;
-                    }
-
-                    if (value < 1 && el.parentNode.classList.contains('has-items')) {
-                        el.parentNode.classList.remove('has-items');
-                    }
-
-                    theme.utils.animate(el.parentNode, 'bounce');
-
-                    el.innerHTML = value;
-                });
-
-                if (iconEl) {
-                    theme.utils.animate(iconEl, 'pulse');
-                }
-
-                if (itemEl) {
-
-                    if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
-                        location.reload();
-                        return;
-                    }
-
-                    itemEl.remove();
-                }
-
-                document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
-                    detail: {
-                        id: id
-                    }
-                }));
-            });
-    	})});
-
-    	document.querySelectorAll('[data-wishlist-toggle]').forEach(el => { el.addEventListener('click', e => {
-
-            const textEl = el.querySelector('.text');
-            const iconEl = el.querySelector('.svg-icon');
-    		const id = el.getAttribute('data-wishlist-toggle');
-    		const itemEl = document.querySelector('[data-wishlist-item="'+id+'"]');
-    		const isAdded = el.getAttribute('aria-pressed') === 'true';
-            const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
-
-    		if (!id) {
-    			return;
-    		}
-
-    		if (isAdded) {
-
-                fetch('/api/wishlist/products/'+id, {
-                    method: 'DELETE'
-                }).then(() => {
-
-                    if (itemEl) {
-    
-                        if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
-                            location.reload();
-                            return;
-                        }
-
-                        itemEl.remove();
-
-                        return;
-                    }
-
-                    itemCountEls.forEach(el => {
-
-                        const value = (parseInt(el.innerText) || 0) - 1;
-
-                        if (value < 0) {
-                            return;
-                        }
-
-                        if (value < 1 && el.parentNode.classList.contains('has-items')) {
-                            el.parentNode.classList.remove('has-items');
-                        }
-
-                        theme.utils.animate(el.parentNode, 'bounce');
-
-                        el.innerHTML = value;
-                    });
-
-                    if (iconEl) {
-                        theme.utils.animate(iconEl, 'pulse');
-                    }
-
-                    if (textEl) {
-                        textEl.textContent = theme.utils.t('wishlist.add');
-                    }
-
-                    el.setAttribute('aria-pressed', false);
-
-                    document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
-                        detail: {
-                            id: id
-                        }
-                    }));
-                });
-
-    		} else {
-
-                fetch('/api/wishlist/products/'+id, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(() => {
-
-                    itemCountEls.forEach(el => {
-
-                        const value = (parseInt(el.innerText) || 0) + 1;
-
-                        if (value > 0 && !el.parentNode.classList.contains('has-items')) {
-                            el.parentNode.classList.add('has-items');
-                        }
-
-                        theme.utils.animate(el.parentNode, 'bounce');
-
-                        el.innerHTML = value;
-                    });
-
-                    if (iconEl) {
-                        theme.utils.animate(iconEl, 'pulse');
-                    }
-
-                    if (textEl) {
-                        textEl.textContent = theme.utils.t('wishlist.remove');
-                    }
-
-	                el.setAttribute('aria-pressed', true);
-
-                    document.dispatchEvent(new CustomEvent('theme:wishlist:addItem', {
-                        detail: {
-                            id: id
-                        }
-                    }));
-                });
-    		}
-    	})});
-	},
     initCookiePolicy: function() {
 
         const cookiePolicyEl = document.querySelector('.cookie-policy');
@@ -401,7 +168,7 @@ export default {
 
         if (cookiePolicyOpenEls.length) {
 
-            cookiePolicyOpenEls.forEach(el => { el.addEventListener('click', e => {
+            cookiePolicyOpenEls.forEach(el => { el.addEventListener('click', () => {
 
                 if (document.body.classList.contains('cookie-policy-visible')) {
                     return;
@@ -418,7 +185,7 @@ export default {
 
         if (cookiePolicySubmitEls.length) {
 
-            cookiePolicySubmitEls.forEach(el => { el.addEventListener('click', e => {
+            cookiePolicySubmitEls.forEach(el => { el.addEventListener('click', () => {
 
                cookiePolicyInputEl.setAttribute('value', el.value);
                cookiePolicyFormEl.submit();
@@ -431,16 +198,11 @@ export default {
 
             const containerEl = document.body;
             const scrollingEl = document.scrollingElement;
-            const backToTopBtnTemplate = theme.hbs.compile(document.querySelector('#hbs-back-to-top-btn').innerHTML);
-            let backToTopBtnEL = null;
             let windowHeight = window.innerHeight;
-            
-            if (backToTopBtnTemplate) {
 
-                containerEl.insertAdjacentHTML('beforeend', backToTopBtnTemplate());
+            containerEl.insertAdjacentHTML('beforeend', theme.renderer.render('back-to-top-btn'));
 
-                backToTopBtnEL = containerEl.querySelector('#back-to-top-btn');
-            }
+            const backToTopBtnEL = containerEl.querySelector('#back-to-top-btn');
 
             if (backToTopBtnEL) {
 
@@ -479,8 +241,284 @@ export default {
             }
         };
 
+        const initWishlist = () => {
+
+            const isWishlistTemplate = document.querySelector('body').classList.contains('template-customers-wishlist');
+
+            document.querySelectorAll('[data-wishlist-add]').forEach(el => { el.addEventListener('click', () => {
+
+                const iconEl = el.querySelector('.svg-icon');
+                const id = el.getAttribute('data-wishlist-add');
+                const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
+                const itemCountWithTextEls = document.querySelectorAll('[data-wishlist-item-count-with-text]');
+
+                if (!id) {
+                    return;
+                }
+
+                fetch('/api/wishlist/products/'+id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(() => {
+                    
+                    itemCountEls.forEach(el => {
+
+                        const value = (parseInt(el.innerText) || 0) + 1;
+
+                        if (wishlistCount > 0 && !el.parentNode.classList.contains('has-items')) {
+                            el.parentNode.classList.add('has-items');
+                        }
+
+                        theme.utils.animate(el.parentNode, 'bounce');
+
+                        el.innerHTML = value;
+                    });
+
+                    itemCountWithTextEls.forEach(el => {
+
+                        const value = (parseInt(el.innerText) || 0) + 1;
+
+                        if (value === 1) {
+
+                            el.innerHTML = theme.utils.t('wishlist.item_count', {
+                                amount: value
+                            });
+
+                        } else {
+
+                            el.innerHTML = theme.utils.t('wishlist.item_count_plural', {
+                                amount: value
+                            });
+                        }
+                    });
+
+                    if (iconEl) {
+                        theme.utils.animate(iconEl, 'pulse');
+                    }
+
+                    document.dispatchEvent(new CustomEvent('theme:wishlist:addItem', {
+                        detail: {
+                            id: id
+                        }
+                    }));
+                });
+            })});
+
+            document.querySelectorAll('[data-wishlist-remove]').forEach(el => { el.addEventListener('click', () => {
+
+                const iconEl = el.querySelector('.svg-icon');
+                const id = el.getAttribute('data-wishlist-remove');
+                const itemEl = document.querySelector('[data-wishlist-item="'+id+'"]');
+                const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
+                const itemCountWithTextEls = document.querySelectorAll('[data-wishlist-item-count-with-text]');
+
+                if (!id) {
+                    return;
+                }
+
+                fetch('/api/wishlist/products/'+id, {
+                    method: 'DELETE'
+                }).then(() => {
+
+                    itemCountEls.forEach(el => {
+        
+                        const value = (parseInt(el.innerText) || 0) - 1;
+
+                        if (value < 1 && el.parentNode.classList.contains('has-items')) {
+                            el.parentNode.classList.remove('has-items');
+                        }
+
+                        theme.utils.animate(el.parentNode, 'bounce');
+
+                        el.innerHTML = value;
+                    });
+
+                    itemCountWithTextEls.forEach(el => {
+
+                        const value = (parseInt(el.innerText) || 0) - 1;
+
+                        if (value === 1) {
+
+                            el.innerHTML = theme.utils.t('wishlist.item_count', {
+                                amount: value
+                            });
+
+                        } else {
+
+                            el.innerHTML = theme.utils.t('wishlist.item_count_plural', {
+                                amount: value
+                            });
+                        }
+                    });
+
+                    if (iconEl) {
+                        theme.utils.animate(iconEl, 'pulse');
+                    }
+
+                    if (itemEl) {
+
+                        if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
+                            location.reload();
+                            return;
+                        }
+
+                        itemEl.remove();
+                    }
+
+                    document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
+                        detail: {
+                            id: id
+                        }
+                    }));
+                });
+            })});
+
+            document.querySelectorAll('[data-wishlist-toggle]').forEach(el => { el.addEventListener('click', () => {
+
+                const textEl = el.querySelector('.text');
+                const iconEl = el.querySelector('.svg-icon');
+                const id = el.getAttribute('data-wishlist-toggle');
+                const itemEl = document.querySelector('[data-wishlist-item="'+id+'"]');
+                const isAdded = el.getAttribute('aria-pressed') === 'true';
+                const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
+                const itemCountWithTextEls = document.querySelectorAll('[data-wishlist-item-count-with-text]');
+
+                if (!id) {
+                    return;
+                }
+
+                if (isAdded) {
+
+                    fetch('/api/wishlist/products/'+id, {
+                        method: 'DELETE'
+                    }).then(() => {
+
+                        if (itemEl) {
+        
+                            if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
+                                location.reload();
+                                return;
+                            }
+
+                            itemEl.remove();
+                        }
+
+                        itemCountEls.forEach(el => {
+
+                            const value = (parseInt(el.innerText) || 0) - 1;
+
+                            if (value < 1 && el.parentNode.classList.contains('has-items')) {
+                                el.parentNode.classList.remove('has-items');
+                            }
+
+                            theme.utils.animate(el.parentNode, 'bounce');
+
+                            el.innerHTML = value;
+                        });
+
+                        itemCountWithTextEls.forEach(el => {
+
+                            const value = (parseInt(el.innerText) || 0) - 1;
+    
+                            if (value === 1) {
+    
+                                el.innerHTML = theme.utils.t('wishlist.item_count', {
+                                    amount: value
+                                });
+    
+                            } else {
+    
+                                el.innerHTML = theme.utils.t('wishlist.item_count_plural', {
+                                    amount: value
+                                });
+                            }
+                        });
+
+                        if (iconEl) {
+                            theme.utils.animate(iconEl, 'pulse');
+                        }
+
+                        if (textEl) {
+                            textEl.textContent = theme.utils.t('wishlist.add');
+                        }
+
+                        el.setAttribute('aria-pressed', false);
+
+                        document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
+                            detail: {
+                                id: id
+                            }
+                        }));
+                    });
+
+                } else {
+
+                    fetch('/api/wishlist/products/'+id, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(() => {
+
+                        itemCountEls.forEach(el => {
+
+                            const value = (parseInt(el.innerText) || 0) + 1;
+
+                            if (value > 0 && !el.parentNode.classList.contains('has-items')) {
+                                el.parentNode.classList.add('has-items');
+                            }
+
+                            theme.utils.animate(el.parentNode, 'bounce');
+
+                            el.innerHTML = value;
+                        });
+
+                        itemCountWithTextEls.forEach(el => {
+
+                            const value = (parseInt(el.innerText) || 0) + 1;
+    
+                            if (value === 1) {
+    
+                                el.innerHTML = theme.utils.t('wishlist.item_count', {
+                                    amount: value
+                                });
+    
+                            } else {
+    
+                                el.innerHTML = theme.utils.t('wishlist.item_count_plural', {
+                                    amount: value
+                                });
+                            }
+                        });
+
+                        if (iconEl) {
+                            theme.utils.animate(iconEl, 'pulse');
+                        }
+
+                        if (textEl) {
+                            textEl.textContent = theme.utils.t('wishlist.remove');
+                        }
+
+                        el.setAttribute('aria-pressed', true);
+
+                        document.dispatchEvent(new CustomEvent('theme:wishlist:addItem', {
+                            detail: {
+                                id: id
+                            }
+                        }));
+                    });
+                }
+            })});
+        }
+
         if (theme.store.accessibility.showBackToTopButton) {
             initBackToTopButton();
+        }
+
+        if (theme.store.accessibility.showWishlist) {
+            initWishlist();
         }
         
     },
@@ -668,5 +706,38 @@ export default {
                 });
             }
         });
+
+        document.querySelectorAll('.product-card-grid-item input[name="product-variant-img"]').forEach(productVariantImgEl => theme.utils.productGridItemVariantImgSwapper(productVariantImgEl));
+    },
+    initMarketing: function() {
+
+        const initNewsletterPopup = () => {
+
+            if (theme.store.cookiePolicy.status !== null
+                && !theme.utils.cookies.get('themeNewsletterPopup')
+                && !(theme.store.customer.loggedIn && theme.store.customer.acceptsMarketing)) {
+
+                setTimeout(() => {
+
+                    document.body.insertAdjacentHTML('beforeend', theme.renderer.render('newsletter-popup'));
+
+                    theme.bs.Modal.getOrCreateInstance('#newsletter-popup-modal')?.show();
+
+                    document.getElementById('newsletter-popup-modal').addEventListener('hide.bs.modal', () => {
+
+                        theme.utils.cookies.set(
+                            'themeNewsletterPopup',
+                            true,
+                            Math.floor(theme.store.marketing.newsletterPopup.cookieDuration / 86400)
+                        );
+                    });
+
+                }, theme.store.marketing.newsletterPopup.delay);
+            }
+        };
+
+        if (theme.store.marketing.newsletterPopup.status && theme.store.designMode !== 'edit') {
+            initNewsletterPopup();
+        }
     }
 }

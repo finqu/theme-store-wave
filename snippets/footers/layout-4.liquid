@@ -6,81 +6,85 @@
 
         <div class="site-footer">
 
-            <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+            <div class="container d-flex flex-column gap-4 gap-lg-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                <div class="site-footer-menu-container">
+                {% if section.settings.footerMenu1 %}
 
-                    {%- if section.settings.footerMenu1Title -%}
+                    <div class="site-footer-menu-container">
 
-                        <div class="site-footer-title text-center">
+                        {%- if section.settings.footerMenu1Title -%}
 
-                            <span class="site-footer-menu-title-text">
-                                {{ section.settings.footerMenu1Title }}
-                            </span>
+                            <div class="site-footer-title text-center">
 
-                        </div>
+                                <span class="site-footer-menu-title-text">
+                                    {{ section.settings.footerMenu1Title }}
+                                </span>
 
-                    {%- endif -%}
+                            </div>
 
-                    <ul class="site-footer-menu site-footer-menu-inline justify-content-center">
+                        {%- endif -%}
 
-                        {% for item in footerMenu1.links %}
+                        <ul class="site-footer-menu site-footer-menu-inline justify-content-center">
 
-                            <li class="site-footer-menu-item">
+                            {% for item in footerMenu1.links %}
 
-                                {%- if item.url -%}
+                                <li class="site-footer-menu-item">
 
-                                    <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                        {{ item.title }}
-                                    </a>
+                                    {%- if item.url -%}
 
-                                {%- else -%}
+                                        <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                            {{ item.title }}
+                                        </a>
 
-                                    <span class="site-footer-menu-item-text">
-                                        {{ item.title }}
-                                    </span>
+                                    {%- else -%}
 
-                                {%- endif -%}
+                                        <span class="site-footer-menu-item-text">
+                                            {{ item.title }}
+                                        </span>
 
-                            </li>
+                                    {%- endif -%}
 
-                            {% if item.links %}
+                                </li>
 
-                                {% for item in item.links %}
+                                {% if item.links %}
 
-                                    <li class="site-footer-menu-item">
+                                    {% for item in item.links %}
 
-                                        {%- if item.url -%}
+                                        <li class="site-footer-menu-item">
 
-                                            <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                                {{ item.title }}
-                                            </a>
+                                            {%- if item.url -%}
 
-                                        {%- else -%}
+                                                <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                    {{ item.title }}
+                                                </a>
 
-                                            <span class="site-footer-menu-item-text">
-                                                {{ item.title }}
-                                            </span>
+                                            {%- else -%}
 
-                                        {%- endif -%}
+                                                <span class="site-footer-menu-item-text">
+                                                    {{ item.title }}
+                                                </span>
 
-                                    </li>
+                                            {%- endif -%}
 
-                                {% endfor %}
+                                        </li>
 
-                            {% endif %}
+                                    {% endfor %}
 
-                        {% endfor %}
+                                {% endif %}
 
-                    </ul>
+                            {% endfor %}
 
-                </div>
+                        </ul>
+
+                    </div>
+
+                {% endif %}
 
                 {% if section.settings.footerSocialMediaButtonsStatus %}
 
-                    <div class="site-footer-social-media-buttons-container justify-content-center mt-6">
+                    <div class="site-footer-social-media-buttons-container justify-content-center">
 
-                        {% render 'social-media-buttons' %}
+                        {% render 'social-media-buttons', preview: request.design_mode %}
 
                     </div>
 
@@ -88,7 +92,7 @@
 
                 {% if section.settings.footerTextArea1Status %}
 
-                    <div class="site-footer-text-container mt-6">
+                    <div class="site-footer-text-container">
 
                         {% if section.settings.footerTextArea1Title %}
 
@@ -100,7 +104,7 @@
 
                         {% endif %}
 
-                        <div class="site-footer-text text-center">
+                        <div class="site-footer-text text-center text-richtext">
 
                             {{ section.settings.footerTextArea1Content }}
 
@@ -112,7 +116,7 @@
 
                 {% if section.settings.footerNewsletterStatus %}
 
-                    <div class="site-footer-newsletter-container mt-6">
+                    <div class="site-footer-newsletter-container">
 
                         {% if section.settings.footerNewsletterTitle %}
 
@@ -144,7 +148,7 @@
 
                                 {% if section.settings.footerNewsletterContent %}
 
-                                    <div class="text-center">
+                                    <div class="text-center text-richtext mb-4">
 
                                         {{ section.settings.footerNewsletterContent }}
 
@@ -166,7 +170,7 @@
 
                                 {% else %}
 
-                                    <div class="mb-4 input-group mx-auto max-w-px-370">
+                                    <div class="input-group mx-auto max-w-px-370">
                                                     
                                         <div class="form-floating">
 
@@ -190,7 +194,7 @@
 
                                     </div>
 
-                                    {% render 'form-error', error: form.error, class: 'mb-4 mt-4' %}
+                                    {% render 'form-error', error: form.error, class: 'mt-4' %}
 
                                 {% endif %}
 
@@ -204,18 +208,17 @@
 
                 {% if section.settings.footerPaymentMethodsStatus %}
 
-                    <div class="site-footer-payment-methods-container justify-content-center mt-6">
+                    <div class="site-footer-payment-methods-container justify-content-center">
 
-                        {% if section.settings.footerPaymentMethodsimg %}
+                        {% if section.settings.footerPaymentMethodsImg %}
 
-                            {%- assign img = section.settings.footerPaymentMethodsimg -%}
                             {%- assign imgSize = '540,190' -%}
 
                             <picture>
                                 <img
                                     alt=""
-                                    data-src="{{ img | thumb: imgSize }}"
-                                    data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+                                    data-src="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }}"
+                                    data-srcset="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMethodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
                                     class="lazy d-block mx-auto img-fluid mt-4 mt-md-0">
                             </picture>
 
@@ -227,7 +230,7 @@
 
                             {% for payment_method in store.payment_methods %}
 
-                                {%- assign img = payment_method.image -%}
+                                {%- assign img = payment_method.logo -%}
 
                                 {% if img %}
 
@@ -237,7 +240,7 @@
 
                                         <picture>
                                             <img
-                                                alt="{{ payment_method.name }}"
+                                                alt="{{ payment_method.title }}"
                                                 data-src="{{ img | thumb: imgSize }}"
                                                 data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
                                                 class="lazy d-block mx-auto img-fluid">
@@ -255,37 +258,19 @@
 
                 {% endif %}
 
-                {% if section.settings.footerTextArea2Status %}
+                <div class="text-center">
 
-                    <div class="site-footer-bottom-text text-center mt-6">
+                    {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                        <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> - 
+                    {%- endif -%}
 
-                        {{ section.settings.footerTextArea2Content }}
+                    {{ powered_by_link }}
 
-                    </div>
-
-                {% endif %}
-
-                <ul class="list-separator d-flex justify-content-center text-center mt-6">
-
-                    <li class="list-inline-item">
-
-                        <button type="button" class="btn btn-link text-reset" data-cookie-policy-open>
-                            {{- 'cookie_policy.cookie_settings' | t -}}
-                        </button>
-
-                    </li>
-
-                    <li class="list-inline-item">
-
-                        <a target="_blank" rel="nofollow noopener" class="text-reset" href="https://www.finqu.com?utm_campaign=poweredby&utm_medium=finqu&utm_source=onlinestore">Powered by Finqu</a>
-
-                    </li>
-
-                </ul>
+                </div>
 
                 {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
 
-                    <div class="site-footer-localization text-center mt-6">
+                    <div class="site-footer-localization text-center">
 
                         {% form 'localization', customer %}
 

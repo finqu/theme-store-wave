@@ -1,0 +1,671 @@
+{%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+{%- if section.settings.sectionTextAlign == 'nil' -%}
+    {%- assign textAlign = settings.sectionTextAlign -%}
+{%- else -%}
+    {%- assign textAlign = section.settings.sectionTextAlign -%}
+{%- endif -%}
+
+{%- capture sectionContent -%}
+
+    <div class="d-flex flex-column py-4 p-md-0 flex-md-row gap-4 gap-md-6 py-4 align-items-center justify-content-{{ textAlign }}">
+
+        <span class="h3 mb-0 text-title">
+            {{ section.settings.title }}
+        </span>
+
+        {%- if section.settings.bannerLayout == 2 and section.settings.discountCode -%}
+
+            <div class="border py-2 px-4" style="--bs-border-style: dashed">
+
+                <span class="h5 mb-0 text-title">
+                    {{- section.settings.discountCode -}}
+                </span>
+
+            </div>
+
+        {%- endif -%}
+
+        {%- if section.settings.bannerLayout == 3 -%}
+
+            {%- if section.settings.datetime or request.design_mode -%}
+
+                {%- if section.settings.datetime -%}
+
+                    {%- if request.design_mode == 'edit' -%}
+                        {%- assign eventName = 'finqu:section:load' -%}
+                    {%- else -%}
+                        {%- assign eventName = 'theme:ready' -%}
+                    {%- endif -%}
+
+                    <script defer="defer">
+                        document.addEventListener('{{- eventName -}}', () => theme.utils.countdown({
+                            el: document.querySelector('{{ sectionHandle }} .countdown-container'),
+                            datetime: {{ section.settings.datetime | json -}},
+                            zeroPad: {{ section.settings.datetimeZeroPad | json -}},
+                            hideTimeUnitOnZero: {{ section.settings.datetimeHideTimeUnitOnZero | json -}},
+                            showYears: {{ section.settings.datetimeShowYears | json -}},
+                            showMonths: {{ section.settings.datetimeShowMonths | json -}},
+                            events: {
+                                complete: () => location.reload()
+                            }
+                        }));
+                    </script>
+
+                    {%- assign targetDate = section.settings.datetime | date: '%s' | times: 1000 -%}
+                    {%- assign currentDate = 'now' | date: '%s' | times: 1000 -%}
+                    {%- assign diff = targetDate | minus: currentDate -%}
+
+                    {%- if section.settings.datetimeShowYears and section.settings.datetimeShowMonths -%}
+
+                        {%- assign yearsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                        {%- assign years = diff | divided_by: yearsEquationA | floor -%}
+
+                        {%- assign monthsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                        {%- assign monthsEquationB = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                        {%- assign months = diff | modulo: monthsEquationA | divided_by: monthsEquationB | floor -%}
+
+                        {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                        {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                        {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                        {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                        {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                        {%- assign minutesEquationB = 1000 | times: 60 -%}
+                        {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                        {%- assign secondsEquationA = 1000 | times: 60 -%}
+                        {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor  -%}
+
+                    {%- elsif section.settings.datetimeShowYears -%}
+
+                        {%- assign yearsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                        {%- assign years = diff | divided_by: yearsEquationA | floor -%}
+
+                        {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                        {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                        {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                        {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                        {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                        {%- assign minutesEquationB = 1000 | times: 60 -%}
+                        {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                        {%- assign secondsEquationA = 1000 | times: 60 -%}
+                        {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor  -%}
+
+                    {%- elsif section.settings.datetimeShowMonths -%}
+
+                        {%- assign monthsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                        {%- assign months = diff | divided_by: monthsEquationA | floor -%}
+
+                        {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                        {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                        {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                        {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                        {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                        {%- assign minutesEquationB = 1000 | times: 60 -%}
+                        {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                        {%- assign secondsEquationA = 1000 | times: 60 -%}
+                        {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor  -%}
+
+                    {%- else -%}
+
+                        {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign days = diff | divided_by: daysEquationA | floor -%}
+
+                        {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                        {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                        {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                        {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                        {%- assign minutesEquationB = 1000 | times: 60 -%}
+                        {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                        {%- assign secondsEquationA = 1000 | times: 60 -%}
+                        {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor  -%}
+
+                    {%- endif -%}
+
+                {%- elsif request.design_mode -%}
+
+                    {%- assign years = 0 -%}
+                    {%- assign months = 0 -%}
+                    {%- assign days = 0 -%}
+                    {%- assign hours = 0 -%}
+                    {%- assign minutes = 0 -%}
+                    {%- assign seconds = 0 -%}
+
+                {%- endif -%}
+
+                {% if request.design_mode and section.settings.datetime == nil or seconds > 0 %}
+
+                    <div class="countdown-container">
+
+                        <div class="countdown">
+
+                            {% if section.settings.datetimeShowYears %}
+
+                                {% unless years == 0 and section.settings.datetimeHideTimeUnitOnZero and request.design_mode %}
+
+                                    <div class="countdown-item">
+
+                                        <span class="countdown-item-value" data-countdown-years>
+                                            {%- if years < 10 and section.settings.datetimeZeroPad -%}
+                                                0{{ years -}}
+                                            {%- else -%}
+                                                {{- years -}}
+                                            {%- endif -%}
+                                        </span>
+
+                                        <span class="countdown-item-label">
+                                            {{ 'general.datetime.year_plural' | t }}
+                                        </span>
+
+                                    </div>
+
+                                {% endunless %}
+
+                            {% endif %}
+
+                            {% if section.settings.datetimeShowMonths %}
+
+                                {% unless months == 0 and section.settings.datetimeHideTimeUnitOnZero and request.design_mode %}
+
+                                    <div class="countdown-item">
+
+                                        <span class="countdown-item-value" data-countdown-months>
+                                            {%- if months < 10 and section.settings.datetimeZeroPad -%}
+                                                0{{ months -}}
+                                            {%- else -%}
+                                                {{- months -}}
+                                            {%- endif -%}
+                                        </span>
+
+                                        <span class="countdown-item-label">{{ 'general.datetime.month_plural' | t }}</span>
+
+                                    </div>
+
+                                {% endunless %}
+
+                            {% endif %}
+
+                            {% unless days == 0 and section.settings.datetimeHideTimeUnitOnZero and request.design_mode %}
+
+                                <div class="countdown-item">
+
+                                    <span class="countdown-item-value" data-countdown-days>
+                                        {%- if days < 10 and section.settings.datetimeZeroPad -%}
+                                            0{{ days -}}
+                                        {%- else -%}
+                                            {{- days -}}
+                                        {%- endif -%}
+                                    </span>
+
+                                    <span class="countdown-item-label">{{ 'general.datetime.day_plural' | t }}</span>
+
+                                </div>
+
+                            {% endunless %}
+
+                            {% unless hours == 0 and section.settings.datetimeHideTimeUnitOnZero and request.design_mode %}
+
+                                <div class="countdown-item">
+
+                                    <span class="countdown-item-value" data-countdown-hours>
+                                        {%- if hours < 10 and section.settings.datetimeZeroPad -%}
+                                            0{{ hours -}}
+                                        {%- else -%}
+                                            {{- hours -}}
+                                        {%- endif -%}
+                                    </span>
+
+                                    <span class="countdown-item-label">{{ 'general.datetime.hour_plural' | t }}</span>
+
+                                </div>
+
+                            {% endunless %}
+
+                            {% unless minutes == 0 and section.settings.datetimeHideTimeUnitOnZero and request.design_mode %}
+
+                                <div class="countdown-item">
+
+                                    <span class="countdown-item-value" data-countdown-minutes>
+                                        {%- if minutes < 10 and section.settings.datetimeZeroPad -%}
+                                            0{{ minutes -}}
+                                        {%- else -%}
+                                            {{- minutes -}}
+                                        {%- endif -%}
+                                    </span>
+
+                                    <span class="countdown-item-label">{{ 'general.datetime.minute_plural' | t }}</span>
+
+                                </div>
+
+                            {% endunless %}
+
+                            <div class="countdown-item">
+
+                                <span class="countdown-item-value" data-countdown-seconds>
+                                    {%- if seconds < 10 and section.settings.datetimeZeroPad -%}
+                                        0{{ seconds -}}
+                                    {%- else -%}
+                                        {{- seconds -}}
+                                    {%- endif -%}
+                                </span>
+
+                                <span class="countdown-item-label">{{ 'general.datetime.second_plural' | t }}</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {%- endif -%}
+
+        {%- endif -%}
+
+        {% if section.settings.btnLink.text %}
+
+            {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLink.text, url: section.settings.btnLink.url, target: section.settings.btnLink.target -%}
+
+        {% endif %}
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'section', section: section, sectionContent: sectionContent, sectionHeader: false %}
+
+{% schema %}
+{
+    "name": {
+        "en": "Promotion banner",
+        "fi": "Kampanjabanneri"
+    },
+    "tag": "section",
+    "class": "section section-promotion-banner",
+    "category": "theme-marketing",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "bannerLayout",
+                        "type": "hidden"
+                    },
+                    {
+                        "id": "title",
+                        "type": "text",
+                        "label": {
+                            "en": "Title",
+                            "fi": "Otsikko"
+                        }
+                    },
+                    {
+                        "id": "discountCode",
+                        "type": "text",
+                        "label": {
+                            "en": "Discount code",
+                            "fi": "Alennuskoodi"
+                        },
+                        "conditions": ["bannerLayout eq 2"]
+                    },
+                    {
+                        "id": "datetime",
+                        "type": "datetime",
+                        "label": {
+                            "en": "Datetime",
+                            "fi": "Päivämäärä"
+                        },
+                        "conditions": ["bannerLayout eq 3"]
+                    },
+                    {
+                        "id": "btnLink",
+                        "type": "url",
+                        "label": {
+                            "en": "Button",
+                            "fi": "Painike"
+                        },
+                        "include_target": true,
+                        "include_text": true
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": {
+                                "en": "Content",
+                                "fi": "Sisältö"
+                            },
+                            "settings": [
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Text align",
+                                        "fi": "Tekstin tasaus"
+                                    },
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "btnStyle",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Button style",
+                                        "fi": "Painikkeen tyyli"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "primary",
+                                            "label": {
+                                                "en": "Fill",
+                                                "fi": "Täytetty"
+                                            }
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": {
+                                                "en": "Outline",
+                                                "fi": "Ääriviivat"
+                                            }
+                                        },
+                                        {
+                                            "value": "link",
+                                            "label": {
+                                                "en": "Text",
+                                                "fi": "Teksti"
+                                            }
+                                        },
+                                        {
+                                            "value": "link-with-icon",
+                                            "label": {
+                                                "en": "Text with icon",
+                                                "fi": "Teksti kuvakkeella"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "title",
+                                    "label": {
+                                        "en": "Countdown",
+                                        "fi": "Lähtölaskenta"
+                                    },
+                                    "conditions": ["bannerLayout eq 3"]
+                                },
+                                {
+                                    "id": "datetimeZeroPad",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Display numbers in 2 characters (e.g. 01:02)",
+                                        "fi": "Näytä luvut aina 2 -merkkisenä (esim. 01:02)"
+                                    },
+                                    "default": true,
+                                    "conditions": ["bannerLayout eq 3"]
+                                },
+                                {
+                                    "id": "datetimeHideTimeUnitOnZero",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Hide time unit when it reaches zero",
+                                        "fi": "Piilota Ajan yksikkö kun se saavuttaa nollan"
+                                    },
+                                    "default": false,
+                                    "conditions": ["bannerLayout eq 3"]
+                                },
+                                {
+                                    "id": "datetimeShowYears",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Show years",
+                                        "fi": "Näytä vuodet"
+                                    },
+                                    "default": false,
+                                    "conditions": ["bannerLayout eq 3"]
+                                },
+                                {
+                                    "id": "datetimeShowMonths",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Show months",
+                                        "fi": "Näytä kuukaudet"
+                                    },
+                                    "default": false,
+                                    "conditions": ["bannerLayout eq 3"]
+                                }
+                            ]
+                        },
+                        {
+                            "title": {
+                                "en": "Section",
+                                "fi": "Osio"
+                            },
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Color scheme",
+                                        "fi": "Värityyli"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": {
+                                                "en": "Disabled",
+                                                "fi": "Pois käytöstä"
+                                            }
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": {
+                                                "en": "Light background / Dark content",
+                                                "fi": "Vaalea tausta / Tumma sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": {
+                                                "en": "Dark background / Light content",
+                                                "fi": "Tumma tausta / Vaalea sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": {
+                                                "en": "Accent background / Adaptive content",
+                                                "fi": "Korostus tausta / Mukautuva sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "1",
+                                            "label": {
+                                                "en": "Color scheme 1",
+                                                "fi": "Värityyli 1"
+                                            }
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": {
+                                                "en": "Color scheme 2",
+                                                "fi": "Värityyli 2"
+                                            }
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": {
+                                                "en": "Color scheme 3",
+                                                "fi": "Värityyli 3"
+                                            }
+                                        },
+                                        {
+                                            "value": "4",
+                                            "label": {
+                                                "en": "Color scheme 4",
+                                                "fi": "Värityyli 4"
+                                            }
+                                        },
+                                        {
+                                            "value": "5",
+                                            "label": {
+                                                "en": "Color scheme 5",
+                                                "fi": "Värityyli 5"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Padding",
+                                        "fi": "Välit"
+                                    },
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": {
+                                                "en": "Custom",
+                                                "fi": "Mukautettu"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingTop",
+                                    "label": {
+                                        "en": "Padding top",
+                                        "fi": "Väli ylhäällä"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                },
+                                {
+                                    "id": "sectionPaddingBottom",
+                                    "label": {
+                                        "en": "Padding bottom",
+                                        "fi": "Väli alhaalla"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "presets": [
+        {
+            "settings": {
+                "bannerLayout": 1,
+                "title": "Uusi mahtava kampanja",
+                "btnLink": {
+                    "text": "Shoppaile nyt"
+                },
+                "sectionTextAlign": "center",
+                "sectionPaddingMode": "custom",
+                "sectionPaddingTop": "1.5",
+                "sectionPaddingBottom": "1.5",
+                "sectionColorScheme": "accent"
+            }
+        },
+        {
+            "settings": {
+                "bannerLayout": 2,
+                "discountCode": "KESÄ20",
+                "title": "Uusi mahtava kampanja",
+                "btnLink": {
+                    "text": "Shoppaile nyt"
+                },
+                "sectionTextAlign": "center",
+                "sectionPaddingMode": "custom",
+                "sectionPaddingTop": "1.5",
+                "sectionPaddingBottom": "1.5",
+                "sectionColorScheme": "accent"
+            }
+        },
+        {
+            "settings": {
+                "bannerLayout": 3,
+                "title": "Uusi mahtava kampanja",
+                "btnLink": {
+                    "text": "Shoppaile nyt"
+                },
+                "sectionTextAlign": "center",
+                "sectionPaddingMode": "custom",
+                "sectionPaddingTop": "1.5",
+                "sectionPaddingBottom": "1.5",
+                "sectionColorScheme": "accent"
+            }
+        }
+    ]
+}
+{% endschema %}

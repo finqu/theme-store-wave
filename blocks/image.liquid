@@ -31,9 +31,9 @@
 {% endif %}
 
 {%- if block.settings.imgScaleRatio < 1 -%}
-    {%- capture imgSizeSm -%}{{- imgSizeSm | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeSm | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
-    {%- capture imgSizeMd -%}{{- imgSizeMd | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeMd | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
-    {%- capture imgSizeLg -%}{{- imgSizeLg | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeLg | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture %}
+    {%- capture imgSizeSm -%}{{- imgSizeSm | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeSm | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture -%}
+    {%- capture imgSizeMd -%}{{- imgSizeMd | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeMd | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture -%}
+    {%- capture imgSizeLg -%}{{- imgSizeLg | split: ',' | first | times: block.settings.imgScaleRatio | round -}},{{- imgSizeLg | split: ',' | last | times: block.settings.imgScaleRatio | round -}}{%- endcapture -%}
     {%- assign imgSizeSm = imgSizeSm -%}
     {%- assign imgSizeMd = imgSizeMd -%}
     {%- assign imgSizeLg = imgSizeLg -%}
@@ -79,7 +79,7 @@
                         {{- block.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                     <img
-                        alt="{{ block.settings.imgAlt }}"
+                        alt="{{ block.settings.img.alt }}"
                         data-src="{{ block.settings.img | thumb: imgSizeSm }}"
                         data-srcset="{{ block.settings.img | thumb: imgSizeSm }} 1x, {{ block.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
                         class="lazy aspect-ratio-item{% if block.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if block.settings.img.offset_left or block.settings.img.offset_top %} style="--object-position: {{ block.settings.img.offset_left }}% {{ block.settings.img.offset_top }}%"{% endif %}>
@@ -123,14 +123,6 @@
                             "fi": "Kuva"
                         },
                         "adjustments": true
-                    },
-                    {
-                        "id": "imgAlt",
-                        "type": "text",
-                        "label": {
-                            "en": "Image alt",
-                            "fi": "Kuvan alt-teksti"
-                        }
                     }
                 ]
             },
@@ -191,10 +183,37 @@
                         "conditions": ["blockPaddingMode eq custom"]
                     },
                     {
+                        "id": "imgAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image alignment",
+                            "fi": "Kuvan ryhmittyminen"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ]
+                    },
+                    {
                         "id": "imgAspectRatio",
                         "type": "select",
                         "label": {
-                            "en": "Aspect ratio",
+                            "en": "Image aspect ratio",
                             "fi": "Kuvasuhde"
                         },
                         "default": "auto",
@@ -217,7 +236,8 @@
                             {
                                 "value": "4:3",
                                 "label": "4:3"
-                            }, {
+                            },
+                            {
                                 "value": "1:1",
                                 "label": "1:1"
                             }
@@ -244,33 +264,6 @@
                         },
                         "default": false,
                         "conditions": ["!imgAspectRatio eq auto"]
-                    },
-                    {
-                        "id": "imgAlign",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Image alignment",
-                            "fi": "Kuvan ryhmittyminen"
-                        },
-                        "default": "nil",
-                        "options": [
-                            {
-                                "value": "nil",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "start",
-                                "label": "{# icon.align-start #}"
-                            },
-                            {
-                                "value": "center",
-                                "label": "{# icon.align-center #}"
-                            },
-                            {
-                                "value": "end",
-                                "label": "{# icon.align-end #}"
-                            }
-                        ]
                     }
                 ]
             }

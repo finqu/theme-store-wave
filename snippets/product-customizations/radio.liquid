@@ -1,0 +1,84 @@
+<div class="product-customization-container product-customization-radio mb-4{% if inline %} d-md-flex{% endif %}">
+
+    {% if group.name %}
+
+        {% if highlightLabel %}
+            <label class="form-label text-titlefw-bold{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}:</label>
+        {% else %}
+            <label class="form-label text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}</label>
+        {% endif %}
+
+    {% endif %}
+
+    <div class="form-check-badge-container">
+
+        {% for option in group.options %}
+
+            {%- if settings.taxFreeShopping -%}
+                {% assign itemPrice = option.net_price %}
+            {%- else -%}
+                {% assign itemPrice = option.price %}
+            {%- endif -%}
+
+            <div class="{% if style == 'badge' %}form-check-badge{% else %}mb-4 form-check{% endif %}">
+
+                {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock == true %}
+
+                    {% assign arg1 = true %}
+
+                {% endif %}
+
+                {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
+
+                    {% assign arg2 = true %}
+
+                {% endif %}
+
+                <input class="product-customization form-check-input{% if arg1 or arg2 %} has-price{% endif %}"
+                type="radio"
+                data-customization="{{ group.id }}"
+                id="product-option-{{ option.id }}"
+                name="{{ group.id }}"
+                value="{{ option.id }}"
+                {% if option.image %} data-has-image{% endif %}
+                {% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% else %} data-is-usable{% endif %}>
+
+                <label for="product-option-{{ option.id }}" class="form-check-label">
+
+                    {{ option.title }}
+
+                    {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock == true and option.child_group == false %}
+
+                        ({{ option.stock }} {{ unit }})
+
+                    {% endif %}
+
+                    {% if option.in_stock == false and inventoryPolicy == 'deny' %}
+
+                        ({{ 'product.out_of_stock' | t }})
+
+                    {% elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %}
+
+                        (+{{ itemPrice | money_with_currency }})
+
+                    {% endif %}
+
+                </label>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% for option in group.options %}
+
+    {% if option.child_group %}
+
+        {% render 'product-customizations/child-group', option: option, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, style: style %}
+
+    {% endif %}
+
+{% endfor %}

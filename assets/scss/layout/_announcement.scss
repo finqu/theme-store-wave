@@ -2,16 +2,13 @@
 // -----------------------------------------------------------------------------------------
 
 .site-announcement-container {
-    min-height: var(--style-announcement-height);
     background-color: var(--style-announcement-bg-color);
     overflow: hidden;
 
     .site-announcement {
         display: flex;
         align-items: center;
-        padding-top: spacer(3);
-        padding-bottom: spacer(3);
-        height: 100%;
+        height: var(--style-announcement-height);
 
         .site-announcement-text {
             color: var(--style-announcement-text-color);
@@ -37,6 +34,8 @@
 
                     @include media-breakpoint-down(lg) {
                         text-align: center;
+                        font-size: 90%;
+                        line-height: 1.3;
                     }
                 }
             }

@@ -12,11 +12,11 @@
 
                 <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                    <div class="row">
+                    <div class="row gy-4">
 
                         {% if section.settings.footerMenu1 %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-4 col-lg-2">
 
                                 <div class="site-footer-menu-container">
 
@@ -92,7 +92,7 @@
 
                         {% if section.settings.footerMenu2 %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-4 col-lg-2">
 
                                 <div class="site-footer-menu-container">
 
@@ -168,7 +168,7 @@
 
                         {% if section.settings.footerMenu3 %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-4 col-lg-2">
 
                                 <div class="site-footer-menu-container">
 
@@ -244,7 +244,7 @@
 
                         {% if section.settings.footerTextArea1Status %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-6 col-lg">
 
                                 <div class="site-footer-text-container">
 
@@ -258,7 +258,7 @@
 
                                     {% endif %}
 
-                                    <div class="site-footer-text">
+                                    <div class="site-footer-text text-richtext">
 
                                         {{ section.settings.footerTextArea1Content }}
 
@@ -272,7 +272,7 @@
 
                         {% if section.settings.footerNewsletterStatus %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-6 col-lg">
 
                                 <div class="site-footer-newsletter-container">
 
@@ -306,7 +306,11 @@
 
                                             {% if section.settings.footerNewsletterContent %}
 
-                                                {{ section.settings.footerNewsletterContent }}
+                                                <div class="text-richtext mb-4">
+
+                                                    {{ section.settings.footerNewsletterContent }}
+
+                                                </div>
 
                                             {% endif %}
 
@@ -324,7 +328,7 @@
 
                                             {% else %}
 
-                                               <div class="input-group max-w-px-370 mt-4">
+                                               <div class="input-group">
                                                     
                                                     <div class="form-floating">
 
@@ -374,13 +378,13 @@
 
                     <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                        <div class="row">
+                        <div class="row gy-4">
 
                             {% if section.settings.footerSocialMediaButtonsStatus %}
 
                                 <div class="col-12 col-md">
 
-                                    {% render 'social-media-buttons' class: 'site-footer-social-media-buttons-container' %}
+                                    {% render 'social-media-buttons' class: 'site-footer-social-media-buttons-container', preview: request.design_mode %}
 
                                 </div>
 
@@ -392,16 +396,15 @@
 
                                     <div class="site-footer-payment-methods-container">
 
-                                        {% if section.settings.footerPaymentMethodsimg %}
+                                        {% if section.settings.footerPaymentMethodsImg %}
 
-                                            {%- assign img = section.settings.footerPaymentMethodsimg -%}
                                             {%- assign imgSize = '540,190' -%}
 
                                             <picture>
                                                 <img
                                                     alt=""
-                                                    data-src="{{ img | thumb: imgSize }}"
-                                                    data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                    data-src="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }}"
+                                                    data-srcset="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMethodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
                                                     class="lazy d-block mx-auto img-fluid mt-4 mt-md-0">
                                             </picture>
 
@@ -413,7 +416,7 @@
 
                                             {% for payment_method in store.payment_methods %}
 
-                                                {%- assign img = payment_method.image -%}
+                                                {%- assign img = payment_method.logo -%}
 
                                                 {% if img %}
 
@@ -423,7 +426,7 @@
 
                                                         <picture>
                                                             <img
-                                                                alt="{{ payment_method.name }}"
+                                                                alt="{{ payment_method.title }}"
                                                                 data-src="{{ img | thumb: imgSize }}"
                                                                 data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
                                                                 class="lazy d-block mx-auto img-fluid">
@@ -455,87 +458,61 @@
 
                 <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                    {% if section.settings.footerTextArea2Status %}
+                    <div class="row gy-4">
 
-                        <div class="site-footer-bottom-text">
+                        <div class="col-12 col-md">
 
-                            {{ section.settings.footerTextArea2Content }}
+                            {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                                <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> - 
+                            {%- endif -%}
+
+                            {{ powered_by_link }}
 
                         </div>
 
-                    {% endif %}
+                        {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
 
-                    <div class="site-footer-bottom-items mt-4">
+                            <div class="col-12 col-md site-footer-localization text-md-end">
 
-                        <div class="row">
+                                {% form 'localization', customer %}
 
-                            <div class="col-12 col-md">
+                                    {% if store.published_locales.size > 1 %}
 
-                                <ul class="list-separator">
+                                        <select name="locale_code" class="site-localization-locale-select">
 
-                                    <li class="list-inline-item">
+                                            {% for locale in store.published_locales %}
+                                                <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
+                                                    {{ locale.name }}
+                                                </option>
+                                            {% endfor %}
 
-                                        <button type="button" class="btn btn-link text-reset" data-cookie-policy-open>
-                                            {{- 'cookie_policy.cookie_settings' | t -}}
-                                        </button>
+                                        </select>
 
-                                    </li>
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
 
-                                    <li class="list-inline-item">
+                                    {% endif %}
 
-                                        <a target="_blank" rel="nofollow noopener" class="text-reset" href="https://www.finqu.com?utm_campaign=poweredby&utm_medium=finqu&utm_source=onlinestore">Powered by Finqu</a>
+                                    {% if store.enabled_currencies.size > 1 %}
 
-                                    </li>
+                                        <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
 
-                                </ul>
+                                            {% for currency in store.enabled_currencies %}
+                                                <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
+                                                    {{ currency.name }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+                                    {% endif %}
+
+                                {% endform %}
 
                             </div>
 
-                            {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
-
-                                <div class="col-12 col-md site-footer-localization text-md-end mt-4 mt-md-0">
-
-                                    {% form 'localization', customer %}
-
-                                        {% if store.published_locales.size > 1 %}
-
-                                            <select name="locale_code" class="site-localization-locale-select">
-
-                                                {% for locale in store.published_locales %}
-                                                    <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
-                                                        {{ locale.name }}
-                                                    </option>
-                                                {% endfor %}
-
-                                            </select>
-
-                                            {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
-
-                                        {% endif %}
-
-                                        {% if store.enabled_currencies.size > 1 %}
-
-                                            <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
-
-                                                {% for currency in store.enabled_currencies %}
-                                                    <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
-                                                        {{ currency.name }}
-                                                    </option>
-                                                {% endfor %}
-
-                                            </select>
-
-                                            {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
-
-                                        {% endif %}
-
-                                    {% endform %}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
+                        {% endif %}
 
                     </div>
 
@@ -549,4 +526,4 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContainer: 'none', sectionClasses: sectionClasses, sectionAnimation: false %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContainer: 'none', sectionClasses: sectionClasses, sectionAnimation: false, sectionGutterWidth: '4rem' %}

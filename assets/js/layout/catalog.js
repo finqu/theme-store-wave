@@ -239,7 +239,7 @@ export default function() {
 
         if (catalogRemoveFilterEls.length) {
 
-            catalogRemoveFilterEls.forEach(el => { el.addEventListener('click', e => {
+            catalogRemoveFilterEls.forEach(el => { el.addEventListener('click', () => {
 
                 if (isProcessing) {
                     return;
@@ -512,6 +512,15 @@ export default function() {
                 catalogFiltersFormEl.dispatchEvent(new Event('submit'));
             })});
         }
+
+        catalogDynamicContentEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', e => {
+
+            if (isProcessing) {
+                return;
+            }
+
+            containerEl.dispatchEvent(new Event('theme:filters:show'));
+        })});
     };
 
     if (catalogFiltersFormEl) {
@@ -521,8 +530,8 @@ export default function() {
             const opts = el.dataset;
             const rangeSliderContainerEl = el.parentNode;
             const rangeFilterEl = rangeSliderContainerEl.parentNode;
-            const rangeSliderMinTextEl = rangeFilterEl.querySelector('[ data-range-slider-min-text]');
-            const rangeSliderMaxTextEl = rangeFilterEl.querySelector('[ data-range-slider-max-text]');
+            const rangeSliderMinTextEl = rangeFilterEl.querySelector('[data-range-slider-min-text]');
+            const rangeSliderMaxTextEl = rangeFilterEl.querySelector('[data-range-slider-max-text]');
             const rangeSliderMinInputEl = rangeSliderContainerEl.querySelector('input[name="'+opts.rangeSliderMinName+'"]');
             const rangeSliderMaxInputEl = rangeSliderContainerEl.querySelector('input[name="'+opts.rangeSliderMaxName+'"]');
             const rangeSlider = noUiSlider.create(el, {
@@ -594,26 +603,26 @@ export default function() {
                         
                         if (opts.rangeSliderFormat === 'currency') {
 
-                            rangeSliderMaxInputEl.innerHTML = theme.utils.formatCurrency({
+                            rangeSliderMaxTextEl.innerHTML = theme.utils.formatCurrency({
                                 value: value
                             });
 
                         } else if (opts.rangeSliderFormat === 'decimal') {
 
-                            rangeSliderMaxInputEl.innerHTML = theme.utils.formatNumber({
+                            rangeSliderMaxTextEl.innerHTML = theme.utils.formatNumber({
                                 value: value
                             });
 
                         } else if (opts.rangeSliderFormat === 'percent') {
 
-                            rangeSliderMaxInputEl.innerHTML = theme.utils.formatNumber({
+                            rangeSliderMaxTextEl.innerHTML = theme.utils.formatNumber({
                                 style: 'percent',
                                 value: value
                             });
 
                         } else if (opts.rangeSliderFormat === 'unit') {
 
-                            rangeSliderMaxInputEl.innerHTML = theme.utils.formatNumber({
+                            rangeSliderMaxTextEl.innerHTML = theme.utils.formatNumber({
                                 style: 'unit',
                                 value: value,
                                 unit: opts.rangeSliderFormatUnit || '',
@@ -622,7 +631,7 @@ export default function() {
 
                         } else {
 
-                            rangeSliderMaxInputEl.innerHTML = value;
+                            rangeSliderMaxTextEl.innerHTML = value;
                         }
 
                         rangeSliderMaxInputEl.dispatchEvent(new Event('input', { bubbles:true }));
@@ -638,7 +647,7 @@ export default function() {
             rangeSliderContainerEl.classList.add('has-pips');
         });
 
-        catalogFilterInputEls.forEach(el => { el.addEventListener('input', e => {
+        catalogFilterInputEls.forEach(el => { el.addEventListener('input', () => {
 
             if (isProcessing) {
                 return;
@@ -647,7 +656,7 @@ export default function() {
             catalogFiltersFormEl.dispatchEvent(new Event('submit'));
         })});
 
-        catalogFiltersFormEl.addEventListener('submit', (e) => {
+        catalogFiltersFormEl.addEventListener('submit', e => {
 
             e.preventDefault();
 
@@ -676,23 +685,24 @@ export default function() {
 
         // Mobile filters menu
         const filtersMobileNavigationContainerEl = containerEl.querySelector('.filters-mobile-navigation-container');
-        const filtersMobileNavigationShowEls = containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]');
-        const filtersMobileNavigationHideEls = containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]');
 
-        filtersMobileNavigationShowEls.forEach(el => { el.addEventListener('click', (e) => {
-
+        containerEl.addEventListener('theme:filters:show', () => {
+            
             filtersMobileNavigationContainerEl.classList.add('filters-mobile-navigation-visible');
             filtersMobileNavigationContainerEl.classList.add('filters-mobile-navigation-active');
 
             document.body.classList.add('disable-scroll');
-        })});
+        });
 
-        filtersMobileNavigationHideEls.forEach(el => { el.addEventListener('click', (e) => {
-
+        containerEl.addEventListener('theme:filters:hide', () => {
+            
             filtersMobileNavigationContainerEl.classList.remove('filters-mobile-navigation-active');
 
             document.body.classList.remove('disable-scroll');
-        })});
+        });
+
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:show')))});
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:hide')))});
 
         filtersMobileNavigationContainerEl.addEventListener('transitionend', e => {
 
@@ -723,8 +733,8 @@ export default function() {
             },
             watchSlidesProgress: true,
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
+                nextEl: catalogSubcategoriesEl.querySelector('.swiper .swiper-button-next'),
+                prevEl: catalogSubcategoriesEl.querySelector('.swiper .swiper-button-prev')
             }
         });
 
@@ -741,8 +751,8 @@ export default function() {
             slidesPerGroup: 3,
             grabCursor: true,
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
+                nextEl: catalogSubcategoriesEl.querySelector('.swiper .swiper-button-next'),
+                prevEl: catalogSubcategoriesEl.querySelector('.swiper .swiper-button-prev')
             },
             breakpoints: {}
         };

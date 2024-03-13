@@ -2,17 +2,71 @@
 
     {% if wishlist.products %}
 
+        {%- assign animatedItemsCount = settings.productPerRow | times: 2 -%}
+
+        <div class="mb-g" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist">
+
+            <span class="text-muted" data-wishlist-item-count-with-text>
+                {%- if wishlist.products.size == 1 -%}
+                    {{- 'wishlist.item_count' | t: amount: wishlist.products.size -}}
+                {%- else -%}
+                    {{- 'wishlist.item_count_plural' | t: amount: wishlist.products.size -}}
+                {%- endif -%}
+            </span>
+
+        </div>
+
         <div class="row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ settings.productPerRow }}">
 
             {% for product in wishlist.products %}
 
-                <div class="col" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ forloop.index }}" data-wishlist-item="{{ product.id }}">
+                <div class="col" data-wishlist-item="{{ product.id }}"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
 
                     {%- render 'product-card-grid', product: product, wishlist: 'remove' -%}
 
                 </div>
 
+                {%- if session.logged_in == false and store.customer_accounts_enabled -%}
+
+                    {%- if forloop.index <= animatedItemsCount -%}
+                        {%- assign animationOrder = forloop.index | plus: 1 -%}
+                    {%- elsif animationOrder != nil -%}
+                        {%- assign animationOrder = nil -%}
+                    {%- endif -%}
+
+                {%- endif -%}
+
             {% endfor %}
+
+            {% if session.logged_in == false and store.customer_accounts_enabled %}
+
+                <div class="col"{% if animationOrder %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ animationOrder }}"{% endif %}>
+
+                    <div class="d-flex flex-column h-100 justify-content-center align-items-center text-center gap-3 gap-md-g p-3 p-md-g {% if settings.sectionHighlightItems %}section-highlight-item{% else %}bg-accent{% endif %}">
+
+                        {%- render 'icon', icon: 'like', class: 'svg-icon-3x' -%}
+
+                        <span class="h4 mb-0 text-title">
+                            {{- 'wishlist.anonymous_customer.title' | t -}}
+                        </span>
+
+                        <p class="mb-0">
+                            {{- 'wishlist.anonymous_customer.description' | t -}}
+                        </p>
+
+                        <a href="{{ routes.account_login_url }}" class="btn btn-primary w-100">
+                            {{- 'wishlist.anonymous_customer.login' | t -}}
+                        </a>
+
+                        <a href="{{ routes.account_register_url }}" class="btn btn-link text-underline-indicator">
+                            {{- 'wishlist.anonymous_customer.register' | t -}}
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
 
         </div>
 
@@ -22,7 +76,7 @@
 
             {%- render 'icon', icon: 'like', class: 'svg-icon-5x mb-3' -%}
 
-            <span class="h5 d-block mb-3">
+            <span class="h5 d-block mb-3 text-title">
                 {{- 'wishlist.empty_title' | t -}}
             </span>
 
@@ -40,18 +94,27 @@
 
 {%- endcapture -%}
 
-<section class="section section-wishlist">
+{% if settings.accessibilityShowWishlist %}
 
-    {% if wishlist.products %}
+    <section class="section section-wishlist">
 
-        {%- assign sectionTitle = 'wishlist.title' | t -%}
+        {% if wishlist.products %}
 
-        {% render 'section', sectionHandle: '.section-wishlist', sectionTitle: sectionTitle, sectionContent: sectionContent, sectionContentAnimation: false, sectionInnerGap: '2rem' %}
+            {%- assign sectionTitle = 'wishlist.title' | t -%}
+            {%- assign sectionSubtitle = 'wishlist.subtitle' | t -%}
 
-    {% else %}
+            {% render 'section', sectionHandle: '.section-wishlist', sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContentAnimation: false, sectionInnerGap: '2rem' %}
 
-        {% render 'section', sectionHandle: '.section-wishlist', sectionContent: sectionContent, sectionTextAlign: 'center', sectionInnerGap: '2rem' %}
+        {% else %}
 
-    {% endif %}
-    
-</section>
+            {% render 'section', sectionHandle: '.section-wishlist', sectionContent: sectionContent, sectionTextAlign: 'center', sectionInnerGap: '2rem' %}
+
+        {% endif %}
+        
+    </section>
+
+{% else %}
+
+    {% section '404-template' %}
+
+{% endif %}

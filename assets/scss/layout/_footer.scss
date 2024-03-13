@@ -4,20 +4,19 @@
 .section-site-footer {  
 
     .section-inner {
-        --section-padding-top: 0;
-        --section-padding-bottom: 0;
+        --section-padding-top: var(--site-footer-padding-top);
+        --section-padding-bottom: var(--site-footer-padding-bottom);
     }
 
     .site-footer-container {
-        --section-padding-top: 2.25rem;
-        --section-padding-bottom: 2.25rem;
 
         .site-footer {
-            border-top: 1px solid var(--style-border-color);
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--site-footer-gap) * .5);
 
-            .container {
-                padding-top: var(--section-padding-top);
-                padding-bottom: var(--section-padding-bottom);
+            @include media-breakpoint-up(md) {
+                gap: var(--site-footer-gap);
             }
 
             .site-footer-title {
@@ -36,15 +35,14 @@
             }
 
             .site-footer-menu-container {
-                @include media-breakpoint-down(lg) {
-                    margin-bottom: spacer(4);
-                }
 
                 .site-footer-menu {
                     display: flex;
                     flex-direction: column;
                     margin-bottom: 0;
-                    @include list-unstyled();
+                    list-style: none;
+                    padding-left: 0;
+                    gap: spacer(3);
 
                     &.site-footer-menu-inline {
                         flex-direction: row;
@@ -58,31 +56,15 @@
 
                         .site-footer-menu-item {
                             padding: spacer(1) spacer(2);
-                            margin-bottom: 0;
                         }
                     }
 
                     .site-footer-menu-item {
                         display: flex;
                         justify-content: space-between;
-                        margin-bottom: spacer(3);
 
                         .site-footer-menu-item-text {
-                            font-family: $navigation-font-family;
-                            font-weight: $navigation-font-weight;
-                            font-style: $navigation-font-style;
-                            @include font-size($navigation-font-size);
                             color: var(--style-link-color);
-                            @if $navigation-letter-spacing != '0' {
-                                letter-spacing: $navigation-letter-spacing;
-                            }
-                            @if $navigation-text-transform != 'none' {
-                                text-transform: $navigation-text-transform;
-                            }
-                        }
-
-                        &:last-child {
-                            margin-bottom: 0;
                         }
                     }
                 }
@@ -98,38 +80,49 @@
                 display: flex;
             }
 
-            .site-footer-payment-methods-container {
-                display: flex;
-                justify-content: flex-end;
-                height: 100%;
-                align-items: center;
-                @include media-breakpoint-down(lg) {
-                    justify-content: flex-start;
-                }
+            .site-footer-top {
 
-                .site-footer-payment-method {
-                    display: inline-flex;
-                    margin: spacer(2);
+                .site-footer-payment-methods-container {
+                    display: flex;
 
-                    img {
-                        max-width: 100%;
-                        max-height: 50px;
+                    .site-footer-payment-method {
+                        display: inline-flex;
+                        margin: spacer(2);
+
+                        img {
+                            max-width: 100%;
+                            max-height: 50px;
+                        }
                     }
                 }
             }
 
             .site-footer-middle {
-                border-top: 1px solid var(--style-border-color);
 
                 .site-footer-social-media-buttons-container {
                     height: 100%;
                     align-items: center;
                 }
-            }
 
-            .site-footer-bottom {
-                --section-padding-bottom: 4.5rem;
-                border-top: 1px solid var(--style-border-color);
+                .site-footer-payment-methods-container {
+                    display: flex;
+                    justify-content: flex-end;
+                    height: 100%;
+                    align-items: center;
+                    @include media-breakpoint-down(lg) {
+                        justify-content: flex-start;
+                    }
+    
+                    .site-footer-payment-method {
+                        display: inline-flex;
+                        margin: spacer(2);
+    
+                        img {
+                            max-width: 100%;
+                            max-height: 50px;
+                        }
+                    }
+                }
             }
 
             .site-footer-localization {

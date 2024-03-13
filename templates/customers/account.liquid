@@ -5,7 +5,7 @@
  
 {%- capture sectionContent -%}
 
-	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom pb-4 pb-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 3">
+	<div class="section-highlight-item section-highlight-item-md{% if settings.sectionHighlightItems == false %} border-bottom pb-4 pb-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 3">
 
 		<div class="row g-0">
 
@@ -17,15 +17,15 @@
 
 			<div class="col ps-4">
 
-				<div class="row">
+				<div class="row gy-4">
 
 					<div class="col">
 
 						<div class="row">
 
-							<div class="col">
+							<div class="col d-flex flex-column row-gap-4">
 
-								<div class="mb-6">
+								<div>
 
 					                <span class="d-block fw-bold mb-2">
 					                	{{ 'account.information.name' | t }}
@@ -34,8 +34,8 @@
 					                <div>
 
 					                	<span>
-					                		{% if customer.firstname or customer.lastname %}
-						                		{{ customer.firstname }} {{ customer.lastname }}
+					                		{% if customer.first_name or customer.last_name %}
+						                		{{ customer.first_name }} {{ customer.last_name }}
 						                	{% else %}
 						                		{{ 'general.no_information_found' | t }}
 						                	{% endif %}
@@ -54,8 +54,8 @@
 					                <div>
 
 						                <span>
-						                	{% if customer.phonenumber %}
-						                		{{ customer.phonenumber }}
+						                	{% if customer.address.phone %}
+						                		{{ customer.address.phone }}
 						                	{% else %}
 						                		{{ 'general.no_information_found' | t }}
 						                	{% endif %}
@@ -69,9 +69,9 @@
 
 							<div class="col">
 
-								{% form 'localization', customer id: 'account-localization-form' %}
+								{% form 'localization', customer id: 'account-localization-form', class: 'd-flex flex-column row-gap-4' %}
 
-									<div class="mb-6">
+									<div>
 
 										<span class="d-block fw-bold mb-2">
 											{{ 'account.information.currency' | t }}
@@ -131,7 +131,7 @@
 
 					</div>
 
-					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+					<div class="col-12 col-md-5 d-flex align-items-center">
 
 						<a href="{{ routes.account_edit_url }}" class="btn btn-secondary d-block w-100">
 							{{ 'general.edit' | t }}
@@ -149,7 +149,7 @@
 
 	{% if loyalty %}
 
-		<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 4">
+		<div class="section-highlight-item section-highlight-item-md{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: 4">
 
 			<div class="row g-0">
 
@@ -161,81 +161,73 @@
 
 				<div class="col ps-4">
 
-					<div class="row">
+					<div class="row gy-4">
 
 						<div class="col">
 
-							<div class="row">
+							<div>
 
-								<div class="col">
+								<span class="d-block fw-bold mb-2">
+									{{ loyalty.title }}
+								</span>
 
-									<div>
+								<div>
 
-										<span class="d-block fw-bold mb-2">
-											{{ loyalty.title }}
-										</span>
+									{{ loyalty.description }}
 
-										<div>
-
-											{{ loyalty.description }}
-
-											{% if loyalty.is_combinable == false and loyalty.is_stackable == false %}
-												<br><br>
-												{{ 'account.loyalty_discount.not_combinable_not_stackable' | t }}
-											{% elsif loyalty.is_combinable and loyalty.is_stackable == false %}
-												<br><br>
-												{{ 'account.loyalty_discount.combinable_not_stackable' | t }}
-											{% elsif loyalty.is_combinable == false and loyalty.is_stackable %}
-												<br><br>
-												{{ 'account.loyalty_discount.not_combinable_stackable' | t }}
-											{% else %}
-												<br><br>
-												{{ 'account.loyalty_discount.combinable_stackable' | t }}
-											{% endif %}
-
-										</div>
-
-									</div>
-
-								</div>
-
-								<div class="col-12 col-md-5 mt-g mt-md-0">
-
-									{{ 'account.loyalty_discount.current_level_title' | t }}
-
-									<h3 class="mb-0">
-										{% if loyalty.is_fixed_discount %}
-											{{ loyalty.current_level.discount | money_with_currency }}
-										{% else %}
-											{{ loyalty.current_level.discount }}%
-										{% endif %}
-									</h3>
-
-									{% if loyalty.current_level.valid_until %}
-										{%- assign expiry = loyalty.current_level.valid_until | date: dateFormat -%}
-
-										<span class="small text-muted">{{ 'account.loyalty_discount.level_expiry_info' | t: expiry: expiry }}</span>
-
-									{% endif %}
-
-									{% if loyalty.next_level %}
-
-										<div class="progress mb-3 mt-3">
-											{%- assign total = loyalty.next_level.threshold | minus: loyalty.current_level.threshold -%}
-											{%- assign progress = loyalty.total_spent | minus: loyalty.current_level.threshold -%}
-											{%- assign percentage = progress | divided_by: total | times: 100 -%}
-
-											<div class="progress-bar" role="progressbar" style="width: {{ percentage }}%" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-										</div>
-
-										{%- assign amount = loyalty.next_level.threshold | minus: loyalty.total_spent | money_with_currency -%}
-										<span>{{ 'account.loyalty_discount.spend_gap_info' | t: amount: amount }}</span>
-
+									{% if loyalty.is_combinable == false and loyalty.is_stackable == false %}
+										<br><br>
+										{{ 'account.loyalty_discount.not_combinable_not_stackable' | t }}
+									{% elsif loyalty.is_combinable and loyalty.is_stackable == false %}
+										<br><br>
+										{{ 'account.loyalty_discount.combinable_not_stackable' | t }}
+									{% elsif loyalty.is_combinable == false and loyalty.is_stackable %}
+										<br><br>
+										{{ 'account.loyalty_discount.not_combinable_stackable' | t }}
+									{% else %}
+										<br><br>
+										{{ 'account.loyalty_discount.combinable_stackable' | t }}
 									{% endif %}
 
 								</div>
 
 							</div>
+
+						</div>
+
+						<div class="col-12 col-md-5">
+
+							{{ 'account.loyalty_discount.current_level_title' | t }}
+
+							<h3 class="mb-0 text-title">
+								{% if loyalty.is_fixed_discount %}
+									{{ loyalty.current_level.discount | money_with_currency }}
+								{% else %}
+									{{ loyalty.current_level.discount }}%
+								{% endif %}
+							</h3>
+
+							{% if loyalty.current_level.valid_until %}
+								{%- assign expiry = loyalty.current_level.valid_until | date: dateFormat -%}
+
+								<span class="small text-muted">{{ 'account.loyalty_discount.level_expiry_info' | t: expiry: expiry }}</span>
+
+							{% endif %}
+
+							{% if loyalty.next_level %}
+
+								<div class="progress mb-3 mt-3">
+									{%- assign total = loyalty.next_level.threshold | minus: loyalty.current_level.threshold -%}
+									{%- assign progress = loyalty.total_spent | minus: loyalty.current_level.threshold -%}
+									{%- assign percentage = progress | divided_by: total | times: 100 -%}
+
+									<div class="progress-bar" role="progressbar" style="width: {{ percentage }}%" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+								</div>
+
+								{%- assign amount = loyalty.next_level.threshold | minus: loyalty.total_spent | money_with_currency -%}
+								<span>{{ 'account.loyalty_discount.spend_gap_info' | t: amount: amount }}</span>
+
+							{% endif %}
 
 						</div>
 
@@ -249,7 +241,7 @@
 
 	{% endif %}
 
-	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 5, 4 }}">
+	<div class="section-highlight-item section-highlight-item-md{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 5, 4 }}">
 
 		<div class="row g-0">
 
@@ -261,7 +253,7 @@
 
 			<div class="col ps-4">
 
-				<div class="row">
+				<div class="row gy-4">
 
 					<div class="col">
 
@@ -279,7 +271,7 @@
 
 					</div>
 
-					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+					<div class="col-12 col-md-5 d-flex align-items-center">
 
 						<a href="{{ routes.account_password_change_url }}" class="btn btn-secondary d-block w-100">
 							{{ 'general.edit' | t }}
@@ -295,7 +287,7 @@
 
 	</div>
 
-	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 6, 5 }}">
+	<div class="section-highlight-item section-highlight-item-md{% if settings.sectionHighlightItems == false %} border-bottom py-4 py-md-6{% else %} mb-g{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 6, 5 }}">
 
 		<div class="row g-0">
 
@@ -307,7 +299,7 @@
 
 			<div class="col ps-4">
 
-				<div class="row">
+				<div class="row gy-4">
 
 					<div class="col">
 
@@ -325,7 +317,7 @@
 
 					</div>
 
-					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+					<div class="col-12 col-md-5 d-flex align-items-center">
 
 						<a href="{{ routes.account_orders_url }}" class="btn btn-secondary d-block w-100">
 							{{ 'account.view_order_plural' | t }}
@@ -341,7 +333,7 @@
 
 	</div>
 
-	<div class="section-highlight-item{% if settings.sectionHighlightItems == false %} pt-4 pt-md-6{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 7, 6 }}">
+	<div class="section-highlight-item section-highlight-item-md{% if settings.sectionHighlightItems == false %} pt-4 pt-md-6{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-account" data-aos-delay style="--aos-order: {{ loyalty | yepnope: 7, 6 }}">
 
 		<div class="row g-0">
 
@@ -353,7 +345,7 @@
 
 			<div class="col ps-4">
 
-				<div class="row">
+				<div class="row gy-4">
 
 					<div class="col">
 
@@ -364,14 +356,14 @@
 		                <div>
 
 			                <span>
-			                	{{ customer.email }}
+			                	{{ customer.username }}
 			                </span>
 
 			            </div>
 
 					</div>
 
-					<div class="col-12 col-md-5 mt-g mt-md-0 d-flex align-items-center">
+					<div class="col-12 col-md-5 d-flex align-items-center">
 
 						<a href="{{ routes.account_logout_url }}" class="btn btn-secondary d-block w-100">
 							{{ 'account.logout' | t }}

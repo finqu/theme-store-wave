@@ -6,25 +6,6 @@
     flex-direction: column;
     height: 100%;
 
-    @include media-breakpoint-up(lg) {
-        &:hover {
-
-            .product-media-container {
-
-                .product-media {
-
-                    .product-quick-add-action-container {
-                        visibility: visible;
-                        opacity: 1;
-                        transform: translate(0);
-                        transition-duration: .3s;
-                        pointer-events: auto;
-                    }
-                }
-            }
-        }
-    }
-
     .product-media-container {
         position: relative;
 
@@ -76,7 +57,7 @@
                 align-items: center;
                 justify-content: center;
                 border: 0;
-                border-radius: var(--style-border-radius);
+                border-radius: var(--style-btn-border-radius);
                 width: 2em;
                 height: 2em;
                 box-shadow: 0 4px 20px #0000001a, 0 1px 3px #00000012;
@@ -86,8 +67,8 @@
 
         .product-quick-add-action-container {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            right: .7em;
+            bottom: .7em;
             z-index: 1;
             opacity: 0;
             visibility: hidden;
@@ -98,7 +79,6 @@
 
             .product-quick-add-action {
                 display: grid;
-                box-shadow: 0 4px 20px #0000001a, 0 1px 3px #00000012;
 
                 &:hover {
 
@@ -157,6 +137,7 @@
         flex-direction: column;
         text-align: var(--section-content-text-align, inherit);
         height: 100%;
+        position: relative;
 
         > a {
             display: flex;
@@ -193,10 +174,6 @@
                 margin-top: spacer(2);
             }
 
-            & + .product-stock-balance {
-                padding-top: spacer(2);
-            }
-
             .product-name-text {
                 display: block;
                 @include font-size($font-size-base);
@@ -217,22 +194,65 @@
             & + .product-price {
                 margin-top: spacer(2);
             }
-
-            & + .product-stock-balance {
-                padding-top: spacer(2);
-            }
         }
 
-        .product-price {
+        .product-variants {
+            display: flex;
+            flex-direction: column;
+            margin-top: spacer(2);
+            gap: spacer(2);
+        }
 
-            & + .product-stock-balance {
-                padding-top: spacer(2);
-            }
+        .product-variants-hover {
+            display: none;
         }
 
         .product-stock-balance {
             @include font-size($font-size-base * 0.9);
             margin-top: auto;
+            padding-top: spacer(2);
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+
+        .product-caption {
+
+            .product-variants-hover {
+                display: flex;
+                flex-direction: column;
+                gap: spacer(2);
+                position: absolute;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .25s ease-in, visibility 0s linear 0s;
+                width: 100%;
+                height: 100%;
+                background-color: var(--style-bg-color);
+            }
+        }
+
+        &:hover {
+
+            .product-caption {
+
+                .product-variants-hover {
+                    opacity: 1;
+                    visibility: visible;
+                    z-index: 1;
+                }
+            }
+
+            .product-media-container {
+
+                .product-quick-add-action-container {
+                    visibility: visible;
+                    opacity: 1;
+                    transform: translate(0);
+                    transition-duration: .3s;
+                    pointer-events: auto;
+                }
+            }
         }
     }
 }
@@ -264,6 +284,9 @@
 
         .product-quantity-decrease,
         .product-quantity-increase {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 2rem;
             height: 2rem;
             text-align: center;
@@ -300,6 +323,8 @@
 
         .product-quantity-decrease,
         .product-quantity-increase {
+            align-items: center;
+            justify-content: center;
             width: 2rem;
             height: 2rem;
             text-align: center;

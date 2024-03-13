@@ -3,6 +3,7 @@
 
 	Accepts:
 	- sectionTabContent: {String} (Required)
+	- sectionTabContentClass: {String}
 
 	Usage:
 	Render this snippet inside of sectionContent capture and pass it to section snippet.
@@ -10,7 +11,7 @@
 	{% render 'section-tab-content', sectionTabContent: 'Content' %}
 {% endcomment %}
 
-<div class="section-tab-content">
+<div class="section-tab-content{% if sectionTabContentClass %} {{ sectionTabContentClass }}{% endif %}">
 
     {{- sectionTabContent -}}
 

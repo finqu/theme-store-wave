@@ -1,0 +1,1489 @@
+{% comment %}
+    Renders templates which can be accessed from javascript later on
+
+    The renderer uses Handlebars as templating engine.
+    Handlebars documentation https://handlebarsjs.com/guide
+    Additional helpers can be found in the theme's assets/js/components/renderer.js file.
+
+    Usage:
+    Render this snippet inside of head or body element.
+
+    {% render 'renderer-templates' %}
+{% endcomment %}
+
+{% if request.page_type == 'cart' %}
+
+    <script id="renderer-cart_items" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        {{#each cart.items as |item|}}
+
+            <div class="cart-item section-highlight-item{% endraw %}{% if settings.sectionHighlightItems == false %} border-bottom{% endif %}{% raw %}"{{#if @root.isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: {% raw %}{{ add 3 @index }}"{{/if}}>
+
+                <div class="row g-0">
+
+                    <div class="col-auto me-4">
+
+                        <div class="cart-item-media aspect-ratio-product">
+
+                            <div class="cart-item-media-img-container aspect-ratio-container">
+
+                                {{#if item.image}}
+
+                                    {{ assign 'imgSrc' item.image.original }}
+
+                                    {{#ifCond productImageAspectRatio '===' 9:13}}
+                                        {{ assign 'imgSize' '110,142' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 4:3}}
+                                        {{ assign 'imgSize' '110,93' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 3:4}}
+                                        {{ assign 'imgSize' '110,147' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 1:1}}
+                                        {{ assign 'imgSize' '110,110' }}
+                                    {{/ifCond}}
+
+                                    <img
+                                        alt="{{ item.name }}"
+                                        src="{{> image src=@root.imgSrc size=@root.imgSize }}"
+                                        srcset="{{> image src=@root.imgSrc size=@root.imgSize }} 1x, {{> image src=@root.imgSrc size=@root.imgSize scale='2x' }} 2x"
+                                        class="d-block mx-auto img-fluid aspect-ratio-item">
+
+                                {{else}}
+
+                                    <img
+                                        alt="{{ item.name }}"
+                                        src="{{> placeholder_svg type='image' base64=true }}"
+                                        class="d-block mx-auto img-fluid aspect-ratio-item svg-placeholder">
+
+                                {{/if}}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col">
+
+                        <div class="row row align-items-center h-100">
+
+                            <div class="col-12 col-md">
+
+                                {{#if @root.productShowManufacturer}}
+
+                                    {{#if item.manufacturer}}
+
+                                        <div class="cart-item-manufacturer">
+
+                                            <span class="cart-item-manufacturer-text">
+                                                {{ manufacturer }}
+                                            </span>
+
+                                        </div>
+
+                                    {{/if}}
+
+                                {{/if}}
+
+                                <div class="cart-item-name">
+
+                                    <span class="cart-item-name-text">
+
+                                        <a href="{{ item.url }}">
+
+                                            {{ item.name }}
+
+                                        </a>
+
+                                    </span>
+
+                                </div>
+
+                                {{#if item.attributes}}
+
+                                    <div class="cart-item-attributes">
+
+                                        {{#each item.attributes as |attribute|}}
+
+                                            <span class="cart-item-attribute">
+                                                {{ attribute }}
+                                            </span>
+
+                                        {{/each}}
+
+                                    </div>
+
+                                {{/if}}
+
+                            </div>
+
+                            <div class="col-12 col-md-3 mt-2 mt-md-0">
+
+                                <div class="cart-item-price justify-content-md-end">
+
+                                    {{#if @root.taxFreeShopping}}
+                                        {{ assign 'itemPrice' item.net_price }}
+                                    {{else}}
+                                        {{ assign 'itemPrice' item.line_price }}
+                                    {{/if}}
+
+                                    <span class="cart-item-price-text">
+                                        {{ formatCurrency @root.itemPrice }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 col-md-auto mt-2 mt-md-0">
+
+                                <div class="row">
+
+                                    <div class="col">
+
+                                        <div class="cart-item-quantity">
+
+                                            <button type="button" class="btn btn-text cart-item-quantity-decrease" data-cart-quantity-decrease="{{ item.id }}">
+                                                {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
+                                            </button>
+
+                                            <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+
+                                            <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}">
+                                                {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-auto d-flex align-items-center">
+
+                                        <div class="cart-item-remove">
+
+                                            <button type="button" class="btn btn-text text-underline-indicator text-muted small" data-cart-remove="{{ item.id }}">
+                                                {{ t 'cart.remove' }}
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {{/each}}
+
+        <div class="mt-3"{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}"{% raw %} data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 3"{{/if}}>
+
+            <a href="{{ rootUrl }}" class="mt-2 text-reset text-underline-indicator">
+
+                {% endraw %}{%- render 'icon', icon: 'angle-left' -%}{% raw %}
+
+                <span>
+                    {{ t 'cart.continue_shopping' }}
+                </span>
+
+            </a>
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart_aside_inner" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        {{#if cart.has_free_shipping}}
+
+            <div class="cart-message mb-4">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.free_shipping_achieved' }}
+
+                </span>
+
+            </div>
+
+        {{else if cart.free_shipping_limit}}
+
+            {{ assign 'amountToFreeShipping' (formatCurrency cart.free_shipping_limit.amount_to_limit) }}
+
+            <div class="cart-message mb-4">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.amount_to_free_shipping_dynamic' amount=@root.amountToFreeShipping }}
+
+                </span>
+
+            </div>
+
+        {{/if}}
+
+        <div class="cart-subtotal">
+
+            <div class="row">
+
+                <div class="col">
+
+                    <span>
+                        {{ t 'general.subtotal' }}
+                    </span>
+
+                </div>
+
+                <div class="col text-end">
+
+                    {{#if @root.taxFreeShopping}}
+                        {{ assign 'cartSubtotal' cart.tax_free_subtotal }}
+                    {{else}}
+                        {{ assign 'cartSubtotal' cart.subtotal }}
+                    {{/if}}
+
+                    <span>
+                        {{ formatCurrency @root.cartSubtotal }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="cart-summary">
+
+            {{#ifCond cart.shipping_price '>' 0}}
+
+                <div class="cart-shipping-price">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <span>
+                                {{#if @root.taxFreeShopping}}+{{/if}} {{ t 'general.shipping_price' }}
+                            </span>
+
+                        </div>
+
+                        <div class="col text-end">
+
+                            <span>
+                                {{ formatCurrency cart.shipping_price }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/ifCond}}
+
+            {{#ifCond cart.payment_fee '>' 0}}
+
+                <div class="cart-payment-fee">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <span>
+                                {{#if @root.taxFreeShopping}}+{{/if}} {{ t 'general.payment_fee' }}
+                            </span>
+
+                        </div>
+
+                        <div class="col text-end">
+
+                            <span>
+                                {{ formatCurrency cart.payment_fee }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/ifCond}}
+
+            {{#ifCond @root.taxFreeShopping '==' true}}
+
+                <div class="cart-tax">
+
+                    <div class="row">
+
+                        <div class="col">
+
+                            <span>
+                                {{#if @root.taxFreeShopping}}+{{/if}} {{ t 'general.tax' }}
+                            </span>
+
+                        </div>
+
+                        <div class="col text-end">
+
+                            <span>
+                                {{ formatCurrency cart.tax }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/ifCond}}
+
+            {{#if cart.discounts}}
+
+                <div class="cart-discounts">
+
+                    {{#each cart.discounts as |item|}}
+
+                        <div class="cart-discount">
+
+                            <div class="row">
+
+                                <div class="col">
+
+                                    <span>
+                                        {{#if @root.taxFreeShopping}}-{{/if}} {{ item.name }}{{#if item.code}} - {{ item.code }}{{/if}}
+                                    </span>
+
+                                </div>
+
+                                <div class="col text-end">
+
+                                    <span>
+                                        {{ formatCurrency item.total_amount }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {{/each}}
+
+                </div>
+
+            {{/if}}
+
+            <div class="cart-total">
+
+                <div class="row">
+
+                    <div class="col">
+
+                        <span>
+                            {{ t 'general.total' }}{{#if @root.taxFreeShopping}} ({{ t 'general.vat_included' }}){{/if}}
+                        </span>
+
+                    </div>
+
+                    <div class="col text-end">
+
+                        <span>
+                            {{ formatCurrency cart.total }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <small class="d-block mt-1">
+                {{ t 'cart.summary_info' }}
+            </small>
+
+        </div>
+
+        <div class="cart-actions">
+
+            <a href="{{ checkoutUrl }}" class="btn btn-primary d-block w-100" data-cart-checkout>
+                {{ t 'cart.proceed_to_checkout' }}
+            </a>
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart" class="renderer-template" type="text/template">
+    {% raw %}
+
+        {{#ifCond cart.item_count '>' 0}}
+
+            <div class="section-header"{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 1"{% raw %}{{/if}}>
+
+                <div class="container">
+
+                    <div class="title-container">
+
+                        <h2 class="title text-title">
+                            {{ t 'cart.title' }} (<span data-cart-item-count>{{ cart.item_count }}</span>)
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="section-content">
+
+                <div class="container">
+
+                    <div class="cart">
+
+                        <div class="cart-items" data-cart-partial="cart_items">
+                            {{> cart_items cart=cart}}
+                        </div>
+
+                        <div class="cart-aside"{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 2"{% raw %}{{/if}}{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 2"{% raw %}{{/if}}>
+
+                            <div class="cart-aside-inner section-highlight-item">
+
+                                <div data-cart-partial="cart_aside_inner">
+
+                                    {{> cart_aside_inner cart=cart}}
+
+                                </div>
+
+                                {% endraw %}{% if has_additional_checkout_buttons %}
+
+                                    <div class="cart-aside-inner-static">
+
+                                        {{- content_for_additional_checkout_buttons -}}
+                                        
+                                    </div>
+
+                                {% endif %}{% raw %}
+
+                            </div>
+
+                            {% endraw %}{% if financing_offers %}
+
+                                <div class="cart-aside-static">
+
+                                   {{- content_for_financing_offers -}}
+
+                                </div>
+
+                            {% endif %}{% raw %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {{else}}
+
+            <div class="section-content"{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 1"{% raw %}>
+
+                <div class="container-tiny text-center">
+    
+                    {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-7x mb-3' -%}{% raw %}
+
+                    <span class="h3 d-block mb-3 text-title">
+                        {{ t 'cart.empty_title' }}
+                    </span>
+
+                    <p class="mb-6">
+                        {{ t 'cart.empty_description' }}
+                    </p>
+            
+                    <a href="{{ rootUrl }}" class="btn btn-primary">
+                        {{ t 'cart.continue_shopping' }}
+                    </a>
+
+                </div>
+
+            </div>
+
+        {{/ifCond}}
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if settings.styleCartVariant == 2 %}
+
+    <script id="renderer-cart_mini_header" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <span class="cart-header-text text-title">
+            {{ t 'cart.title' }} (<span data-cart-item-count>{{ cart.item_count }}</span>)
+        </span>
+
+        {{#if cart.has_free_shipping}}
+
+            <div class="cart-message mt-3">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.free_shipping_achieved' }}
+
+                </span>
+
+            </div>
+
+        {{else if cart.free_shipping_limit}}
+
+            {{ assign 'amountToFreeShipping' (formatCurrency cart.free_shipping_limit.amount_to_limit) }}
+
+            <div class="cart-message mt-3">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.amount_to_free_shipping_dynamic' amount=@root.amountToFreeShipping }}
+
+                </span>
+
+            </div>
+
+        {{/if}}
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart_mini_body" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <div class="cart-items">
+
+            {{#each cart.items as |item|}}
+
+                <div class="cart-item">
+
+                    <div class="row g-0">
+
+                        <div class="col-auto">
+
+                            <div class="cart-item-media aspect-ratio-product">
+
+                                <div class="cart-item-media-img-container aspect-ratio-container">
+
+                                    {{#if item.image}}
+
+                                        {{ assign 'imgSrc' item.image.original }}
+
+                                        {{#ifCond productImageAspectRatio '===' 9:13}}
+                                            {{ assign 'imgSize' '110,142' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 4:3}}
+                                            {{ assign 'imgSize' '110,93' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 3:4}}
+                                            {{ assign 'imgSize' '110,147' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 1:1}}
+                                            {{ assign 'imgSize' '110,110' }}
+                                        {{/ifCond}}
+
+                                        <picture>
+                                            <img
+                                                alt="{{ item.name }}"
+                                                data-src="{{> image src=@root.imgSrc size=@root.imgSize }}"
+                                                data-srcset="{{> image src=@root.imgSrc size=@root.imgSize }} 1x, {{> image src=@root.imgSrc size=@root.imgSize scale='2x' }} 2x"
+                                                class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                        </picture>
+
+                                    {{else}}
+
+                                        <img
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+                                            alt="{{ item.name }}"
+                                            data-src="{{> placeholder_svg type='image' base64=true }}">
+
+                                    {{/if}}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col ps-4">
+
+                            <div class="row g-0">
+
+                                <div class="col">
+
+                                    {{#if @root.productShowManufacturer}}
+
+                                        {{#if item.manufacturer}}
+
+                                            <div class="cart-item-manufacturer">
+
+                                                <span class="cart-item-manufacturer-text">
+                                                    {{ manufacturer }}
+                                                </span>
+
+                                            </div>
+
+                                        {{/if}}
+
+                                    {{/if}}
+
+                                    <div class="cart-item-name">
+
+                                        <span class="cart-item-name-text">
+
+                                            <a href="{{ item.url }}">
+
+                                                {{ item.name }}
+
+                                            </a>
+
+                                        </span>
+
+                                    </div>
+
+                                    {{#if item.attributes}}
+
+                                        <div class="cart-item-attributes">
+
+                                            {{#each item.attributes as |attribute|}}
+
+                                                <span class="cart-item-attribute">
+                                                    {{ attribute }}
+                                                </span>
+
+                                            {{/each}}
+
+                                        </div>
+
+                                    {{/if}}
+
+                                </div>
+
+                                <div class="col-auto ms-g">
+
+                                    <div class="cart-item-price">
+
+                                        {{#if @root.taxFreeShopping}}
+                                            {{ assign 'itemPrice' item.net_price }}
+                                        {{else}}
+                                            {{ assign 'itemPrice' item.line_price }}
+                                        {{/if}}
+
+                                        <span class="cart-item-price-text">
+                                            {{ formatCurrency @root.itemPrice }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex align-items-center mt-2">
+
+                                <div class="cart-item-quantity">
+
+                                    <button type="button" class="btn btn-text cart-item-quantity-decrease" data-cart-quantity-decrease="{{ item.id }}">
+                                        {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
+                                    </button>
+
+                                    <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+
+                                    <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}">
+                                        {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}
+                                    </button>
+
+                                </div>
+
+                                <div class="cart-item-remove ms-3">
+
+                                    <button type="button" class="btn btn-text text-underline-indicator text-muted small" data-cart-remove="{{ item.id }}">
+                                        {{ t 'cart.remove' }}
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/each}}
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart_mini_footer_inner" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <div class="cart-summary">
+
+            <div class="cart-total">
+
+                <div class="row">
+
+                    <div class="col">
+
+                        <span>
+                            {{ t 'general.subtotal' }}
+                        </span>
+
+                    </div>
+
+                    <div class="col text-end">
+
+                        {{#if @root.taxFreeShopping}}
+                            {{ assign 'cartSubtotal' cart.tax_free_subtotal }}
+                        {{else}}
+                            {{ assign 'cartSubtotal' cart.subtotal }}
+                        {{/if}}
+
+                        <span>
+                            {{ formatCurrency @root.cartSubtotal }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <small class="d-block mt-1">
+                {{ t 'cart.summary_info' }}
+            </small>
+
+        </div>
+
+        <div class="cart-actions">
+
+            <a href="{{ cartUrl }}" class="btn btn-secondary d-block w-100 mt-2">
+                {{ t 'cart.view_cart' }}
+            </a>
+
+            <a href="{{ checkoutUrl }}" class="btn btn-primary d-block w-100 mt-3" data-cart-checkout>
+                {{ t 'cart.proceed_to_checkout' }}
+            </a>
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart-mini" class="renderer-template" type="text/template">
+    {% raw %}
+
+        {{#ifCond cart.item_count '>' 0}}
+
+            <div class="cart-header" data-cart-partial="cart_mini_header">
+
+                {{> cart_mini_header cart=cart}}
+
+            </div>
+
+            <div class="cart-body" data-cart-partial="cart_mini_body">
+
+                {{> cart_mini_body cart=cart}}
+
+            </div>
+
+            <div class="cart-footer">
+
+                <div class="cart-footer-inner" data-cart-partial="cart_mini_footer_inner">
+
+                    {{> cart_mini_footer_inner cart=cart}}
+
+                </div>
+
+                {% endraw %}
+                
+                    {%- if has_additional_checkout_buttons -%}
+
+                        <div class="cart-footer-static">
+
+                            {{- content_for_additional_checkout_buttons -}}
+                            
+                        </div>
+
+                    {%- endif -%}
+
+                    {%- if financing_offers -%}
+
+                        <div class="cart-footer-static">
+
+                            {{- content_for_financing_offers -}}
+
+                        </div>
+
+                    {%- endif -%}
+                
+                {% raw %}
+
+            </div>
+
+        {{else}}
+
+            <div class="cart-header text-center">
+
+                {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-3x mb-3' -%}{% raw %}
+
+                <span class="h5 text-title d-block mb-3">
+                    {{ t 'cart.empty_title' }}
+                </span>
+
+                <p class="mb-0">
+                    {{ t 'cart.empty_description' }}
+                </p>
+
+            </div>
+
+        {{/ifCond}}
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if settings.styleCartVariant == 3 %}
+
+    <script id="renderer-cart_offcanvas_header" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <div class="d-flex justify-content-between">
+
+            <span class="cart-header-text text-title">
+                {{ t 'cart.title' }} (<span data-cart-item-count>{{ cart.item_count }}</span>)
+            </span>
+
+            <button type="button" class="btn btn-text" data-cart-offcanvas-hide>
+                {% endraw %}{%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}{% raw %}
+            </button>
+
+        </div>
+
+        {{#if cart.has_free_shipping}}
+
+            <div class="cart-message mt-4">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.free_shipping_achieved' }}
+
+                </span>
+
+            </div>
+
+        {{else if cart.free_shipping_limit}}
+
+            {{ assign 'amountToFreeShipping' (formatCurrency cart.free_shipping_limit.amount_to_limit) }}
+
+            <div class="cart-message mt-4">
+
+                <span class="cart-message-text">
+
+                    {{ t 'cart.amount_to_free_shipping_dynamic' amount=@root.amountToFreeShipping }}
+
+                </span>
+
+            </div>
+
+        {{/if}}
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart_offcanvas_body" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <div class="cart-items">
+
+            {{#each cart.items as |item|}}
+            
+                <div class="cart-item">
+
+                    <div class="row g-0">
+
+                        <div class="col-auto">
+
+                            <div class="cart-item-media aspect-ratio-product">
+
+                                <div class="cart-item-media-img-container aspect-ratio-container">
+
+                                    {{#if item.image}}
+
+                                        {{ assign 'imgSrc' item.image.original }}
+
+                                        {{#ifCond productImageAspectRatio '===' 9:13}}
+                                            {{ assign 'imgSize' '110,142' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 4:3}}
+                                            {{ assign 'imgSize' '110,93' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 3:4}}
+                                            {{ assign 'imgSize' '110,147' }}
+                                        {{/ifCond}}
+
+                                        {{#ifCond productImageAspectRatio '===' 1:1}}
+                                            {{ assign 'imgSize' '110,110' }}
+                                        {{/ifCond}}
+
+                                        <picture>
+                                            <img
+                                                alt="{{ item.name }}"
+                                                data-src="{{> image src=@root.imgSrc size=@root.imgSize }}"
+                                                data-srcset="{{> image src=@root.imgSrc size=@root.imgSize }} 1x, {{> image src=@root.imgSrc size=@root.imgSize scale='2x' }} 2x"
+                                                class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                        </picture>
+
+                                    {{else}}
+
+                                        <img
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+                                            alt="{{ item.name }}"
+                                            data-src="{{> placeholder_svg type='image' base64=true }}">
+
+                                    {{/if}}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col ps-4">
+
+                            <div class="row g-0">
+
+                                <div class="col">
+
+                                    {{#if @root.productShowManufacturer}}
+
+                                        {{#if item.manufacturer}}
+
+                                            <div class="cart-item-manufacturer">
+
+                                                <span class="cart-item-manufacturer-text">
+                                                    {{ manufacturer }}
+                                                </span>
+
+                                            </div>
+
+                                        {{/if}}
+
+                                    {{/if}}
+
+                                    <div class="cart-item-name">
+
+                                        <span class="cart-item-name-text">
+
+                                            <a href="{{ item.url }}">
+
+                                                {{ item.name }}
+
+                                            </a>
+
+                                        </span>
+
+                                    </div>
+
+                                    {{#if item.attributes}}
+
+                                        <div class="cart-item-attributes">
+
+                                            {{#each item.attributes as |attribute|}}
+
+                                                <span class="cart-item-attribute">
+                                                    {{ attribute }}
+                                                </span>
+
+                                            {{/each}}
+
+                                        </div>
+
+                                    {{/if}}
+
+                                </div>
+
+                                <div class="col-auto ms-g">
+
+                                    <div class="cart-item-price">
+
+                                        {{#if @root.taxFreeShopping}}
+                                            {{ assign 'itemPrice' item.net_price }}
+                                        {{else}}
+                                            {{ assign 'itemPrice' item.line_price }}
+                                        {{/if}}
+
+                                        <span class="cart-item-price-text">
+                                            {{ formatCurrency @root.itemPrice }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex align-items-center mt-2">
+
+                                <div class="cart-item-quantity">
+
+                                    <button type="button" class="btn btn-text cart-item-quantity-decrease" data-cart-quantity-decrease="{{ item.id }}">
+                                        {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
+                                    </button>
+
+                                    <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+
+                                    <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}">
+                                        {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}
+                                    </button>
+
+                                </div>
+
+                                <div class="cart-item-remove ms-3">
+
+                                    <button type="button" class="btn btn-text text-underline-indicator text-muted small" data-cart-remove="{{ item.id }}">
+                                        {{ t 'cart.remove' }}
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {{/each}}
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart_offcanvas_footer_inner" class="renderer-partial" type="text/template">
+    {% raw %}
+
+        <div class="cart-summary">
+
+            <div class="cart-total">
+
+                <div class="row">
+
+                    <div class="col">
+
+                        <span>
+                            {{ t 'general.subtotal' }}
+                        </span>
+
+                    </div>
+
+                    <div class="col text-end">
+
+                        {{#if @root.taxFreeShopping}}
+                            {{ assign 'cartSubtotal' cart.tax_free_subtotal }}
+                        {{else}}
+                            {{ assign 'cartSubtotal' cart.subtotal }}
+                        {{/if}}
+
+                        <span>
+                            {{ formatCurrency @root.cartSubtotal }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <small class="d-block mt-1">
+                {{ t 'cart.summary_info' }}
+            </small>
+
+        </div>
+
+        <div class="cart-actions">
+
+            <a href="{{ cartUrl }}" class="btn btn-secondary d-block w-100 mt-2">
+                {{ t 'cart.view_cart' }}
+            </a>
+
+            <a href="{{ checkoutUrl }}" class="btn btn-primary d-block w-100 mt-3" data-cart-checkout>
+                {{ t 'cart.proceed_to_checkout' }}
+            </a>
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-cart-offcanvas" class="renderer-template" type="text/template">
+    {% raw %}
+
+        {{#ifCond cart.item_count '>' 0}}
+
+            <div class="cart-header" data-cart-partial="cart_offcanvas_header">
+
+                {{> cart_offcanvas_header cart=cart}}
+
+            </div>
+
+            <div class="cart-body" data-cart-partial="cart_offcanvas_body">
+
+                {{> cart_offcanvas_body cart=cart}}
+
+            </div>
+
+            <div class="cart-footer">
+
+                <div class="cart-footer-inner" data-cart-partial="cart_offcanvas_footer_inner">
+
+                    {{> cart_offcanvas_footer_inner cart=cart}}
+
+                </div>
+
+                {% endraw %}
+                
+                    {%- if has_additional_checkout_buttons -%}
+
+                        <div class="cart-footer-static">
+
+                            {{- content_for_additional_checkout_buttons -}}
+                            
+                        </div>
+
+                    {%- endif -%}
+
+                    {%- if financing_offers -%}
+
+                        <div class="cart-footer-static">
+
+                            {{- content_for_financing_offers -}}
+
+                        </div>
+
+                    {%- endif -%}
+                
+                {% raw %}
+
+            </div>
+
+        {{else}}
+
+            <div class="cart-header text-center">
+
+                {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-5x mb-3' -%}{% raw %}
+
+                <span class="h5 text-title d-block mb-3">
+                    {{ t 'cart.empty_title' }}
+                </span>
+
+                <p class="mb-6">
+                    {{ t 'cart.empty_description' }}
+                </p>
+
+                <button type="button" class="btn btn-primary" data-cart-offcanvas-hide>
+                    {{ t 'cart.continue_shopping' }}
+                </button>
+
+            </div>
+
+        {{/ifCond}}
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if request.page_type == 'cart' or settings.styleCartVariant == 2 or settings.styleCartVariant == 3 %}
+
+    <script id="renderer-cart-discounts" class="renderer-template" type="text/template">
+    {% raw %}
+
+        <div class="cart-discounts">
+
+            {{#each discounts}}
+
+                <div class="cart-discount">
+                    <span class="cart-discount-title">{{ title }}{{#if code}} - {{ code }}{{/if}}</span>
+                    <span class="cart-discount-amount">{{ total_amount }}</span>
+                </div>
+
+            {{/each}}
+
+        </div>
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if settings.accessibilityShowBackToTopButton %}
+
+    <script id="renderer-back-to-top-btn" class="renderer-template" type="text/template">
+    {% raw %}
+
+        <button type="button" id="back-to-top-btn" class="d-none">
+            {% endraw %}{%- render 'icon', icon: 'angle-up' -%}{% raw %}
+        </button>
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if settings.accessibilityShowSearch and settings.accessibilityShowSearchAutocomplete %}
+
+    <script id="renderer-site-search-results" class="renderer-template" type="text/template">
+    {% raw %}
+
+        {{#each results}}
+
+            <a href="{{ url }}" class="site-search-result-item" tabindex="0">
+
+                <div class="row g-0 align-items-center">
+
+                    <div class="col-auto">
+
+                        <div class="aspect-ratio-product w-px-50">
+
+                            <div class="aspect-ratio-container">
+
+                                {{#ifCond image '&&' image.original}}
+
+                                    {{#ifCond productImageAspectRatio '===' 9:13}}
+                                        {{ assign 'imgSize' '50,81' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 4:3}}
+                                        {{ assign 'imgSize' '50,33' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 3:4}}
+                                        {{ assign 'imgSize' '50,67' }}
+                                    {{/ifCond}}
+
+                                    {{#ifCond productImageAspectRatio '===' 1:1}}
+                                        {{ assign 'imgSize' '50,50' }}
+                                    {{/ifCond}}
+
+                                    <picture>
+                                        <img
+                                            alt="{{ name }}"
+                                            data-src="{{> image src=image.original size=@root.imgSize }}"
+                                            data-srcset="{{> image src=image.original size=@root.imgSize }} 1x, {{> image src=image.original size=@root.imgSize scale='2x' }} 2x"
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item site-search-result-item-img">
+                                    </picture>
+
+                                {{else}}
+
+                                    <img
+                                        class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder site-search-result-item-img"
+                                        alt="{{ name }}"
+                                        data-src="{{> placeholder_svg type='image' base64=true }}">
+
+                                {{/ifCond}}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                
+                    <div class="col ms-4">
+
+                        <span class="site-search-result-item-text">
+                            {{ title}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        {{/each}}
+
+    {% endraw %}
+    </script>
+
+    <script id="renderer-site-search-no-results" class="renderer-template" type="text/template">
+    {% raw %}
+
+        <div class="site-search-no-results">
+            <span class="site-search-no-results-text">
+                {{ t 'general.search_no_results' }}
+            </span>
+        </div>
+
+    {% endraw %}
+    </script>
+
+{% endif %}
+
+{% if settings.newsletterPopup and request.design_mode != 'edit' %}
+
+    <script id="renderer-newsletter-popup" class="renderer-template" type="text/template">
+
+        <div class="modal fade" id="newsletter-popup-modal" tabindex="-1" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-body p-0">
+
+                        <div class="row g-0 h-100">
+
+                            {% if settings.newsletterPopupImg %}
+
+                                <div id="newsletter-popup-modal-img-container" class="col-4 col-md-5 position-relative">
+
+                                    <div class="lazy position-absolute top-0 end-0 bottom-0 w-100 h-100{% if settings.newsletterPopupImg %} bg-size-cover{% endif %}" data-bg-set="url('{{- settings.newsletterPopupImg | thumb: '400,400' -}}') 1x, url('{{- settings.newsletterPopupImg | thumb: '400,400' | thumb: '@2x' -}}') 2x"{% if settings.newsletterPopupImg.offset_left or item.settings.img.offset_top %} style="--bg-position: {{ settings.newsletterPopupImg.offset_left }}% {{ settings.newsletterPopupImg.offset_top }}%"{% endif %}></div>
+
+                                </div>
+
+                            {% endif %}
+
+                            {% form 'customer', customer, id: 'newsletter-popup-modal-content-container', class: 'col p-g text-center d-flex flex-column gap-g position-relative justify-content-center' %}
+
+                                <div class="position-absolute top-0 end-0 mt-g me-g">
+
+                                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                                    </button>
+
+                                </div>
+            
+                                {% if form.posted_successfully? %}
+
+                                    {%- capture newsletterPopupScript -%}
+                                        <script type="application/javascript">
+                                            document.addEventListener('theme:ready', function() {
+                                                document.dispatchEvent(new CustomEvent('theme:newsletter:subscribe', {
+                                                    detail: {
+                                                        email: {{ form.email | json }}
+                                                    }
+                                                }));
+                                                theme.bs.Modal.getOrCreateInstance('#newsletter-popup-modal')?.show();
+                                                theme.utils.cookies.set(
+                                                    'themeNewsletterPopup',
+                                                    true,
+                                                    Math.floor({{ settings.newsletterPopupCookieDuration }} / 86400)
+                                                )
+                                            });
+                                        </script>
+                                    {%- endcapture -%}
+
+                                    {%- assign newsletterPopupScript = newsletterPopupScript -%}
+
+                                    <div class="d-flex flex-column justify-content-center align-items-center h-px-200">
+
+                                        {%- render 'icon', icon: 'email-success', class: 'svg-icon-5x mb-3 text-success' -%}
+
+                                        <span class="d-block h3 mb-0 text-title">
+                                            {{- 'marketing.newsletter_popup.success' | t -}}
+                                        </span>
+
+                                    </div>
+
+                                {% else %}
+
+                                    {% if form.error %}
+
+                                        {%- capture newsletterPopupScript -%}
+                                            <script type="application/javascript">
+                                                document.addEventListener('theme:ready', function() {
+                                                    theme.bs.Modal.getOrCreateInstance('#newsletter-popup-modal')?.show();
+                                                });
+                                            </script>
+                                        {%- endcapture -%}
+
+                                        {%- assign newsletterPopupScript = newsletterPopupScript -%}
+
+                                    {% endif %}
+
+                                    <span class="d-block text-muted max-w-80 mx-auto fs-5">
+                                        {{- 'marketing.newsletter_popup.overline' | t -}}
+                                    </span>
+
+                                    <span class="d-block h3 text-title">
+                                        {{- 'marketing.newsletter_popup.title' | t -}}
+                                    </span>
+                                        
+                                    <div class="form-floating">
+
+                                        <input id="newsletters-popup-modal-input" class="form-control" type="email" name="email" value="" placeholder="{{ 'marketing.newsletter_popup.email' | t }}" required>
+
+                                        <label for="newsletters-popup-modal-input">
+                                            {{- 'marketing.newsletter_popup.email' | t -}}
+                                        </label>
+
+                                    </div>
+
+                                    {% render 'form-error', error: form.error %}
+
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        {{- 'marketing.newsletter_popup.cta' | t -}}
+                                    </button>
+
+                                    <small class="d-block text-muted">
+                                        {{- 'marketing.newsletter_popup.description' | t -}}
+                                    </small>
+
+                                {% endif %}
+
+                            {% endform %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </script>
+
+    {%- if newsletterPopupScript -%}
+        {{- newsletterPopupScript -}}
+    {%- endif -%}
+
+{% endif %}

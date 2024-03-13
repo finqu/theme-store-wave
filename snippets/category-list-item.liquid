@@ -9,7 +9,7 @@
 	{% render 'category-list-item', category: category, currentCategory: category %}
 {% endcomment %}
 
-{%- if category.is_visible and category.sub_categories.size > 0 -%}
+{%- if category.is_visible and category.categories.size > 0 -%}
 	{%- assign hasSubCategories = true -%}
 {%- endif -%}
 
@@ -20,7 +20,7 @@
 		{%- if category.id == currentCategory.id -%}
 
 			<span class="category-list-item-text">
-				{{- category.name -}}
+				{{- category.title -}}
 			</span>
 
 		{%- else -%}
@@ -28,18 +28,18 @@
 			<a href="{{ category | link }}" class="category-list-item-link">
 
 				<span class="category-list-item-text">
-					{{- category.name -}}
+					{{- category.title -}}
 				</span>
 
 			</a>
 
 		{%- endif -%}
 
-		{%- if category.sub_categories.size > 0 -%}
+		{%- if category.categories.size > 0 -%}
 
 	        <ul class="category-list-subcategory-container">
 
-	            {%- for item in category.sub_categories -%}
+	            {%- for item in category.categories -%}
 
 	                {%- render 'category-list-item', category: item, currentCategory: currentCategory -%}
 
@@ -58,7 +58,7 @@
 		{%- if category.id == currentCategory.id -%}
 
 			<span class="category-list-item-text">
-				{{- category.name -}}
+				{{- category.title -}}
 			</span>
 
 		{%- else -%}
@@ -66,7 +66,7 @@
 			<a href="{{ category | link }}" class="category-list-item-link">
 
 				<span class="category-list-item-text">
-					{{- category.name -}}
+					{{- category.title -}}
 				</span>
 
 			</a>

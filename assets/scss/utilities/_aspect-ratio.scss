@@ -12,35 +12,53 @@
 		    .aspect-ratio#{$infix}-#{$key} {
 				@include aspect-ratio($key);
 			}
-		}
-	}
-}
 
-.aspect-ratio-auto {
-	display: grid;
-    grid-template-columns: minmax(auto, calc(100% * var(--img-scale-ratio, 1)));
+			.aspect-ratio#{$infix}-auto {
+				display: grid;
+				grid-template-columns: minmax(auto, calc(100% * var(--img-scale-ratio, 1)));
+			
+				&.justify-content-start > .aspect-ratio-container {
+					justify-content: start;
+				}
+			
+				&.justify-content-center > .aspect-ratio-container {
+					justify-content: center;
+				}
+			
+				&.justify-content-end > .aspect-ratio-container {
+					justify-content: end;
+				}
+			
+				> .aspect-ratio-container {
+					display: flex;
+					justify-content: center;
+					aspect-ratio: auto;
+			
+					.aspect-ratio-item {
+						max-width: 100%;
+						height: auto;
+						border-radius: var(--style-image-border-radius);
+					}
+				}
+			}
 
-	&.justify-content-start > .aspect-ratio-container {
-        justify-content: start;
-    }
-
-    &.justify-content-center > .aspect-ratio-container {
-        justify-content: center;
-    }
-
-    &.justify-content-end > .aspect-ratio-container {
-        justify-content: end;
-    }
-
-	> .aspect-ratio-container {
-		display: flex;
-        justify-content: center;
-		aspect-ratio: auto;
-
-        .aspect-ratio-item {
-			max-width: 100%;
-			height: auto;
-			border-radius: var(--style-image-border-radius);
+			.aspect-ratio#{$infix}-cover {
+				display: grid;
+				grid-template-columns: minmax(auto, calc(100% * var(--img-scale-ratio, 1)));
+				height: 100%;
+			
+				> .aspect-ratio-container {
+					display: flex;
+					justify-content: center;
+					aspect-ratio: auto;
+			
+					.aspect-ratio-item {
+						max-width: 100%;
+						height: auto;
+						border-radius: var(--style-image-border-radius);
+					}
+				}
+			}
 		}
 	}
 }

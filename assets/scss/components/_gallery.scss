@@ -3,6 +3,30 @@
 
 .pswp {
 
+	.pswp__iframe-container {
+		position: relative;
+		display: flex;
+	    align-items: center;
+	    margin: 0 auto;
+	    width: 100%;
+	    height: 100%;
+	    max-width: 1200px;
+
+	    .pswp__iframe-aspect-ratio-container {
+			position: relative;
+		    padding-bottom: 56.25%;
+		    width: 100%;
+
+			.pswp__iframe {
+				position: absolute;
+			    top: 0;
+			    left: 0;
+			    width: 100%;
+			    height: 100%;
+			}
+		}
+	}
+
 	.pswp__video-container {
 		position: relative;
 		display: flex;
@@ -25,5 +49,9 @@
 			    height: 100%;
 			}
 		}
+	}
+
+	.pswp__img {
+		background-color: var(--style-bg-accent-color);
 	}
 }

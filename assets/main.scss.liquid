@@ -19,7 +19,7 @@ $h2-font-size: 1.55rem * {{- settings.headingFontScale -}};
 $h3-font-size: 1.35rem * {{- settings.headingFontScale -}};
 $h4-font-size: 1.15rem * {{- settings.headingFontScale -}};
 $h5-font-size: 1.05rem * {{- settings.headingFontScale -}};
-$h6-font-size: 0.82rem {{- settings.headingFontScale -}};
+$h6-font-size: 0.82rem * {{- settings.headingFontScale -}};
 	
 $headings-font-family: {{- settings.headingFont -}};
 $headings-font-weight: {{- settings.headingFontWeight -}};
@@ -82,9 +82,11 @@ $aspect-ratios: (
 	'16-9': '16:9',
 	'9-13': '9:13',
 	'9-12': '9:12',
+	'9-11': '9:11',
 	'4-5': '4:5',
 	'4-3': '4:3',
 	'3-5': '3:5',
+	'3-4': '3:4',
 	'1-1': '1:1',
 	'product': '{{- settings.productImageAspectRatio -}}',
 	'article': '{{- settings.articleImageAspectRatio -}}'
@@ -157,10 +159,10 @@ $link-hover-color: {{ settings.style_link_color }};
 
 	{%- if styleTextColorBrightness > 190 -%}
 		--style-text-accent-color: {{ settings.style_text_color | color_darken: 10 }};
-		--style-text-muted-color: {{ settings.style_text_color | color_darken: 40 }};
+		--style-text-muted-color: {{ settings.style_text_color | color_darken: 30 }};
 	{%- else -%}
 		--style-text-accent-color: {{ settings.style_text_color | color_lighten: 10 }};
-		--style-text-muted-color: {{ settings.style_text_color | color_lighten: 40 }};
+		--style-text-muted-color: {{ settings.style_text_color | color_lighten: 30 }};
 	{%- endif -%}
 
 	{%- if styleTableBgColorBrightness > 190 -%}
@@ -262,6 +264,12 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-grid-gutter-width-mobile: {{ settings.styleGridGutterWidth | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
 
 	--style-icon-stroke-width: {{ settings.styleIconStrokeWidth }};
+
+	{%- if settings.navigationFontWeight > 400 -%}
+		--style-navigation-icon-stroke-width: {{ settings.styleIconStrokeWidth | replace: 'px', '' | times: 1.5 | append: 'px' -}};
+	{%- else -%}
+		--style-navigation-icon-stroke-width: var(--style-icon-stroke-width);
+	{%- endif -%}
 
 	@each $key, $val in $spacers {
 		--style-spacer-#{$key}: #{$val};

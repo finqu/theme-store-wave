@@ -1,3 +1,5 @@
+import Countdown from './countdown';
+
 const debounce = function (func, wait, immediate) {
 
 	let timeout = null;
@@ -390,15 +392,16 @@ const placeholderSvg = function (data) {
 
 const image = function(data) {
 
-	const src = data.src;
+	const url = new URL(data.src);
 	const scale = parseInt(data.scale, 10) || 1;
-	const size = data.size.split(',');
-	const width = scale * size[0];
-	const height = scale * (size[1] || size[0]);
-	const extension = src.substring(src.lastIndexOf('.') + 1);
-	const result = src.substring(0, src.lastIndexOf('.'))+'_'+width+'_'+height+'.'+extension;
+	const sizeArr = data.size.split(',');
+	const width = scale * sizeArr[0];
+	const height = scale * (sizeArr[1] || sizeArr[0]);
 
-	return result;
+	url.searchParams.set('w', width);
+	url.searchParams.set('h', height);
+
+	return url.href;
 }
 
 const icon = function(data) {
@@ -413,6 +416,59 @@ const getCssVariable = function(variable = null, el = null) {
 	return getComputedStyle(el || document.documentElement).getPropertyValue(variable);
 }
 
+const productGridItemVariantImgSwapper = function (productVariantImgEl) {
+
+	if (!productVariantImgEl.value) {
+		return;
+	}
+
+	const productCardGridItemEl = productVariantImgEl.closest('.product-card-grid-item');
+	const productMediaEl = productCardGridItemEl.querySelector('.product-media');
+
+	const addProductImg = (containerEl, imgUrl) => {
+
+		const productImgEl = containerEl.querySelector('.featured-img');
+		const productImgContainerEl = productImgEl.closest('.product-media-img-container');
+		const productImgUrl = new URL(productImgEl.getAttribute('src'));
+
+		productImgUrl.search = '';
+
+		const el = document.createElement(productImgContainerEl.nodeName);
+		const html = productImgContainerEl.innerHTML.trim().replaceAll(productImgUrl.href, imgUrl);
+
+		el.className = productImgContainerEl.className;
+		el.innerHTML = html;
+
+		containerEl.prepend(el);
+	};
+
+	const removeProductImg = (containerEl) => {
+		containerEl.children[0].remove();
+	};
+
+	productVariantImgEl.parentElement.addEventListener('mouseenter', addProductImg.bind(null, productMediaEl, productVariantImgEl.value));
+	productVariantImgEl.parentElement.addEventListener('mouseleave', removeProductImg.bind(null, productMediaEl));
+};
+
+const cookies = {
+	get: (name) => {
+		const data = document.cookie.split(';').map(cookie => cookie.split('=')).reduce((accumulator, [key, value]) => ({...accumulator, [key.trim()]: decodeURIComponent(value)}), {});
+		return data[name];
+	},
+	set: (name, value, days = 365) => {
+		const date = new Date();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+		document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+	},
+	remove: (name) => {
+		document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+	}
+};
+
+const countdown = function (opts = {}) {
+	return new Countdown(opts);
+};
+
 export {
 	debounce,
 	extend,
@@ -426,5 +482,8 @@ export {
 	placeholderSvg,
 	image,
 	icon,
-	getCssVariable
+	getCssVariable,
+	productGridItemVariantImgSwapper,
+	cookies,
+	countdown
 };

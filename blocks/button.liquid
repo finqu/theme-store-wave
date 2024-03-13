@@ -1,4 +1,4 @@
-{%- assign btnLabel = block.settings.btnLabel | default: 'placeholder.label' | t -%}
+{%- assign btnLabel =  block.settings.btnLink.text | default: 'placeholder.label' | t -%}
 
 {%- capture blockStyle -%}
     #finqu-block-{{ block.id }} .block-inner {
@@ -17,31 +17,7 @@
 
 <div class="block-inner">
 
-    {% if block.settings.btnStyle == 'primary' %}
-
-        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-primary"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
-            {{ btnLabel }}
-        </a>
-
-    {% elsif block.settings.btnStyle == 'secondary' %}
-
-        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-secondary"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
-            {{ btnLabel }}
-        </a>
-
-    {% elsif block.settings.btnStyle == 'link' %}
-
-        <a href="{{- block.settings.btnLink.url -}}" class="btn btn-link text-underline-indicator fw-bold"{% if block.settings.openInNewWindowStatus %} target="_blank"{% endif %}>
-
-            <span class="me-2">
-                {{ btnLabel }}
-            </span>
-
-            {%- render 'icon', icon: 'arrow-right', class: 'svg-icon-fw' -%}
-
-        </a>
-
-    {% endif %}
+    {%- render 'section-quick-link', style: block.settings.btnStyle, text: btnLabel, url: block.settings.btnLink.url, target: block.settings.btnLink.target -%}
 
 </div>
 
@@ -64,29 +40,14 @@
                 },
                 "settings": [
                     {
-                        "id": "btnLabel",
-                        "type": "text",
-                        "label": {
-                            "en": "Label",
-                            "fi": "Teksti"
-                        }
-                    },
-                    {
                         "id": "btnLink",
                         "type": "url",
                         "label": {
-                            "en": "Link",
-                            "fi": "Linkki"
-                        }
-                    },
-                    {
-                        "id": "openInNewWindowStatus",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Open link in a new tab",
-                            "fi": "Avaa linkki uudessa välilehdessä"
+                            "en": "Button",
+                            "fi": "Painike"
                         },
-                        "default": false
+                        "include_target": true,
+                        "include_text": true
                     }
                 ]
             },
@@ -96,6 +57,49 @@
                     "fi": "Asetukset"
                 },
                 "settings": [
+                    {
+                        "id": "btnStyle",
+                        "type": "select",
+                        "label": {
+                            "en": "Button style",
+                            "fi": "Painikkeen tyyli"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "primary",
+                                "label": {
+                                    "en": "Fill",
+                                    "fi": "Täytetty"
+                                }
+                            },
+                            {
+                                "value": "secondary",
+                                "label": {
+                                    "en": "Outline",
+                                    "fi": "Ääriviivat"
+                                }
+                            },
+                            {
+                                "value": "link",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                }
+                            },
+                            {
+                                "value": "link-with-icon",
+                                "label": {
+                                    "en": "Text with icon",
+                                    "fi": "Teksti kuvakkeella"
+                                }
+                            }
+                        ]
+                    },
                     {
                         "id": "blockPaddingMode",
                         "type": "radio-pill",
@@ -145,38 +149,6 @@
                         "default": "0",
                         "unit": "rem",
                         "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "btnStyle",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Button style",
-                            "fi": "Painikkeen tyyli"
-                        },
-                        "default": "primary",
-                        "options": [
-                            {
-                                "value": "primary",
-                                "label": {
-                                    "en": "Style 1",
-                                    "fi": "Tyyli 1"
-                                }
-                            },
-                            {
-                                "value": "secondary",
-                                "label": {
-                                    "en": "Style 2",
-                                    "fi": "Tyyli 2"
-                                }
-                            },
-                            {
-                                "value": "link",
-                                "label": {
-                                    "en": "Style 3",
-                                    "fi": "Tyyli 3"
-                                }
-                            }
-                        ]
                     },
                     {
                         "id": "contentAlign",

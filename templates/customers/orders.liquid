@@ -56,6 +56,10 @@
 
                                                     {%- assign imgSize = '110,93' -%}
 
+                                                {% elsif settings.productImageAspectRatio == '3:4' %}
+
+                                                    {%- assign imgSize = '110,147' -%}
+
                                                 {% elsif settings.productImageAspectRatio == '1:1' %}
 
                                                     {%- assign imgSize = '110,110' -%}
@@ -64,7 +68,7 @@
 
                                                 <picture>
                                                     <img
-                                                        alt="{{ item.name }}"
+                                                        alt="{{ item.title }}"
                                                         data-src="{{ img | thumb: imgSize }}"
                                                         data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
                                                         class="lazy d-block mx-auto img-fluid aspect-ratio-item">
@@ -78,7 +82,7 @@
 
                                                 <img
                                                     class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
-                                                    alt="{{ item.name }}"
+                                                    alt="{{ item.title }}"
                                                     data-src="{{- img | strip_newlines -}}">
 
                                             {% endif %}
@@ -183,7 +187,7 @@
 
             {%- render 'icon', icon: 'order-details', class: 'svg-icon-5x mb-3' -%}
 
-            <span class="h5 d-block mb-3">
+            <span class="h5 d-block mb-3 text-title">
                 {{- 'account.orders_title' | t -}}
             </span>
 

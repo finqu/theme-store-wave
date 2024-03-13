@@ -30,13 +30,23 @@
             {{- 'login.cta' | t -}}
         </button>
 
+        {% if additional_authentication_flows %}
+
+            <hr class="hr-text mb-4" data-content="{{ 'general.or' | t }}">
+
+            <div class="mb-4">
+                {{ content_for_additional_authentication_flows }}
+            </div>
+
+        {% endif %}
+
         <a href="{{ routes.account_password_recover_url }}" class="fw-bold text-underline-indicator">
             {{- 'login.forgot_password' | t -}}
         </a>
 
         <hr class="mt-5 mb-5">
 
-        <h3 class="mb-5">
+        <h3 class="mb-5 text-title">
             {{- 'login.new_customer' | t -}}
         </h3>
 

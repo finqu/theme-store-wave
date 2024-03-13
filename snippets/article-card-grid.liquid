@@ -47,20 +47,38 @@
 
                     {%- elsif aspectRatio == '4:3' -%}
 
-                        {%- assign imgSizeSm = '280,220' -%}
-                        {%- assign imgSizeMd = '240,190' -%}
+                        {%- assign imgSizeSm = '280,210' -%}
+                        {%- assign imgSizeMd = '240,180' -%}
 
                         {%- case articlePerRow -%}
                             {% when '2' %}
-                                {%- assign imgSizeLg = '600,460' -%}
+                                {%- assign imgSizeLg = '613,460' -%}
                             {% when '3' %}
-                                {%- assign imgSizeLg = '400,310' -%}
+                                {%- assign imgSizeLg = '413,310' -%}
                             {% when '4' %}
-                                {%- assign imgSizeLg = '400,235' -%}
+                                {%- assign imgSizeLg = '313,235' -%}
                             {% when '5' %}
                                 {%- assign imgSizeLg = '240,190' -%}
                             {% when '6' %}
                                 {%- assign imgSizeLg = '200,160' -%}
+                        {%- endcase -%}
+
+                    {%- elsif aspectRatio == '3:4' -%}
+
+                        {%- assign imgSizeSm = '280,373' -%}
+                        {%- assign imgSizeMd = '240,320' -%}
+
+                        {%- case articlePerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,800' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,533' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,400' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,320' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,267' -%}
                         {%- endcase -%}
 
                     {%- elsif aspectRatio == '1:1' -%}
@@ -130,7 +148,7 @@
 
                 <a href="{{ article | link }}">
 
-                    <h3 class="article-title-text">
+                    <h3 class="article-title-text text-title">
                         {{- article.title -}}
                     </h3>
 
@@ -138,7 +156,7 @@
 
             {%- else -%}
 
-                <h3 class="article-title-text">
+                <h3 class="article-title-text text-title">
                     {{- 'placeholder.article' | t -}}
                 </h3>
 

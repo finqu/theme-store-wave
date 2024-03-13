@@ -58,7 +58,7 @@
 
                 <div class="mb-4 d-flex justify-content-between align-items-center">
 
-                    <span class="h5 mb-0">
+                    <span class="h5 mb-0 text-title">
                         {{- 'product.review_grade' | t -}}
                     </span>
 
@@ -178,84 +178,93 @@
             {%- assign showStockBalance = true -%}
         {%- endif -%}
 
-        <div class="section-highlight-item section-highlight-item-md mb-md-8">
+        {% if settings.productImageAspectRatio == '9:13' %}
+
+            {%- assign imgSizeSm = '415,590' -%}
+            {%- assign imgSizeMd = '253,357' -%}
+            {%- assign imgSizeLg = '364,517' -%}
+
+        {% elsif settings.productImageAspectRatio == '4:3' %}
+
+            {%- assign imgSizeSm = '415,316' -%}
+            {%- assign imgSizeMd = '253,195' -%}
+            {%- assign imgSizeLg = '364,278' -%}
+
+        {% elsif settings.productImageAspectRatio == '3:4' %}
+
+            {%- assign imgSizeSm = '415,553' -%}
+            {%- assign imgSizeMd = '253,337' -%}
+            {%- assign imgSizeLg = '364,485' -%}
+
+        {% elsif settings.productImageAspectRatio == '1:1' %}
+
+            {%- assign imgSizeSm = '415,415' -%}
+            {%- assign imgSizeMd = '253,253' -%}
+            {%- assign imgSizeLg = '364,364' -%}
+
+        {% endif %}
+        
+        <div class="product-container section-highlight-item section-highlight-item-md mb-md-8">
 
             <div class="row justify-content-between">
 
-                <div class="col-12 col-md-6 col-lg-7 pe-md-4 pe-lg-8">
+                <div class="col-12 col-md-6 col-xxl-7 pe-md-4 pe-xxl-8">
 
                     <div class="product-media-container">
 
                         <div class="product-media row g-0">
 
-                            <div id="product-thumb-media-swiper" class="swiper swiper-vertical d-none d-lg-block col-2 me-5 p-0">
+                            <div id="product-thumb-media-swiper" class="swiper swiper-vertical d-none d-lg-block w-px-80 me-g">
 
                                 <div class="swiper-wrapper">
 
-                                    {%- assign hasMediaImg = false -%}
+                                    {%- assign hasImg = false -%}
 
                                     {% if settings.productImageAspectRatio == '9:13' %}
-                                        {%- assign imgSize = '132,182' -%}
+                                        {%- assign imgSize = '90,124' -%}
                                     {% elsif settings.productImageAspectRatio == '4:3' %}
-                                        {%- assign imgSize = '122,104' -%}
+                                        {%- assign imgSize = '90,71' -%}
+                                    {% elsif settings.productImageAspectRatio == '3:4' %}
+                                        {%- assign imgSize = '90,120' -%}
                                     {% elsif settings.productImageAspectRatio == '1:1' %}
-                                        {%- assign imgSize = '132,132' -%}
+                                        {%- assign imgSize = '90,90' -%}
                                     {% endif %}
 
-                                    {% for media in product.media %}
+                                    {% for image in product.images %}
 
-                                        {% if media.type == "image" %}
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
 
-                                            <div class="swiper-slide aspect-ratio-product">
+                                        <div class="swiper-slide aspect-ratio-product">
 
-                                                <div class="aspect-ratio-container">
+                                            <div class="aspect-ratio-container">
 
-                                                    {%- unless hasMediaImg -%}
-                                                        {%- assign hasMediaImg = true -%}
-                                                    {%- endunless -%}
-
-                                                    {% if media.thumb %}
-
-                                                        <img
-                                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer"
-                                                            alt="{{ product.name }}"
-                                                            data-src="{{ media.thumb | thumb: imgSize }}"
-                                                            data-srcset="{{ media.thumb | thumb: imgSize }} 1x, {{ media.thumb | thumb: imgSize | thumb: '@2x' }} 2x">
-
-                                                    {% else %}
-
-                                                        {%- capture imgSrc -%}
-                                                            {% render 'placeholder-svg', type: 'image', base64: true %}
-                                                        {%- endcapture -%}
-
-                                                        <img
-                                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
-                                                            alt="{{ product.name }}"
-                                                            data-src="{{ imgSrc }}">
-
-                                                    {% endif %}
-
-                                                </div>
+                                                <img
+                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% if forloop.first %} featured-img{% endif %}"
+                                                    alt="{{ product.title }}"
+                                                    data-src="{{ image | thumb: imgSize }}"
+                                                    data-srcset="{{ image | thumb: imgSize }} 1x, {{ image | thumb: imgSize | thumb: '@2x' }} 2x">
 
                                             </div>
 
-                                        {% endif %}
+                                        </div>
 
                                     {% endfor %}
 
-                                    {% if product.attributes.size > 0 %}
+                                    {% if product.customizations.size > 0 %}
 
-                                        {% for attribute in product.attributes %}
+                                        {% for group in product.customizations %}
 
-                                            {% for option in attribute.options %}
+                                            {% for option in group.options %}
 
                                                 {% if option.image %}
 
-                                                    {%- unless hasMediaImg -%}
-                                                        {%- assign hasMediaImg = true -%}
+                                                    {%- unless hasImg -%}
+                                                        {%- assign hasImg = true -%}
                                                     {%- endunless -%}
 
-                                                    <div class="swiper-slide aspect-ratio-product" data-product-option-image="{{ option.id }}">
+                                                    <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
 
                                                         <div class="aspect-ratio-container">
 
@@ -263,7 +272,7 @@
 
                                                                 <img
                                                                     class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer"
-                                                                    alt="{{ product.name }}"
+                                                                    alt="{{ product.title }}"
                                                                     data-src="{{ option.image | thumb: imgSize }}"
                                                                     data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
 
@@ -275,7 +284,7 @@
 
                                                                 <img
                                                                     class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
-                                                                    alt="{{ product.name }}"
+                                                                    alt="{{ product.title }}"
                                                                     data-src="{{ imgSrc }}">
 
                                                             {% endif %}
@@ -286,17 +295,17 @@
 
                                                 {% endif %}
 
-                                                {% if option.subattribute %}
+                                                {% if option.child_group %}
 
-                                                    {% for option in option.subattribute.options %}
+                                                    {% for option in option.child_group.options %}
 
                                                         {% if option.image %}
 
-                                                            {%- unless hasMediaImg -%}
-                                                                {%- assign hasMediaImg = true -%}
+                                                            {%- unless hasImg -%}
+                                                                {%- assign hasImg = true -%}
                                                             {%- endunless -%}
 
-                                                            <div class="swiper-slide aspect-ratio-product" data-product-option-image="{{ option.id }}">
+                                                            <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
 
                                                                 <div class="aspect-ratio-container">
 
@@ -304,7 +313,7 @@
 
                                                                         <img
                                                                             class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer"
-                                                                            alt="{{ product.name }}"
+                                                                            alt="{{ product.title }}"
                                                                             data-src="{{ option.image | thumb: imgSize }}"
                                                                             data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
 
@@ -316,7 +325,7 @@
 
                                                                         <img
                                                                             class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
-                                                                            alt="{{ product.name }}"
+                                                                            alt="{{ product.title }}"
                                                                             data-src="{{ imgSrc }}">
 
                                                                     {% endif %}
@@ -337,7 +346,7 @@
 
                                     {% endif %}
 
-                                    {% unless hasMediaImg %}
+                                    {% unless hasImg %}
 
                                         <div class="swiper-slide aspect-ratio-product">
 
@@ -349,7 +358,7 @@
 
                                                 <img
                                                     class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
-                                                    alt="{{ product.name }}"
+                                                    alt="{{ product.title }}"
                                                     data-src="{{ imgSrc }}">
 
                                             </div>
@@ -358,52 +367,52 @@
 
                                     {% endunless %}
 
-                                    {% for media in product.media %}
+                                    {% for video in product.videos %}
 
-                                        {% if media.type == "video" %}
+                                        <div class="swiper-slide aspect-ratio-product">
 
-                                            <div class="swiper-slide aspect-ratio-product">
+                                            <div class="aspect-ratio-container">
 
-                                                <div class="aspect-ratio-container">
+                                                {% if video.thumb %}
 
-                                                    {% if media.thumb %}
+                                                    <img
+                                                        class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item"
+                                                        alt="{{ product.title }}"
+                                                        data-src="{{ video.thumb | thumb: imgSize }}"
+                                                        data-srcset="{{ video.thumb | thumb: imgSize }} 1x, {{ video.thumb | thumb: imgSize | thumb: '@2x' }} 2x">
 
-                                                        <img
-                                                            class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item"
-                                                            alt="{{ product.name }}"
-                                                            data-src="{{ media.thumb | thumb: imgSize }}"
-                                                            data-srcset="{{ media.thumb | thumb: imgSize }} 1x, {{ media.thumb | thumb: imgSize | thumb: '@2x' }} 2x">
+                                                {% else %}
 
-                                                    {% else %}
+                                                    {%- capture imgSrc -%}
+                                                        {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                    {%- endcapture -%}
 
-                                                        {%- capture imgSrc -%}
-                                                            {% render 'placeholder-svg', type: 'image', base64: true %}
-                                                        {%- endcapture -%}
+                                                    <img
+                                                        class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item svg-placeholder"
+                                                        alt="{{ product.title }}"
+                                                        data-src="{{ imgSrc }}">
 
-                                                        <img
-                                                            class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item svg-placeholder"
-                                                            alt="{{ product.name }}"
-                                                            data-src="{{ imgSrc }}">
-
-                                                    {% endif %}
-
-                                                </div>
+                                                {% endif %}
 
                                             </div>
 
-                                        {% endif %}
+                                        </div>
 
                                     {% endfor %}
 
                                 </div>
 
-                                <div class="swiper-button-prev">
-                                    {%- render 'icon', icon: 'angle-left' -%}
-                                </div>
+                                {% if product.media.size %}
 
-                                <div class="swiper-button-next">
-                                    {%- render 'icon', icon: 'angle-right' -%}
-                                </div>
+                                    <div class="swiper-button-prev">
+                                        {%- render 'icon', icon: 'angle-left' -%}
+                                    </div>
+
+                                    <div class="swiper-button-next">
+                                        {%- render 'icon', icon: 'angle-right' -%}
+                                    </div>
+
+                                {% endif %}
 
                             </div>
 
@@ -413,97 +422,83 @@
 
                                 <div class="swiper-wrapper">
 
-                                    {%- assign hasMediaImg = false -%}
+                                    {%- assign hasImg = false -%}
 
                                     {% if settings.productImageAspectRatio == '9:13' %}
 
-                                        {%- assign imgSizeSm = '555,792' -%}
-                                        {%- assign imgSizeMd = '747,1070' -%}
-                                        {%- assign imgSizeLg = '574,820' -%}
+                                        {%- assign imgSizeSm = '530,766' -%}
+                                        {%- assign imgSizeMd = '449,649' -%}
+                                        {%- assign imgSizeLg = '607,877' -%}
 
                                     {% elsif settings.productImageAspectRatio == '4:3' %}
 
-                                        {%- assign imgSizeSm = '555,421' -%}
-                                        {%- assign imgSizeMd = '747,565' -%}
-                                        {%- assign imgSizeLg = '574,435' -%}
+                                        {%- assign imgSizeSm = '530,398' -%}
+                                        {%- assign imgSizeMd = '449,337' -%}
+                                        {%- assign imgSizeLg = '607,455' -%}
+
+                                    {% elsif settings.productImageAspectRatio == '3:4' %}
+
+                                        {%- assign imgSizeSm = '530,707' -%}
+                                        {%- assign imgSizeMd = '449,599' -%}
+                                        {%- assign imgSizeLg = '607,809' -%}
 
                                     {% elsif settings.productImageAspectRatio == '1:1' %}
 
-                                        {%- assign imgSizeSm = '555,555' -%}
-                                        {%- assign imgSizeMd = '747,747' -%}
-                                        {%- assign imgSizeLg = '574,574' -%}
+                                        {%- assign imgSizeSm = '530,530' -%}
+                                        {%- assign imgSizeMd = '449,449' -%}
+                                        {%- assign imgSizeLg = '607,607' -%}
 
                                     {% endif %}
 
-                                    {% for media in product.media %}
+                                    {% for image in product.images %}
 
-                                        {% if media.type == "image" %}
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
 
-                                            {%- unless hasMediaImg -%}
-                                                {%- assign hasMediaImg = true -%}
-                                            {%- endunless -%}
+                                        <div class="swiper-slide gallery-item aspect-ratio-product">
 
-                                            <div class="swiper-slide gallery-item aspect-ratio-product">
+                                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
 
-                                                <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+                                                <picture>
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                        {{- image | thumb: imgSizeLg }} 1x,
+                                                        {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
 
-                                                    {% if media.thumb %}
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                        {{- image | thumb: imgSizeMd }} 1x,
+                                                        {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
 
-                                                        <picture>
-                                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                                                {{- media.thumb | thumb: imgSizeLg }} 1x,
-                                                                {{- media.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+                                                    <source data-srcset="
+                                                        {{- image | thumb: imgSizeSm }} 1x,
+                                                        {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
-                                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
-                                                                {{- media.thumb | thumb: imgSizeMd }} 1x,
-                                                                {{- media.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
-
-                                                            <source data-srcset="
-                                                                {{- media.thumb | thumb: imgSizeSm }} 1x,
-                                                                {{- media.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                                                            <img
-                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' %} aspect-ratio-item-position-top{% endif %}"
-                                                                alt="{{ product.name }}"
-                                                                data-gallery-img-src="{{ media.original }}"
-                                                                src="{{ media.thumb | thumb: imgSizeSm }}">
-                                                        </picture>
-
-                                                    {% else %}
-
-                                                        {%- capture imgSrc -%}
-                                                            {% render 'placeholder-svg', type: 'image', base64: true %}
-                                                        {%- endcapture -%}
-
-                                                        <img
-                                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder"
-                                                            alt="{{ product.name }}"
-                                                            data-gallery-img-src="{{ imgSrc }}"
-                                                            data-src="{{ imgSrc }}">
-
-                                                    {% endif %}
-
-                                                </div>
+                                                    <img
+                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' or settings.productImageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% if forloop.first %} featured-img{% endif %}"s
+                                                        alt="{{ product.title }}"
+                                                        data-gallery-img-src="{{ image }}"
+                                                        src="{{ image | thumb: imgSizeSm }}">
+                                                </picture>
 
                                             </div>
 
-                                        {% endif %}
+                                        </div>
 
                                     {% endfor %}
 
-                                    {% if product.attributes.size > 0 %}
+                                    {% if product.customizations.size > 0 %}
 
-                                        {% for attribute in product.attributes %}
+                                        {% for group in product.customizations %}
 
-                                            {% for option in attribute.options %}
+                                            {% for option in group.options %}
 
                                                 {% if option.image %}
 
-                                                    {%- unless hasMediaImg -%}
-                                                        {%- assign hasMediaImg = true -%}
+                                                    {%- unless hasImg -%}
+                                                        {%- assign hasImg = true -%}
                                                     {%- endunless -%}
 
-                                                    <div class="swiper-slide gallery-item aspect-ratio-product" data-product-option-image="{{ option.id }}">
+                                                    <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
 
                                                         <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
 
@@ -523,8 +518,8 @@
                                                                         {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                                                     <img
-                                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' %} aspect-ratio-item-position-top{% endif %}"
-                                                                        alt="{{ product.name }}"
+                                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' or settings.productImageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                                        alt="{{ product.title }}"
                                                                         data-gallery-img-src="{{ option.image }}"
                                                                         src="{{ option.image | thumb: imgSizeSm }}">
                                                                 </picture>
@@ -537,7 +532,7 @@
 
                                                                 <img
                                                                     class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder"
-                                                                    alt="{{ product.name }}"
+                                                                    alt="{{ product.title }}"
                                                                     data-gallery-img-src="{{ imgSrc }}"
                                                                     data-src="{{ imgSrc }}">
 
@@ -549,17 +544,17 @@
 
                                                 {% endif %}
 
-                                                {% if option.subattribute %}
+                                                {% if option.child_group %}
 
-                                                    {% for option in option.subattribute.options %}
+                                                    {% for option in option.child_group.options %}
 
                                                         {% if option.image %}
 
-                                                            {%- unless hasMediaImg -%}
-                                                                {%- assign hasMediaImg = true -%}
+                                                            {%- unless hasImg -%}
+                                                                {%- assign hasImg = true -%}
                                                             {%- endunless -%}
 
-                                                            <div class="swiper-slide gallery-item aspect-ratio-product" data-product-option-image="{{ option.id }}">
+                                                            <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
 
                                                                 <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
 
@@ -579,8 +574,8 @@
                                                                                 {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                                                             <img
-                                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' %} aspect-ratio-item-position-top{% endif %}"
-                                                                                alt="{{ product.name }}"
+                                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' or settings.productImageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                                                alt="{{ product.title }}"
                                                                                 data-gallery-img-src="{{ option.image }}"
                                                                                 src="{{ option.image | thumb: imgSizeSm }}">
                                                                         </picture>
@@ -593,7 +588,7 @@
 
                                                                         <img
                                                                             class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder"
-                                                                            alt="{{ product.name }}"
+                                                                            alt="{{ product.title }}"
                                                                             data-gallery-img-src="{{ imgSrc }}"
                                                                             data-src="{{ imgSrc }}">
 
@@ -615,7 +610,7 @@
 
                                     {% endif %}
 
-                                    {% unless hasMediaImg %}
+                                    {% unless hasImg %}
 
                                         <div class="swiper-slide gallery-item aspect-ratio-product">
 
@@ -626,8 +621,8 @@
                                                 {%- endcapture -%}
 
                                                 <img
-                                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if settings.productImageAspectRatio == '9:13' %} aspect-ratio-item-position-top{% endif %}"
-                                                    alt="{{ product.name }}"
+                                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if settings.productImageAspectRatio == '9:13' or settings.productImageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                    alt="{{ product.title }}"
                                                     data-gallery-img-src="{{ imgSrc }}"
                                                     data-src="{{ imgSrc }}">
 
@@ -637,78 +632,88 @@
 
                                     {% endunless %}
 
-                                    {% for media in product.media %}
+                                    {% for video in product.videos %}
 
-                                        {% if media.type == "video" %}
+                                        {%- capture iframeSrc -%}
+                                            {%- if video.youtube_id -%}
+                                                https://www.youtube.com/embed/{{ video.youtube_id -}}
+                                            {%- elsif video.vimeo_id -%}
+                                                https://player.vimeo.com/video/{{ video.vimeo_id -}}
+                                            {%- else -%}
+                                                {{- video -}}
+                                            {%- endif -%}
+                                        {%- endcapture -%}
 
-                                            <div class="swiper-slide gallery-item">
+                                        <div class="swiper-slide gallery-item">
 
-                                                <div class="aspect-ratio-product">
+                                            <div class="aspect-ratio-product">
 
-                                                    <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
+                                                <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
 
-                                                        {% if media.thumb %}
+                                                    {% if video.thumb %}
 
-                                                            <div class="product-media-video-icon-container cursor-zoom-in">
-                                                                {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
-                                                            </div>
+                                                        <div class="product-media-video-icon-container cursor-zoom-in">
+                                                            {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                                        </div>
 
-                                                            <picture>
-                                                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                                                    {{- media.thumb | thumb: imgSizeLg }} 1x,
-                                                                    {{- media.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+                                                        <picture>
+                                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                                {{- video.thumb | thumb: imgSizeLg }} 1x,
+                                                                {{- video.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
 
-                                                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
-                                                                    {{- media.thumb | thumb: imgSizeMd }} 1x,
-                                                                    {{- media.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+                                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                                {{- video.thumb | thumb: imgSizeMd }} 1x,
+                                                                {{- video.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
 
-                                                                <source data-srcset="
-                                                                    {{- media.thumb | thumb: imgSizeSm }} 1x,
-                                                                    {{- media.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                                                                <img
-                                                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' %} aspect-ratio-item-position-top{% endif %}"
-                                                                    alt="{{ product.name }}"
-                                                                    data-gallery-video-src="{{ media.url }}"
-                                                                    src="{{ media.thumb | thumb: imgSizeSm }}">
-                                                            </picture>
-
-                                                        {% else %}
-
-                                                            {%- capture imgSrc -%}
-                                                                {% render 'placeholder-svg', type: 'image', base64: true %}
-                                                            {%- endcapture -%}
+                                                            <source data-srcset="
+                                                                {{- video.thumb | thumb: imgSizeSm }} 1x,
+                                                                {{- video.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                                             <img
-                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
-                                                                alt="{{ product.name }}"
-                                                                data-src="{{ imgSrc }}"
-                                                                data-gallery-video-src="{{ media.url }}"
-                                                                data-srcset="{{ imgSrc }}">
+                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if settings.productImageAspectRatio == '9:13' or settings.productImageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                                alt="{{ product.title }}"
+                                                                data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                                                src="{{ video.thumb | thumb: imgSizeSm }}">
+                                                        </picture>
 
-                                                        {% endif %}
+                                                    {% else %}
 
-                                                    </div>
+                                                        {%- capture imgSrc -%}
+                                                            {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                        {%- endcapture -%}
+
+                                                        <img
+                                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
+                                                            alt="{{ product.title }}"
+                                                            data-src="{{ imgSrc }}"
+                                                            data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                                            data-srcset="{{ imgSrc }}">
+
+                                                    {% endif %}
 
                                                 </div>
 
                                             </div>
 
-                                        {% endif %}
+                                        </div>
 
                                     {% endfor %}
 
                                 </div>
 
+                                {% if product.media.size %}
+                                
                                 <div class="swiper-button-prev">
-                                    {%- render 'icon', icon: 'angle-left' -%}
-                                </div>
+                                        {%- render 'icon', icon: 'angle-left' -%}
+                                    </div>
 
-                                <div class="swiper-button-next">
-                                    {%- render 'icon', icon: 'angle-right' -%}
-                                </div>
+                                    <div class="swiper-button-next">
+                                        {%- render 'icon', icon: 'angle-right' -%}
+                                    </div>
 
-                                <div class="swiper-pagination swiper-pagination-relative d-md-none"></div>
+                                    <div class="swiper-pagination swiper-pagination-relative d-md-none"></div>
+
+                                {% endif %}   
 
                             </div>
 
@@ -718,7 +723,7 @@
 
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-5" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+                <div class="col-12 col-md-6 col-xxl-5 product-info-container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
                     <div class="product-info mt-4 mt-md-0">
 
@@ -726,8 +731,8 @@
 
                             <div class="product-manufacturer mb-1">
 
-                                <a href="{{ product.manufacturer | link }}" class="product-manufacturer-text h3">
-                                    {{ product.manufacturer.name }}
+                                <a href="{{ product.manufacturer | link }}" class="product-manufacturer-text">
+                                    {{ product.manufacturer.title }}
                                 </a>
 
                             </div>
@@ -736,56 +741,11 @@
 
                         <div class="product-name">
 
-                            <h1 class="product-name-text">
-                                {{ product.name }}
+                            <h1 class="product-name-text text-product-title">
+                                {{ product.title }}
                             </h1>
 
                         </div>
-
-                        {% if product.review_count > 0 and product.reviews_are_enabled %}
-
-                            <div class="product-review-rating mb-4">
-
-                                <button
-                                    type="button"
-                                    id="product-show-reviews"
-                                    class="btn btn-text">
-
-                                    <div class="product-review-icons">
-
-                                        {% for rating in (1..product.max_rating) %}
-
-                                            <div class="product-review-icon">
-
-                                                {% if product.rating >= rating %}
-
-                                                    {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
-
-                                                {% else %}
-
-                                                    {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
-
-                                                {% endif %}
-
-                                            </div>
-
-                                        {% endfor %}
-
-                                    </div>
-
-                                    <span class="product-review-text">
-                                        {%- if product.review_count == 1 -%}
-                                            {{- 'product.review_count_dynamic' | t: amount: product.review_count -}}
-                                        {%- else -%}
-                                            {{- 'product.review_count_plural_dynamic' | t: amount: product.review_count -}}
-                                        {%- endif -%}
-                                    </span>
-
-                                </button>
-
-                            </div>
-
-                        {% endif %}
 
                         {% if store.customer_accounts_require_approval == false or accountHasApproval %}
 
@@ -803,23 +763,50 @@
 
                                 {% endif %}
 
-                                <div class="product-price-container">
+                                <div class="d-flex justify-content-between">
 
-                                    {% if product.has_discount %}
+                                    <div class="d-flex product-price-container">
 
-                                        <span class="product-sale-price-text text-sale-price fw-bold me-1" data-product-price-dynamic>
-                                            {{- settings.taxFreeShopping == true | yepnope: product.net_price, product.price | money_with_currency -}}
-                                        </span>
+                                        {% if product.has_discount %}
 
-                                        <span class="product-price text-decoration-line-through text-muted" data-product-original-price-dynamic>
-                                            {{- settings.taxFreeShopping == true | yepnope: product.original_net_price, product.original_price | money_with_currency -}}
-                                        </span>
+                                            <span class="product-sale-price-text text-sale-price me-3" data-product-price-dynamic>
+                                                {{- settings.taxFreeShopping == true | yepnope: product.net_price, product.price | money_with_currency -}}
+                                            </span>
 
-                                    {% else %}
+                                            <span class="product-price text-decoration-line-through text-muted me-3" data-product-original-price-dynamic>
+                                                {{- settings.taxFreeShopping == true | yepnope: product.original_net_price, product.original_price | money_with_currency -}}
+                                            </span>
 
-                                        <span class="product-price text-price" data-product-price-dynamic>
-                                            {{- settings.taxFreeShopping == true | yepnope: product.net_price, product.price | money_with_currency -}}
-                                        </span>
+                                        {% else %}
+
+                                            <span class="product-price text-price me-3" data-product-price-dynamic>
+                                                {{- settings.taxFreeShopping == true | yepnope: product.net_price, product.price | money_with_currency -}}
+                                            </span>
+
+                                        {% endif %}
+
+                                        {% render 'product-badges', product: product, position: 'inline', showNew: showNewBadge, showPromotion: showPromotionBadge, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge %}
+
+                                    </div>
+
+                                    {% if product.review_count > 0 and product.reviews_are_enabled %}
+
+                                        <div class="product-review-rating">
+
+                                            <button
+                                                type="button"
+                                                id="product-show-reviews"
+                                                class="btn btn-text">
+
+                                                {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                                <span class="product-review-text">
+                                                    {{ product.rating }}
+                                                </span>
+
+                                            </button>
+
+                                        </div>
 
                                     {% endif %}
 
@@ -846,6 +833,53 @@
                                 </div>
 
                             </div>
+
+                        {% else %}
+
+                            {% if product.review_count > 0 and product.reviews_are_enabled %}
+
+                                <div class="product-review-rating mb-6">
+
+                                    <button
+                                        type="button"
+                                        id="product-show-reviews"
+                                        class="btn btn-text">
+
+                                        <div class="product-review-icons">
+
+                                            {% for rating in (1..product.max_rating) %}
+
+                                                <div class="product-review-icon">
+
+                                                    {% if product.rating >= rating %}
+
+                                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                                    {% else %}
+
+                                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                        <span class="product-review-text">
+                                            {%- if product.review_count == 1 -%}
+                                                {{- 'product.review_count_dynamic' | t: amount: product.review_count -}}
+                                            {%- else -%}
+                                                {{- 'product.review_count_plural_dynamic' | t: amount: product.review_count -}}
+                                            {%- endif -%}
+                                        </span>
+
+                                    </button>
+
+                                </div>
+
+                            {% endif %}
 
                         {% endif %}
 
@@ -893,6 +927,298 @@
 
                         {% endif %}
 
+                        {% if store.customer_accounts_enabled == false or store.customer_accounts_optional == true or customer %}
+
+                            {% if store.customer_accounts_require_approval == false or customer.has_access %}
+
+                                {% if product.inventory_policy == 'continue' or product.in_stock and product.only_preview == false %}
+
+                                    <div class="product-form mt-4">
+
+                                        {% form 'product', product %}
+
+                                            {% unless section.settings.showQuantitySelect %}
+                                                <input
+                                                    type="hidden"
+                                                    name="quantity"
+                                                    value="{{ product.min_amount }}">
+                                            {% endunless %}
+
+                                            {% unless product.has_only_default_variant %}
+
+                                                <div class="product-variants">
+
+                                                    {% render 'product-variant-options', product: product, showAsDropdown: section.settings.showVariantSelectionAsDropdown %}
+
+                                                </div>
+
+                                            {% endunless %}
+
+                                            {% if product.customizations.size > 0 %}
+
+                                                <div class="product-customizations">
+
+                                                    {% assign showCustomizationPrice = section.settings.showProductCustomizationPrice %}
+                                                    {% assign showCustomizationTotalPrice = section.settings.showProductCustomizationTotalPrice %}
+                                                    {% assign showCustomizationStockBalance = section.settings.showProductCustomizationStockBalance %}
+                                                    {% assign inventoryPolicy = product.inventory_policy %}
+                                                    {% assign isPreviewProduct = product.only_preview %}
+                                                    {% assign unit = product.unit %}
+
+                                                    {% for group in product.customizations %}
+
+                                                        {%- if group.input_type == 'select' -%}
+
+                                                            {% render 'product-customizations/select', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
+
+                                                        {%- elsif group.input_type == 'radio' -%}
+
+                                                            {% render 'product-customizations/radio', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, style: 'badge' %}
+
+                                                        {%- elsif group.input_type == 'checkbox' -%}
+
+                                                            {% render 'product-customizations/checkbox', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
+
+                                                        {%- elsif group.input_type == 'text' -%}
+
+                                                            {% render 'product-customizations/text', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
+
+                                                        {%- endif -%}
+
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            {% endif %}
+
+                                            {% if product.notifications_supported and product.is_out_of_stock %}
+
+                                                <div class="product-availability-notification d-flex mt-5">
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-primary d-block w-100"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#availability-notification-modal">
+                                                        {{- 'product.availability_notification.modal_cta' | t -}}
+                                                    </button>
+
+                                                    {% if settings.accessibilityShowWishlist %}
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
+                                                            data-wishlist-toggle="{{ product.id }}"
+                                                            aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                            {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
+                                                        </button>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            {% else %}
+
+                                                {% if section.settings.showQuantitySelect %}
+
+                                                    <div class="product-quantity-container mb-4">
+
+                                                        <label for="product-quantity-input" class="form-label">
+                                                            {{- 'general.quantity' | t -}}
+                                                        </label>
+
+                                                        <div class="product-inline-quantity max-w-px-120 min-h-px-40">
+
+                                                            <button type="button" class="btn btn-text product-quantity-decrease">
+                                                                {%- render 'icon', icon: 'subtract' -%}
+                                                            </button>
+
+                                                            <input
+                                                                type="tel"
+                                                                id="product-quantity-input"
+                                                                name="quantity"
+                                                                class="product-quantity-input"
+                                                                value="{{ product.min_amount }}"
+                                                                min="{% if product.min_amount %}{{ product.min_amount }}{% else %}1{% endif %}"
+                                                                {% if product.max_amount %}max="{{ product.max_amount }}"{% endif %}pattern="[0-9]{1,3}">
+
+                                                            <button type="button" class="btn btn-text product-quantity-increase">
+                                                                {%- render 'icon', icon: 'add' -%}
+                                                            </button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                {% endif %}
+
+                                                <div class="product-action-add-to-cart d-flex mt-5">
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn {{ section.settings.showBuyNowButton | yepnope: 'btn-secondary', btn-primary' }} d-block w-100"
+                                                        data-cart-add
+                                                        data-cart-form>
+                                                        {{- 'cart.add' | t -}}
+                                                    </button>
+
+                                                {% if settings.accessibilityShowWishlist and section.settings.showBuyNowButton == false %}
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
+                                                            data-wishlist-toggle="{{ product.id }}"
+                                                            aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                            {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
+                                                        </button>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {% if section.settings.showBuyNowButton %}
+
+                                                    <div class="product-action-buy-now d-flex mt-2">
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-primary d-block w-100"
+                                                            data-cart-add
+                                                            data-cart-checkout
+                                                            data-cart-form>
+                                                            {{- 'cart.buy_now' | t -}}
+                                                        </button>
+
+                                                    </div>
+
+                                                    {% if product.additional_buy_buttons %}
+
+                                                        <div class="product-action-additonal-buy-now d-flex mt-2">
+
+                                                        {{ product.content_for_additional_buy_buttons }}
+
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
+                                            {% endif %}
+
+                                            {% render 'form-error', error: form.error, class: 'mt-4' %}
+
+                                            {% if product.financing_offers %}
+
+                                                <div class="mt-3">
+                                                    {{ product.content_for_financing_offers }}
+                                                </div>
+
+                                            {% endif %}
+
+                                            {% if settings.klarnaClientId %}
+
+                                                <div class="mt-3">
+
+                                                    {% assign itemPrice = settings.taxFreeShopping == true | yepnope: product.net_price, product.price %}
+
+                                                    {% render 'klarna-placement', type: 'credit-promotion-auto-size', purchaseAmount: itemPrice %}
+
+                                                </div>
+
+                                            {% endif %}
+
+                                            {% if section.settings.showProductQuestionForm or product.size_chart or settings.accessibilityShowWishlist and section.settings.showBuyNowButton %}
+
+                                                <div class="d-flex justify-content-between justify-content-md-start gap-g mt-3">
+
+                                                    {% if section.settings.showProductQuestionForm %}
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-text text-underline-indicator"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#product-question-modal">
+
+                                                            {%- render 'icon', icon: 'question', class: 'svg-icon-lg svg-icon-fw' -%}
+
+                                                            <span>
+                                                                {{- 'product.question.modal_cta' | t -}}
+                                                            </span>
+
+                                                        </button>
+
+                                                    {% endif %}
+
+                                                    {% if product.size_chart %}
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-text text-underline-indicator"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#product-size-chart-modal">
+
+                                                            {%- render 'icon', icon: 'size-chart', class: 'svg-icon-lg svg-icon-fw' -%}
+
+                                                            <span>
+                                                                {{- 'product.size_chart.modal_cta' | t -}}
+                                                            </span>
+
+                                                        </button>
+
+                                                    {% endif %}
+
+                                                    {% if settings.accessibilityShowWishlist and section.settings.showBuyNowButton %}
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-text text-underline-indicator product-wishlist-action"
+                                                            data-wishlist-toggle="{{ product.id }}"
+                                                            aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                            
+                                                                {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
+                                                                
+                                                                <span class="text">
+
+                                                                    {%- if product.in_customers_wishlist -%}
+                                                                        {{- 'wishlist.remove' | t -}}
+                                                                    {%- else -%}
+                                                                        {{- 'wishlist.add' | t -}}
+                                                                    {%- endif -%}
+
+                                                                </span>
+
+                                                        </button>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            {% endif %}
+
+                                        {% endform %}
+
+                                    </div>
+
+                                {% elsif product.inventory_policy == 'deny' and product.in_stock == false and product.only_preview == false %}
+
+                                    <div class="product-form mt-4">
+
+                                        <div class="product-info-out-of-stock">
+
+                                            <span class="product-info-out-of-stock-text btn btn-primary d-block w-100 disabled">
+                                                {{- 'product.out_of_stock' | t -}}
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        {% endif %}
+
                         {% if product.short_description %}
 
                             <div class="product-short-description mt-4">
@@ -903,11 +1229,67 @@
 
                         {% endif %}
 
+                        {% if product.sku or product.product_number or product.gtin %}
+
+                            <div class="mt-4">
+
+                                {% if product.sku %}
+
+                                    <div class="d-flex">
+
+                                        <span>
+                                            {{- 'product.sku_number' | t -}}:
+                                        </span>
+
+                                        <span class="ms-2">
+                                            {{- product.sku -}}
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+                                {% if product.product_number %}
+
+                                    <div class="d-flex{% if product.sku %} mt-1{% endif %}">
+
+                                        <span>
+                                            {{- 'product.model_number' | t -}}:
+                                        </span>
+
+                                        <span class="ms-2">
+                                            {{- product.product_number -}}
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+                                {% if product.gtin %}
+
+                                    <div class="d-flex{% if product.product_number %} mt-1{% endif %}">
+
+                                        <span>
+                                            {{- 'product.product_identifier' | t -}}:
+                                        </span>
+
+                                        <span class="ms-2">
+                                            {{- product.gtin -}}
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
                         {% if product.bulkrates %}
 
                             <div class="product-bulk-discounts mt-4">
 
-                                <div class="product-bulk-discount-header row g-0 border-bottom py-2">
+                                <div class="product-bulk-discount-header row g-0">
 
                                     <div class="col-6">
 
@@ -931,7 +1313,7 @@
 
                                     {% if rate.is_percentage %}
 
-                                        <div class="product-bulk-discount-item row g-0 border-bottom py-2">
+                                        <div class="product-bulk-discount-item row g-0">
 
                                             <div class="col-6">
 
@@ -961,64 +1343,182 @@
 
                         {% endif %}
 
+                        {%- if product.deliverytime and product.deliverytime.max.days > 0 or section.settings.detailsFreeShippingLimit -%}
+                            {%- assign showDelivery = true -%}
+                        {%- endif -%}
+
+                        {%- if product.returntime and product.returntime.days -%}
+                            {%- assign showReturnTime = true -%}
+                        {%- endif -%}
+
+                        {% if showDelivery or showReturnTime %}
+
+                            <hr>
+
+                        {% endif %}
+
+                        {% if showDelivery %}
+
+                            <div class="product-delivery d-flex align-items-center mt-4 text-title">
+
+                                {% if product.deliverytime and product.deliverytime.max.days > 0 %}
+
+                                    {%- render 'icon', icon: 'delivery-time', class: 'svg-icon-fw svg-icon-lg' -%}
+
+                                {% else %}
+
+                                    {%- render 'icon', icon: 'delivery', class: 'svg-icon-fw svg-icon-lg' -%}
+
+                                {% endif %}
+
+                                <div class="ms-3">
+
+                                    {% if product.deliverytime and product.deliverytime.max.days > 0 %}
+
+                                        <span class="d-block">
+                                            {{- 'product.delivery_time_dynamic' | t: min_days: product.deliverytime.min.days, max_days: product.deliverytime.max.days -}}
+                                        </span>
+
+                                    {% endif %}
+
+                                    {% if section.settings.detailsFreeShippingLimit %}
+
+                                        {%- assign amountWithCurrency = section.settings.detailsFreeShippingLimit | money_with_currency -%}
+
+                                        <span{% if product.deliverytime and product.deliverytime.max.days > 0 %} class="d-block fw-bold"{% endif %}>
+                                            {{ 'product.free_shipping_dynamic' | t: amount: amountWithCurrency -}}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if showReturnTime %}
+
+                            <div class="product-return-time d-flex align-items-center mt-4 text-title">
+
+                                {%- render 'icon', icon: 'arrow-return', class: 'svg-icon-fw svg-icon-lg' -%}
+
+                                <span class="ms-3">
+                                    {{- 'product.return_time_dynamic' | t: days: product.returntime.days -}}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
                         {% if product.related.size > 0 %}
 
                             {% if settings.productImageAspectRatio == '9:13' %}
                                 {%- assign imgSize = '79,108' -%}
                             {% elsif settings.productImageAspectRatio == '4:3' %}
                                 {%- assign imgSize = '79,62' -%}
+                            {% elsif settings.productImageAspectRatio == '3:4' %}
+                                {%- assign imgSize = '79,105' -%}
                             {% elsif settings.productImageAspectRatio == '1:1' %}
-                                {%- assign imgSize = '75,75' -%}
+                                {%- assign imgSize = '90,90' -%}
                             {% endif %}
 
-                            <div class="product-related-items-container my-4">
+                            <div class="product-related-items my-4">
 
-                                <div class="product-related-items">
+                                <span class="d-block fw-bold fs-4 my-3 text-title">
+                                    {{ 'product.related_products' | t }}
+                                </span>
+
+                                <div class="row gx-0 gy-g">
 
                                     {% for relatedItem in product.related %}
 
-                                        {% if relatedItem.is_visible %}
+                                        <div class="d-flex align-items-center gap-g border-top pt-g">
 
-                                            <div class="product-related-item">
+                                            <a href="{{ relatedItem | link }}">
 
-                                                <a href="{{ relatedItem | link }}">
+                                                <div class="aspect-ratio-product w-px-80">
 
-                                                    <div class="product-related-item-media aspect-ratio-product">
+                                                    <div class="aspect-ratio-container">
 
-                                                        <div class="product-related-media-img-container aspect-ratio-container">
+                                                        {% if relatedItem.image %}
 
-                                                            {% if relatedItem.image %}
-
-                                                                <picture>
-                                                                    <img
-                                                                        alt="{{ relatedItem.name }}"
-                                                                        data-src="{{ relatedItem.image | thumb: imgSize }}"
-                                                                        data-srcset="{{ relatedItem.image | thumb: imgSize }} 1x, {{ relatedItem.image | thumb: imgSize | thumb: '@2x' }} 2x"
-                                                                        class="lazy d-block mx-auto img-fluid aspect-ratio-item">
-                                                                </picture>
-
-                                                            {% else %}
-
-                                                                {%- capture imgSrc -%}
-                                                                    {% render 'placeholder-svg', type: 'image', base64: true %}
-                                                                {%- endcapture -%}
-
+                                                            <picture>
                                                                 <img
-                                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
-                                                                    alt="{{ relatedItem.name }}"
-                                                                    data-src="{{ imgSrc }}">
+                                                                    alt="{{ relatedItem.title }}"
+                                                                    data-src="{{ relatedItem.image | thumb: imgSize }}"
+                                                                    data-srcset="{{ relatedItem.image | thumb: imgSize }} 1x, {{ relatedItem.image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                                            </picture>
 
-                                                            {% endif %}
+                                                        {% else %}
 
-                                                        </div>
+                                                            {%- capture imgSrc -%}
+                                                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                            {%- endcapture -%}
+
+                                                            <img
+                                                                class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+                                                                alt="{{ relatedItem.title }}"
+                                                                data-src="{{ imgSrc }}">
+
+                                                        {% endif %}
 
                                                     </div>
 
+                                                </div>
+
+                                            </a>
+
+                                            <div class="flex-grow-1">
+
+                                                <a href="{{ relatedItem | link }}" class="fw-bold d-block mt-3">
+                                                    {{ relatedItem.title }}
                                                 </a>
+
+                                                <div>
+
+                                                    {% if product.has_discount %}
+
+                                                        <span class="text-sale-price me-1">
+                                                            {{- settings.taxFreeShopping == true | yepnope: relatedItem.net_price, relatedItem.price | money_with_currency -}}
+                                                        </span>
+
+                                                        <span class="text-decoration-line-through text-muted" data-product-original-price-dynamic>
+                                                            {{- settings.taxFreeShopping == true | yepnope: relatedItem.original_net_price, relatedItem.original_price | money_with_currency -}}
+                                                        </span>
+
+                                                    {% else %}
+
+                                                        <span class="text-price">
+                                                            {{- settings.taxFreeShopping == true | yepnope: relatedItem.net_price, relatedItem.price | money_with_currency -}}
+                                                        </span>
+
+                                                    {% endif %}
+                                                    
+                                                </div>
 
                                             </div>
 
-                                        {% endif %}
+                                            {% if relatedItem.inventory_policy == 'continue' or relatedItem.in_stock and relatedItem.buy_directly %}
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-secondary btn-sm"
+                                                    data-cart-add="{{ relatedItem.id }}"
+                                                    data-cart-quantity="{{ relatedItem.min_amount }}">
+                                                    {{- 'cart.quick_add' | t -}}
+                                                </button>
+
+                                            {% else %}
+
+                                                <a href="{{ relatedItem | link }}" class="btn btn-secondary btn-sm">
+                                                    {{- 'general.product_view' | t -}}
+                                                </a>
+
+                                            {% endif %}
+
+                                        </div>
 
                                     {% endfor %}
 
@@ -1028,606 +1528,307 @@
 
                         {% endif %}
 
-                        {% if store.customer_accounts_enabled == false or store.customer_accounts_optional == true or customer %}
+                    </div>
 
-                            {% if store.customer_accounts_require_approval == false or customer.has_access %}
+                </div>
 
-                                {% if product.inventory_policy == 'continue' or product.in_stock and product.only_preview == false %}
+            </div>
 
-                                    <div class="product-form mt-4">
+            <div class="section-tabs section-tabs-fluid d-md-flex justify-content-md-center mt-7" data-aos="{{ settings.sectionAnimation }}">
 
-                                        {% form 'product', product %}
+                <div class="section-tabs-inner">
+
+                    {% if product.description %}
+                        {%- assign descriptionTitle = 'product.description' | t -%}
+                        {%- render 'section-tab', sectionTab: descriptionTitle, sectionTabValue: 'description' -%}    
+                    {% endif %}
+
+                    {% if product.attachments.size %}
+                        {%- assign attachmentsTitle = 'product.attachments' | t -%}
+                        {%- render 'section-tab', sectionTab: attachmentsTitle, sectionTabValue: 'attachments' -%}    
+                    {% endif %}
+
+                    {% if product.reviews_are_enabled %}
+                        {%- capture reviewsTitle -%}{{ 'product.reviews' | t }} ({{ product.review_count }}){%- endcapture -%}
+                        {%- render 'section-tab', sectionTab: reviewsTitle, sectionTabValue: 'reviews' -%}    
+                    {% endif %}
+
+                    {% if section.settings.detailsShippingAndReturnRichtext %}
+                        {%- assign shippingAndReturnTitle = 'product.shipping_and_return' | t -%}
+                        {%- render 'section-tab', sectionTab: shippingAndReturnTitle, sectionTabValue: 'shipping-and-return' -%}    
+                    {% endif %}
+
+                    {% if section.settings.detailsPaymentRichtext %}
+                        {%- assign paymentTitle = 'product.payment' | t -%}
+                        {%- render 'section-tab', sectionTab: paymentTitle, sectionTabValue: 'payment' -%}    
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="section-tabs-content-container mt-4 mb-7">
+
+                {% if product.description %}
+
+                    {%- capture sectionTabContent -%}
+
+                        <div class="text-richtext" data-aos="{{ settings.sectionAnimation }}">
+                            {{- product.description -}}
+                        </div>
+
+                    {%- endcapture -%}
+
+                    {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+
+                {% endif %}
+
+                {% if product.attachments.size %}
+
+                    {%- capture sectionTabContent -%}
+
+                        {% for attachment in product.attachments %}
+
+                            <div{% unless forloop.last == true %} class="border-bottom pb-4 mb-3"{% endunless %}" data-aos="{{ settings.sectionAnimation }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                                <a href="{{ attachment.href }}" class="d-flex align-items-center">
+
+                                    {%- render 'icon', icon: 'download', class: 'svg-icon-fw' -%}
+
+                                    <span>{{ attachment.name }}</span>
+                                    
+                                </a>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {%- endcapture -%}
+
+                    {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+
+                {% endif %}
+
+                {% if product.reviews_are_enabled %}
+
+                    {%- capture sectionTabContent -%}
+
+                        <div data-aos="{{ settings.sectionAnimation }}">
+
+                            {% if product.customer_can_review %}
+
+                                <button id="product-review-create" class="btn btn-sm btn-secondary{% if submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endif %}">
+                                    {{- 'product.write_review' | t -}}
+                                </button>
+
+                                <div class="product-review-form{% unless submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endunless %}">
+
+                                    {% form 'review', product id: 'product-review-form' %}
+
+                                        <div class="mb-4 form-floating">
 
                                             <input
-                                                type="hidden"
-                                                name="product_id"
-                                                value="{{ product.id }}">
-
-                                            {% unless section.settings.showQuantitySelect %}
-                                                <input
-                                                    type="hidden"
-                                                    name="quantity"
-                                                    value="{{ product.min_amount }}">
-                                            {% endunless %}
-
-                                            {% if product.attributes.size > 0 %}
-
-                                                <div class="product-attributes">
-
-                                                    {% assign showOptionPrice = section.settings.showProductOptionPrice %}
-                                                    {% assign showOptionTotalPrice = section.settings.showProductOptionTotalPrice %}
-                                                    {% assign showOptionStockBalance = section.settings.showProductOptionStockBalance %}
-                                                    {% assign inventoryPolicy = product.inventory_policy %}
-                                                    {% assign isPreviewProduct = product.only_preview %}
-                                                    {% assign unit = product.unit %}
-
-                                                    {% for attribute in product.attributes %}
-
-                                                        {%- if attribute.input_type == 'select' -%}
-
-                                                            {% render 'product-attributes/select', attribute: attribute, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
-
-                                                        {%- elsif attribute.input_type == 'radio' -%}
-
-                                                            {% render 'product-attributes/radio', attribute: attribute, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, style: 'badge' %}
-
-                                                        {%- elsif attribute.input_type == 'checkbox' -%}
-
-                                                            {% render 'product-attributes/checkbox', attribute: attribute, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
-
-                                                        {%- elsif attribute.input_type == 'text' -%}
-
-                                                            {% render 'product-attributes/text', attribute: attribute, showOptionPrice: showOptionPrice, showOptionTotalPrice: showOptionTotalPrice, showOptionStockBalance: showOptionStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
-
-                                                        {%- endif -%}
-
-                                                    {% endfor %}
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            {% if section.settings.showQuantitySelect %}
-
-                                                <div class="product-quantity-container mb-4">
-
-                                                    <label for="product-quantity-input" class="form-label">
-                                                        {{- 'general.quantity' | t -}}
-                                                    </label>
-
-                                                    <div class="product-quantity">
-
-                                                        <button type="button" class="btn btn-text product-quantity-decrease">
-                                                            {%- render 'icon', icon: 'subtract' -%}
-                                                        </button>
-
-                                                        <input
-                                                            type="tel"
-                                                            id="product-quantity-input"
-                                                            name="quantity"
-                                                            class="product-quantity-input"
-                                                            value="{{ product.min_amount }}"
-                                                            min="{% if product.min_amount %}{{ product.min_amount }}{% else %}1{% endif %}"
-                                                            {% if product.max_amount %}max="{{ product.max_amount }}"{% endif %}pattern="[0-9]{1,3}">
-
-                                                        <button type="button" class="btn btn-text product-quantity-increase">
-                                                            {%- render 'icon', icon: 'add' -%}
-                                                        </button>
-
-                                                    </div>
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            <div class="product-action-add-to-cart d-flex mt-5">
-
-                                                <button
-                                                    type="button"
-                                                    class="btn {{ section.settings.showBuyNowButton | yepnope: 'btn-secondary', btn-primary' }} d-block w-100"
-                                                    data-cart-add
-                                                    data-cart-form>
-                                                    {{- 'cart.add' | t -}}
-                                                </button>
-
-                                                {% if session.logged_in and section.settings.showBuyNowButton == false %}
-
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
-                                                        data-wishlist-toggle="{{ product.id }}"
-                                                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
-                                                        {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
-                                                    </button>
-
-                                                {% endif %}
-
-                                            </div>
-
-                                            {% if section.settings.showBuyNowButton %}
-
-                                                <div class="product-action-buy-now d-flex mt-2">
-
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-primary d-block w-100"
-                                                        data-cart-add
-                                                        data-cart-checkout
-                                                        data-cart-form>
-                                                        {{- 'cart.buy_now' | t -}}
-                                                    </button>
-
-                                                </div>
-
-                                                {% if session.logged_in %}
-
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-text text-underline-indicator mt-g product-wishlist-action"
-                                                        data-wishlist-toggle="{{ product.id }}"
-                                                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
-                                                        
-                                                            {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
-                                                            
-                                                            <span class="text">
-
-                                                                {%- if product.in_customers_wishlist -%}
-                                                                    {{- 'wishlist.remove' | t -}}
-                                                                {%- else -%}
-                                                                    {{- 'wishlist.add' | t -}}
-                                                                {%- endif -%}
-
-                                                            </span>
-
-                                                    </button>
-
-                                                {% endif %}
-
-                                            {% endif %}
-
-                                            {% render 'form-error', error: form.error, class: 'mt-4' %}
-
-                                            {% if settings.klarnaClientId %}
-
-                                                <div class="mt-3">
-
-                                                    {% assign itemPrice = settings.taxFreeShopping == true | yepnope: product.net_price, product.price %}
-
-                                                    {% render 'klarna-placement', type: 'credit-promotion-auto-size', purchaseAmount: itemPrice %}
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            <div class="product-highlights">
-
-                                                {% if product.deliverytime and product.deliverytime.max.days > 0 %}
-
-                                                    <div class="product-delivery-time">
-
-                                                        {%- render 'icon', icon: 'delivery-time', class: 'svg-icon-fw svg-icon-lg' -%}
-
-                                                        <span class="fw-bold ms-3">
-                                                            {{- 'product.delivery_time_dynamic' | t: min_days: product.deliverytime.min.days, max_days: product.deliverytime.max.days -}}
-                                                        </span>
-
-                                                    </div>
-
-                                                {% endif %}
-
-                                                {% if product.returntime and product.returntime.days %}
-
-                                                    <div class="product-return-time">
-
-                                                        {%- render 'icon', icon: 'arrow-return', class: 'svg-icon-fw svg-icon-lg' -%}
-
-                                                        <span class="fw-bold ms-3">
-                                                            {{- 'product.return_time_dynamic' | t: days: product.returntime.days -}}
-                                                        </span>
-
-                                                    </div>
-
-                                                {% endif %}
-
-                                            </div>
-
-                                        {% endform %}
-
-                                    </div>
-
-                                {% elsif product.inventory_policy == 'deny' and product.in_stock == false and product.only_preview == false %}
-
-                                    <div class="product-form mt-4">
-
-                                        <div class="product-info-out-of-stock">
-
-                                            <span class="product-info-out-of-stock-text btn btn-primary d-block w-100 disabled">
-                                                {{- 'product.out_of_stock' | t -}}
-                                            </span>
+                                                name="name"
+                                                type="text"
+                                                id="product-review-name"
+                                                class="form-control"
+                                                placeholder="{{ 'general.name' | t }}"
+                                                value="{{ form.submitted.name | escape }}"
+                                                required>
+
+                                            <label for="product-review-name">
+                                                {{- 'general.name' | t -}}
+                                            </label>
 
                                         </div>
 
-                                    </div>
+                                        <div class="mb-4 form-floating">
+
+                                            <input
+                                                name="title"
+                                                type="text"
+                                                id="product-review-title"
+                                                class="form-control"
+                                                placeholder="{{ 'general.title' | t }}"
+                                                value="{{ form.submitted.title | escape }}"
+                                                required>
+
+                                            <label for="product-review-title">
+                                                {{- 'general.title' | t -}}
+                                            </label>
+
+                                        </div>
+
+                                        <div class="mb-4 form-floating">
+
+                                            <textarea
+                                                id="product-review-comment"
+                                                name="comment"
+                                                class="form-control"
+                                                placeholder="{{ 'product.write_review' | t }}"
+                                                value="{{ form.submitted.comment | escape }}"
+                                                required></textarea>
+
+                                            <label for="product-review-comment">
+                                                {{- 'product.write_review' | t -}}
+                                            </label>
+
+                                        </div>
+
+                                        <div class="mb-4 d-flex justify-content-between align-items-center">
+
+                                            <span class="h5 mb-0 text-title">
+                                                {{- 'product.review_grade' | t -}}
+                                            </span>
+
+                                            <fieldset class="product-review-rating ms-2">
+
+                                                <input
+                                                    type="radio"
+                                                    id="product-review-rating-5"
+                                                    name="rating"
+                                                    value="5"
+                                                    {% if form.submitted.rating | escape == '5' %}checked{% endif %}>
+                                                <label for="product-review-rating-5" title="5">
+                                                    {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                </label>
+
+                                                <input
+                                                    type="radio"
+                                                    id="product-review-rating-4"
+                                                    name="rating"
+                                                    value="4"
+                                                    {% if form.submitted.rating | escape == '4' %}checked{% endif %}>
+                                                <label for="product-review-rating-4" title="4">
+                                                    {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                </label>
+
+                                                <input
+                                                    type="radio"
+                                                    id="product-review-rating-3"
+                                                    name="rating"
+                                                    value="3"
+                                                    {% if form.submitted.rating | escape == '3' %}checked{% endif %}>
+                                                <label for="product-review-rating-3" title="3">
+                                                    {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                </label>
+
+                                                <input
+                                                    type="radio"
+                                                    id="product-review-rating-2"
+                                                    name="rating"
+                                                    value="2"
+                                                    {% if form.submitted.rating | escape == '2' %}checked{% endif %}>
+                                                <label for="product-review-rating-2" title="2">
+                                                    {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                </label>
+
+                                                <input
+                                                    type="radio"
+                                                    id="product-review-rating-1"
+                                                    name="rating"
+                                                    value="1"
+                                                    {% if form.submitted.rating | escape == '1' %}checked{% endif %}>
+                                                <label for="product-review-rating-1" title="1">
+                                                    {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                </label>
+
+                                            </fieldset>
+
+                                        </div>
+
+                                        {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                                        <div class="mb-4 text-end">
+
+                                            <button
+                                                type="button"
+                                                id="product-review-cancel"
+                                                class="btn btn-secondary">{{ 'general.cancel' | t }}</button>
+
+                                            <button type="submit" class="btn btn-primary">{{ 'general.submit' | t }}</button>
+
+                                        </div>
+
+                                    {% endform %}
+
+                                </div>
+
+                            {% elsif session.logged_in == false and product.reviews_require_account %}
+
+                                {%- capture loginLink -%}<a href="{{ 'login' | link }}" class="fw-bold text-underline-indicator">
+                                    {{- 'product.review_account_required_link_text' | t -}}
+                                </a>{%- endcapture -%}
+
+                                <span>
+                                    {{- 'product.review_account_required' | t, link: loginLink -}}
+                                </span>
+
+                            {% elsif product.customer_has_purchased == false and product.reviews_require_purchase %}
+
+                                <span>
+                                    {{- 'product.review_purchase_required' | t -}}
+                                </span>
+
+                            {% elsif product.customer_has_reviewed %}
+
+                                {% if product.reviews_require_approval %}
+
+                                    <span>
+                                        {{- 'product.review_publish_pending' | t -}}
+                                    </span>
+
+                                {% else %}
+
+                                    <span>
+                                        {{- 'product.review_already_given' | t -}}
+                                    </span>
 
                                 {% endif %}
 
                             {% endif %}
 
-                        {% endif %}
+                        </div>
 
-                        <div id="accordion-product-details" class="product-details mt-4 accordion accordion-flush">
+                        <div class="product-reviews-content{% if product.reviews.size > 0 %} has-content{% endif %}" data-aos="{{ settings.sectionAnimation }}">
 
-                            {% if product.description %}
+                            {% for review in product.reviews %}
 
-                                <div class="accordion-item">
+                                <div class="product-review section-highlight-item{% if settings.sectionHighlightItems == false %} pt-4 border-top{% endif %}">
 
-                                    <div id="accordion-product-description-header" class="accordion-header">
+                                    <div class="product-review-title mb-0">
 
-                                        <button
-                                            class="btn d-block w-100 btn-text d-flex align-items-center"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#accordion-product-description"
-                                            aria-controls="accordion-product-description"
-                                            {% if section.settings.openProductDescriptionByDefault %}aria-expanded="true"{% endif %}>
-
-                                            <span class="fw-bold fs-4 my-3">
-                                                {{- 'product.description' | t -}}
-                                            </span>
-
-                                            <span class="accordion-indicator"></span>
-
-                                        </button>
+                                        <span class="product-review-title">
+                                            {{ review.name }}
+                                        </span>
 
                                     </div>
 
-                                    <div id="accordion-product-description" class="collapse{% if section.settings.openProductDescriptionByDefault %} show{% endif %}" aria-labelledby="accordion-product-description-header" data-bs-parent="#accordion-product-details">
+                                    <div class="product-review-date">
 
-                                        <div class="product-description accordion-body text-richtext">
-                                            {{ product.description }}
-                                        </div>
+                                        {%- assign dateFormat = 'general.date_format' | t -%}
 
-                                    </div>
-
-                                </div>
-
-                            {% endif %}
-
-                            {% if product.attachments.size %}
-
-                                <div class="accordion-item">
-
-                                    <div id="accordion-product-attachments-header" class="accordion-header">
-
-                                        <button
-                                            class="btn d-block w-100 btn-text d-flex align-items-center"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#accordion-product-attachments"
-                                            aria-controls="accordion-product-attachments">
-
-                                            <span class="fw-bold fs-4 my-3">
-                                                {{- 'product.attachments' | t -}}
-                                            </span>
-
-                                            <span class="accordion-indicator"></span>
-
-                                        </button>
+                                        <i>
+                                            <time datetime="{{ review.created_at | date: "%F" }}">{{ review.created_at | date: dateFormat }}</time>
+                                        </i>
 
                                     </div>
 
-                                    <div id="accordion-product-attachments" class="collapse" aria-labelledby="accordion-product-attachments-header" data-bs-parent="#accordion-product-details">
+                                    <div class="product-review-rating">
 
-                                        <div class="product-attachments accordion-body">
+                                        <div class="product-review-icons">
 
-                                            {% for attachment in product.attachments %}
+                                            {% for rating in (1..product.max_rating) %}
 
-                                                <div{% unless forloop.last == true %} class="mb-3"{% endunless %}> 
+                                                <div class="product-review-icon">
 
-                                                    <a href="{{ attachment.href }}" class="inline-flex align-items-center">
+                                                    {% if review.rating >= rating %}
 
-                                                        {%- render 'icon', icon: 'download', class: 'svg-icon-fw' -%}
+                                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
 
-                                                        <span>{{ attachment.name }}</span>
+                                                    {% else %}
 
-                                                    </a>
-
-                                                </div>
-
-                                            {% endfor %}
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            {% endif %}
-
-                            {% if product.reviews_are_enabled %}
-
-                                <div class="accordion-item">
-
-                                    <div id="accordion-product-reviews-header" class="accordion-header">
-
-                                        <button
-                                            class="btn d-block w-100 btn-text d-flex align-items-center"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#accordion-product-reviews"
-                                            aria-controls="accordion-product-reviews">
-
-                                            <span class="fw-bold fs-4 my-3 me-2">{{ 'product.reviews' | t }} ({{ product.review_count }})</span>
-
-                                            <div class="product-review-icons">
-
-                                                {% for rating in (1..product.max_rating) %}
-
-                                                    <div class="product-review-icon">
-
-                                                        {% if product.rating >= rating %}
-
-                                                            {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
-
-                                                        {% else %}
-
-                                                            {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
-
-                                                        {% endif %}
-
-                                                    </div>
-
-                                                {% endfor %}
-
-                                            </div>
-
-                                            <span class="accordion-indicator"></span>
-
-                                        </button>
-
-                                    </div>
-
-                                    <div id="accordion-product-reviews" class="collapse{% if submitted_form.id == 'product-review-form'%} show{% endif %}" aria-labelledby="accordion-product-reviews-header" data-bs-parent="#accordion-product-details">
-
-                                        <div class="product-reviews accordion-body">
-
-                                            {% if product.reviews_are_enabled %}
-
-                                                <div class="mb-4">
-
-                                                    {% if product.customer_can_review %}
-
-                                                        <button id="product-review-create" class="btn btn-sm btn-secondary{% if submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endif %}">
-                                                            {{- 'product.write_review' | t -}}
-                                                        </button>
-
-                                                        <div class="product-review-form{% unless submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endunless %}">
-
-                                                            {% form 'review', product id: 'product-review-form' %}
-
-                                                                <div class="mb-4 form-floating">
-
-                                                                    <input
-                                                                        name="name"
-                                                                        type="text"
-                                                                        id="product-review-name"
-                                                                        class="form-control"
-                                                                        placeholder="{{ 'general.name' | t }}"
-                                                                        value="{{ form.submitted.name | escape }}"
-                                                                        required>
-
-                                                                    <label for="product-review-name">
-                                                                        {{- 'general.name' | t -}}
-                                                                    </label>
-
-                                                                </div>
-
-                                                                <div class="mb-4 form-floating">
-
-                                                                    <input
-                                                                        name="title"
-                                                                        type="text"
-                                                                        id="product-review-title"
-                                                                        class="form-control"
-                                                                        placeholder="{{ 'general.title' | t }}"
-                                                                        value="{{ form.submitted.title | escape }}"
-                                                                        required>
-
-                                                                    <label for="product-review-title">
-                                                                        {{- 'general.title' | t -}}
-                                                                    </label>
-
-                                                                </div>
-
-                                                                <div class="mb-4 form-floating">
-
-                                                                    <textarea
-                                                                        id="product-review-comment"
-                                                                        name="comment"
-                                                                        class="form-control"
-                                                                        placeholder="{{ 'product.write_review' | t }}"
-                                                                        value="{{ form.submitted.comment | escape }}"
-                                                                        required></textarea>
-
-                                                                    <label for="product-review-comment">
-                                                                        {{- 'product.write_review' | t -}}
-                                                                    </label>
-
-                                                                </div>
-
-                                                                <div class="mb-4 d-flex justify-content-between align-items-center">
-
-                                                                    <span class="h5 mb-0">
-                                                                        {{- 'product.review_grade' | t -}}
-                                                                    </span>
-
-                                                                    <fieldset class="product-review-rating ms-2">
-
-                                                                        <input
-                                                                            type="radio"
-                                                                            id="product-review-rating-5"
-                                                                            name="rating"
-                                                                            value="5"
-                                                                            {% if form.submitted.rating | escape == '5' %}checked{% endif %}>
-                                                                        <label for="product-review-rating-5" title="5">
-                                                                            {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
-                                                                        </label>
-
-                                                                        <input
-                                                                            type="radio"
-                                                                            id="product-review-rating-4"
-                                                                            name="rating"
-                                                                            value="4"
-                                                                            {% if form.submitted.rating | escape == '4' %}checked{% endif %}>
-                                                                        <label for="product-review-rating-4" title="4">
-                                                                            {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
-                                                                        </label>
-
-                                                                        <input
-                                                                            type="radio"
-                                                                            id="product-review-rating-3"
-                                                                            name="rating"
-                                                                            value="3"
-                                                                            {% if form.submitted.rating | escape == '3' %}checked{% endif %}>
-                                                                        <label for="product-review-rating-3" title="3">
-                                                                            {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
-                                                                        </label>
-
-                                                                        <input
-                                                                            type="radio"
-                                                                            id="product-review-rating-2"
-                                                                            name="rating"
-                                                                            value="2"
-                                                                            {% if form.submitted.rating | escape == '2' %}checked{% endif %}>
-                                                                        <label for="product-review-rating-2" title="2">
-                                                                            {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
-                                                                        </label>
-
-                                                                        <input
-                                                                            type="radio"
-                                                                            id="product-review-rating-1"
-                                                                            name="rating"
-                                                                            value="1"
-                                                                            {% if form.submitted.rating | escape == '1' %}checked{% endif %}>
-                                                                        <label for="product-review-rating-1" title="1">
-                                                                            {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
-                                                                        </label>
-
-                                                                    </fieldset>
-
-                                                                </div>
-
-                                                                {% render 'form-error', error: form.error, class: 'mb-4' %}
-
-                                                                <div class="mb-4 text-end">
-
-                                                                    <button
-                                                                        type="button"
-                                                                        id="product-review-cancel"
-                                                                        class="btn btn-secondary">{{ 'general.cancel' | t }}</button>
-
-                                                                    <button type="submit" class="btn btn-primary">{{ 'general.submit' | t }}</button>
-
-                                                                </div>
-
-                                                            {% endform %}
-
-                                                        </div>
-
-                                                    {% elsif session.logged_in == false and product.reviews_require_account %}
-
-                                                        {%- capture loginLink -%}<a href="{{ 'login' | link }}" class="fw-bold text-underline-indicator">
-                                                            {{- 'product.review_account_required_link_text' | t -}}
-                                                        </a>{%- endcapture -%}
-
-                                                        <span>
-                                                            {{- 'product.review_account_required' | t, link: loginLink -}}
-                                                        </span>
-
-                                                    {% elsif product.customer_has_purchased == false and product.reviews_require_purchase %}
-
-                                                        <span>
-                                                            {{- 'product.review_purchase_required' | t -}}
-                                                        </span>
-
-                                                    {% elsif product.customer_has_reviewed %}
-
-                                                        {% if product.reviews_require_approval %}
-
-                                                            <span>
-                                                                {{- 'product.review_publish_pending' | t -}}
-                                                            </span>
-
-                                                        {% else %}
-
-                                                            <span>
-                                                                {{- 'product.review_already_given' | t -}}
-                                                            </span>
-
-                                                        {% endif %}
-
-                                                    {% endif %}
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            {% for review in product.reviews %}
-
-                                                <div class="product-review">
-
-                                                    <div class="product-review-title mb-0">
-
-                                                        <span class="product-review-title">
-                                                            {{ review.name }}
-                                                        </span>
-
-                                                    </div>
-
-                                                    <div class="product-review-date">
-
-                                                        {%- assign dateFormat = 'general.date_format' | t -%}
-
-                                                        <i>
-                                                            <time datetime="{{ review.created_at | date: "%F" }}">{{ review.created_at | date: dateFormat }}</time>
-                                                        </i>
-
-                                                    </div>
-
-                                                    <div class="product-review-rating">
-
-                                                        <div class="product-review-icons">
-
-                                                            {% for rating in (1..product.max_rating) %}
-
-                                                                <div class="product-review-icon">
-
-                                                                    {% if review.rating >= rating %}
-
-                                                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
-
-                                                                    {% else %}
-
-                                                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
-
-                                                                    {% endif %}
-
-                                                                </div>
-
-                                                            {% endfor %}
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    {%- if review.title or review.review -%}
-
-                                                        <div class="product-review-content">
-
-                                                            <p class="mb-0">
-                                                                <strong>{{ review.title }}</strong>
-                                                            </p>
-
-                                                            {{ review.review }}
-
-                                                        </div>
+                                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
 
                                                     {% endif %}
 
@@ -1639,81 +1840,59 @@
 
                                     </div>
 
-                                </div>
+                                    {%- if review.title or review.review -%}
 
-                            {% endif %}
+                                        <div class="product-review-content">
 
-                            {% if product.model or product.gtin %}
+                                            <p class="mb-0">
+                                                <strong>{{ review.title }}</strong>
+                                            </p>
 
-                                <div class="accordion-item">
-
-                                    <div id="accordion-product-additional-information-header" class="accordion-header">
-
-                                        <button
-                                            class="btn d-block w-100 btn-text d-flex align-items-center"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#accordion-product-additional-information"
-                                            aria-controls="accordion-product-additional-information">
-
-                                            <span class="fw-bold fs-4 my-3">
-                                                {{- 'product.additional_information' | t -}}
-                                            </span>
-
-                                            <span class="accordion-indicator"></span>
-
-                                        </button>
-
-                                    </div>
-
-                                    <div id="accordion-product-additional-information" class="collapse" aria-labelledby="accordion-product-additional-information-header" data-bs-parent="#accordion-product-details">
-
-                                        <div class="product-additional-information accordion-body">
-
-                                            {% if product.model %}
-
-                                                <div class="d-flex{% if product.gtin %} mb-2{% endif %}">
-
-                                                    <span>
-                                                        {{- 'product.model_number' | t -}}:
-                                                    </span>
-
-                                                    <span class="ms-2">
-                                                        {{- product.model -}}
-                                                    </span>
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            {% if product.gtin %}
-
-                                                <div class="product-additional-information-item d-flex">
-
-                                                    <span>
-                                                        {{- 'product.product_identifier' | t -}}:
-                                                    </span>
-
-                                                    <span class="ms-2">
-                                                        {{- product.gtin -}}
-                                                    </span>
-
-                                                </div>
-
-                                            {% endif %}
+                                            {{ review.review }}
 
                                         </div>
 
-                                    </div>
+                                    {% endif %}
 
                                 </div>
 
-                            {% endif %}
+                            {% endfor %}
 
                         </div>
 
-                    </div>
+                    {%- endcapture -%}
 
-                </div>
+                    {%- render 'section-tab-content', sectionTabContent: sectionTabContent, sectionTabContentClass: 'product-reviews' -%}
+
+                {% endif %}
+
+                {% if section.settings.detailsShippingAndReturnRichtext %}
+
+                    {%- capture sectionTabContent -%}
+
+                        <div class="text-richtext" data-aos="{{ settings.sectionAnimation }}">
+                            {{- section.settings.detailsShippingAndReturnRichtext -}}
+                        </div>
+
+                    {%- endcapture -%}
+
+                    {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+
+                {% endif %}
+
+                {% if section.settings.detailsPaymentRichtext %}
+
+                    {%- capture sectionTabContent -%}
+
+                        <div class="text-richtext" data-aos="{{ settings.sectionAnimation }}">
+                            {{- section.settings.detailsPaymentRichtext -}}
+                        </div>
+
+                    {%- endcapture -%}
+
+                    {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+
+                {% endif %}
 
             </div>
 
@@ -1722,14 +1901,13 @@
         {% if product.similar.size > 0 or request.design_mode %}
 
             {%- assign carouselTitle = 'product.similar_products' | t -%}
-            {%- assign carouselSectionHandle = '#finqu-section-' | append: section.id -%}
 
             <div class="mt-4 mt-md-g">
 
                 {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
 
                 <div class="product-carousel mt-4">
-                    {% render 'product-carousel', items: product.similar, sectionHandle: carouselSectionHandle, carouselFreemode: true %}
+                    {% render 'product-carousel', items: product.similar, carouselFreemode: true %}
                 </div>
 
             </div>
@@ -1739,14 +1917,13 @@
         {% if product.compatible.size > 0 or request.design_mode %}
 
             {%- assign carouselTitle = 'product.compatible_products' | t -%}
-            {%- assign carouselSectionHandle = '#finqu-section-' | append: section.id -%}
 
             <div class="mt-4 mt-md-g">
 
                 {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
 
                 <div class="product-carousel mt-4">
-                    {% render 'product-carousel', items: product.compatible, sectionHandle: carouselSectionHandle, carouselFreemode: true %}
+                    {% render 'product-carousel', items: product.compatible, carouselFreemode: true %}
                 </div>
 
             </div>
@@ -1755,20 +1932,20 @@
 
         <script type="application/javascript">
             document.addEventListener('DOMContentLoaded', function() {
-            document.dispatchEvent(new CustomEvent('theme:product:view', {
-                detail: {
-                    id: {{ product.id | json }},
-                    {%- if store.customer_accounts_require_approval == false or accountHasApproval -%}
-                        price: {{ product.price | json }},
-                    {%- else -%}
-                        price: null,
-                    {%- endif -%}
-                    name: {{ product.name | json }},
-                    manufacturer: {{ product.manufacturer.name | json }},
-                    currency: {{ store.currency.iso_code | json }}
-                }
-            }));
-                                                                        });
+                document.dispatchEvent(new CustomEvent('theme:product:view', {
+                    detail: {
+                        id: {{ product.id | json }},
+                        {%- if store.customer_accounts_require_approval == false or accountHasApproval -%}
+                            price: {{ product.price | json }},
+                        {%- else -%}
+                            price: null,
+                        {%- endif -%}
+                        name: {{ product.title | json }},
+                        manufacturer: {{ product.manufacturer.title | json }},
+                        currency: {{ store.currency.iso_code | json }}
+                    }
+                }));
+            });
         </script>
 
     {% endif %}
@@ -1778,9 +1955,9 @@
 {% if request.uri contains 'create_review=true' and product.customer_has_reviewed == false and product.reviews_are_enabled %}
 
     {%- assign sectionTitle = 'product.write_product_review' | t -%}
-    {%- assign sectionSubtitle = product.name -%}
+    {%- assign sectionSubtitle = product.title -%}
 
-    {% render 'section', section: section, sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContainer: 'tiny', sectionContentOverflow: 'hidden', sectionInnerGap: '2rem' %}
+    {% render 'section', section: section, sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContainer: 'tiny', sectionContentOverflow: 'clip', sectionInnerGap: '2rem' %}
 
 {% else %}
 
@@ -1800,6 +1977,433 @@
     {% render 'schemas/breadcrumblist', breadcrumbs: product.breadcrumbs, currentItem: product %}
 {%- endif -%}
 
+{% if product.notifications_supported and product.is_out_of_stock %}
+
+    <div class="modal fade" id="availability-notification-modal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header border-bottom-0 pb-0 justify-content-end">
+
+                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                    </button>
+
+                </div>
+
+                <div class="modal-body pt-0">
+
+                    {% form 'customer', product %}
+
+                        {% if form.posted_successfully? %}
+
+                            <script type="application/javascript">
+                                document.addEventListener('theme:ready', function() {
+                                    theme.bs.Modal.getOrCreateInstance('#availability-notification-modal')?.show();
+                                });
+                            </script>
+
+                            <p class="my-4">
+                                {{- 'product.availability_notification.success' | t -}}
+                            </p>
+
+                        {% elsif product.subscribed_to_notifications %}
+
+                            <p class="my-4">
+                                {{- 'product.availability_notification.already_subscribed' | t -}}
+                            </p>
+
+                        {% else %}
+
+                            {% if form.error %}
+
+                                <script type="application/javascript">
+                                    document.addEventListener('theme:ready', function() {
+                                        theme.bs.Modal.getOrCreateInstance('#availability-notification-modal')?.show();
+                                    });
+                                </script>
+
+                            {% endif %}
+
+                            <span class="d-block h3 text-title">
+                                {{- 'product.availability_notification.title' | t -}}
+                            </span>
+
+                            <p>
+                                {{- 'product.availability_notification.description' | t -}}
+                            </p>
+
+                            <div class="form-floating">
+
+                                <input id="availability-notification-email" class="form-control" type="email" name="email" value="" placeholder="{{ 'general.email' | t }}" required>
+
+                                <label for="availability-notification-email">
+                                    {{- 'general.email' | t -}}
+                                </label>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-sm w-100 mt-4">
+                                {{- 'product.availability_notification.cta' | t -}}
+                            </button>
+
+                            {% render 'form-error', error: form.error, class: 'mt-4' %}
+
+                        {% endif %}
+
+                    {% endform %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% if section.settings.showProductQuestionForm %}
+
+    <div class="modal fade" id="product-question-modal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header border-bottom-0 pb-0 justify-content-end">
+
+                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                    </button>
+
+                </div>
+
+                <div class="modal-body pt-0">
+
+                    {% form 'contact' %}
+    
+                        {% if form.posted_successfully? %}
+
+                            <script type="application/javascript">
+                                document.addEventListener('theme:ready', function() {
+                                    document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
+                                    theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
+                                });
+                            </script>
+
+                            <p class="my-4">
+                                {{- 'product.question.success' | t -}}
+                            </p>
+
+                        {% else %}
+
+                            {% if form.error %}
+
+                                <script type="application/javascript">
+                                    document.addEventListener('theme:ready', function() {
+                                        theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
+                                    });
+                                </script>
+
+                            {% endif %}
+                            
+                            <input
+                                type="hidden"
+                                name="subject"
+                                value="{{- 'product.question.subject' | t: product_name: product.title | escape -}}">
+
+                            <span class="d-block h3 text-title">
+                                {{- 'product.question.title' | t -}}
+                            </span>
+
+                            <div class="form-floating mb-4">
+
+                                <input
+                                    type="text"
+                                    id="product-question-modal-name"
+                                    class="form-control"
+                                    name="name"
+                                    placeholder="{{ 'product.question.name' | t }}"
+                                    value="{{ form.submitted.name | escape }}"
+                                    required>
+
+                                <label for="product-question-modal-name">
+                                    {{- 'product.question.name' | t -}}
+                                </label>
+
+                            </div>
+
+                            <div class="form-floating mb-4">
+
+                                <input
+                                    type="email"
+                                    id="product-question-modal-email"
+                                    class="form-control"
+                                    name="email"
+                                    placeholder="{{ 'product.question.email' | t }}"
+                                    value="{{ form.submitted.email | escape }}"
+                                    required>
+
+                                <label for="product-question-modal-email">
+                                    {{- 'product.question.email' | t -}}
+                                </label>
+
+                            </div>
+
+                            <div class="form-floating mb-4">
+
+                                <textarea
+                                    id="product-question-modal-messaage"
+                                    name="message"
+                                    class="form-control"
+                                    placeholder="{{ 'product.question.message' | t }}"
+                                    required>{{ form.submitted.message | escape }}</textarea>
+
+                                <label for="product-question-modal-message">
+                                    {{- 'product.question.message' | t -}}
+                                </label>
+
+                            </div>
+
+                            {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                            <button type="submit" class="btn btn-primary btn-sm d-block w-100">
+                                {{- 'product.question.cta' | t -}}
+                            </button>
+
+                        {% endif %}
+
+                    {% endform %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% if product.size_chart %}
+
+    <div class="modal fade" id="product-size-chart-modal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header border-bottom-0 pb-0 justify-content-end">
+
+                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                    </button>
+
+                </div>
+
+                <div class="modal-body pt-0 d-flex flex-column gap-g">
+
+                    <span class="d-block h3 text-title">
+                        {{- 'product.size_chart.title' | t -}}
+                    </span>
+
+                    {% if product.size_chart.measuring_guide_image or product.size_chart.measuring_guide_instructions %}
+
+                        {%- assign instructionsCharLength = product.size_chart.measuring_guide_instructions | strip_html | size %}
+
+                        <div class="row gy-4 mb-g{% if instructionsCharLength < 300 and product.size_chart.measuring_guide_image %} row-cols-1{% endif %}">
+
+                            {% if product.size_chart.measuring_guide_instructions %}
+
+                                <div class="col text-richtext">
+                                    {{- product.size_chart.measuring_guide_instructions -}}
+                                </div>
+
+                            {% endif %}
+
+                            {% if product.size_chart.measuring_guide_image %}
+
+                                <div class="col-auto">
+
+                                    {% if product.size_chart.measuring_guide_instructions %}
+                                        {%- assign imgSizeSm = '356,356' -%}
+                                        {%- assign imgSizeMd = '335,335' -%}
+                                        {%- assign imgSizeLg = '335,335' -%}
+
+                                    {% else %}
+                                        {%- assign imgSizeSm = '356,356' -%}
+                                        {%- assign imgSizeMd = '680,680' -%}
+                                        {%- assign imgSizeLg = '680,680' -%}
+                                    {% endif %}
+
+                                    <picture>
+                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg }} 1x,
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd }} 1x,
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                        <source data-srcset="
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm }} 1x,
+                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                        <img
+                                            class="lazy d-block img-fluid"
+                                            alt="{{ product.size_chart.measuring_guide_image.alt }}"
+                                            src="{{ product.size_chart.measuring_guide_image | thumb: imgSizeSm }}">
+                                    </picture>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if product.size_chart.conversion_table %}
+
+                        {%- assign theadCols = product.size_chart.conversion_table | first -%}
+
+                        <span class="d-block fw-bold">
+                            {{- 'product.size_chart.conversion_table' | t -}}
+                        </span>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-borderless text-center">
+
+                                <thead>
+
+                                    <tr>
+
+                                        {% for value in theadCols %}
+
+                                            <th scope="col" class="fw-normal">
+                                                {{- value -}}
+                                            </th>
+
+                                        {% endfor %}
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    {% for row in product.size_chart.conversion_table offset: 1 %}
+
+                                        <tr>
+
+                                            {% for value in row %}
+
+                                                {% if forloop.first %}
+
+                                                    <th scope="row" class="fw-normal">
+                                                        {{- value -}}
+                                                    </th>
+
+                                                {% else %}
+
+                                                    <td>
+                                                        {{- value -}}
+                                                    </td>
+
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if product.size_chart.measurements_table %}
+
+                        {%- assign theadCols = product.size_chart.measurements_table | first -%}
+
+                        <span class="d-block fw-bold">
+                            {{- 'product.size_chart.measurements_table' | t -}}
+                        </span>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-borderless text-center">
+
+                                <thead>
+
+                                    <tr>
+
+                                        {% for value in theadCols %}
+
+                                            <th scope="col" class="fw-normal">
+                                                {{- value -}}
+                                            </th>
+
+                                        {% endfor %}
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    {% for row in product.size_chart.measurements_table offset: 1 %}
+
+                                        <tr>
+
+                                            {% for value in row %}
+
+                                                {% if forloop.first %}
+
+                                                    <th scope="row" class="fw-normal">
+                                                        {{- value -}}
+                                                    </th>
+
+                                                {% else %}
+
+                                                    <td>
+                                                        {{- value -}}
+                                                    </td>
+
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
 {% schema %}
 {
     "name": {
@@ -1807,11 +2411,63 @@
         "fi": "Tuote"
     },
     "tag": "div",
-    "class": "section section-product",
+    "class": "section section-product has-lazy",
     "is_creatable": false,
     "settings": {
         "list_type": "tabs",
         "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": {
+                                "en": "Shipping & return",
+                                "fi": "Toimitus & palautus"
+                            },
+                            "settings": [
+                                {
+                                    "id": "detailsFreeShippingLimit",
+                                    "type": "number",
+                                    "format": "currency",
+                                    "label": {
+                                        "en": "Free shipping limit",
+                                        "fi": "Ilmaisen toimituksen raja"
+                                    }
+                                },
+                                {
+                                    "id": "detailsShippingAndReturnRichtext",
+                                    "type": "richtext",
+                                    "label": {
+                                        "en": "Content",
+                                        "fi": "Sisältö"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "title": {
+                                "en": "Payment",
+                                "fi": "Maksaminen"
+                            },
+                            "settings": [
+                                {
+                                    "id": "detailsPaymentRichtext",
+                                    "type": "richtext",
+                                    "label": {
+                                        "en": "Content",
+                                        "fi": "Sisältö"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
             {
                 "title": {
                     "en": "Settings",
@@ -1843,43 +2499,16 @@
                             "en": "Show quantity select",
                             "fi": "Näytä määrävalinta"
                         },
-                        "default": false
-                    },
-                    {
-                        "id": "showProductOptionPrice",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Show product option price",
-                            "fi": "Näytä tuotevalinnan hinta"
-                        },
                         "default": true
                     },
                     {
-                        "id": "showProductOptionTotalPrice",
+                        "id": "showProductQuestionForm",
                         "type": "checkbox",
                         "label": {
-                            "en": "Show total price of the product and product option in the product option",
-                            "fi": "Näytä tuotevalinnassa tuotteen ja tuotevalinnan yhteishinta"
+                            "en": "Show product question form",
+                            "fi": "Näytä tuotekysymys -lomake"
                         },
-                        "default": false
-                    },
-                    {
-                        "id": "showProductOptionStockBalance",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Show product option stock balance",
-                            "fi": "Näytä tuotevalinnan varastosaldo"
-                        },
-                        "default": false
-                    },
-                    {
-                        "id": "openProductDescriptionByDefault",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Open product description by default",
-                            "fi": "Avaa tuotekuvaus oletuksena"
-                        },
-                        "default": false
+                        "default": true
                     },
                     {
                         "id": "showLowestPrice",
@@ -1889,6 +2518,42 @@
                             "fi": "Näytä viimeisen 30 päivän alin myyntihinta"
                         },
                         "default": true
+                    },
+                    {
+                        "id": "showVariantSelectionAsDropdown",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show selection of variants as dropdown menu",
+                            "fi": "Näytä varianttien valinta pudostusvalikkona"
+                        },
+                        "default": false
+                    },
+                    {
+                        "id": "showProductCustomizationPrice",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show customization price",
+                            "fi": "Näytä mukautuksen hinta"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "showProductCustomizationTotalPrice",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show total price of the product and customization in the customization",
+                            "fi": "Näytä mukautuksessa tuotteen ja mukautuksen yhteishinta"
+                        },
+                        "default": false
+                    },
+                    {
+                        "id": "showProductCustomizationStockBalance",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show customization stock balance",
+                            "fi": "Näytä tuotevalinnan varastosaldo"
+                        },
+                        "default": false
                     },
                     {
                         "id": "customDisplayInformation",

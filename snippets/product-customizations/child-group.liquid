@@ -1,0 +1,23 @@
+<div class="product-customization-child-group-container mb-4" data-customization="{{ option.group.id }}" data-option="{{ option.id }}" style="display: none;">
+
+    {%- assign group = option.child_group -%}
+
+    {%- if group.input_type == 'select' -%}
+
+        {% render 'product-customizations/select', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- elsif group.input_type == 'radio' -%}
+
+        {% render 'product-customizations/radio', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, style: 'badge' %}
+
+    {%- elsif group.input_type == 'checkbox' -%}
+
+        {% render 'product-customizations/checkbox', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- elsif group.input_type == 'text' -%}
+
+        {% render 'product-customizations/text', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {%- endif -%}
+
+</div>

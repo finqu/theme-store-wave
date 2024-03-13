@@ -1,7 +1,6 @@
-import { Collapse, Dropdown, Popover, Tooltip } from 'bootstrap';
-import 'intersection-observer';
+import { Collapse, Dropdown, Popover, Tooltip, Modal } from 'bootstrap';
 import * as utils from './components/utils';
-import Handlebars from './components/hbs';
+import Renderer from './components/renderer';
 import Cart from './components/cart';
 import common from './components/common';
 import SVGInject from '@iconfu/svg-inject';
@@ -16,10 +15,17 @@ export default class App {
             document.body.classList.add('is-ios');
         }
 
-		this.store = store || {};
+		this.store = window.store || {};
 		this.utils = utils;
-		this.hbs = Handlebars;
-		this.cart = new Cart();
+		this.renderer = new Renderer();
+		this.cart = new Cart(this.store.cart?.data || {});
+		this.bs = {
+			Collapse: Collapse,
+			Dropdown: Dropdown,
+			Popover: Popover,
+			Tooltip: Tooltip,
+			Modal: Modal
+		};
 
 		this.lazyLoad = new LazyLoad({
             show_while_loading: true,
@@ -47,7 +53,7 @@ export default class App {
 		if (this.store.accessibility.showAnimations && this.store.designMode !== 'edit') {
 			this.aos = AOS;
 			this.aos.init({
-				disable: false,
+				disable: () => !document.body.classList.contains('animations-enabled'),
                 startEvent: 'load',
                 initClassName: false,
                 animatedClassName: 'animate__animated',
@@ -66,6 +72,58 @@ export default class App {
 
 	    window.theme = this;
 		window.themeApp = this; // Deprecated
+
+		const bodyObserver = new MutationObserver((mutations) => {
+
+			for (const { addedNodes } of mutations) {
+
+				for (const node of addedNodes) {
+
+					if (node.tagName && node.nodeType === 1) {
+
+						for (const el of node.querySelectorAll('[data-bs-toggle="tooltip"]')) {
+							new Tooltip(el);
+						}
+
+						for (const el of node.querySelectorAll('[data-bs-toggle="popover"]')) {
+							new Popover(el);
+						}
+
+						for (const el of node.querySelectorAll('img, [data-bg-multi], [data-bg-multi-hidpi], [data-bg-set]')) {
+
+				        	if (el.classList.contains('svg-inline')) {
+
+				        		this.SVGInject(el);
+
+				        	} else {
+
+				        		if (el.classList.contains('lazy')) {
+				        			this.lazyLoad.update();
+				        		}
+					        }
+				        }
+
+						for (const el of node.querySelectorAll('.product-card-grid-item input[name="product-variant-img"]')) {
+							this.utils.productGridItemVariantImgSwapper(el);
+						};
+					}
+			    }
+			}
+		});
+
+		bodyObserver.observe(document.querySelector('body'), {
+			childList: true,
+			subtree: true
+		});
+
+		for (const el of document.querySelectorAll('img')) {
+        	if (el.classList.contains('svg-inline')) {
+        		this.SVGInject(el);
+        	}
+        }
+
+		[...document.querySelectorAll('[data-bs-toggle="tooltip"]')].map(tooltipEl => new Tooltip(tooltipEl));
+		[...document.querySelectorAll('[data-bs-toggle="popover"]')].map(popoverEl => new Popover(popoverEl));
 
 	    document.dispatchEvent(new CustomEvent('theme:ready', {
 	    	detail: this

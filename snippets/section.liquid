@@ -12,10 +12,12 @@
     - sectionOverline: {String}
     - sectionOverlineTag {String}
     - sectionHeight {String}
-    - sectionMinHeight {String}
+    - sectionMinHeight {String
+    - sectionPaddingMode {String}
     - sectionPaddingTop {String}
     - sectionPaddingBottom {String}
-    - sectionInnerPadding {String}
+    - sectionInnerGap {String}
+    - sectionGutterWidth {String}
     - sectionDescription: {String}
     - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
     - sectionHeader {Boolean}
@@ -42,6 +44,7 @@
     - sectionAnimationRepeat {Boolean}
     - sectionAction {String}
     - sectionHighlightItems {Boolean}
+    - sectionAdditionalTitles {Boolean}
 
     Usage:
     {% render 'section', section: section %}
@@ -51,17 +54,17 @@
 {%- assign sectionContainer = sectionContainer | default: 'fixed' -%}
 {%- assign sectionHeight = sectionHeight | default: section.settings.sectionHeight -%}
 {%- assign sectionInnerGap = sectionInnerGap | default: section.settings.sectionInnerGap | default: settings.sectionInnerGap -%}
-{%- assign sectionGutterWidth = section.settings.sectionGutterWidth -%}
+{%- assign sectionGutterWidth = sectionGutterWidth | default: section.settings.sectionGutterWidth -%}
 {%- assign sectionContent = sectionContent | default: nil -%}
 {%- assign sectionCustomContent = sectionCustomContent | default: nil -%}
 {%- assign sectionContentWidth = section.settings.sectionContentWidth | default: '12' -%}
 {%- assign sectionContentAlign = section.settings.sectionContentAlign | default: 'center' -%}
 {%- assign sectionContentContainer = sectionContentContainer | default: sectionContainer -%}
 {%- assign sectionContentOverflow = sectionContentOverflow | default: section.settings.sectionContentOverflow | default: nil -%}
-{%- assign sectionBgImgPos = section.settings.sectionBgImgPos | default: settings.sectionBgImgPos -%}
-{%- assign sectionBgImgDimming = section.settings.sectionBgImgDimming | default: '0' -%}
-{%- assign sectionBgImgBlur = section.settings.sectionBgImgBlur | default: '0' -%}
-{%- assign sectionBgImg = section.settings.sectionBgImg -%}
+{%- assign sectionBgImgPos = sectionBgImgPos | default: section.settings.sectionBgImgPos | default: settings.sectionBgImgPos -%}
+{%- assign sectionBgImgDimming = sectionBgImgDimming | default: section.settings.sectionBgImgDimming | default: '0' -%}
+{%- assign sectionBgImgBlur = sectionBgImgBlur | default: section.settings.sectionBgImgBlur | default: '0' -%}
+{%- assign sectionBgImg = sectionBgImg | default: section.settings.sectionBgImg -%}
 {%- assign sectionColorScheme = sectionColorScheme | default: section.settings.sectionColorScheme -%}
 {%- assign sectionTitle = sectionTitle | default: section.settings.sectionTitle -%}
 {%- assign sectionTitleClass = sectionTitleClass | default: section.settings.sectionTitleClass -%}
@@ -77,7 +80,13 @@
 {%- assign sectionHeaderGapScale = sectionHeaderGapScale | default: settings.sectionHeaderGapScale -%}
 {%- assign sectionOverlay = sectionOverlay | default: section.settings.sectionOverlay | default: false -%}
 {%- assign sectionOverlayPadding = sectionOverlayPadding | default: section.settings.sectionOverlayPadding | default: settings.sectionOverlayPadding -%}
-{%- assign sectionClasses = sectionClasses -%}
+{%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
+{%- assign sectionPaddingMode = sectionPaddingMode | default: section.settings.sectionPaddingMode -%}
+{%- assign sectionAdditionalTitles = sectionAdditionalTitles | default: section.settings.sectionAdditionalTitles | default: false -%}
+
+{%- unless sectionAdditionalTitles -%}
+    {%- assign sectionOverline = false -%}
+{%- endunless -%}
 
 {%- if sectionHandle == nil and section.id -%}
     {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
@@ -150,7 +159,7 @@
 
 {%- if sectionPaddingTop == nil -%}
 
-    {%- if section.settings.sectionPaddingTop != nil and section.settings.sectionPaddingMode == 'custom' -%}
+    {%- if section.settings.sectionPaddingTop != nil and sectionPaddingMode == 'custom' -%}
         {%- assign sectionPaddingTop = section.settings.sectionPaddingTop | append: 'rem' -%}
     {%- elsif settings.sectionPaddingTop != nil -%}
         {%- assign sectionPaddingTop = settings.sectionPaddingTop -%}
@@ -160,7 +169,7 @@
 
 {%- if sectionPaddingBottom == nil -%}
 
-    {%- if section.settings.sectionPaddingBottom != nil and section.settings.sectionPaddingMode == 'custom' -%}
+    {%- if section.settings.sectionPaddingBottom != nil and sectionPaddingMode == 'custom' -%}
         {%- assign sectionPaddingBottom = section.settings.sectionPaddingBottom | append: 'rem' -%}
     {%- elsif settings.sectionPaddingBottom != nil -%}
         {%- assign sectionPaddingBottom = settings.sectionPaddingBottom -%}
@@ -186,11 +195,20 @@
             --section-overlay-padding: {{ sectionOverlayPadding }};
             --section-inner-gap: {{ sectionInnerGap }};
             --section-inner-gap-mobile: {{ sectionInnerGap | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
-            --section-text-align: {{ sectionTextAlign }};
             --section-header-gap-scale: {{ sectionHeaderGapScale }};
-            --section-header-text-align: {{ sectionHeaderTextAlign }};
-            --section-content-text-align: {{ sectionContentTextAlign }};
             --section-bg-img-pos: {{ sectionBgImgPos | replace: '-', ' ' }};
+
+            {%- if sectionTextAlign -%}
+                --section-text-align: {{ sectionTextAlign }};
+            {%- endif -%}
+
+            {%- if sectionHeaderTextAlign -%}
+                --section-header-text-align: {{ sectionHeaderTextAlign }};
+            {%- endif -%}
+
+            {%- if sectionContentTextAlign -%}
+                --section-content-text-align: {{ sectionContentTextAlign }};
+            {%- endif -%}
 
             {%- if sectionHeight -%}
                 --section-height: {{ sectionHeight }};
@@ -198,6 +216,7 @@
 
             {%- if sectionMinHeight -%}
                 --section-min-height: {{ sectionMinHeight }};
+                --section-min-height-mobile: {{ sectionMinHeight | replace: 'vh', '' | times: 0.5 | append: 'vh' }};
             {%- endif -%}
 
             {%- if sectionContentOverflow -%}
@@ -205,7 +224,7 @@
             {%- endif -%}
 
             {%- if sectionGutterWidth -%}
-                @media (min-width: {{ settings.styleGridBreakpointMd }}) {
+                @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
                     --style-grid-gutter-width: {{ sectionGutterWidth }};
                 }
             {%- endif -%}
@@ -327,27 +346,27 @@
                     --style-loader-faded-color: {{ style.icon_color | color_modify: 'alpha', 0.1 }};
 
                     --bs-body-bg: {{ style.bg_color }};
-                    --bs-body-bg-rgb: {{ style.bg_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-bg-rgb: {{ style.bg_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-body-color: {{ style.text_color }};
-                    --bs-body-color-rgb: {{ style.text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-color-rgb: {{ style.text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-secondary-bg: {{ style.bg_color | color_darken: 30 }};
-                    --bs-secondary-bg-rgb: {{ style.bg_color | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-secondary-bg-rgb: {{ style.bg_color | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-secondary-color: {{ style.text_color | color_modify: 'alpha', 0.75 }};
-                    --bs-secondary-color-rgb: {{ style.text_color | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+                    --bs-secondary-color-rgb: {{ style.text_color | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-tertiary-bg: {{ style.bg_color | color_darken: 10 }};
-                    --bs-tertiary-bg-rgb: {{ style.bg_color | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-tertiary-bg-rgb: {{ style.bg_color | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-tertiary-color: {{ style.text_color | color_modify: 'alpha', 0.5 }};
-                    --bs-tertiary-color-rgb: {{ style.text_color | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+                    --bs-tertiary-color-rgb: {{ style.text_color | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-emphasis-color: {{ style.accent_color }};
-                    --bs-emphasis-color-rgb: {{ style.accent_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-emphasis-color-rgb: {{ style.accent_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-link-color: {{ style.link_color }};
-                    --bs-link-color-rgb: {{ style.link_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-color-rgb: {{ style.link_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-link-hover-color: {{ style.link_color }};
-                    --bs-link-hover-color-rgb: {{ style.link_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-hover-color-rgb: {{ style.link_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-border-color: var(--style-border-color);
                     --bs-heading-color: var(--style-heading-color);
@@ -428,10 +447,17 @@
                         --style-form-bg-disabled-color: {{ bgColor | color_lighten: 10 }};
                     {%- endif -%}
 
+                    --style-form-bg-color: {{ contentColor }};
+                    --style-form-text-color: {{ bgColor }};
+                    --style-form-placeholder-color: {{ bgColor | color_lighten: 15 }};
+                    --style-form-bg-readonly-color: {{ contentColor | color_lighten: 15 }};
+
                     {%- if styleformBorderColorBrightness > 190 -%}
+                        --style-form-border-color: {{ contentColor | color_darken: 5 }};
                         --style-form-border-focus-color: {{ contentColor | color_darken: 10 }};
                         --style-form-border-disabled-color: {{ contentColor | color_darken: 10 }};
                     {%- else -%}
+                        --style-form-border-color: {{ contentColor | color_lighten: 5 }};
                         --style-form-border-focus-color: {{ contentColor | color_lighten: 10 }};
                         --style-form-border-disabled-color: {{ contentColor | color_lighten: 10 }};
                     {%- endif -%}
@@ -463,8 +489,8 @@
                         --style-bg-disabled-color: {{ bgColorbgColor | color_darken: 30 }};
                     {%- else -%}
                         --pswp-bg-color: {{ contentColor }};
-                        --swiper-btn-bg-color: {{ bgColor }};
-                        --swiper-btn-color: {{ contentColor }};
+                        --swiper-btn-bg-color: {{ contentColor }};
+                        --swiper-btn-color: {{ bgColor }};
                         --swiper-btn-border-color: {{ bgColor | color_lighten: 30 }};
                         --swiper-pagination-bullet-color: {{ bgColor | color_lighten: 70 }};
                         --swiper-pagination-bullet-active-color: {{ contentColor }};
@@ -496,8 +522,6 @@
                     --style-bg-light-color: {{ bgColor | color_lighten: 35 }};
                     --style-border-focus-color: {{ contentColor | color_lighten: 25 }};
                     --style-btn-border-color: {{ contentColor }};
-                    --style-form-placeholder-color: {{ contentColor | color_lighten: 15 }};
-                    --style-form-bg-readonly-color: {{ bgColor | color_lighten: 15 }};
                     --style-text-darker-color: {{ contentColor | color_darken: 5 }};
                     --style-accent-faded-color: {{ bgColor | color_lighten: 30 }};
                     
@@ -505,27 +529,27 @@
                     --style-loader-faded-color: {{ contentColor | color_modify: 'alpha', 0.1 }};
 
                     --bs-body-bg: {{ bgColor }};
-                    --bs-body-bg-rgb: {{ bgColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-bg-rgb: {{ bgColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-body-color: {{ contentColor }};
-                    --bs-body-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-body-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-secondary-bg: {{ bgColor | color_darken: 30 }};
-                    --bs-secondary-bg-rgb: {{ bgColor | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-secondary-bg-rgb: {{ bgColor | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-secondary-color: {{ contentColor | color_modify: 'alpha', 0.75 }};
-                    --bs-secondary-color-rgb: {{ contentColor | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+                    --bs-secondary-color-rgb: {{ contentColor | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-tertiary-bg: {{ bgColor | color_darken: 10 }};
-                    --bs-tertiary-bg-rgb: {{ bgColor | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-tertiary-bg-rgb: {{ bgColor | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-tertiary-color: {{ contentColor | color_modify: 'alpha', 0.5 }};
-                    --bs-tertiary-color-rgb: {{ contentColor | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+                    --bs-tertiary-color-rgb: {{ contentColor | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-emphasis-color: {{ bgColor }};
-                    --bs-emphasis-color-rgb: {{ bgColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-emphasis-color-rgb: {{ bgColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-link-color: {{ contentColor }};
-                    --bs-link-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
                     --bs-link-hover-color: {{ contentColor }};
-                    --bs-link-hover-color-rgb: {{ contentColor | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+                    --bs-link-hover-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-border-color: var(--style-border-color);
                     --bs-heading-color: var(--style-heading-color);
@@ -563,6 +587,6 @@
 
     {%- endif -%}
 
-    {%- render 'section-bg'sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur -%}
+    {%- render 'section-bg' sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur -%}
 
 </div>

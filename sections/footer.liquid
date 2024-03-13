@@ -4,6 +4,9 @@
 
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} {
+        --site-footer-gap: {{ section.settings.footerGap }};
+        --site-footer-padding-top: {{ section.settings.footerPaddingTop }};
+        --site-footer-padding-bottom: {{ section.settings.footerPaddingBottom }};
         --style-bg-color: {{ settings.style_footer_bg_color }};
         --style-text-color: {{ settings.style_footer_text_color }};
         --style-link-color: {{ settings.style_footer_text_color }};
@@ -20,6 +23,7 @@
         --style-border-accent-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 50 }};
         --style-btn-bg-color: {{ settings.style_footer_accent_color }};
         --style-btn-border-color: {{ settings.style_footer_accent_color }};
+        --style-accent-color: {{ settings.style_footer_accent_color }};
 
         {%- if footerAccentColorBrightness > 190 -%}
             --style-btn-text-color: #000;
@@ -52,50 +56,88 @@
         {%- endif -%}
 
         --bs-body-bg: {{ settings.style_footer_bg_color }};
-        --bs-body-bg-rgb: {{ settings.style_footer_bg_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-body-bg-rgb: {{ settings.style_footer_bg_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
         --bs-body-color: {{ settings.style_footer_text_color }};
-        --bs-body-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-body-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-secondary-bg: {{ settings.style_footer_bg_color | color_darken: 30 }};
-        --bs-secondary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 30 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-secondary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
         --bs-secondary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.75 }};
-        --bs-secondary-color-rgb: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.75 | replace: 'rgba(', '' | replace: ', 0.75)', '' }};
+        --bs-secondary-color-rgb: {{ settings.style_footer_text_color | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-tertiary-bg: {{ settings.style_footer_bg_color | color_darken: 10 }};
-        --bs-tertiary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 10 | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-tertiary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
         --bs-tertiary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 }};
-        --bs-tertiary-color-rgb: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 | replace: 'rgba(', '' | replace: ', 0.5)', '' }};
+        --bs-tertiary-color-rgb: {{ settings.style_footer_text_color | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-emphasis-color: {{ settings.style_footer_accent_color }};
-        --bs-emphasis-color-rgb: {{ settings.style_footer_accent_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-emphasis-color-rgb: {{ settings.style_footer_accent_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-link-color: {{ settings.style_footer_text_color }};
-        --bs-link-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-link-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
         --bs-link-hover-color: {{ settings.style_footer_text_color }};
-        --bs-link-hover-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | replace: 'rgb(', '' | replace: ')', '' }};
+        --bs-link-hover-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-border-color: var(--style-border-color);
         --bs-heading-color: var(--style-heading-color);
     }
+    {%- if section.settings.footerTopBorder -%}
+        #finqu-section-{{ section.id }} .site-footer-top{% unless section.settings.footerTopBorderFluid %} > .container{% endunless %}:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: var(--style-grid-container-padding-x);
+            right: var(--style-grid-container-padding-x);
+            border-top: 1px solid var(--style-border-color);
+        }
+        #finqu-section-{{ section.id }} .site-footer-top{% unless section.settings.footerTopBorderFluid %} > .container{% endunless %} {
+            position: relative;
+            padding-top: var(--section-padding-top);
+        }
+    {%- endif -%}
+    {%- if section.settings.footerBottomBorder -%}
+        #finqu-section-{{ section.id }} .site-footer-bottom{% unless section.settings.footerBottomBorderFluid %} > .container{% endunless %}:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: var(--style-grid-container-padding-x);
+            right: var(--style-grid-container-padding-x);
+            border-top: 1px solid var(--style-border-color);
+        }
+        #finqu-section-{{ section.id }} .site-footer-bottom{% unless section.settings.footerBottomBorderFluid %} > .container{% endunless %} {
+            position: relative;
+            padding-top: var(--section-padding-bottom);
+        }
+    {%- endif -%}
 {%- endcapture -%}
 
 <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
 {%- if section.settings.footerLayout == '1' -%}
 
-    {%- render 'footers/layout-1', section: section, sectionClasses: 'site-footer-layout-1' -%}
+    {%- render 'footers/layout-1', section: section -%}
 
 {%- elsif section.settings.footerLayout == '2' -%}
 
-    {%- render 'footers/layout-2', section: section, sectionClasses: 'site-footer-layout-2' -%}
+    {%- render 'footers/layout-2', section: section -%}
 
 {%- elsif section.settings.footerLayout == '3' -%}
 
-    {%- render 'footers/layout-3', section: section, sectionClasses: 'site-footer-layout-3' -%}
+    {%- render 'footers/layout-3', section: section -%}
 
 {%- elsif section.settings.footerLayout == '4' -%}
 
-    {%- render 'footers/layout-4', section: section, sectionClasses: 'site-footer-layout-4' -%}
+    {%- render 'footers/layout-4', section: section -%}
+
+{%- elsif section.settings.footerLayout == '5' -%}
+
+    {%- render 'footers/layout-5', section: section -%}
+
+{%- elsif section.settings.footerLayout == '6' -%}
+
+    {%- render 'footers/layout-6', section: section -%}
 
 {%- endif -%}
 
@@ -117,111 +159,144 @@
                         "en": "Content",
                         "fi": "Sisältö"
                     },
-                    "settings": [
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Introduction text",
-                                "fi": "Esittelyteksti"
+                    "settings": {
+                        "list_type": "list",
+                        "groups": [
+                            {
+                                "title": {
+                                    "en": "Introduction text",
+                                    "fi": "Esittelyteksti"
+                                },
+                                "settings": [
+                                    {
+                                        "id": "footerTextArea1Title",
+                                        "type": "text",
+                                        "label": {
+                                            "en": "Title",
+                                            "fi": "Otsikko"
+                                        }
+                                    },
+                                    {
+                                        "id": "footerTextArea1Content",
+                                        "type": "richtext",
+                                        "mode": "simple",
+                                        "label": {
+                                            "en": "Content",
+                                            "fi": "Sisältö"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "title": {
+                                    "en": "Additional text",
+                                    "fi": "Lisäteksti"
+                                },
+                                "settings": [
+                                    {
+                                        "id": "footerTextArea2Content",
+                                        "type": "richtext",
+                                        "mode": "simple",
+                                        "label": {
+                                            "en": "Content",
+                                            "fi": "Sisältö"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "title": {
+                                    "en": "Newsletter",
+                                    "fi": "Uutiskirje"
+                                },
+                                "settings": [
+                                    {
+                                        "id": "footerNewsletterTitle",
+                                        "type": "text",
+                                        "label": {
+                                            "en": "Title",
+                                            "fi": "Otsikko"
+                                        }
+                                    },
+                                    {
+                                        "id": "footerNewsletterContent",
+                                        "type": "richtext",
+                                        "mode": "simple",
+                                        "label": {
+                                            "en": "Content",
+                                            "fi": "Sisältö"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "title": {
+                                    "en": "Social media",
+                                    "fi": "Sosiaalinen media"
+                                },
+                                "conditions": ["footerLayout eq 3"],
+                                "settings": [
+                                    {
+                                        "id": "footerSocialMediaTitle",
+                                        "type": "text",
+                                        "label": {
+                                            "en": "Title",
+                                            "fi": "Otsikko"
+                                        },
+                                        "conditions": ["footerLayout eq 3"]
+                                    },
+                                    {
+                                        "id": "footerSocialMediaContent",
+                                        "type": "richtext",
+                                        "mode": "simple",
+                                        "label": {
+                                            "en": "Content",
+                                            "fi": "Sisältö"
+                                        },
+                                        "conditions": ["footerLayout eq 3"]
+                                    }
+                                ]
+                            },
+                            {
+                                "title": {
+                                    "en": "Payment methods",
+                                    "fi": "Maksutavat"
+                                },
+                                "settings": [
+                                    {
+                                        "id": "footerPaymentMethodsImg",
+                                        "type": "image-picker",
+                                        "label": {
+                                            "en": "Image",
+                                            "fi": "Kuva"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "title": {
+                                    "en": "Logo",
+                                    "fi": "Logo"
+                                },
+                                "conditions": ["footerLayout in 5,6"],
+                                "settings": [
+                                   {
+                                        "type": "title",
+                                        "label": {
+                                            "en": "Image",
+                                            "fi": "Kuva"
+                                        },
+                                        "conditions": ["footerLayout in 5,6"]
+                                    },
+                                    {
+                                        "id": "footerLogoImg",
+                                        "type": "image-picker",
+                                        "conditions": ["footerLayout in 5,6"]
+                                    }
+                                ]
                             }
-                        },
-                        {
-                            "id": "footerTextArea1Title",
-                            "type": "text",
-                            "label": {
-                                "en": "Title",
-                                "fi": "Otsikko"
-                            }
-                        },
-                        {
-                            "id": "footerTextArea1Content",
-                            "type": "richtext",
-                            "label": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            }
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Additional text",
-                                "fi": "Lisäteksti"
-                            }
-                        },
-                        {
-                            "id": "footerTextArea2Title",
-                            "type": "text",
-                            "label": {
-                                "en": "Title",
-                                "fi": "Otsikko"
-                            }
-                        },
-                        {
-                            "id": "footerTextArea2Content",
-                            "type": "richtext",
-                            "label": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            }
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Nesletter",
-                                "fi": "Uutiskirje"
-                            }
-                        },
-                        {
-                            "id": "footerNewsletterTitle",
-                            "type": "text",
-                            "label": {
-                                "en": "Title",
-                                "fi": "Otsikko"
-                            }
-                        },
-                        {
-                            "id": "footerNewsletterContent",
-                            "type": "richtext",
-                            "label": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            }
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Social media",
-                                "fi": "Sosiaalinen media"
-                            }
-                        },
-                        {
-                            "id": "footerSocialMediaTitle",
-                            "type": "text",
-                            "label": {
-                                "en": "Title",
-                                "fi": "Otsikko"
-                            }
-                        },
-                        {
-                            "id": "footerSocialMediaContent",
-                            "type": "richtext",
-                            "label": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            }
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Payment methods",
-                                "fi": "Maksutavat"
-                            }
-                        },
-                        {
-                            "id": "footerPaymentMethodsImgSrc",
-                            "type": "image-picker"
-                        }
-                    ]
+                        ]
+                    }
                 },
                 {   
                     "title": {
@@ -242,7 +317,8 @@
                             "label": {
                                 "en": "Title",
                                 "fi": "Otsikko"
-                            }
+                            },
+                            "conditions": ["!footerMenu1 eq blank"]
                         },
                         {
                             "id": "footerMenu1",
@@ -251,15 +327,16 @@
                                 "en": "Menu",
                                 "fi": "Valikko"
                             },
-                            "default": "footer"
+                            "default": "footer",
+                            "allow_empty": true
                         },
-                        
                         {
                             "type": "title",
                             "label": {
                                 "en": "Navigation 2",
                                 "fi": "Navigaatio 2"
-                            }
+                            },
+                            "conditions": ["footerLayout in 1,2,3,5"]
                         },
                         {
                             "id": "footerMenu2Title",
@@ -267,7 +344,11 @@
                             "label": {
                                 "en": "Title",
                                 "fi": "Otsikko"
-                            }
+                            },
+                            "conditions": [
+                                "!footerMenu2 eq blank",
+                                "footerLayout in 1,2,3,5"
+                            ]
                         },
                         {
                             "id": "footerMenu2",
@@ -276,14 +357,17 @@
                                 "en": "Menu",
                                 "fi": "Valikko"
                             },
-                            "default": "footer"
+                            "default": "footer",
+                            "conditions": ["footerLayout in 1,2,3,5"],
+                            "allow_empty": true
                         },
                         {
                             "type": "title",
                             "label": {
                                 "en": "Navigation 3",
                                 "fi": "Navigaatio 3"
-                            }
+                            },
+                            "conditions": ["footerLayout in 1,5"]
                         },
                         {
                             "id": "footerMenu3Title",
@@ -291,7 +375,11 @@
                             "label": {
                                 "en": "Title",
                                 "fi": "Otsikko"
-                            }
+                            },
+                            "conditions": [
+                                "!footerMenu3 eq blank",
+                                "footerLayout in 1,5"
+                            ]
                         },
                         {
                             "id": "footerMenu3",
@@ -300,7 +388,9 @@
                                 "en": "Menu",
                                 "fi": "Valikko"
                             },
-                            "default": "footer"
+                            "default": "footer",
+                            "conditions": ["footerLayout in 1,5"],
+                            "allow_empty": true
                         }
                     ]
                 },
@@ -310,6 +400,38 @@
                         "fi": "Asetukset"
                     },
                     "settings": [
+                        {
+                            "type": "hidden",
+                            "id": "footerGap"
+                        },
+                        {
+                            "type": "hidden",
+                            "id": "footerPaddingTop"
+                        },
+                        {
+                            "type": "hidden",
+                            "id": "footerPaddingBottom"
+                        },
+                        {
+                            "type": "hidden",
+                            "id": "footerTopBorder",
+                            "default": false
+                        },
+                        {
+                            "type": "hidden",
+                            "id": "footerTopBorderFluid",
+                            "default": false
+                        },
+                       {
+                            "type": "hidden",
+                            "id": "footerBottomBorder",
+                            "default": false
+                        },
+                        {
+                            "type": "hidden",
+                            "id": "footerBottomBorderFluid",
+                            "default": false
+                        },
                         {
                             "type": "title",
                             "label": {
@@ -337,6 +459,14 @@
                                 {
                                     "value": "4",
                                     "label": "4"
+                                },
+                                {
+                                    "value": "5",
+                                    "label": "5"
+                                },
+                                {
+                                    "value": "6",
+                                    "label": "6"
                                 }
                             ]
                         },
@@ -381,7 +511,7 @@
                                 "en": "Social media buttons",
                                 "fi": "Sosiaalisen median kuvakkeet"
                             },
-                            "default": false
+                            "default": true
                         },
                         {
                             "id": "footerPaymentMethodsStatus",
@@ -391,6 +521,16 @@
                                 "fi": "Maksutavat"
                             },
                             "default": true
+                        },
+                        {
+                            "id": "footerLogoStatus",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Logo",
+                                "fi": "Logo"
+                            },
+                            "default": true,
+                            "conditions": ["footerLayout in 5,6"]
                         }
                     ]
                 }

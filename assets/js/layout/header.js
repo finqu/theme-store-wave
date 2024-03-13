@@ -56,7 +56,7 @@ export default function() {
                 siteMobileNavigationOverlayEl.classList.remove('site-mobile-navigation-overlay-visible');
             }
 
-            siteMobileNavigationToggleEl.querySelectorAll('svg').forEach((el) => {
+            siteMobileNavigationToggleEl.querySelectorAll('svg').forEach(el => {
                 el.classList.toggle('d-none')
             });
 
@@ -84,7 +84,7 @@ export default function() {
             lastScroll = currentScroll;
         });
 
-        siteMobileNavigationLayerChildEls.forEach(el => { el.addEventListener('transitionend', (e) => {
+        siteMobileNavigationLayerChildEls.forEach(el => { el.addEventListener('transitionend', e => {
 
             e.preventDefault();
 
@@ -93,7 +93,7 @@ export default function() {
             }
         })});
 
-        siteMobileNavigationShowLayerEls.forEach(el => { el.addEventListener('click', (e) => {
+        siteMobileNavigationShowLayerEls.forEach(el => { el.addEventListener('click', e => {
 
             const id = e.target.value;
             const navigationLayerEl = containerEl.querySelector('.site-mobile-navigation-layer[data-mobile-navigation-layer-id="'+id+'"]');
@@ -102,7 +102,7 @@ export default function() {
             navigationLayerEl.classList.add('site-mobile-navigation-layer-active');
         })});
 
-        siteMobileNavigationHideLayerEls.forEach(el => { el.addEventListener('click', (e) => {
+        siteMobileNavigationHideLayerEls.forEach(el => { el.addEventListener('click', e => {
 
             const id = e.target.value;
             const navigationLayerEl = containerEl.querySelector('.site-mobile-navigation-layer[data-mobile-navigation-layer-id="'+id+'"]');
@@ -110,7 +110,7 @@ export default function() {
             navigationLayerEl.classList.remove('site-mobile-navigation-layer-active');
         })});
 
-        siteMobileNavigationToggleEl.addEventListener('click', (e) => {
+        siteMobileNavigationToggleEl.addEventListener('click', () => {
 
             if (siteMobileNavigationContainerEl.classList.contains('site-mobile-navigation-visible')) {
                 closeMobileNavigation();
@@ -121,7 +121,7 @@ export default function() {
 
         if (siteMobileNavigationOverlayEl) {
 
-            siteMobileNavigationOverlayEl.addEventListener('click', (e) => {
+            siteMobileNavigationOverlayEl.addEventListener('click', () => {
 
                 siteMobileNavigationContainerEl.classList.remove('site-mobile-navigation-active');
                 siteMobileNavigationOverlayEl.classList.remove('site-mobile-navigation-overlay-visible');
@@ -150,42 +150,42 @@ export default function() {
             const delay = 500;
             let delayTimer = null;
 
+            const showCart = () => {
+                siteHeaderItemCartEl.classList.add('cart-mini-expanded');
+                siteHeaderCartEl.classList.add('cart-mini-expanded');
+            };
+
+            const hideCart = () => {
+                siteHeaderItemCartEl.classList.remove('cart-mini-expanded');
+                siteHeaderCartEl.classList.remove('cart-mini-expanded');
+            };
+
             siteHeaderCartContainerEl.style.top = siteHeaderItemCartEl.offsetTop + siteHeaderItemCartEl.clientHeight + 20 + 'px';
 
-            siteHeaderItemCartEl.addEventListener('mouseenter', e => {
+            siteHeaderItemCartEl.addEventListener('mouseenter', () => {
 
-                siteHeaderItemCartEl.classList.add('cart-mini-expanded');
-                siteHeaderCartEl.classList.add('cart-mini-expanded');
-
-                if (delayTimer) {
-                    clearTimeout(delayTimer);
-                }
-            });
-
-            siteHeaderCartContainerEl.addEventListener('mouseenter', e => {
-
-                siteHeaderItemCartEl.classList.add('cart-mini-expanded');
-                siteHeaderCartEl.classList.add('cart-mini-expanded');
+                showCart();
 
                 if (delayTimer) {
                     clearTimeout(delayTimer);
                 }
             });
 
-            siteHeaderItemCartEl.addEventListener('mouseleave', e => {
+            siteHeaderCartContainerEl.addEventListener('mouseenter', () => {
 
-                delayTimer = setTimeout(() => {
-                    siteHeaderItemCartEl.classList.remove('cart-mini-expanded');
-                    siteHeaderCartEl.classList.remove('cart-mini-expanded');
-                }, delay);
+                showCart();
+
+                if (delayTimer) {
+                    clearTimeout(delayTimer);
+                }
             });
 
-            siteHeaderCartContainerEl.addEventListener('mouseleave', e => {
+            siteHeaderItemCartEl.addEventListener('mouseleave', () => {
+                delayTimer = setTimeout(hideCart, delay);
+            });
 
-                delayTimer = setTimeout(() => {
-                    siteHeaderItemCartEl.classList.remove('cart-mini-expanded');
-                    siteHeaderCartEl.classList.remove('cart-mini-expanded');
-                }, delay);
+            siteHeaderCartContainerEl.addEventListener('mouseleave', () => {
+                delayTimer = setTimeout(hideCart, delay);
             });
 
         } else if (theme.store.cart.styleVariant === '3') {
@@ -194,40 +194,30 @@ export default function() {
             const siteHeaderCartContainerEl = containerEl.querySelector('.site-header-cart-offcanvas-container');
             const siteHeaderCartOverlayEl = containerEl.querySelector('.site-header-cart-offcanvas-overlay');
 
-            siteHeaderItemCartEl.addEventListener('click', (e) => {
-
-                e.preventDefault();
-
+            const showCart = () => {
                 siteHeaderCartContainerEl.classList.add('site-header-cart-offcanvas-visible');
                 siteHeaderCartOverlayEl.classList.add('site-header-cart-offcanvas-overlay-visible');
-    
                 document.body.classList.add('disable-scroll');
-            });
-    
-            siteHeaderCartOverlayEl.addEventListener('click', (e) => {
-    
+            };
+
+            const hideCart = () => {
                 siteHeaderCartContainerEl.classList.remove('site-header-cart-offcanvas-visible');
                 siteHeaderCartOverlayEl.classList.remove('site-header-cart-offcanvas-overlay-visible');
-    
                 document.body.classList.remove('disable-scroll');
+            };
+
+            siteHeaderItemCartEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                showCart()
             });
+    
+            siteHeaderCartOverlayEl.addEventListener('click', hideCart);
 
             document.addEventListener('theme:cart:render', () => {
-
-                const cartOffcanvasHideEl = document.querySelector('[data-cart-offcanvas-hide]');
-                
-                if (cartOffcanvasHideEl) {
-
-                    cartOffcanvasHideEl.addEventListener('click', (e) => {
-        
-                        siteHeaderCartContainerEl.classList.remove('site-header-cart-offcanvas-visible');
-                        siteHeaderCartOverlayEl.classList.remove('site-header-cart-offcanvas-overlay-visible');
-            
-                        document.body.classList.remove('disable-scroll');
-                    });
-                }
-
+                document.querySelector('[data-cart-offcanvas-hide]')?.addEventListener('click', hideCart);
             }, false);
+
+            document.querySelector('[data-cart-offcanvas-hide]')?.addEventListener('click', hideCart);
         }
     }
 
@@ -237,8 +227,6 @@ export default function() {
         const siteHeaderSearchToggleEls = containerEl.querySelectorAll('.site-search-toggle');
         const siteHeaderSearchContainerEl = containerEl.querySelector('.site-search-container');
         const siteHeaderSearchInputEl = siteHeaderSearchContainerEl.querySelector('[name="q"]');
-        const siteSearchResultsTemplate = theme.hbs.compile(document.querySelector('#hbs-site-search-results').innerHTML);
-        const siteSearchNoResultsTemplate = theme.hbs.compile(document.querySelector('#hbs-site-search-no-results').innerHTML);
 
         const search = (siteSearchEl, siteSearchResultsEl, q) => {
 
@@ -266,17 +254,13 @@ export default function() {
 
                         if (data.length) {
 
-                            if (siteSearchResultsTemplate) {
-                                siteSearchResultsEl.innerHTML = siteSearchResultsTemplate({
-                                    results: data
-                                });
-                            }
+                            siteSearchResultsEl.innerHTML = theme.renderer.render('site-search-results', {
+                                results: data
+                            });
 
                         } else {
 
-                            if (siteSearchResultsTemplate) {
-                                siteSearchResultsEl.innerHTML = siteSearchNoResultsTemplate();
-                            }
+                            siteSearchResultsEl.innerHTML = theme.renderer.render('site-search-no-results');
                         }
 
                         document.dispatchEvent(new CustomEvent('theme:search', {
@@ -306,17 +290,44 @@ export default function() {
             if (siteSearchResetEl) {
 
                 siteSearchResetEl.addEventListener('click', () => {
-                    search(el, siteSearchResultsEl, null);
+
+                    if (!siteSearchQueryEl.value && siteHeaderSearchContainerEl.classList.contains('site-search-active')) {
+
+                        const searchOverlayEl = document.querySelector('#search-overlay');
+
+                        if (el.classList.contains('active')) {
+                            el.classList.remove('active');
+                        }
+                        
+                        if (document.body.classList.contains('site-search-autocomplete-visible')) {
+                            document.body.classList.remove('site-search-autocomplete-visible');
+                        }
+
+                        if (searchOverlayEl) {
+
+                            searchOverlayEl.click();
+
+                        } else {
+                            
+                            theme.utils.animate(siteHeaderSearchContainerEl, 'fadeOut').then(() => {
+                                siteHeaderSearchContainerEl.classList.remove('site-search-active');
+                            });
+                        }
+                        
+                    } else {
+
+                        search(el, siteSearchResultsEl, null);
+                    }
                 }, false);
             }
 
-            siteSearchQueryEl.addEventListener('input', theme.utils.debounce((e) => {
+            siteSearchQueryEl.addEventListener('input', theme.utils.debounce(e => {
                 search(el, siteSearchResultsEl, e.target.value);
             }, 300, false));
 
             if (theme.store.accessibility.showSearchAutocomplete) {
 
-                siteSearchQueryEl.addEventListener('click', (e) => {
+                siteSearchQueryEl.addEventListener('click', () => {
 
                     if (siteSearchQueryEl.value && siteSearchResultsEl.hasChildNodes() && theme.store.accessibility.showSearchAutocomplete) {
 
@@ -339,7 +350,7 @@ export default function() {
             }
         });
 
-        siteHeaderSearchToggleEls.forEach(el => { el.addEventListener('click', e => {
+        siteHeaderSearchToggleEls.forEach(el => { el.addEventListener('click', () => {
 
             if (siteHeaderSearchContainerEl.classList.contains('site-search-active')) {
 
@@ -370,7 +381,7 @@ export default function() {
 
                 if (!siteHeaderSearchContainerEl.contains(e.target) && siteHeaderSearchContainerEl !== e.target) {
 
-                    theme.utils.animate(siteHeaderSearchContainerEl, 'fadeOutUp').then(() => {
+                    theme.utils.animate(siteHeaderSearchContainerEl, 'fadeOut').then(() => {
                         siteHeaderSearchContainerEl.classList.remove('site-search-active');
                     });
 
@@ -480,7 +491,7 @@ export default function() {
 
                         if (!isMegamenu) {
 
-                            const submenuWidth = submenuEl.querySelector('.container').getBoundingClientRect().width;
+                            const submenuWidth = submenuEl.querySelector('.site-header-submenu-item').getBoundingClientRect().width;
                             const bodyPosRight = document.body.getBoundingClientRect().right;
                             let submenuPosLeft = menuItemEl.getBoundingClientRect().left;
                             const submenuPosRight = submenuPosLeft + submenuWidth;
@@ -497,7 +508,7 @@ export default function() {
                         submenuEl.style.height = submenuEl.scrollHeight+'px';
                     };
 
-                    const closeEventHandler = (e) => {
+                    const closeEventHandler = () => {
 
                         closeHandleTimer = setTimeout(() => {
 

@@ -37,7 +37,7 @@ export default class Notify {
 
         const template = `
             ${title ? `
-                <span class="d-block h5 mb-0">
+                <span class="d-block h5 text-title mb-0">
                     ${title}
                 </span>
             ` : '' }
@@ -69,7 +69,7 @@ export default class Notify {
 
         const template = `
             ${title ? `
-                <span class="d-block h5 mb-0">
+                <span class="d-block h5 text-title mb-0">
                     ${title}
                 </span>
             ` : '' }
@@ -101,7 +101,7 @@ export default class Notify {
 
         const template = `
             ${title ? `
-                <span class="d-block h5 mb-0">
+                <span class="d-block h5 text-title mb-0">
                     ${title}
                 </span>
             ` : '' }
@@ -133,7 +133,7 @@ export default class Notify {
 
         const template = `
             ${title ? `
-                <span class="d-block h5 mb-0">
+                <span class="d-block h5 text-title mb-0">
                     ${title}
                 </span>
             ` : '' }
@@ -165,7 +165,7 @@ export default class Notify {
 
         const template = `
             ${title ? `
-                <span class="d-block h5 mb-0">
+                <span class="d-block h5 text-title mb-0">
                     ${title}
                 </span>
             ` : '' }

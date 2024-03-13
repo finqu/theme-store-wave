@@ -181,6 +181,10 @@ a.text-accent {
 	color: currentColor !important
 }
 
+.text-inherit {
+	color: var(--style-text-color);
+}
+
 a.text-reset:hover,
 a.text-reset:focus {
 	color: currentColor;
@@ -189,7 +193,8 @@ a.text-reset:focus {
 .list-separator {
 	display: inline-flex;
 	margin-bottom: 0;
-	@include list-unstyled();
+	padding-left: 0;
+ 	list-style: none;
 
 	.list-inline-item {
 		display: inline-flex;
@@ -243,6 +248,31 @@ a.text-reset:focus {
 	p:last-of-type {
 		margin-bottom: 0;
 	}
+
+	a:not(:has(> *)) {
+		transition: border .15s ease-in-out;
+		border-bottom: 2px solid transparent;
+		padding-bottom: 2px;
+		margin-bottom: -4px;
+	
+		&:hover {
+			border-bottom-color: var(--style-accent-color);
+		}
+	}
+
+	ul, ol {
+		padding: 0;
+		margin-left: 1rem;
+		margin-bottom: 0;
+
+		li:not(:last-child) {
+			margin-bottom: $paragraph-margin-bottom;
+		}
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		color: var(--style-heading-color);
+	}
 }
 
 .text-muted {
@@ -252,4 +282,39 @@ a.text-reset:focus {
 
 .text-align-auto {
 	text-align: var(--section-content-text-align);
+}
+
+.blockquote {
+	display: block;
+    font-style: italic;
+    font-family: $accent-font-family;
+    padding: 2rem 4rem;
+    background-color: var(--style-bg-accent-color);
+	color: var(--style-text-accent-color);
+	border-radius: var(--style-component-border-radius);
+	--style-icon-color: var(--style-text-accent-color);
+}
+
+.hr-text {
+	position: relative;
+	text-align: center;
+	border-top: 0;
+
+	&:before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		background: $hr-border-color;
+		width: 100%;
+		height: 1px;
+	}
+
+	&:after {
+		content: attr(data-content);
+		position: relative;
+		background-color: var(--style-bg-color);
+		color: var(--style-text-color);
+		padding: 0 spacer(2);
+	}
 }

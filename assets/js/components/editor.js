@@ -4,14 +4,10 @@ import Masonry from 'masonry-layout';
 export default {
     init: function() {
 
-        document.addEventListener('finqu:section:load', (e) => {
+        document.addEventListener('finqu:section:load', e => {
 
             // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe for some reason
             theme.lazyLoad.loadAll();
-
-            if (window.KlarnaOnsiteService) {
-                KlarnaOnsiteService.push({ eventName: 'refresh-placements' });
-            }
 
             for (const el of e.target.querySelectorAll('.swiper.swiper-standalone')) {
                 new Slider(el);
@@ -27,12 +23,12 @@ export default {
             }
         });
 
-        document.addEventListener('finqu:section:unload', (e) => {
+        document.addEventListener('finqu:section:unload', e => {
 
             for (const el of e.target.querySelectorAll('.swiper.swiper-standalone')) {
 
                 if (el && el.swiper) {
-                    swiper.destroy();
+                    el.swiper.destroy();
                 }
             }
 
@@ -46,13 +42,13 @@ export default {
             }
         });
 
-        document.addEventListener('finqu:block:load', (e) => {
+        document.addEventListener('finqu:block:load', () => {
 
             // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe for some reason
             theme.lazyLoad.loadAll();
         });
 
-        document.addEventListener('finqu:block:edit', (e) => {
+        document.addEventListener('finqu:block:edit', e => {
 
             const el = e.detail.settingsContainerEl;
             const radioLabelEls = el.querySelectorAll('.radio-group label');
@@ -65,7 +61,7 @@ export default {
 
                     for (const index in matches) {
 
-                        const arr = Array.from(matches[index].matchAll(/{# icon.(.*?) #}/g));
+                        const arr = [...matches[index].matchAll(/{# icon.(.*?) #}/g)];
 
                         if (arr.length > 0 && arr[0].length >= 2) {
 
@@ -78,7 +74,7 @@ export default {
             }
         });
 
-        document.addEventListener('finqu:section:edit', (e) => {
+        document.addEventListener('finqu:section:edit', e => {
 
         	const el = e.detail.settingsContainerEl;
         	const radioLabelEls = el.querySelectorAll('.radio-group label');
@@ -91,7 +87,7 @@ export default {
 
         			for (const index in matches) {
 
-        				const arr = Array.from(matches[index].matchAll(/{# icon.(.*?) #}/g));
+        				const arr = [...matches[index].matchAll(/{# icon.(.*?) #}/g)];
 
                         if (arr.length > 0 && arr[0].length >= 2) {
 

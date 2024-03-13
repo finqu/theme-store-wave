@@ -1,4 +1,5 @@
 import { c as createElementIfNotDefined } from '../shared/create-element-if-not-defined.mjs';
+import { m as makeElementsArray } from '../shared/utils.mjs';
 
 function Navigation(_ref) {
   let {
@@ -22,7 +23,6 @@ function Navigation(_ref) {
     nextEl: null,
     prevEl: null
   };
-  const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
   function getEl(el) {
     let res;
     if (el && typeof el === 'string' && swiper.isElement) {

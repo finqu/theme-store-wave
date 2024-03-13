@@ -12,6 +12,7 @@
 	{%- if localeParts.size < 2 %}{{- request.locale.iso_code -}}-{{- request.country | upcase -}}{%else%}{{- request.locale.iso_code -}}{% endif %}
 {%- endcapture -%}
 {%- assign locale = locale | strip_newlines -%}
+{%- assign freeShippingLimit = cart.calc_free_shipping_limit -%}
 
 <script>
 	window.store = {
@@ -19,15 +20,12 @@
 		locale: {{ locale | json }},
 		designMode: {{ request.design_mode | json }},
 		taxFreeShopping: {{ settings.taxFreeShopping | json }},
-		klarna: {
-			clientId: {{ settings.klarnaClient | json }},
-			libSrc: 'https://eu-library.klarnaservices.com/lib.js'	
-		},
 		accessibility: {
 			showAnimations: {{ settings.accessibilityShowAnimations | json }},
 			showBackToTopButton: {{ settings.accessibilityShowBackToTopButton | json }},
 			showSearch: {{ settings.accessibilityShowSearch | json }},
-			showSearchAutocomplete: {{ settings.accessibilityShowSearchAutocomplete | json }}
+			showSearchAutocomplete: {{ settings.accessibilityShowSearchAutocomplete | json }},
+			showWishlist: {{ settings.accessibilityShowWishlist | json }}
 		},
 		customer: {
 			catalogBrowsingRequiresAccount: {{ store.catalog_browsing_requires_account | json }},
@@ -35,15 +33,119 @@
 			accountsOptional: {{ store.customer_accounts_optional | json }},
 			accountsRequireApproval: {{ store.customer_accounts_require_approval | json }},
 			loggedIn: {{ customer | yepnope: 'true', 'false' }},
-			hasAccess: {{ customer.has_access | yepnope: 'true', 'false' }}
+			hasAccess: {{ customer.has_access | yepnope: 'true', 'false' }},
+			acceptsMarketing: {{ customer.accepts_marketing | yepnope: 'true', 'false' }}
+		},
+		marketing: {
+			newsletterPopup: {
+				status: {{ settings.newsletterPopup | json }},
+				delay: {{ settings.newsletterPopupDelay }},
+				cookieDuration: {{ settings.newsletterPopupCookieDuration }}
+			}
 		},
 		cookiePolicy: {
-			status: {{ session.cookie_policy | json }},
+			status: 'all',
 			position: {{ settings.cookiesPolicyPosition | json }}
 		},
 		cart: {
 			showAddNotification: {{ settings.cartShowAddNotification | json }},
-			styleVariant: {{ settings.styleCartVariant | json }}
+			styleVariant: {{ settings.styleCartVariant | json }},
+			data: {
+				currency: {{ store.currency.iso_code | json }},
+				total: {{ cart.total | money | json }},
+				subtotal: {{ cart.subtotal | money | json }},
+				payment_fee: {{ cart.payment_fee | money | json }},
+				shipping_price: {{ cart.shipping_price | money | json }},
+				tax: {{ cart.tax | money | json }},
+				tax_subtotal: {{ cart.tax_subtotal | money | json }},
+				tax_free: {{ cart.tax_free | money | json }},
+				tax_free_subtotal: {{ cart.tax_free_subtotal | money | json }},
+				item_count: {{ cart.item_count | json }},
+				expires: {% if cart.expires %}{{ cart.expires | date: 'r' | json }}{% else %}null{% endif %},
+				has_free_shipping: {{ cart.applicable_for_free_shipping | json }},
+				{%- if freeShippingLimit -%}
+					free_shipping_limit: {
+						title: {{ freeShippingLimit.title | json }},
+						description: {{ freeShippingLimit.description | json }},
+						amount_to_limit: {{ freeShippingLimit.amount_to_limit | money | json }},
+						limit_amount: {{ freeShippingLimit.limit_amount | money | json }}
+					},
+				{%- endif -%}
+				item_count: {{ cart.item_count | json }},
+				weight_in_grams: {{ cart.weight_in_grams | json }},
+				items: [
+					{%- for item in cart.items -%}
+						{
+							name: {{ item.name | json }},
+							description: {{ item.description | json }},
+							id: {{ item.id | ceil | json }},
+							url: {{ item.url | json }},
+							image: {% if item.image -%} {
+								icon: {{ item.image | thumb: '32,32' | json }},
+								thumb: {{ item.image | thumb: '50,50' | json }},
+								small: {{ item.image | thumb: '96,96' | json }},
+								medium: {{ item.image | thumb: '240,240' | json }},
+								large: {{ item.image | thumb: '400,400' | json }},
+								original: {{ item.image | json }}
+							}{%- else -%}null{%- endif -%},
+							quantity: {{ item.quantity | json }},
+							unit_price: {{ item.unit_price | money | json }},
+							line_price: {{ item.line_price | money | json }},
+							net_price: {{ item.net_price | money | json }},
+							rate: {{ item.rate | json }},
+							tax: {{ item.tax | money | json }},
+							unit_name: {{ item.unit_name | json }},
+							out_of_stock: {{ item.stock_out | json }},
+							product_id: {{ item.product.id | ceil | json }},
+							requires_shipping: {{ item.requires_shipping | json }},
+							category_path: {{ item.category_path | compact | json }},
+							sku: {{ item.sku | json }},
+							model: {{ item.model | json }},
+							manufacturer: {{ item.manufacturer | json }},
+							type: {{ item.type | json }},
+							attributes: {{ item.attributes | json }},
+							attributes_label: {{ item.attributes_label | json }},
+							weight_in_grams: {{ item.weight_in_grams | round: 2 | json }},
+							shipping_weight_in_grams: {{ item.shipping_weight_in_grams | round: 2 | json }}
+						}{%- unless forloop.last -%},{%- endunless -%}
+					{%- endfor -%}
+				],
+				payment_methods: [
+					{%- for item in cart.payment_methods -%}
+						{
+							id: {{ item.id | ceil | json }},
+							name: {{ item.title | json}},
+							price: {{ item.fee | money | json }},
+							line_price: {{ item.fee | money | json }},
+							fee: {{ item.fee | money | json }},
+							rate: {{ item.rate | money | json }}
+						}{%- unless forloop.last -%},{%- endunless -%}
+					{%- endfor -%}
+				],
+				shipping_methods: [
+					{%- for item in cart.shipping_methods -%}
+						{
+							id: {{ item.id | ceil | json }},
+							name: {{ item.title | json}},
+							price: {{ item.price | money | json }},
+							line_price: {{ item.price | money | json }},
+							fee: {{ item.price | money | json }},
+							rate: {{ item.rate | money | json }}
+						}{%- unless forloop.last -%},{%- endunless -%}
+					{%- endfor -%}
+				],
+				discounts: [
+					{%- for item in cart.discounts -%}
+						{
+							id: {{ item.id | ceil | json }},
+							name: {{ item.title | json }},
+							code: {{ item.code | json }},
+							total_amount: {{ item.total_amount | money | json }},
+							total_savings: {{ item.total_savings | money | json }}
+						}{%- unless forloop.last -%},{%- endunless -%}
+					{%- endfor -%}
+				]
+			}
 		},
 		product: {
             showName: {{ settings.productShowName | json }},
@@ -99,6 +201,8 @@
 		    'filters.show_result_plural': {{ 'filters.show_result_plural' | t | json }},
 			'wishlist.add': {{ 'wishlist.add' | t | json }},
 			'wishlist.remove': {{ 'wishlist.remove' | t | json }},
+			'wishlist.item_count': {{ 'wishlist.item_count' | t | json }},
+			'wishlist.item_count_plural': {{ 'wishlist.item_count_plural' | t | json }},
 			'cart.title': {{ 'cart.title' | t | json }},
 			'cart.product_added_to_cart': {{ 'cart.product_added_to_cart' | t | json }},
 			'cart.proceed_to_checkout': {{ 'cart.proceed_to_checkout' | t | json }},

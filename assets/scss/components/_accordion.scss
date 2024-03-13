@@ -2,6 +2,85 @@
 // -----------------------------------------------------------------------------------------
 
 .accordion {
+
+    &.accordion-navigation {
+
+        .accordion-item {
+            padding: 0 var(--style-grid-container-padding-x);
+            border: 0;
+            border-radius: 0;
+
+            & + .accordion-item {
+                margin-top: spacer(3);
+            }
+
+            .accordion-header {
+                display: flex;
+                align-items: center;
+                min-height: 40px;
+                
+                &:has([aria-expanded="true"]) + .accordion-collapse > .accordion-body > .accordion-navigation {
+                    transform: translate(0);
+                    opacity: 1;
+                    overflow: unset;
+                    visibility: visible;
+                    transition: opacity 1s ease, visibility 0s, transform .5s ease;
+                }       
+                
+                .accordion-header-text {
+                    @include font-size($h3-font-size);
+                    flex: 1;
+                }
+            }
+
+            .accordion-collapse {
+                border-radius: 0;
+
+                > .accordion-body > .accordion-navigation {
+                    will-change: transform;
+                    transition: transform .5s ease;
+                    transform: translate(-20px);
+                    opacity: 0;
+                    overflow: hidden;
+                    visibility: hidden;
+                    transition: opacity .3s ease, visibility .3s,  transform .5s ease;
+                    backface-visibility: hidden;
+                }
+            }
+
+            .accordion-body {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            .accordion-item {
+                padding-left: 0;
+                padding-right: 0;
+
+                & + .accordion-item {
+                    margin-top: 0;
+                }
+
+                .accordion-header {
+
+                    .accordion-header-text {
+                        @include font-size($font-size-base);
+                    }
+                }
+                
+                .accordion-body {
+                    padding-top: spacer(1);
+                    padding-bottom: spacer(1);
+                }
+
+                .accordion-item {
+                    padding-left: spacer(3);
+                    margin-left: spacer(4);
+                    border-left: 1px solid var(--style-border-color);
+                }
+            }
+        }
+    }
     
     .accordion-header {
 

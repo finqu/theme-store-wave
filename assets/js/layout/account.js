@@ -6,13 +6,13 @@ export default function() {
     const accountLocaleEl = containerEl.querySelector('#edit-account-locale');
 
     if (accountCurrencyEl) {
-        accountCurrencyEl.addEventListener('change', e => {
+        accountCurrencyEl.addEventListener('change', () => {
             localizationFormEl.submit();
         });
     }
 
     if (accountLocaleEl) {
-        accountLocaleEl.addEventListener('change', e => {
+        accountLocaleEl.addEventListener('change', ( )=> {
             localizationFormEl.submit();
         });
     }

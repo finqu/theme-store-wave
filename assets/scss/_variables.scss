@@ -49,6 +49,7 @@ $sizes-percentage: (
 );
 
 $sizes-px: (
+	30: 30px,
 	40: 40px,
 	50: 50px,
 	60: 60px,
@@ -86,28 +87,48 @@ $sizes-px: (
 );
 
 $sizes-vw: (
+	5: 5vw,
 	10: 10vw,
+	15: 15vw,
 	20: 20vw,
+	25: 25vw,
 	30: 30vw,
+	35: 35vw,
 	40: 40vw,
+	45: 45vw,
 	50: 50vw,
+	55: 55vw,
 	60: 60vw,
+	65: 65vw,
 	70: 70vw,
+	75: 75vw,
 	80: 80vw,
+	85: 85vw,
 	90: 90vw,
+	95: 95vw,
 	100: 100vw
 );
 
 $sizes-vh: (
+	5: 5vh,
 	10: 10vh,
+	15: 15vh,
 	20: 20vh,
+	25: 25vh,
 	30: 30vh,
+	35: 35vh,
 	40: 40vh,
+	45: 45vh,
 	50: 50vh,
+	55: 55vh,
 	60: 60vh,
+	65: 65vh,
 	70: 70vh,
+	75: 75vh,
 	80: 80vh,
+	85: 85vh,
 	90: 90vh,
+	95: 95vh,
 	100: 100vh
 );
 
@@ -143,13 +164,14 @@ $border-radius-pill: 50rem;
 
 // Font
 $font-size-root: 14px;
+$font-size-root-rfs: rfs-value($font-size-root);
 $font-size-lg: $font-size-base * 1.15;
 $font-size-sm: $font-size-base * 0.85;
 
 $font-weight-light: 400;
 $font-weight-normal: 400;
-$font-weight-medium: 400;
-$font-weight-semibold: 700;
+$font-weight-medium: 500;
+$font-weight-semibold: 500;
 $font-weight-bold: 700;
 
 $font-weight-base: $font-weight-normal;
@@ -161,6 +183,16 @@ $line-height-computed: floor(($font-size-base * $line-height-base));
 $headings-margin-bottom: 1rem;
 $headings-line-height: $line-height-base * 0.85;
 $headings-color: var(--style-heading-color);
+
+$font-sizes: (
+	1: $h1-font-size,
+	2: $h2-font-size,
+	3: $h3-font-size,
+	4: $h4-font-size,
+	5: $h5-font-size,
+	6: $h6-font-size,
+	'reset': $font-size-root-rfs
+);
 
 $display-font-sizes: (
 	1: 5rem,
@@ -198,7 +230,7 @@ $mark-bg: var(--style-accent-faded-color);
 
 $list-inline-padding: .5rem;
 
-$blockquote-font-size: $font-size-base * 1.25;
+$blockquote-font-size: $font-size-base;
 $blockquote-footer-font-size: 80%;
 $blockquote-margin-y: $spacer;
 $blockquote-footer-color: var(--style-text-color);
@@ -218,8 +250,8 @@ $input-btn-focus-color: none;
 $input-btn-focus-blur: none;
 $input-btn-focus-box-shadow: none;
 
-$input-btn-padding-y-sm: $input-btn-padding-y * 0.85;
-$input-btn-padding-x-sm: $input-btn-padding-y * 0.85;
+$input-btn-padding-y-sm: $input-btn-padding-y * 0.75;
+$input-btn-padding-x-sm: $input-btn-padding-x * 0.85;
 $input-btn-font-size-sm: $font-size-sm;
 
 $input-btn-padding-y-lg: $input-btn-padding-y * 1.15;
@@ -315,7 +347,7 @@ $input-line-height: $input-btn-line-height;
 
 $input-padding-y-sm: $input-btn-padding-y-sm;
 $input-padding-x-sm: $input-btn-padding-x-sm;
-$input-font-size-sm: input-btn-font-size-sm;
+$input-font-size-sm: $input-btn-font-size-sm;
 
 $input-padding-y-lg: $input-btn-padding-y-lg;
 $input-padding-x-lg: $input-btn-padding-x-lg;
@@ -362,7 +394,7 @@ $btn-border-radius-lg: var(--style-btn-border-radius);
 $btn-border-radius-sm: var(--style-btn-border-radius);
 
 $btn-border-width: 2px;
-$btn-font-weight: 700;
+$btn-font-weight: $btn-font-weight;
 $btn-disabled-opacity: .65;
 
 $btn-padding-y: 0.8rem;
@@ -521,9 +553,37 @@ $toast-border-radius: var(--style-component-border-radius);
 $badge-border-radius: var(--style-btn-border-radius);
 
 // Modal
-$modal-content-border-width: $border-width;
+$modal-inner-padding: $spacer;
+$modal-footer-margin-between: 5rem;
+$modal-dialog-margin: .5rem;
+$modal-dialog-margin-y-sm-up: 1.75rem;
+$modal-title-line-height: $line-height-base;
+$modal-content-color: null;
+$modal-content-bg: var(--#{$prefix}body-bg);
+$modal-content-border-color: var(--#{$prefix}border-color-translucent);
+$modal-content-border-width:  $border-width;
 $modal-content-border-radius: var(--style-component-border-radius);
 $modal-content-inner-border-radius: calc(var(--style-component-border-radius) - $modal-content-border-width);
+$modal-content-box-shadow-xs: var(--#{$prefix}box-shadow-sm);
+$modal-content-box-shadow-sm-up: var(--#{$prefix}box-shadow);
+$modal-backdrop-bg: rgba(0,0,0);
+$modal-backdrop-opacity: .5;
+$modal-header-border-color: var(--#{$prefix}border-color);
+$modal-header-border-width: $modal-content-border-width;
+$modal-header-padding-y: $modal-inner-padding;
+$modal-header-padding-x: $modal-inner-padding;
+$modal-header-padding: $modal-header-padding-y $modal-header-padding-x;
+$modal-footer-bg: null;
+$modal-footer-border-color: $modal-header-border-color;
+$modal-footer-border-width: $modal-header-border-width;
+$modal-sm: 300px;
+$modal-md: 500px;
+$modal-lg: 700px;
+$modal-xl: 1140px;
+$modal-fade-transform: translate(0, -50px);
+$modal-show-transform: none;
+$modal-transition: transform .3s ease-out;
+$modal-scale-transform: scale(1.02);
 
 // Alert
 $alert-border-radius: var(--style-component-border-radius);

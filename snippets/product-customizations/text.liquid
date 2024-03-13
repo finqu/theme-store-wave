@@ -1,0 +1,72 @@
+<div class="product-customization-container product-customization-text">
+
+    {% for option in group.options %}
+
+        <div class="mb-4{% if inline %} d-md-flex{% endif %}">
+
+            {%- if settings.taxFreeShopping -%}
+                {% assign itemPrice = option.net_price %}
+            {%- else -%}
+                {% assign itemPrice = option.price %}
+            {%- endif -%}
+
+            {% if option.title or itemPrice > 0 %}
+
+                {% if highlightLabel %}
+
+                    <label for="product-customization-{{ option.id }}" class="form-label fw-bold text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">
+
+                        {{ option.title }}{% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %} (+{{ itemPrice | money_with_currency }}){% endif %}:
+
+                    </label>
+
+                {% else %}
+
+                    <label for="product-customization-{{ option.id }}" class="form-label text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">
+
+                        {{ option.title }}{% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %} (+{{ itemPrice | money_with_currency }}){% endif %}:
+
+                    </label>
+
+                {% endif %}
+
+            {% endif %}
+
+            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock == true %}
+
+                {% assign arg1 = true %}
+
+            {% endif %}
+
+            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
+
+                {% assign arg2 = true %}
+
+            {% endif %}
+
+            <textarea
+
+                class="product-customization form-control{% if arg1 or arg2 %} has-price{% endif %}"
+                id="product-option-{{ option.id }}"
+                name="{{ option.id }}"
+                data-is-usable
+
+                {% if option.min_length > 0 %}
+                    minlength="{{ option.min_length }}"
+                {% endif %}
+
+                {% if option.max_length > 0 %}
+                    maxlength="{{ option.max_length }}"
+                {% endif %}
+
+                {% if option.rows > 0 %}
+                    rows="{{ option.rows }}"
+                {% endif %}
+
+                ></textarea>
+
+        </div>
+
+    {% endfor %}
+
+</div>

@@ -1,31 +1,19 @@
-{%- assign sectionTitle =  'general.page_not_found_title' | t -%}
-{%- assign sectionSubtitle = 'general.page_not_found_subtitle' | t -%}
+{% comment %}
+	The contents of the 404.liquid template can be found in /sections/404-template.liquid
+{% endcomment %}
 
-{%- capture sectionContent -%}
-
-	<div class="text-center">
-
-		<div class="mb-7">
-			{%- render 'icon', icon: 'page-missing', class: 'svg-icon-10x' -%}
-		</div>
-
-		<a href="{{ routes.root_url }}" class="btn btn-primary">
-			{{- 'general.back_to_home_page' | t -}}
-		</a>
-
-	</div>
-
-{%- endcapture -%}
-
-<section class="section section-404">
-	{% render 'section', sectionHandle: '.section-404', sectionTitle: sectionTitle, sectionTitleTag: 'h1', sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionHeaderTextAlign: 'center' %}
-</section>
+{{ content_for_index }}
 
 {% schema %}
 {
-    "name": {
-        "en": "404",
+	"name": {
+		"en": "404",
         "fi": "404"
-    }
+	},
+	"template_sections": [
+		{
+			"name": "404-template"
+		}
+	]
 }
 {% endschema %}

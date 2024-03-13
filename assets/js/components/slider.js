@@ -50,12 +50,12 @@ export default class Slider {
             speed: parseInt(this.opts.swiperSpeed || 300, 10),
             loop: this.opts.swiperLoop === 'true' ? true : false,
             pagination: {
-                el: '.swiper-pagination',
+                el: el.querySelector('.swiper-pagination'),
                 clickable: this.opts.swiperNoSwiping !== 'true' ? true : false
             },
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
+                nextEl: el.querySelector('.swiper-button-next'),
+                prevEl: el.querySelector('.swiper-button-prev')
             },
             freeMode: {
                 enabled: false
@@ -177,7 +177,7 @@ export default class Slider {
             }
         }, 150, false));
 
-        document.addEventListener('finqu:section:unload', theme.utils.debounce((e) => {
+        document.addEventListener('finqu:section:unload', theme.utils.debounce(e => {
             if (this.el === e.target) {
                 this.swiper.destroy();
             }

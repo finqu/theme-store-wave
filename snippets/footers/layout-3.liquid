@@ -11,11 +11,11 @@
 
                 <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                    <div class="row">
+                    <div class="row gy-4">
 
                         {% if section.settings.footerTextArea1Status %}
 
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-6 col-lg">
 
                                 <div class="site-footer-text-container">
 
@@ -29,7 +29,7 @@
 
                                     {% endif %}
 
-                                    <div class="site-footer-text">
+                                    <div class="site-footer-text text-richtext">
 
                                         {{ section.settings.footerTextArea1Content }}
 
@@ -41,153 +41,161 @@
 
                         {% endif %}
 
-                        <div class="col-12 col-md">
+                        {% if section.settings.footerMenu1 %}
 
-                            <div class="site-footer-menu-container">
+                            <div class="col-12 col-md-6 col-lg-2">
 
-                                <div class="site-footer-title">
+                                <div class="site-footer-menu-container">
 
-                                    {%- if section.settings.footerMenu1Title -%}
+                                    <div class="site-footer-title">
 
-                                        <span class="site-footer-menu-title-text">
-                                            {{ section.settings.footerMenu1Title }}
-                                        </span>
+                                        {%- if section.settings.footerMenu1Title -%}
 
-                                    {%- endif -%}
+                                            <span class="site-footer-menu-title-text">
+                                                {{ section.settings.footerMenu1Title }}
+                                            </span>
 
-                                </div>
+                                        {%- endif -%}
 
-                                <ul class="site-footer-menu">
+                                    </div>
 
-                                    {% for item in footerMenu1.links %}
+                                    <ul class="site-footer-menu">
 
-                                        <li class="site-footer-menu-item">
+                                        {% for item in footerMenu1.links %}
 
-                                            {%- if item.url -%}
+                                            <li class="site-footer-menu-item">
 
-                                                <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                                    {{ item.title }}
-                                                </a>
+                                                {%- if item.url -%}
 
-                                            {%- else -%}
+                                                    <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                        {{ item.title }}
+                                                    </a>
 
-                                                <span class="site-footer-menu-item-text">
-                                                    {{ item.title }}
-                                                </span>
+                                                {%- else -%}
 
-                                            {%- endif -%}
+                                                    <span class="site-footer-menu-item-text">
+                                                        {{ item.title }}
+                                                    </span>
 
-                                        </li>
+                                                {%- endif -%}
 
-                                        {% if item.links %}
+                                            </li>
 
-                                            {% for item in item.links %}
+                                            {% if item.links %}
 
-                                                <li class="site-footer-menu-item">
+                                                {% for item in item.links %}
 
-                                                    {%- if item.url -%}
+                                                    <li class="site-footer-menu-item">
 
-                                                        <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                                            {{ item.title }}
-                                                        </a>
+                                                        {%- if item.url -%}
 
-                                                    {%- else -%}
+                                                            <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                                {{ item.title }}
+                                                            </a>
 
-                                                        <span class="site-footer-menu-item-text">
-                                                            {{ item.title }}
-                                                        </span>
+                                                        {%- else -%}
 
-                                                    {%- endif -%}
+                                                            <span class="site-footer-menu-item-text">
+                                                                {{ item.title }}
+                                                            </span>
 
-                                                </li>
+                                                        {%- endif -%}
 
-                                            {% endfor %}
+                                                    </li>
 
-                                        {% endif %}
+                                                {% endfor %}
 
-                                    {% endfor %}
+                                            {% endif %}
 
-                                </ul>
+                                        {% endfor %}
 
-                            </div>
-
-                        </div>
-
-                        <div class="col-12 col-md">
-
-                            <div class="site-footer-menu-container">
-
-                                <div class="site-footer-title">
-
-                                    {%- if section.settings.footerMenu2Title -%}
-
-                                        <span class="site-footer-menu-title-text">
-                                            {{ section.settings.footerMenu2Title }}
-                                        </span>
-
-                                    {%- endif -%}
+                                    </ul>
 
                                 </div>
 
-                                <ul class="site-footer-menu">
+                            </div>
 
-                                    {% for item in footerMenu2.links %}
+                        {% endif %}
 
-                                        <li class="site-footer-menu-item">
+                        {% if section.settings.footerMenu2 %}
 
-                                            {%- if item.url -%}
+                            <div class="col-12 col-md-6 col-lg-2">
 
-                                                <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                                    {{ item.title }}
-                                                </a>
+                                <div class="site-footer-menu-container">
 
-                                            {%- else -%}
+                                    <div class="site-footer-title">
 
-                                                <span class="site-footer-menu-item-text">
-                                                    {{ item.title }}
-                                                </span>
+                                        {%- if section.settings.footerMenu2Title -%}
 
-                                            {%- endif -%}
+                                            <span class="site-footer-menu-title-text">
+                                                {{ section.settings.footerMenu2Title }}
+                                            </span>
 
-                                        </li>
+                                        {%- endif -%}
 
-                                        {% if item.links %}
+                                    </div>
 
-                                            {% for item in item.links %}
+                                    <ul class="site-footer-menu">
 
-                                                <li class="site-footer-menu-item">
+                                        {% for item in footerMenu2.links %}
 
-                                                    {%- if item.url -%}
+                                            <li class="site-footer-menu-item">
 
-                                                        <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
-                                                            {{ item.title }}
-                                                        </a>
+                                                {%- if item.url -%}
 
-                                                    {%- else -%}
+                                                    <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                        {{ item.title }}
+                                                    </a>
 
-                                                        <span class="site-footer-menu-item-text">
-                                                            {{ item.title }}
-                                                        </span>
+                                                {%- else -%}
 
-                                                    {%- endif -%}
+                                                    <span class="site-footer-menu-item-text">
+                                                        {{ item.title }}
+                                                    </span>
 
-                                                </li>
+                                                {%- endif -%}
 
-                                            {% endfor %}
+                                            </li>
 
-                                        {% endif %}
+                                            {% if item.links %}
 
-                                    {% endfor %}
+                                                {% for item in item.links %}
 
-                                </ul>
+                                                    <li class="site-footer-menu-item">
+
+                                                        {%- if item.url -%}
+
+                                                            <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                                                {{ item.title }}
+                                                            </a>
+
+                                                        {%- else -%}
+
+                                                            <span class="site-footer-menu-item-text">
+                                                                {{ item.title }}
+                                                            </span>
+
+                                                        {%- endif -%}
+
+                                                    </li>
+
+                                                {% endfor %}
+
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
 
                             </div>
 
-                        </div>
+                        {% endif %}
 
                         {% if section.settings.footerSocialMediaButtonsStatus %}
 
-                            <div class="col-12 col-md">
+                            <div class="col-12 col-md-6 col-lg">
 
                                 {% if section.settings.footerSocialMediaTitle or section.settings.footerSocialMediaContent %}
 
@@ -205,7 +213,7 @@
 
                                         {% if section.settings.footerSocialMediaContent %}
 
-                                            <div class="site-footer-text mb-3">
+                                            <div class="site-footer-text mb-3 text-richtext">
 
                                                 {{ section.settings.footerSocialMediaContent }}
 
@@ -217,7 +225,7 @@
 
                                 {% endif %}
 
-                                {% render 'social-media-buttons' class: 'site-footer-social-media-buttons-container' %}
+                                {% render 'social-media-buttons' class: 'site-footer-social-media-buttons-container', preview: request.design_mode %}
 
                             </div>
 
@@ -235,7 +243,7 @@
 
                     <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                        <div class="row">
+                        <div class="row gy-4">
 
                             {% if section.settings.footerNewsletterStatus %}
 
@@ -273,7 +281,11 @@
 
                                                 {% if section.settings.footerNewsletterContent %}
 
-                                                    {{ section.settings.footerNewsletterContent }}
+                                                    <div class="text-richtext mb-4">
+
+                                                        {{ section.settings.footerNewsletterContent }}
+
+                                                    </div>
 
                                                 {% endif %}
 
@@ -291,7 +303,7 @@
 
                                                 {% else %}
 
-                                                    <div class="input-group max-w-px-370 mt-4">
+                                                    <div class="input-group max-w-px-370">
                                                     
                                                         <div class="form-floating">
 
@@ -335,16 +347,14 @@
 
                                     <div class="site-footer-payment-methods-container">
 
-                                        {% if section.settings.footerPaymentMethodsimg %}
-
-                                            {%- assign img = section.settings.footerPaymentMethodsimg -%}
+                                        {% if section.settings.footerPaymentMethodsImg %}
                                             {%- assign imgSize = '540,190' -%}
 
                                             <picture>
                                                 <img
                                                     alt=""
-                                                    data-src="{{ img | thumb: imgSize }}"
-                                                    data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
+                                                    data-src="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }}"
+                                                    data-srcset="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMethodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
                                                     class="lazy d-block mx-auto img-fluid mt-4 mt-md-0">
                                             </picture>
 
@@ -356,7 +366,7 @@
 
                                             {% for payment_method in store.payment_methods %}
 
-                                                {%- assign img = payment_method.image -%}
+                                                {%- assign img = payment_method.logo -%}
 
                                                 {% if img %}
 
@@ -366,7 +376,7 @@
 
                                                         <picture>
                                                             <img
-                                                                alt="{{ payment_method.name }}"
+                                                                alt="{{ payment_method.title }}"
                                                                 data-src="{{ img | thumb: imgSize }}"
                                                                 data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
                                                                 class="lazy d-block mx-auto img-fluid">
@@ -398,87 +408,61 @@
 
                 <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                    {% if section.settings.footerTextArea2Status %}
+                    <div class="row gy-4">
 
-                        <div class="site-footer-bottom-text">
+                        <div class="col-12 col-md">
 
-                            {{ section.settings.footerTextArea2Content }}
+                            {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                                <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> - 
+                            {%- endif -%}
+
+                            {{ powered_by_link }}
 
                         </div>
 
-                    {% endif %}
+                        {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
 
-                    <div class="site-footer-bottom-items mt-4">
+                            <div class="col-12 col-md site-footer-localization text-md-end">
 
-                        <div class="row">
+                                {% form 'localization', customer %}
 
-                            <div class="col-12 col-md">
+                                    {% if store.published_locales.size > 1 %}
 
-                                <ul class="list-separator">
+                                        <select name="locale_code" class="site-localization-locale-select">
 
-                                    <li class="list-inline-item">
+                                            {% for locale in store.published_locales %}
+                                                <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
+                                                    {{ locale.name }}
+                                                </option>
+                                            {% endfor %}
 
-                                        <button type="button" class="btn btn-link text-reset" data-cookie-policy-open>
-                                            {{- 'cookie_policy.cookie_settings' | t -}}
-                                        </button>
+                                        </select>
 
-                                    </li>
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
 
-                                    <li class="list-inline-item">
+                                    {% endif %}
 
-                                        <a target="_blank" rel="nofollow noopener" class="text-reset" href="https://www.finqu.com?utm_campaign=poweredby&utm_medium=finqu&utm_source=onlinestore">Powered by Finqu</a>
+                                    {% if store.enabled_currencies.size > 1 %}
 
-                                    </li>
+                                        <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
 
-                                </ul>
+                                            {% for currency in store.enabled_currencies %}
+                                                <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
+                                                    {{ currency.name }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+
+                                        {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+                                    {% endif %}
+
+                                {% endform %}
 
                             </div>
 
-                            {% if store.published_locales.size > 1 or store.enabled_currencies.size > 1 %}
-
-                                <div class="col-12 col-md site-footer-localization text-md-end mt-4 mt-md-0">
-
-                                    {% form 'localization', customer %}
-
-                                        {% if store.published_locales.size > 1 %}
-
-                                            <select name="locale_code" class="site-localization-locale-select">
-
-                                                {% for locale in store.published_locales %}
-                                                    <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
-                                                        {{ locale.name }}
-                                                    </option>
-                                                {% endfor %}
-
-                                            </select>
-
-                                            {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
-
-                                        {% endif %}
-
-                                        {% if store.enabled_currencies.size > 1 %}
-
-                                            <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
-
-                                                {% for currency in store.enabled_currencies %}
-                                                    <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
-                                                        {{ currency.name }}
-                                                    </option>
-                                                {% endfor %}
-
-                                            </select>
-
-                                            {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
-
-                                        {% endif %}
-
-                                    {% endform %}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
+                        {% endif %}
 
                     </div>
 
@@ -492,4 +476,4 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContainer: 'none', sectionClasses: sectionClasses, sectionAnimation: false %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContainer: 'none', sectionClasses: sectionClasses, sectionAnimation: false, sectionGutterWidth: '4rem' %}

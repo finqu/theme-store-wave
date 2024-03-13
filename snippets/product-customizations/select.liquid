@@ -1,0 +1,80 @@
+<div class="product-customization-container product-customization-select mb-4{% if inline %} d-md-flex{% endif %}">
+
+    {% if group.name %}
+
+        {% if highlightLabel %}
+            <label for="product-customization-{{ group.id }}" class="form-label fw-bold text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}:</label>
+        {% else %}
+            <label for="product-customization-{{ group.id }}" class="form-label text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}</label>
+        {% endif %}
+
+    {% endif %}
+
+    <select class="product-customization form-select"
+        data-customization="{{ group.id }}"
+        id="product-customization-{{ group.id }}"
+        name="{{ group.id }}"
+        data-is-usable
+        disabled>
+
+        <option disabled selected value>{{ 'general.choose' | t }}</option>
+
+        {% for option in group.options %}
+
+            {%- if settings.taxFreeShopping -%}
+                {% assign itemPrice = option.net_price %}
+            {%- else -%}
+                {% assign itemPrice = option.price %}
+            {%- endif -%}
+
+            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock == true %}
+
+                {% assign arg1 = true %}
+
+            {% endif %}
+
+            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
+
+                {% assign arg2 = true %}
+
+            {% endif %}
+
+            <option
+                {% if arg1 or arg2 %}class="has-price" {% endif %}
+                value="{{ option.id }}"{% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% endif %}>
+
+                {{ option.title }}
+
+                {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock == true and option.child_group != true %}
+
+                    ({{ option.stock }} {{ unit }})
+
+                {% endif %}
+
+                {% if option.in_stock == false and inventoryPolicy == 'deny' %}
+
+                    ({{ 'product.out_of_stock' | t }})
+
+                {% elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %}
+
+                    (+{{ itemPrice | money_with_currency }})
+
+                {% endif %}
+
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+{% for option in group.options %}
+
+    {% if option.child_group %}
+
+        {% render 'product-customizations/child-group', option: option, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel %}
+
+    {% endif %}
+
+{% endfor %}

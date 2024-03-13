@@ -16,6 +16,7 @@
     - showDiscountBadge: {Boolean} true | false
     - showOutOfStockBadge: {Boolean} true | false
     - showAddToCart: {Boolean} true | false
+    - showVariants: {Boolean} true | false
 
     Usage:
     {% render 'product-card-grid', product: product %}
@@ -69,6 +70,10 @@
     {%- assign showStockBalance = showStockBalance | default: settings.productShowStockBalance -%}
 {%- endif -%}
 
+{%- if showVariants != false -%}
+    {%- assign showVariants = settings.productShowVariants -%}
+{%- endif -%}
+
 {%- if store.customer_accounts_optional == true or store.customer_accounts_require_approval == true and customer.has_access -%}
     {%- assign accountHasApproval = true -%}
 {%- endif -%}
@@ -88,8 +93,8 @@
     {%- assign showAddToCart = false -%}
 {% endunless %}
 
-{%- assign productName = product.name | default: '' -%}
-{%- assign productManufacturerName = product.manufacturer.name | default: '' -%}
+{%- assign productName = product.title | default: '' -%}
+{%- assign productManufacturerName = product.manufacturer.title | default: '' -%}
 {%- assign productPrice = product.price | default: '' -%}
 {%- assign productNetPrice = product.net_price | default: '' -%}
 {%- assign productOriginalNetPrice = product.original_net_price | default: '' -%}
@@ -159,7 +164,7 @@
 
         {%- if product -%}
 
-            {%- if wishlist and session.logged_in -%}
+            {%- if wishlist and settings.accessibilityShowWishlist -%}
 
                 <div class="product-wishlist-action-container">
 
@@ -235,20 +240,38 @@
 
                             {%- elsif settings.productImageAspectRatio == '4:3' -%}
 
-                                {%- assign imgSizeSm = '280,220' -%}
-                                {%- assign imgSizeMd = '240,190' -%}
+                                {%- assign imgSizeSm = '280,210' -%}
+                                {%- assign imgSizeMd = '240,180' -%}
 
                                 {%- case productPerRow -%}
                                     {% when '2' %}
-                                        {%- assign imgSizeLg = '600,460' -%}
+                                        {%- assign imgSizeLg = '613,460' -%}
                                     {% when '3' %}
-                                        {%- assign imgSizeLg = '400,310' -%}
+                                        {%- assign imgSizeLg = '413,310' -%}
                                     {% when '4' %}
-                                        {%- assign imgSizeLg = '400,235' -%}
+                                        {%- assign imgSizeLg = '313,235' -%}
                                     {% when '5' %}
                                         {%- assign imgSizeLg = '240,190' -%}
                                     {% when '6' %}
                                         {%- assign imgSizeLg = '200,160' -%}
+                                {%- endcase -%}
+
+                            {%- elsif settings.productImageAspectRatio == '3:4' -%}
+
+                                {%- assign imgSizeSm = '280,373' -%}
+                                {%- assign imgSizeMd = '240,320' -%}
+
+                                {%- case productPerRow -%}
+                                    {% when '2' %}
+                                        {%- assign imgSizeLg = '600,800' -%}
+                                    {% when '3' %}
+                                        {%- assign imgSizeLg = '400,533' -%}
+                                    {% when '4' %}
+                                        {%- assign imgSizeLg = '300,400' -%}
+                                    {% when '5' %}
+                                        {%- assign imgSizeLg = '240,320' -%}
+                                    {% when '6' %}
+                                        {%- assign imgSizeLg = '200,267' -%}
                                 {%- endcase -%}
 
                             {%- elsif settings.productImageAspectRatio == '1:1' -%}
@@ -273,22 +296,22 @@
 
                             <picture>
                                 <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                    {{- image.original | thumb: imgSizeLg }} 1x,
-                                    {{- image.original | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+                                    {{- image | thumb: imgSizeLg }} 1x,
+                                    {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
 
                                 <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
-                                    {{- image.original | thumb: imgSizeMd }} 1x,
-                                    {{- image.original | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+                                    {{- image | thumb: imgSizeMd }} 1x,
+                                    {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
 
                                 <source data-srcset="
-                                    {{- image.original | thumb: imgSizeSm }} 1x,
-                                    {{- image.original | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+                                    {{- image | thumb: imgSizeSm }} 1x,
+                                    {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                 <img
                                     alt="{{ productName }}" 
-                                    data-src="{{ image.original | thumb: imgSizeSm }}"
-                                    data-srcset="{{ image.original | thumb: imgSizeSm }} 1x, {{ image.original | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                    data-src="{{ image | thumb: imgSizeSm }}"
+                                    data-srcset="{{ image | thumb: imgSizeSm }} 1x, {{ image | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item{% if forloop.first %} featured-img{% endif %}">
                             </picture>
 
                         </div>
@@ -349,7 +372,7 @@
 
                 <div class="product-name">
 
-                    <h3 class="product-name-text">
+                    <h3 class="product-name-text text-product-title">
                         {{- productName -}}
                     </h3>
 
@@ -385,7 +408,7 @@
 
                     {%- if productHasDiscount -%}
 
-                        <span class="text-sale-price fw-bold me-2">
+                        <span class="text-sale-price me-2">
                             {{- settings.taxFreeShopping == true | yepnope: productNetPrice, productPrice | money_with_currency -}}
                         </span>
 
@@ -417,34 +440,6 @@
 
             {% endif %}
 
-            {%- if showStockBalance -%}
-
-                <div class="product-stock-balance">
-
-                    {%- if product.in_stock == false and product.inventory_policy == 'deny' -%}
-
-                        <span class="product-stock-balance-out-of-stock">
-                            {{- 'product.out_of_stock' | t -}}
-                        </span>
-
-                    {%- elsif product.stock_alarm and product.stock and product.inventory_policy == 'deny' -%}
-
-                        <span class="product-stock-balance-low-on-stock">
-                            {{- 'product.low_on_stock_dynamic' | t: amount: product.stock -}}
-                        </span>
-
-                    {%- else -%}
-
-                        <span class="product-stock-balance-in-stock">
-                            {{- 'product.in_stock' | t -}}
-                        </span>
-
-                    {%- endif -%}
-
-                </div>
-
-            {%- endif -%}
-
         {%- endcapture -%}
 
         {%- if product -%}
@@ -456,6 +451,412 @@
         {%- else -%}
 
             {{- productCaptionInner -}}
+
+        {%- endif -%}
+
+        {%- if showVariants and product.options_with_values.size -%}
+
+            {% assign variantsAvailableArr = product.variants | map: 'is_available' %}
+            {% assign variantsOption1Arr = product.variants | map: 'option1' %}
+            {% assign variantsOption2Arr = product.variants | map: 'option2' %}
+            {% assign variantsOption3Arr = product.variants | map: 'option3' %}
+            {% assign variantsHasImage = product.variants | where: 'image' | compact %}
+            {% assign visibleOptionsCount = 1 %}
+
+            {% if settings.productShowVariantOption2 %}
+                {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+            {% endif %}
+
+            {% if settings.productShowVariantOption3 %}
+                {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+            {% endif %}
+
+            {% capture variantsTemplate %}
+
+                {% for num in (1..visibleOptionsCount) %}
+
+                    {%- case forloop.index -%}
+                        {% when 1 %}
+                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption1 | first -%}
+                        {% when 2 %}
+                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption2 | first -%}
+                        {% when 3 %}
+                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption3 | first -%}
+                    {%- endcase -%}
+
+                    {% unless option %}
+                        {%- continue -%}
+                    {% endunless %}
+
+                    {%- assign optionPosition = option.sort_order | plus: 1 -%}
+
+                    {% if option.type == 'color' %}
+
+                        {% assign colorOptionValuesWithColor = option.values | where: 'color' %}
+
+                        <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap">
+
+                            {% for value in colorOptionValuesWithColor %}
+
+                                {%- assign optionDisabled = true -%}
+
+                                {%- for option1 in variantsOption1Arr -%}
+
+                                    {%- case colorOptionPosition -%}
+                                        {%- when 1 -%}
+                                            {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- assign optionDisabled = false -%}
+                                            {%- endif -%}
+                                        {%- when 2 -%}
+                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {% assign optionDisabled = false %}
+                                            {%- endif -%}
+                                        {%- when 3 -%}
+                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {% assign optionDisabled = false %}
+                                            {%- endif -%}
+                                    {%- endcase -%}
+
+                                {%- endfor -%}
+
+                                <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs" style="--swatch-color: {{ value.color }}">
+
+                                    <input class="form-check-input{% if optionDisabled %} disabled{% endif %}"
+                                        type="hidden"
+                                        name="product-variant-img"
+                                        value="{{ value.image }}"
+                                        readonly>
+
+                                    <label class="form-check-label"{% unless optionDisabled %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}"{% endunless %}></label>
+
+                                </div>
+
+                                {% if forloop.index == 5 and option.values.size > 5 %}
+                                    {% break %}
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {% if colorOptionValuesWithColor.size < option.values.size and option.values.size > 5 %}
+                                <small class="lh-1">+{{ option.values.size | minus: colorOptionValuesWithColor.size }}</small>
+                            {% endif %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            {% for value in option.values %}
+
+                                {%- assign optionDisabled = true -%}
+
+                                {%- for option1 in variantsOption1Arr -%}
+
+                                    {%- case sizeOptionPosition -%}
+                                        {%- when 1 -%}
+                                            {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- assign optionDisabled = false -%}
+                                            {%- endif -%}
+                                        {%- when 2 -%}
+                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {% assign optionDisabled = false %}
+                                            {%- endif -%}
+                                        {%- when 3 -%}
+                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {% assign optionDisabled = false %}
+                                            {%- endif -%}
+                                    {%- endcase -%}
+
+                                {%- endfor -%}
+
+                                <small{% if optionDisabled %} class="text-decoration-line-through text-muted"{% endif %}>{{ value.title }}</small>
+
+                                {% if forloop.index == 5 and option.values.size > 5 %}
+                                    {% break %}
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {% if option.values.size > 5 %}
+                                <small>+{{ option.values.size | minus: 5 }}</small>
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endcapture %}
+
+            {% if variantsTemplate %}
+
+                <div class="product-variants">
+
+                    {{- variantsTemplate -}}
+
+                </div>
+
+            {% endif %}
+
+            {% if variantsHasImage and settings.productShowVariantOptionAsImage and settings.productShowVariantImgsOnHover %} 
+
+                {% capture variantsHoverTemplate %}
+
+                    {% for num in (1..visibleOptionsCount) %}
+
+                        {%- case forloop.index -%}
+                            {% when 1 %}
+                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption1 | first -%}
+                            {% when 2 %}
+                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption2 | first -%}
+                            {% when 3 %}
+                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption3 | first -%}
+                        {%- endcase -%}
+
+                        {% unless option %}
+                            {%- continue -%}
+                        {% endunless %}
+
+                        {%- assign optionPosition = option.sort_order | plus: 1 -%}
+
+                        {% if option.type == settings.productShowVariantOptionAsImage %}
+
+                            {% assign optionValuesWithImg = option.values | where: 'image' %}
+
+                            <div class="form-check-imgs-container">
+
+                                {% for value in optionValuesWithImg %}
+
+                                    {%- assign optionDisabled = true -%}
+
+                                    {%- for option1 in variantsOption1Arr -%}
+
+                                        {%- case optionPosition -%}
+                                            {%- when 1 -%}
+                                                {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {%- assign optionDisabled = false -%}
+                                                {%- endif -%}
+                                            {%- when 2 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                            {%- when 3 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                        {%- endcase -%}
+
+                                    {%- endfor -%}
+
+                                    <div class="form-check-img form-check-img-simple">
+
+                                        <input class="form-check-input{% if optionDisabled %} disabled{% endif %}"
+                                            type="hidden"
+                                            name="product-variant-img"
+                                            value="{{ value.image }}"
+                                            readonly>
+
+                                        <label class="form-check-label w-px-30" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}">
+
+                                            <div class="aspect-ratio-product">
+
+                                                <div class="aspect-ratio-container">
+
+                                                    {% if value.image %}
+
+                                                        {% if settings.productImageAspectRatio == '9:13' %}
+                                                            {%- assign imgSize = '40,58' -%}
+                                                        {% elsif settings.productImageAspectRatio == '4:3' %}
+                                                            {%- assign imgSize = '40,30' -%}
+                                                        {% elsif settings.productImageAspectRatio == '3:4' %}
+                                                            {%- assign imgSize = '40,53' -%}
+                                                        {% elsif settings.productImageAspectRatio == '1:1' %}
+                                                            {%- assign imgSize = '40,40' -%}
+                                                        {% endif %}
+
+                                                        <picture>
+                                                            <img
+                                                                alt="{{ value.title }}"
+                                                                src="{{ value.image | thumb: imgSize }}"
+                                                                srcset="{{ value.image | thumb: imgSize }} 1x, {{ value.image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                                loading="lazy"
+                                                                class="d-block mx-auto img-fluid aspect-ratio-item">
+                                                        </picture>
+
+                                                    {% else %}
+
+                                                        {%- capture imgSrc -%}
+                                                            {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                        {%- endcapture -%}
+
+                                                        <img
+                                                            alt="{{ value.title }}"
+                                                            src="{{ imgSrc }}"
+                                                            class="d-block mx-auto img-fluid aspect-ratio-item svg-placeholder">
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            </div>
+
+                                        </label>
+
+                                    </div>
+
+                                    {% if forloop.index == 5 and option.values.size > 5 %}
+                                        {% break %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if optionValuesWithImg.size < option.values.size and option.values.size > 5 %}
+                                    <small class="lh-1">+{{ option.values.size | minus: optionValuesWithImg.size }}</small>
+                                {% endif %}
+
+                            </div>
+
+                        {% elsif option.type == 'color' %}
+
+                            {% assign colorOptionValuesWithColor = option.values | where: 'color' %}
+
+                            <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap">
+
+                                {% for value in colorOptionValuesWithColor %}
+
+                                    {%- assign optionDisabled = true -%}
+
+                                    {%- for option1 in variantsOption1Arr -%}
+
+                                        {%- case colorOptionPosition -%}
+                                            {%- when 1 -%}
+                                                {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {%- assign optionDisabled = false -%}
+                                                {%- endif -%}
+                                            {%- when 2 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                            {%- when 3 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                        {%- endcase -%}
+
+                                    {%- endfor -%}
+
+                                    <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs" style="--swatch-color: {{ value.color }}">
+
+                                        <input class="form-check-input{% if optionDisabled %} disabled{% endif %}"
+                                            type="hidden"
+                                            name="product-variant-img"
+                                            value="{{ value.image }}"
+                                            readonly>
+
+                                        <label class="form-check-label"{% unless optionDisabled %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}"{% endunless %}></label>
+
+                                    </div>
+
+                                    {% if forloop.index == 5 and option.values.size > 5 %}
+                                        {% break %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if colorOptionValuesWithColor.size < option.values.size and option.values.size > 5 %}
+                                    <small class="lh-1">+{{ option.values.size | minus: colorOptionValuesWithColor.size }}</small>
+                                {% endif %}
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                {% for value in option.values %}
+
+                                    {%- assign optionDisabled = true -%}
+
+                                    {%- for option1 in variantsOption1Arr -%}
+
+                                        {%- case sizeOptionPosition -%}
+                                            {%- when 1 -%}
+                                                {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {%- assign optionDisabled = false -%}
+                                                {%- endif -%}
+                                            {%- when 2 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                            {%- when 3 -%}
+                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                        {%- endcase -%}
+
+                                    {%- endfor -%}
+
+                                    <small{% if optionDisabled %} class="text-decoration-line-through text-muted"{% endif %}>{{ value.title }}</small>
+
+                                    {% if forloop.index == 5 and option.values.size > 5 %}
+                                        {% break %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if option.values.size > 5 %}
+                                    <small>+{{ option.values.size | minus: 5 }}</small>
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endcapture %}
+
+                {% if variantsHoverTemplate %}
+
+                    <div class="product-variants-hover">
+
+                        {{- variantsHoverTemplate -}}
+
+                    </div>
+
+                {% endif %}
+
+            {% endif %}
+
+        {%- endif -%}
+
+        {%- if showStockBalance -%}
+
+            <div class="product-stock-balance">
+
+                {%- if product.in_stock == false and product.inventory_policy == 'deny' -%}
+
+                    <span class="product-stock-balance-out-of-stock">
+                        {{- 'product.out_of_stock' | t -}}
+                    </span>
+
+                {%- elsif product.stock_alarm and product.stock and product.inventory_policy == 'deny' -%}
+
+                    <span class="product-stock-balance-low-on-stock">
+                        {{- 'product.low_on_stock_dynamic' | t: amount: product.stock -}}
+                    </span>
+
+                {%- else -%}
+
+                    <span class="product-stock-balance-in-stock">
+                        {{- 'product.in_stock' | t -}}
+                    </span>
+
+                {%- endif -%}
+
+            </div>
 
         {%- endif -%}
 

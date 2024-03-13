@@ -276,21 +276,22 @@
 
                 {%- if item.settings.img -%}
                     {%- assign img = item.settings.img-%}
+                    {%- assign imgAlt = item.settings.img.alt -%}
                 {%- else -%}
                     {%- assign img = itemCategory.image -%}
+                    {%- assign imgAlt = itemCategory.title -%}
                 {%- endif -%}
-
-                {%- assign imgAlt = item.settings.imgAlt | default: itemCategory.title -%}
+                
                 {%- assign resourceUrl = item.settings.resource.url | default: itemCategory | link -%}
-                {%- assign openResourceInNewWindow = item.settings.resourceOpenInNewTab | default: false -%}
+                {%- assign resourceTarget = item.settings.resource.target | default: '_self' -%}
                 {%- assign text = item.settings.text | default: itemCategory.title -%}
 
             {%- else -%}
 
                 {%- assign img = item.settings.img -%}
-                {%- assign imgAlt = item.settings.imgAlt -%}
+                {%- assign imgAlt = item.settings.img.alt -%}
                 {%- assign resourceUrl = item.settings.resource.url -%}
-                {%- assign openResourceInNewWindow = item.settings.resourceOpenInNewTab -%}
+                {%- assign resourceTarget = item.settings.resource.target | default: '_self' -%}
                 {%- assign text = item.settings.text -%}
 
             {%- endif -%}
@@ -329,10 +330,10 @@
                                     {{- img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                 <img
-                                    alt="{{ imgAlt }}" 
+                                    alt="{{ imgAlt }}"
                                     data-src="{{ img | thumb: imgSizeSm }}"
                                     data-srcset="{{ img | thumb: imgSizeSm }} 1x, {{ img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                    class="lazy aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %} style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
+                                    class="lazy aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %}style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
                             </picture>
 
                         {% else %}
@@ -376,7 +377,7 @@
 
                     {% if resourceUrl %}
 
-                        <a href="{{- resourceUrl -}}" class="img-indicator-zoom"{% if openResourceInNewWindow %} target="_blank"{% endif %}>
+                        <a href="{{- resourceUrl -}}" class="img-indicator-zoom" target="{{ resourceTarget }}"">
 
                             {{ slideContent }}
 

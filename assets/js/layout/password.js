@@ -6,13 +6,13 @@ export default function() {
     const passwordOverlayActionHideEl = containerEl.querySelector('#password-overlay-action-hide');
 
     if (passwordOverlayActionShowEl) {
-        passwordOverlayActionShowEl.addEventListener('click', (e) => {
+        passwordOverlayActionShowEl.addEventListener('click', () => {
             passwordOverlayContainerEl.classList.add('active');
         });
     }
 
     if (passwordOverlayActionHideEl) {
-        passwordOverlayActionHideEl.addEventListener('click', (e) => {
+        passwordOverlayActionHideEl.addEventListener('click', () => {
             passwordOverlayContainerEl.classList.remove('active');
         });
     }

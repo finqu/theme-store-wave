@@ -50,28 +50,19 @@
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
     {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
     
-    {%- if section.settings.sectionTextAlign == 'nil' -%}
+    {%- if section.settings.textHorizontalAlign == 'nil' -%}
         {%- assign textHorizontalAlign = settings.sectionTextAlign -%}
     {%- else -%}
-        {%- assign textHorizontalAlign = section.settings.sectionTextAlign -%}
+        {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
     {%- endif -%}
 
-    {%- case textHorizontalAlign -%}
-        {% when 'start' %}
-            {%- assign textHorizontalAlignClass = 'text-start' -%}
-        {% when 'center' %}
-            {%- assign textHorizontalAlignClass = 'text-center' -%}
-        {% when 'end' %}
-            {%- assign textHorizontalAlignClass = 'text-end' -%}
-    {%- endcase -%}
+    <div class="d-flex align-items-{{ section.settings.textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
 
-    <div class="d-flex align-items-center position-absolute top-0 start-0 w-100 h-100">
-
-        <div class="d-flex flex-grow-1 justify-content-{{ textHorizontalAlign }} py-4">
+        <div class="d-flex flex-grow-1 justify-content-{{ textHorizontalAlign }} py-6">
 
             <div class="text-container container-fluid max-w-lg-80">
 
-                <div class="{{ textHorizontalAlignClass }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
                     {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
 
@@ -198,11 +189,11 @@
                             },
                             "settings": [
                                 {
-                                    "id": "sectionTextAlign",
+                                    "id": "textHorizontalAlign",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Text align",
-                                        "fi": "Tekstin tasaus"
+                                        "en": "Text horizontal align",
+                                        "fi": "Tekstin tasaus vaakasuunnassa"
                                     },
                                     "default": "center",
                                     "options": [
@@ -221,6 +212,29 @@
                                         {
                                             "value": "end",
                                             "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "textVerticalAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Text vertical align",
+                                        "fi": "Tekstin tasaus pystysuunnassa"
+                                    },
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-top #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-middle #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-bottom #}"
                                         }
                                     ]
                                 },

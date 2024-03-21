@@ -53,7 +53,7 @@
 
                 {% if option.in_stock == false and inventoryPolicy == 'deny' %}
 
-                    ({{ 'product.out_of_stock' | t }})
+                    ({{ 'product.default_or_selected_variant.is_out_of_stock' | t }})
 
                 {% elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %}
 

@@ -24,9 +24,9 @@
         --style-accent-color: {{ settings.style_header_accent_color }};
 
         {%- if headerAccentColorBrightness > 190 -%}
-            --style-accent-text-color: #000;
+            --style-accent-text-color: {{ '#000000' | color_min_contrast: settings.style_header_accent_color }};
         {%- else -%}
-            --style-accent-text-color: #fff;
+            --style-accent-text-color: {{ '#ffffff' | color_min_contrast: settings.style_header_accent_color }};
         {%- endif -%}
 
         {%- if headerContentColorBrightness > 190 -%}
@@ -89,7 +89,11 @@
     #finqu-section-{{ section.id }} .site-header-container {
         --site-header-items-padding-y: {{ section.settings.headerItemsPaddingY }};
         {%- if section.settings.logoPosition == 'start' -%}
-            --site-header-template-columns: auto 1fr auto;
+            {%- if section.settings.menuItemsAlign == 'start' -%}
+                --site-header-template-columns: auto 1fr auto;
+            {%- else -%}
+                --site-header-template-columns: 20% 1fr 20%;
+            {%- endif -%}
             --site-header-logo-position: items-start;
             --site-header-logo-items-align: start;
             --site-header-logo-margin: 0 20px 0 0;
@@ -1127,16 +1131,16 @@
 
                         <a href="{{ routes.root_url }}">
 
-                            {%- capture imgSize -%}
-                                {{- section.settings.logoSize -}},{{- section.settings.logoSize | times: 0.5 | ceil -}}
-                            {%- endcapture -%}
-
                             {% if section.settings.logoImg %}
+
+                                {%- capture imgSize -%}
+                                    {{- section.settings.logoSize -}},{{- section.settings.logoSize | times: 0.5 | ceil -}}
+                                {%- endcapture -%}
 
                                 <img
                                     alt="{{ store.name }}"
                                     src="{{ section.settings.logoImg | thumb: imgSize }}"
-                                    srcset="{{ section.settings.logoImg | thumb: imgSize }} 1x, {{ section.settings.logoImgsection.settings.logoImg | thumb: imgSize | thumb:'@2x' }} 2x"
+                                    srcset="{{ section.settings.logoImg | thumb: imgSize }} 1x, {{ section.settings.logoImg | thumb: imgSize | thumb:'@2x' }} 2x"
                                     class="d-block img-fluid site-header-logo-img">
 
                             {% else %}
@@ -2059,8 +2063,8 @@
                             "id": "mobileNavigationSimple",
                             "type": "checkbox",
                             "label": {
-                                "en": "Simple mobile navigation",
-                                "fi": "Yksinkertainen mobiilinavigaatio"
+                                "en": "Show mobile navigation in a simple design",
+                                "fi": "Näytä mobiilinavigaatio yksinkertaisena"
                             },
                             "default": false
                         },
@@ -2068,8 +2072,8 @@
                             "id": "mobileShowSocialIconsInNavigation",
                             "type": "checkbox",
                             "label": {
-                                "en": "Show social media icons",
-                                "fi": "Näytä sosiaalisen median kuvakkeet"
+                                "en": "Show social media icons in mobile navigation",
+                                "fi": "Näytä mobiilinavigaatiossa sosiaalisen median kuvakkeet"
                             },
                             "default": true
                         },
@@ -2077,8 +2081,8 @@
                             "id": "mobileShowSearchInNavigation",
                             "type": "checkbox",
                             "label": {
-                                "en": "Show search in navigation",
-                                "fi": "Näytä näytä haku navigaatiossa"
+                                "en": "Show search box in mobile navigation",
+                                "fi": "Näytä mobiilinavigaatiossa hakukenttä"
                             },
                             "default": true
                         }
@@ -2208,6 +2212,7 @@
                                         "en": "Image",
                                         "fi": "Kuva"
                                     },
+                                    "adjustments": true,
                                     "conditions": ["!index eq blank"]
                                 },
                                 {

@@ -12,7 +12,7 @@
 
 <style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
-<div class="block-inner text-break">{{ block.settings.richtext }}</div>
+<div class="block-inner text-break text-richtext">{{ block.settings.richtext | default: 'placeholder.text' | t }}</div>
 
 {% schema %}
 {
@@ -34,8 +34,7 @@
                 "settings": [
                     {
                         "id": "richtext",
-                        "type": "richtext",
-                        "default": "Tell your customers about your brand. Promote a product, make announcements or share information about your store."
+                        "type": "richtext"
                     }
                 ]
             },

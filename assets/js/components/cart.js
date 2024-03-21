@@ -588,32 +588,15 @@ export default class Cart {
 
     getCart() {
 
-        // Customer account required to purchase
-        if (theme.store.customer.accountsEnabled == true &&
-            theme.store.customer.accountsRequireApproval == false &&
-            theme.store.customer.accountsOptional == false &&
-            theme.store.customer.loggedIn == false) {
+        if (!theme.store.customer.hasPurchaseRight) {
 
-                document.dispatchEvent(new CustomEvent('theme:cart:update', {
-                    detail: this.cart
-                }));
+            document.dispatchEvent(new CustomEvent('theme:cart:update', {
+                detail: this.cart
+            }));
 
-                return;
+            return;
         }
 
-        // Customer account requires approval in order to purchase
-        if (theme.store.customer.accountsEnabled == true &&
-            theme.store.customer.accountsRequireApproval == true &&
-            theme.store.customer.hasAccess == false) {
-
-                document.dispatchEvent(new CustomEvent('theme:cart:update', {
-                    detail: this.cart
-                }));
-
-                return;
-        }
-
-        // Set test data for preview in design mode
         if (theme.store.template === 'cart' && theme.store.designMode === 'edit') {
 
             this.updateCart({
@@ -703,23 +686,8 @@ export default class Cart {
 
     addItem(id = null, quantity = 1, customizations = [], checkout = false) {
 
-        if (id === null) {
+        if (id === null || !theme.store.customer.hasPurchaseRight) {
             return;
-        }
-
-        // Customer account required to purchase
-        if (theme.store.customer.accountsEnabled == true &&
-            theme.store.customer.accountsRequireApproval == false &&
-            theme.store.customer.accountsOptional == false &&
-            theme.store.customer.loggedIn == false) {
-                return;
-        }
-
-        // Customer account requires approval in order to purchase
-        if (theme.store.customer.accountsEnabled == true &&
-            theme.store.customer.accountsRequireApproval == true &&
-            theme.store.customer.hasAccess == false) {
-                return;
         }
 
         const data = {

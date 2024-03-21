@@ -34,7 +34,9 @@
 			accountsRequireApproval: {{ store.customer_accounts_require_approval | json }},
 			loggedIn: {{ customer | yepnope: 'true', 'false' }},
 			hasAccess: {{ customer.has_access | yepnope: 'true', 'false' }},
-			acceptsMarketing: {{ customer.accepts_marketing | yepnope: 'true', 'false' }}
+			acceptsMarketing: {{ customer.accepts_marketing | yepnope: 'true', 'false' }},
+			canViewProductSalesDetails: {{ store.customer_can_view_product_sales_details | yepnope: 'true', 'false' }},
+			hasPurchaseRight: {{ store.customer_has_purchase_right | yepnope: 'true', 'false' }}
 		},
 		marketing: {
 			newsletterPopup: {
@@ -44,7 +46,7 @@
 			}
 		},
 		cookiePolicy: {
-			status: 'all',
+			status: {{ session.cookie_policy | json }},
 			position: {{ settings.cookiesPolicyPosition | json }}
 		},
 		cart: {

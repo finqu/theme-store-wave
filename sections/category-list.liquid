@@ -167,12 +167,12 @@
 
                     {% endif %}
 
-                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}{% if section.settings.imgAspectRatio == '1:1' and section.settings.imgFit and section.settings.imgCircle %} rounded-circle{% endif %}">
+                    <div class="aspect-ratio-{% if section.settings.imgShape == 'circle' %}1-1{% else %}{{ section.settings.imgAspectRatio | replace: ':', '-' }}{% endif %}{% if section.settings.imgShape == 'circle' %} rounded-circle{% endif %}">
 
                         <div class="aspect-ratio-container">
 
                              {%- capture class -%}
-                                aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                                aspect-ratio-item{% if section.settings.imgFit or section.settings.imgShape == 'circle' %} aspect-ratio-item-cover{% endif %}
                             {%- endcapture -%}
 
                             {% render 'placeholder-svg', type: 'category', class: class %}
@@ -256,7 +256,7 @@
 
                     {% endif %}
 
-                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}{% if section.settings.imgAspectRatio == '1:1' and section.settings.imgFit and section.settings.imgCircle %} rounded-circle{% endif %}">
+                    <div class="aspect-ratio-{% if section.settings.imgShape == 'circle' %}1-1{% else %}{{ section.settings.imgAspectRatio | replace: ':', '-' }}{% endif %}{% if section.settings.imgShape == 'circle' %} rounded-circle{% endif %}">
 
                         <div class="aspect-ratio-container">
 
@@ -279,13 +279,13 @@
                                         alt="{{ imgAlt }}" 
                                         data-src="{{ img | thumb: imgSizeSm }}"
                                         data-srcset="{{ img | thumb: imgSizeSm }} 1x, {{ img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                        class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %} style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
+                                        class="lazy aspect-ratio-item{% if section.settings.imgFit or section.settings.imgShape == 'circle' %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %} style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
                                 </picture>
 
                             {% else %}
 
                                 {%- capture class -%}
-                                    aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                                    aspect-ratio-item{% if section.settings.imgFit or section.settings.imgShape == 'circle' %} aspect-ratio-item-cover{% endif %}
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'category', class: class %}
@@ -631,6 +631,31 @@
                                     "conditions": ["textPosition eq over"]
                                 },
                                 {
+                                    "id": "imgShape",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Image shape",
+                                        "fi": "Kuvan muoto"
+                                    },
+                                    "default": "default",
+                                    "options": [
+                                        {
+                                            "value": "default",
+                                            "label": {
+                                                "en": "Default",
+                                                "fi": "Oletus"
+                                            }
+                                        },
+                                        {
+                                            "value": "circle",
+                                            "label": {
+                                                "en": "Circle",
+                                                "fi": "Ympyrä"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
                                     "id": "imgAspectRatio",
                                     "type": "select",
                                     "label": {
@@ -655,7 +680,8 @@
                                             "value": "1:1",
                                             "label": "1:1"
                                         }
-                                    ]
+                                    ],
+                                    "conditions": ["imgShape eq default"]
                                 },
                                 {
                                     "id": "imgFit",
@@ -664,20 +690,8 @@
                                         "en": "Image area fill",
                                         "fi": "Kuva-alueen täyttö"
                                     },
-                                    "default": true
-                                },
-                                {
-                                    "id": "imgCircle",
-                                    "type": "checkbox",
-                                    "label": {
-                                        "en": "Circular shaped image",
-                                        "fi": "Ympyrän muotoinen kuva"
-                                    },
-                                    "default": false,
-                                    "conditions": [
-                                        "imgAspectRatio eq 1:1",
-                                        "imgFit eq true"
-                                    ]
+                                    "default": true,
+                                    "conditions": ["imgShape eq default"]
                                 }
                             ]
                         },
@@ -980,8 +994,7 @@
         {
             "settings": {
                 "sectionTitle": "Mallistomme",
-                "imgAspectRatio": "1:1",
-                "imgCircle": true,
+                "imgShape": "circle",
                 "categoryPerRow": "6"
             }
         }

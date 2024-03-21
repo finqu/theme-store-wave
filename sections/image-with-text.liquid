@@ -196,16 +196,7 @@
         {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
     {%- endif -%}
 
-    {%- case textHorizontalAlign -%}
-        {% when 'start' %}
-            {%- assign textHorizontalAlignClass = 'text-start' -%}
-        {% when 'center' %}
-            {%- assign textHorizontalAlignClass = 'text-center' -%}
-        {% when 'end' %}
-            {%- assign textHorizontalAlignClass = 'text-end' -%}
-    {%- endcase -%}
-
-    <div class="section-highlight-item section-highlight-item-md {{ textHorizontalAlignClass }}">
+    <div class="section-highlight-item section-highlight-item-md text-{{ textHorizontalAlign }}">
 
         {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
@@ -227,43 +218,25 @@
 
 {%- capture sectionContent -%}
 
-    {%- case section.settings.imgVerticalAlign -%}
-        {% when 'top' %}
-            {%- assign imgVerticalAlignClass = 'align-self-start' -%}
-        {% when 'middle' %}
-            {%- assign imgVerticalAlignClass = 'align-self-center' -%}
-        {% when 'bottom' %}
-            {%- assign imgVerticalAlignClass = 'align-self-end' -%}
-    {%- endcase -%}
-
-    {%- case section.settings.textVerticalAlign -%}
-        {% when 'top' %}
-            {%- assign textVerticalAlignClass = 'align-self-start' -%}
-        {% when 'middle' %}
-            {%- assign textVerticalAlignClass = 'align-self-center' -%}
-        {% when 'bottom' %}
-            {%- assign textVerticalAlignClass = 'align-self-end' -%}
-    {%- endcase -%}
-
     <div class="row gy-5 gx-lg-10">
 
         {%- if section.settings.imgPosition == 'start' -%}
 
-            <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ imgVerticalAlignClass }}">
+            <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ section.settings.imgVerticalAlign }}">
                 {{- imgColContent -}}
             </div>
 
-            <div class="text-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ textVerticalAlignClass }}">
+            <div class="text-container col-12 col-md-6 col-lg-{{ rightColSize }} align-self-{{ section.settings.textVerticalAlign }}">
                 {{- textColContent -}}
             </div>
 
         {%- elsif section.settings.imgPosition == 'end' -%}
 
-            <div class="text-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ textVerticalAlignClass }} order-2 order-md-1">
+            <div class="text-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ section.settings.textVerticalAlign }} order-2 order-md-1">
                 {{- textColContent -}}
             </div>
 
-            <div class="img-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ imgVerticalAlignClass }} order-1 order-md-2">
+            <div class="img-container col-12 col-md-6 col-lg-{{ rightColSize }} align-self-{{ section.settings.imgVerticalAlign }} order-1 order-md-2">
                 {{- imgColContent -}}
             </div>
 
@@ -477,18 +450,18 @@
                                         "en": "Text vertical align",
                                         "fi": "Tekstin tasaus pystysuunnassa"
                                     },
-                                    "default": "middle",
+                                    "default": "center",
                                     "options": [
                                         {
-                                            "value": "top",
+                                            "value": "start",
                                             "label": "{# icon.align-top #}"
                                         },
                                         {
-                                            "value": "middle",
+                                            "value": "center",
                                             "label": "{# icon.align-middle #}"
                                         },
                                         {
-                                            "value": "bottom",
+                                            "value": "end",
                                             "label": "{# icon.align-bottom #}"
                                         }
                                     ]
@@ -592,18 +565,18 @@
                                         "en": "Image vertical align",
                                         "fi": "Kuvan tasaus pystysuunnassa"
                                     },
-                                    "default": "middle",
+                                    "default": "center",
                                     "options": [
                                         {
-                                            "value": "top",
+                                            "value": "start",
                                             "label": "{# icon.align-top #}"
                                         },
                                         {
-                                            "value": "middle",
+                                            "value": "center",
                                             "label": "{# icon.align-middle #}"
                                         },
                                         {
-                                            "value": "bottom",
+                                            "value": "end",
                                             "label": "{# icon.align-bottom #}"
                                         }
                                     ]

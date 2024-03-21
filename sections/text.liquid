@@ -1,28 +1,16 @@
-{%- if section.settings.blockGutterWidth != 'nil' -%}
-
-    {%- capture sectionStyle -%}
-        #finqu-section-{{ section.id }} {
-            --block-padding-bottom: {{- section.settings.blockGutterWidth -}};
-        }
-    {%- endcapture -%}
-
-    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
-{%- endif -%}
-
 {%- capture sectionContent -%}
 
-    {% container %}
+    <div class="text-richtext">{{ section.settings.richtext }}</div>
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionHeader: false %}
 
 {% schema %}
 {
     "name": {
         "en": "Text",
-        "fi": "Teksti"
+        "fi": "Tesksti"
     },
     "tag": "section",
     "class": "section section-text",
@@ -30,6 +18,19 @@
     "settings": {
         "list_type": "tabs",
         "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "size": "lg"
+                    }
+                ]
+            },
             {
                 "title": {
                     "en": "Settings",
@@ -45,34 +46,11 @@
                             },
                             "settings": [
                                 {
-                                    "id": "sectionHighlightItems",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content highlight",
-                                        "fi": "Sisällön korostaminen"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
                                     "id": "sectionTextAlign",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Content align",
-                                        "fi": "Sisällön tasaus"
+                                        "en": "Text align",
+                                        "fi": "Tekstin tasaus"
                                     },
                                     "default": "nil",
                                     "options": [
@@ -91,37 +69,6 @@
                                         {
                                             "value": "end",
                                             "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "blockGutterWidth",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content elements gap",
-                                        "fi": "Sisällön elementtien väli"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "2rem",
-                                            "label": "S"
-                                        },
-                                        {
-                                            "value": "4rem",
-                                            "label": "M"
-                                        },
-                                        {
-                                            "value": "6rem",
-                                            "label": "L"
-                                        },
-                                        {
-                                            "value": "8rem",
-                                            "label": "XL"
                                         }
                                     ]
                                 }
@@ -303,20 +250,9 @@
     },
     "presets": [
         {
-            "blocks": [
-                {
-                    "name": "heading",
-                    "settings": {
-                        "title": "Otsikko"
-                    }
-                },
-                {
-                    "name": "text",
-                    "settings": {
-                        "richtext": "Kerro asiakkaillesi brändistäsi. Mainosta tuotetta, kerro tulevista tapahtumista tai jaa tietoa kaupastasi."
-                    }
-                }
-            ]
+            "settings": {
+                "richtext": "Kerro asiakkaillesi brändistäsi. Mainosta tuotetta, kerro tulevista tapahtumista tai jaa tietoa kaupastasi."
+            }
         }
     ]
 }

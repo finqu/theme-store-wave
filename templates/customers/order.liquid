@@ -585,7 +585,7 @@
 
 											{% if item.product %}
 
-												{% if item.product.reviews_are_enabled and item.product.customer_has_reviewed == false %}
+												{% if item.product.reviews_are_enabled and item.product.default_or_selected_variant.customer_has_reviewed == false %}
 
 													<a href="{{ item.product_url }}?create_review=true" class="btn btn-sm btn-secondary mt-3">
 														{{ 'account.order.write_review' | t }}

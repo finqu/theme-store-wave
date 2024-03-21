@@ -172,16 +172,7 @@
         {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
     {%- endif -%}
 
-    {%- case textHorizontalAlign -%}
-        {% when 'start' %}
-            {%- assign textHorizontalAlignClass = 'text-start' -%}
-        {% when 'center' %}
-            {%- assign textHorizontalAlignClass = 'text-center' -%}
-        {% when 'end' %}
-            {%- assign textHorizontalAlignClass = 'text-end' -%}
-    {%- endcase -%}
-
-    <div class="{{ textHorizontalAlignClass }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+    <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
         {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
 
@@ -203,43 +194,25 @@
 
 {%- capture sectionContent -%}
 
-    {%- case section.settings.imgVerticalAlign -%}
-        {% when 'top' %}
-            {%- assign imgVerticalAlignClass = 'align-self-start' -%}
-        {% when 'middle' %}
-            {%- assign imgVerticalAlignClass = 'align-self-center' -%}
-        {% when 'bottom' %}
-            {%- assign imgVerticalAlignClass = 'align-self-end' -%}
-    {%- endcase -%}
-
-    {%- case section.settings.textVerticalAlign -%}
-        {% when 'top' %}
-            {%- assign textVerticalAlignClass = 'align-self-start' -%}
-        {% when 'middle' %}
-            {%- assign textVerticalAlignClass = 'align-self-center' -%}
-        {% when 'bottom' %}
-            {%- assign textVerticalAlignClass = 'align-self-end' -%}
-    {%- endcase -%}
-
     <div class="row gy-5">
 
         {%- if section.settings.imgPosition == 'start' -%}
 
-            <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ imgVerticalAlignClass }} order-2 order-md-1">
+            <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ section.settings.imgVerticalAlign }} order-2 order-md-1">
                 {{- imgColContent -}}
             </div>
 
-            <div class="text-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ textVerticalAlignClass }} order-1 order-md-2">
+            <div class="text-container col-12 col-md-6 col-lg-{{ rightColSize }} align-self-{{ section.settings.textVerticalAlign }} order-1 order-md-2">
                 {{- textColContent -}}
             </div>
 
         {%- elsif section.settings.imgPosition == 'end' -%}
 
-            <div class="text-container col-12 col-md-6 col-lg-{{ leftColSize }} {{ textVerticalAlignClass }}">
+            <div class="text-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ section.settings.textVerticalAlign }}">
                 {{- textColContent -}}
             </div>
             
-            <div class="img-container col-12 col-md-6 col-lg-{{ rightColSize }} {{ imgVerticalAlignClass }}">
+            <div class="img-container col-12 col-md-6 col-lg-{{ rightColSize }} align-self-{{ section.settings.imgVerticalAlign }}">
                 {{- imgColContent -}}
             </div>
 
@@ -363,18 +336,18 @@
                                         "en": "Text vertical align",
                                         "fi": "Tekstin tasaus pystysuunnassa"
                                     },
-                                    "default": "middle",
+                                    "default": "center",
                                     "options": [
                                         {
-                                            "value": "top",
+                                            "value": "start",
                                             "label": "{# icon.align-top #}"
                                         },
                                         {
-                                            "value": "middle",
+                                            "value": "center",
                                             "label": "{# icon.align-middle #}"
                                         },
                                         {
-                                            "value": "bottom",
+                                            "value": "end",
                                             "label": "{# icon.align-bottom #}"
                                         }
                                     ]
@@ -509,18 +482,18 @@
                                         "en": "Image vertical align",
                                         "fi": "Kuvan tasaus pystysuunnassa"
                                     },
-                                    "default": "middle",
+                                    "default": "center",
                                     "options": [
                                         {
-                                            "value": "top",
+                                            "value": "start",
                                             "label": "{# icon.align-top #}"
                                         },
                                         {
-                                            "value": "middle",
+                                            "value": "center",
                                             "label": "{# icon.align-middle #}"
                                         },
                                         {
-                                            "value": "bottom",
+                                            "value": "end",
                                             "label": "{# icon.align-bottom #}"
                                         }
                                     ]

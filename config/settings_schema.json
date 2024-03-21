@@ -261,10 +261,6 @@
                 "en": "Colors",
                 "fi": "Värit"
             },
-            "info": {
-                "en": "With the color settings, you can create a consistent and appealing appearance that matches your brand identity.",
-                "fi": "Väriasetusten avulla voit luoda yhtenäisen ja houkuttelevan ilmeen, joka vastaa brändisi identiteettiä."
-            },
             "settings": [
                 {
                     "type": "heading",
@@ -280,16 +276,8 @@
                 {
                     "type": "title",
                     "label": {
-                        "en": "General",
-                        "fi": "Yleinen"
-                    }
-                },
-                {
-                    "id": "style_link_color",
-                    "type": "color",
-                    "label": {
-                        "en": "Link color",
-                        "fi": "Linkin väri"
+                        "en": "Content",
+                        "fi": "Sisältö"
                     }
                 },
                 {
@@ -321,15 +309,23 @@
                     }
                 },
                 {
-                    "id": "style_icon_color",
+                    "id": "style_bg_color",
                     "type": "color",
                     "label": {
-                        "en": "Icon color",
-                        "fi": "Kuvakkeiden väri"
+                        "en": "Background color",
+                        "fi": "Taustaväri"
+                    }
+                },
+                {
+                    "id": "style_secondary_bg_color",
+                    "type": "color",
+                    "label": {
+                        "en": "Secondary background color",
+                        "fi": "Toissijainen taustaväri"
                     },
                     "info": {
-                        "en": "For example the color of shopping cart and search icons",
-                        "fi": "Esimeksiksi haun ja ostoskorin kuvakkeiden väri"
+                        "en": "This is used for highlighted content",
+                        "fi": "Tämä on käytössä korostetussa sisällössä"
                     }
                 },
                 {
@@ -371,6 +367,9 @@
                     }
                 },
                 {
+                    "type": "spacer"
+                },
+                {
                     "id": "style_footer_bg_color",
                     "type": "color",
                     "label": {
@@ -392,6 +391,32 @@
                     "label": {
                         "en": "Accent color",
                         "fi": "Korostusväri"
+                    }
+                },
+                {
+                    "type": "spacer"
+                },
+                {
+                    "type": "title",
+                    "label": {
+                        "en": "Announcement",
+                        "fi": "Ilmoitus"
+                    }
+                },
+                {
+                    "id": "style_announcement_bg_color",
+                    "type": "color",
+                    "label": {
+                        "en": "Background color",
+                        "fi": "Taustaväri"
+                    }
+                },
+                {
+                    "id": "style_announcement_text_color",
+                    "type": "color",
+                    "label": {
+                        "en": "Text",
+                        "fi": "Tekstin väri"
                     }
                 },
                 {
@@ -419,58 +444,12 @@
                         {
                             "type": "title",
                             "label": {
-                                "en": "Background",
-                                "fi": "Tausta"
+                                "en": "Content",
+                                "fi": "Sisältö"
                             },
                             "subtitle": {
-                                "en": "Section colors",
-                                "fi": "Osion värit"
-                            }
-                        },
-                        {
-                            "id": "style_bg_color",
-                            "type": "color",
-                            "label": {
-                                "en": "Background color",
-                                "fi": "Taustaväri"
-                            }
-                        },
-                        {
-                            "id": "style_secondary_bg_color",
-                            "type": "color",
-                            "label": {
-                                "en": "Secondary background color",
-                                "fi": "Toissijainen taustaväri"
-                            },
-                            "info": {
-                                "en": "In use for example on the shopping cart page",
-                                "fi": "Käytössä mm. ostokori sivulla"
-                            }
-                        },
-                        {
-                            "id": "style_border_color",
-                            "type": "color",
-                            "label": {
-                                "en": "Border color",
-                                "fi": "Reunuksen väri"
-                            },
-                            "info": {
-                                "en": "In use for example on the hr elements",
-                                "fi": "Käytössä mm. väliviivoissa"
-                            }
-                        },
-                        {
-                            "type": "spacer"
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Text",
-                                "fi": "Teksti"
-                            },
-                            "subtitle": {
-                                "en": "Colors that affect text",
-                                "fi": "Tekstiin vaikuttavat värit"
+                                "en": "Colors that affect content",
+                                "fi": "Sisältöön vaikuttavat värit"
                             }
                         },
                         {
@@ -495,6 +474,34 @@
                             "label": {
                                 "en": "Text color",
                                 "fi": "Tekstin väri"
+                            }
+                        },
+                        {
+                            "id": "style_link_color",
+                            "type": "color",
+                            "label": {
+                                "en": "Link color",
+                                "fi": "Linkin väri"
+                            }
+                        },
+                        {
+                            "id": "style_icon_color",
+                            "type": "color",
+                            "label": {
+                                "en": "Icon color",
+                                "fi": "Kuvakkeiden väri"
+                            }
+                        },
+                        {
+                            "id": "style_border_color",
+                            "type": "color",
+                            "label": {
+                                "en": "Border color",
+                                "fi": "Reunuksen väri"
+                            },
+                            "info": {
+                                "en": "In use for example on the hr elements",
+                                "fi": "Käytössä mm. väliviivoissa"
                             }
                         },
                         {
@@ -681,36 +688,6 @@
                                 "en": "Border color",
                                 "fi": "Reunuksen väri"
                             }
-                        },
-                        {
-                            "type": "spacer"
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Announcement",
-                                "fi": "Ilmoitus"
-                            },
-                            "subtitle": {
-                                "en": "Colors of the announcement at the top of the page",
-                                "fi": "Sivun yläreunassa sijaitsevan ilmoituksen värit"
-                            }
-                        },
-                        {
-                            "id": "style_announcement_bg_color",
-                            "type": "color",
-                            "label": {
-                                "en": "Background color",
-                                "fi": "Taustaväri"
-                            }
-                        },
-                        {
-                            "id": "style_announcement_text_color",
-                            "type": "color",
-                            "label": {
-                                "en": "Text",
-                                "fi": "Tekstin väri"
-                            }
                         }
                     ]
                 },
@@ -739,66 +716,32 @@
                         {
                             "id": "styles",
                             "type": "style-editor",
+                            "preset_background_color_id": "bg_color",
+                            "preset_text_color_id": "text_color",
                             "settings": [
                                 {
                                     "type": "title",
                                     "label": {
-                                        "en": "Background",
-                                        "fi": "Tausta"
+                                        "en": "Content",
+                                        "fi": "Sisältö"
                                     },
                                     "subtitle": {
-                                        "en": "Section colors",
-                                        "fi": "Osion värit"
+                                        "en": "Colors that affect content, for example heading or link color",
+                                        "fi": "Sisältöön vaikuttavat värit, esim. otsikon tai linkin väri"
                                     }
                                 },
                                 {
-                                    "id": "bg_color",
+                                    "id": "accent_color",
                                     "type": "color",
                                     "label": {
-                                        "en": "Background color",
-                                        "fi": "Taustaväri"
-                                    },
-                                    "nullable": true
-                                },
-                                {
-                                    "id": "secondary_bg_color",
-                                    "type": "color",
-                                    "label": {
-                                        "en": "Secondary background color",
-                                        "fi": "Toissijainen taustaväri"
+                                        "en": "Accent color",
+                                        "fi": "Korostusväri"
                                     },
                                     "info": {
-                                        "en": "In use for example on the shopping cart page",
-                                        "fi": "Käytössä mm. ostokori sivulla"
+                                        "en": "For example, the color of a link or icon when it is active",
+                                        "fi": "Esimeksiksi linkin tai kuvakkeen väri kun se on aktiivinen"
                                     },
                                     "nullable": true
-                                },
-                                {
-                                    "id": "border_color",
-                                    "type": "color",
-                                    "label": {
-                                        "en": "Border color",
-                                        "fi": "Reunuksen väri"
-                                    },
-                                    "info": {
-                                        "en": "In use for example on the hr elements",
-                                        "fi": "Käytössä mm. väliviivoissa"
-                                    },
-                                    "nullable": true
-                                },
-                                {
-                                    "type": "spacer"
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "subtitle": {
-                                        "en": "Colors that affect text, for example heading or link color",
-                                        "fi": "Tekstiin vaikuttavat värit, esim. otsikon tai linkin väri"
-                                    }
                                 },
                                 {
                                     "id": "heading_color",
@@ -837,19 +780,6 @@
                                     "nullable": true
                                 },
                                 {
-                                    "id": "accent_color",
-                                    "type": "color",
-                                    "label": {
-                                        "en": "Accent color",
-                                        "fi": "Korostusväri"
-                                    },
-                                    "info": {
-                                        "en": "For example, the color of a link or icon when it is active",
-                                        "fi": "Esimeksiksi linkin tai kuvakkeen väri kun se on aktiivinen"
-                                    },
-                                    "nullable": true
-                                },
-                                {
                                     "id": "icon_color",
                                     "type": "color",
                                     "label": {
@@ -859,6 +789,19 @@
                                     "info": {
                                         "en": "For example the colors of shopping cart and search icons",
                                         "fi": "Esim. haku ja ostoskori kuvakkeiden väri"
+                                    },
+                                    "nullable": true
+                                },
+                                {
+                                    "id": "border_color",
+                                    "type": "color",
+                                    "label": {
+                                        "en": "Border color",
+                                        "fi": "Reunuksen väri"
+                                    },
+                                    "info": {
+                                        "en": "In use for example on the hr elements",
+                                        "fi": "Käytössä mm. väliviivoissa"
                                     },
                                     "nullable": true
                                 },
@@ -891,6 +834,42 @@
                                     "label": {
                                         "en": "Text color",
                                         "fi": "Tekstin väri"
+                                    },
+                                    "nullable": true
+                                },
+                                {
+                                    "type": "spacer"
+                                },
+                                {
+                                    "type": "title",
+                                    "label": {
+                                        "en": "Background",
+                                        "fi": "Tausta"
+                                    },
+                                    "subtitle": {
+                                        "en": "Section background colors",
+                                        "fi": "Osion taustavärit"
+                                    }
+                                },
+                                {
+                                    "id": "bg_color",
+                                    "type": "color",
+                                    "label": {
+                                        "en": "Background color",
+                                        "fi": "Taustaväri"
+                                    },
+                                    "nullable": true
+                                },
+                                {
+                                    "id": "secondary_bg_color",
+                                    "type": "color",
+                                    "label": {
+                                        "en": "Secondary background color",
+                                        "fi": "Toissijainen taustaväri"
+                                    },
+                                    "info": {
+                                        "en": "In use for example on the shopping cart page",
+                                        "fi": "Käytössä mm. ostokori sivulla"
                                     },
                                     "nullable": true
                                 },
@@ -1288,10 +1267,6 @@
                 "en": "Typography",
                 "fi": "Teksti"
             },
-            "info": {
-                "en": "Customize texts to suit your brand's needs and appeal to your target audience.",
-                "fi": "Mukauta tekstit sopimaan brändisi tarpeisiin ja asiakaskohderyhmällesi."
-            },
             "settings": [
                 {
                     "type": "heading",
@@ -1305,971 +1280,995 @@
                     }
                 },
                 {
-                    "id": "textScale",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Text size",
-                        "fi": "Tekstin koko"
-                    },
-                    "default": "1",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "0.875",
-                            "label": "S"
-                        },
-                        {
-                            "value": "1",
-                            "label": "M"
-                        },
-                        {
-                            "value": "1.125",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "textLineHeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Line height",
-                        "fi": "Rivinkorkeus"
-                    },
-                    "default": "1.5",
-                    "options": [
-                        {
-                            "value": "1.25",
-                            "label": "S"
-                        },
-                        {
-                            "value": "1.5",
-                            "label": "M"
-                        },
-                        {
-                            "value": "1.85",
-                            "label": "L"
-                        },
-                        {
-                            "value": "2.1",
-                            "label": "XL"
-                        }
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Body",
-                        "fi": "Leipäteksti"
-                    }
-                },
-                {
-                    "id": "bodyTextFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "bodyLetterSpacing",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font letter-spacing",
-                        "fi": "Fontin kirjainväli"
-                    },
-                    "default": "0.06rem",
-                    "options": [
-                        {
-                            "value": "0",
-                            "label": "Off"
-                        },
-                        {
-                            "value": "0.06rem",
-                            "label": "S"
-                        },
-                        {
-                            "value": "0.12rem",
-                            "label": "M"
-                        },
-                        {
-                            "value": "0.18rem",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "bodyTextFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
-                        {
-                            "value": "normal",
+                            "type": "title",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
+                                "en": "General",
+                                "fi": "Yleinen"
                             }
                         },
                         {
-                            "value": "italic",
+                            "id": "textScale",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
+                                "en": "Text size",
+                                "fi": "Tekstin koko"
+                            },
+                            "default": "1",
+                            "options": [
+                                {
+                                    "value": "0.875",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "1",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "1.125",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "textLineHeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Line height",
+                                "fi": "Rivinkorkeus"
+                            },
+                            "default": "1.5",
+                            "options": [
+                                {
+                                    "value": "1.25",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "1.5",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "1.85",
+                                    "label": "L"
+                                },
+                                {
+                                    "value": "2.1",
+                                    "label": "XL"
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Heading",
-                        "fi": "Otsikko"
-                    }
-                },
-                {
-                    "id": "headingFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "headingFontScale",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font scale",
-                        "fi": "Fontin mittasuhde"
-                    },
-                    "default": "0.875",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "0.875",
-                            "label": "S"
+                            "type": "title",
+                            "label": {
+                                "en": "Body",
+                                "fi": "Leipäteksti"
+                            }
                         },
                         {
-                            "value": "1",
-                            "label": "M"
+                            "id": "bodyTextFont",
+                            "type": "font-picker",
+                            "label": {
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
                         },
                         {
-                            "value": "1.125",
-                            "label": "L"
+                            "id": "bodyLetterSpacing",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "0.06rem",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "0.06rem",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "0.12rem",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "0.18rem",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "bodyTextFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "id": "headingLetterSpacing",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font letter-spacing",
-                        "fi": "Fontin kirjainväli"
-                    },
-                    "default": "1px",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "0",
-                            "label": "Off"
+                            "type": "title",
+                            "label": {
+                                "en": "Heading",
+                                "fi": "Otsikko"
+                            }
                         },
                         {
-                            "value": "1px",
-                            "label": "S"
+                            "id": "headingFont",
+                            "type": "font-picker",
+                            "label": {
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
                         },
                         {
-                            "value": "3px",
-                            "label": "M"
+                            "id": "headingFontScale",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font scale",
+                                "fi": "Fontin mittasuhde"
+                            },
+                            "default": "0.875",
+                            "options": [
+                                {
+                                    "value": "0.875",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "1",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "1.125",
+                                    "label": "L"
+                                }
+                            ]
                         },
                         {
-                            "value": "5px",
-                            "label": "L"
+                            "id": "headingLetterSpacing",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "1px",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "1px",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "3px",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "5px",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "headingFontWeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "700",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "headingFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "headingTextTransform",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "id": "headingFontWeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font weight",
-                        "fi": "Fontin paksuus"
-                    },
-                    "default": "700",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "400",
-                            "label": "400"
+                            "type": "title",
+                            "label": {
+                                "en": "Subheading",
+                                "fi": "Alaotsikko"
+                            }
                         },
                         {
-                            "value": "500",
-                            "label": "500"
+                            "id": "subheadingFont",
+                            "type": "font-picker",
+                            "label": {
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
                         },
                         {
-                            "value": "700",
-                            "label": "700"
+                            "id": "subheadingLetterSpacing",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "1px",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "1px",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "3px",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "5px",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "subheadingFontWeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "400",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "subheadingFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "subheadingTextTransform",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "id": "headingFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "normal",
+                            "type": "title",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
+                                "en": "Button",
+                                "fi": "Nappi"
                             }
                         },
                         {
-                            "value": "italic",
+                            "id": "buttonFont",
+                            "type": "font-picker",
                             "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
+                        },
+                        {
+                            "id": "buttonLetterSpacing",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "1px",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "1px",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "3px",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "5px",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "buttonFontWeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "700",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "buttonFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "buttonTextTransform",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "id": "headingTextTransform",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font design",
-                        "fi": "Fontin muotoilu"
-                    },
-                    "default": "none",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "none",
+                            "type": "title",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
+                                "en": "Accent",
+                                "fi": "Korostus"
                             }
                         },
                         {
-                            "value": "uppercase",
+                            "id": "accentFont",
+                            "type": "font-picker",
                             "label": {
-                                "en": "Uppercase",
-                                "fi": "Isot kirjaimet"
-                            }
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
+                        },
+                        {
+                            "id": "accentFontWeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "400",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "accentFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "accentTextTransform",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Subheading",
-                        "fi": "Alaotsikko"
-                    }
-                },
-                {
-                    "id": "subheadingFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "subheadingLetterSpacing",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font letter-spacing",
-                        "fi": "Fontin kirjainväli"
-                    },
-                    "default": "1px",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "0",
-                            "label": "Off"
-                        },
-                        {
-                            "value": "1px",
-                            "label": "S"
-                        },
-                        {
-                            "value": "3px",
-                            "label": "M"
-                        },
-                        {
-                            "value": "5px",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "subheadingFontWeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font weight",
-                        "fi": "Fontin paksuus"
-                    },
-                    "default": "400",
-                    "options": [
-                        {
-                            "value": "400",
-                            "label": "400"
-                        },
-                        {
-                            "value": "500",
-                            "label": "500"
-                        },
-                        {
-                            "value": "700",
-                            "label": "700"
-                        }
-                    ]
-                },
-                {
-                    "id": "subheadingFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
-                        {
-                            "value": "normal",
+                            "type": "title",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
+                                "en": "Navigation",
+                                "fi": "Navigointi"
                             }
                         },
                         {
-                            "value": "italic",
+                            "id": "navigationFont",
+                            "type": "font-picker",
                             "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "subheadingTextTransform",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font design",
-                        "fi": "Fontin muotoilu"
-                    },
-                    "default": "none",
-                    "options": [
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
+                        },
                         {
-                            "value": "none",
+                            "id": "navigationFontScale",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
+                                "en": "Font scale",
+                                "fi": "Fontin mittasuhde"
+                            },
+                            "default": "1",
+                            "options": [
+                                {
+                                    "value": "0.875",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "1",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "1.125",
+                                    "label": "L"
+                                }
+                            ]
                         },
                         {
-                            "value": "uppercase",
+                            "id": "navigationLetterSpacing",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Uppercase",
-                                "fi": "Isot kirjaimet"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Button",
-                        "fi": "Nappi"
-                    }
-                },
-                {
-                    "id": "buttonFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "buttonLetterSpacing",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font letter-spacing",
-                        "fi": "Fontin kirjainväli"
-                    },
-                    "default": "1px",
-                    "options": [
-                        {
-                            "value": "0",
-                            "label": "Off"
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "1px",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "1px",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "2px",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "3px",
+                                    "label": "L"
+                                }
+                            ]
                         },
                         {
-                            "value": "1px",
-                            "label": "S"
-                        },
-                        {
-                            "value": "3px",
-                            "label": "M"
-                        },
-                        {
-                            "value": "5px",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "buttonFontWeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font weight",
-                        "fi": "Fontin paksuus"
-                    },
-                    "default": "700",
-                    "options": [
-                        {
-                            "value": "400",
-                            "label": "400"
-                        },
-                        {
-                            "value": "500",
-                            "label": "500"
-                        },
-                        {
-                            "value": "700",
-                            "label": "700"
-                        }
-                    ]
-                },
-                {
-                    "id": "buttonFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
-                        {
-                            "value": "normal",
+                            "id": "navigationFontWeight",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "400",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
                         },
                         {
-                            "value": "italic",
+                            "id": "navigationFontStyle",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "buttonTextTransform",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font design",
-                        "fi": "Fontin muotoilu"
-                    },
-                    "default": "none",
-                    "options": [
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
                         {
-                            "value": "none",
+                            "id": "navigationTextTransform",
+                            "type": "radio-pill",
                             "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
-                        },
-                        {
-                            "value": "uppercase",
-                            "label": {
-                                "en": "Uppercase",
-                                "fi": "Isot kirjaimet"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Accent",
-                        "fi": "Korostus"
-                    }
-                },
-                {
-                    "id": "accentFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "accentFontWeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font weight",
-                        "fi": "Fontin paksuus"
-                    },
-                    "default": "400",
-                    "options": [
-                        {
-                            "value": "400",
-                            "label": "400"
-                        },
-                        {
-                            "value": "500",
-                            "label": "500"
-                        },
-                        {
-                            "value": "700",
-                            "label": "700"
-                        }
-                    ]
-                },
-                {
-                    "id": "accentFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
-                        {
-                            "value": "normal",
-                            "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
-                        },
-                        {
-                            "value": "italic",
-                            "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "accentTextTransform",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font design",
-                        "fi": "Fontin muotoilu"
-                    },
-                    "default": "none",
-                    "options": [
-                        {
-                            "value": "none",
-                            "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
-                        },
-                        {
-                            "value": "uppercase",
-                            "label": {
-                                "en": "Uppercase",
-                                "fi": "Isot kirjaimet"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Navigation",
-                        "fi": "Navigointi"
-                    }
-                },
-                {
-                    "id": "navigationFont",
-                    "type": "font-picker",
-                    "label": {
-                        "en": "Font",
-                        "fi": "Fontti"
-                    },
-                    "families": [
-                        "Open Sans",
-                        "Lato",
-                        "Roboto",
-                        "Barlow",
-                        "Inter",
-                        "Assistant",
-                        "Amiri",
-                        "Jost",
-                        "Cormorant Garamond",
-                        "Roboto Condensed",
-                        "Roboto Slab",
-                        "Raleway",
-                        "Ubuntu",
-                        "Nunito",
-                        "Rubik",
-                        "Josefin Sans",
-                        "Lora",
-                        "Dosis",
-                        "Libre Baskerville",
-                        "Yanone Kaffeesatz",
-                        "Balsamiq Sans",
-                        "KoHo",
-                        "Averia Libre",
-                        "Sansita",
-                        "Tourney",
-                        "Grandstander",
-                        "Prompt",
-                        "Montserrat",
-                        "Poppins",
-                        "Source Sans Pro",
-                        "Noto Sans",
-                        "Merriweather",
-                        "Playfair Display"
-                    ],
-                    "variants": [
-                        "Regular",
-                        "italic",
-                        "700"
-                    ]
-                },
-                {
-                    "id": "navigationFontScale",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font scale",
-                        "fi": "Fontin mittasuhde"
-                    },
-                    "default": "1",
-                    "options": [
-                        {
-                            "value": "0.875",
-                            "label": "S"
-                        },
-                        {
-                            "value": "1",
-                            "label": "M"
-                        },
-                        {
-                            "value": "1.125",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "navigationLetterSpacing",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font letter-spacing",
-                        "fi": "Fontin kirjainväli"
-                    },
-                    "default": "1px",
-                    "options": [
-                        {
-                            "value": "0",
-                            "label": "Off"
-                        },
-                        {
-                            "value": "1px",
-                            "label": "S"
-                        },
-                        {
-                            "value": "2px",
-                            "label": "M"
-                        },
-                        {
-                            "value": "3px",
-                            "label": "L"
-                        }
-                    ]
-                },
-                {
-                    "id": "navigationFontWeight",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font weight",
-                        "fi": "Fontin paksuus"
-                    },
-                    "default": "400",
-                    "options": [
-                        {
-                            "value": "400",
-                            "label": "400"
-                        },
-                        {
-                            "value": "500",
-                            "label": "500"
-                        },
-                        {
-                            "value": "700",
-                            "label": "700"
-                        }
-                    ]
-                },
-                {
-                    "id": "navigationFontStyle",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font style",
-                        "fi": "Fontin tyyli"
-                    },
-                    "default": "normal",
-                    "options": [
-                        {
-                            "value": "normal",
-                            "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
-                        },
-                        {
-                            "value": "italic",
-                            "label": {
-                                "en": "Italic",
-                                "fi": "Kursivoitu"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "navigationTextTransform",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Font design",
-                        "fi": "Fontin muotoilu"
-                    },
-                    "default": "none",
-                    "options": [
-                        {
-                            "value": "none",
-                            "label": {
-                                "en": "Normal",
-                                "fi": "Normaali"
-                            }
-                        },
-                        {
-                            "value": "uppercase",
-                            "label": {
-                                "en": "Uppercase",
-                                "fi": "Isot kirjaimet"
-                            }
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -2280,10 +2279,6 @@
             "label": {
                 "en": "General",
                 "fi": "Yleinen"
-            },
-            "info": {
-                "en": "Manage more broadly the appearance settings. For example, change the aspect ratio of product images or display prices without tax.",
-                "fi": "Hallitse laajemmin ulkoasun asetuksia. Vaihda esimerkiksi tuotekuvien kuvasuhdetta tai näytä hinnat verottomina."
             },
             "settings": [
                 {
@@ -2298,753 +2293,766 @@
                     }
                 },
                 {
-                    "type": "title",
-                    "label": {
-                        "en": "Accessibility",
-                        "fi": "Käytettävyys"
-                    }
-                },
-                {
-                    "id": "accessibilityShowAnimations",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show animations",
-                        "fi": "Näytä animaatiot"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "accessibilityShowSearch",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show search",
-                        "fi": "Näytä haku"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "accessibilityShowSearchAutocomplete",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show search autocomplete",
-                        "fi": "Näytä ennakoiva haku"
-                    },
-                    "default": true,
-                    "conditions": [
-                        "accessibilityShowSearch eq true"
-                    ]
-                },
-                {
-                    "id": "accessibilityShowBackToTopButton",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show back to top button",
-                        "fi": "Näytä takaisin alkuun -painike"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "accessibilityShowWishlist",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show favorites list",
-                        "fi": "Näytä suosikkilistat"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "cartShowAddNotification",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show notification when product is added to the cart",
-                        "fi": "Näytä ilmoitus kun tuote lisätään ostoskoriin"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "taxFreeShopping",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show prices tax-free",
-                        "fi": "Näytä hinnat verottomina"
-                    },
-                    "default": false
-                },
-                {
-                    "id": "cookiesPolicyPosition",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Cookie policy position",
-                        "fi": "Evästeilmoituksen sijainti"
-                    },
-                    "default": "middle",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "middle",
+                            "type": "title",
                             "label": {
-                                "en": "Middle",
-                                "fi": "Keskellä"
+                                "en": "Accessibility",
+                                "fi": "Käytettävyys"
                             }
                         },
                         {
-                            "value": "down",
+                            "id": "accessibilityShowAnimations",
+                            "type": "checkbox",
                             "label": {
-                                "en": "Down",
-                                "fi": "Alhaalla"
-                            }
+                                "en": "Show animations",
+                                "fi": "Näytä animaatiot"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "accessibilityShowSearch",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show search",
+                                "fi": "Näytä haku"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "accessibilityShowSearchAutocomplete",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show search autocomplete",
+                                "fi": "Näytä ennakoiva haku"
+                            },
+                            "default": true,
+                            "conditions": [
+                                "accessibilityShowSearch eq true"
+                            ]
+                        },
+                        {
+                            "id": "accessibilityShowBackToTopButton",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show back to top button",
+                                "fi": "Näytä takaisin alkuun -painike"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "accessibilityShowWishlist",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show favorites list",
+                                "fi": "Näytä suosikkilistat"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "cartShowAddNotification",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show notification when product is added to the cart",
+                                "fi": "Näytä ilmoitus kun tuote lisätään ostoskoriin"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "taxFreeShopping",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show prices tax-free",
+                                "fi": "Näytä hinnat verottomina"
+                            },
+                            "default": false
+                        },
+                        {
+                            "id": "cookiesPolicyPosition",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Cookie policy position",
+                                "fi": "Evästeilmoituksen sijainti"
+                            },
+                            "default": "middle",
+                            "options": [
+                                {
+                                    "value": "middle",
+                                    "label": {
+                                        "en": "Middle",
+                                        "fi": "Keskellä"
+                                    }
+                                },
+                                {
+                                    "value": "down",
+                                    "label": {
+                                        "en": "Down",
+                                        "fi": "Alhaalla"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Product",
-                        "fi": "Tuote"
-                    }
-                },
-                {
-                    "id": "productImageAspectRatio",
-                    "type": "select",
-                    "label": {
-                        "en": "Aspect ratio",
-                        "fi": "Kuvasuhde"
-                    },
-                    "default": "1:1",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "9:13",
-                            "label": "9:13"
+                            "type": "title",
+                            "label": {
+                                "en": "Product",
+                                "fi": "Tuote"
+                            }
                         },
                         {
-                            "value": "4:3",
-                            "label": "4:3"
+                            "id": "productImageAspectRatio",
+                            "type": "select",
+                            "label": {
+                                "en": "Aspect ratio",
+                                "fi": "Kuvasuhde"
+                            },
+                            "default": "1:1",
+                            "options": [
+                                {
+                                    "value": "9:13",
+                                    "label": "9:13"
+                                },
+                                {
+                                    "value": "4:3",
+                                    "label": "4:3"
+                                },
+                                {
+                                    "value": "3:4",
+                                    "label": "3:4"
+                                },
+                                {
+                                    "value": "1:1",
+                                    "label": "1:1"
+                                }
+                            ]
                         },
                         {
-                            "value": "3:4",
-                            "label": "3:4"
+                            "id": "productImageAspectRatioFit",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Image area fill",
+                                "fi": "Kuva-alueen täyttö"
+                            },
+                            "default": "cover",
+                            "options": [
+                                {
+                                    "value": "contain",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "cover",
+                                    "label": "On"
+                                }
+                            ]
                         },
                         {
-                            "value": "1:1",
-                            "label": "1:1"
+                            "id": "productPerRow",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Products per row",
+                                "fi": "Tuotteita per rivi"
+                            },
+                            "default": 5,
+                            "options": [
+                                {
+                                    "value": 2,
+                                    "label": "2"
+                                },
+                                {
+                                    "value": 3,
+                                    "label": "3"
+                                },
+                                {
+                                    "value": 4,
+                                    "label": "4"
+                                },
+                                {
+                                    "value": 5,
+                                    "label": "5"
+                                },
+                                {
+                                    "value": 6,
+                                    "label": "6"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "productShowVariantOptionAsImage",
+                            "type": "select",
+                            "label": {
+                                "en": "Show variant option as an image",
+                                "fi": "Näytä variaation valinta kuvana"
+                            },
+                            "default": "color",
+                            "options": [
+                                {
+                                    "value": false,
+                                    "label": {
+                                        "en": "Disabled",
+                                        "fi": "Poissa käytöstä"
+                                    }
+                                },
+                                {
+                                    "value": "color",
+                                    "label": {
+                                        "en": "Color",
+                                        "fi": "Väri"
+                                    }
+                                },
+                                {
+                                    "value": "size",
+                                    "label": {
+                                        "en": "Size",
+                                        "fi": "Koko"
+                                    }
+                                },
+                                {
+                                    "value": "material",
+                                    "label": {
+                                        "en": "Material",
+                                        "fi": "Materiaali"
+                                    }
+                                },
+                                {
+                                    "value": "style",
+                                    "label": {
+                                        "en": "Style",
+                                        "fi": "Tyyli"
+                                    }
+                                },
+                                {
+                                    "value": "favlor",
+                                    "label": {
+                                        "en": "Flavor",
+                                        "fi": "Maku"
+                                    }
+                                },
+                                {
+                                    "value": "pattern",
+                                    "label": {
+                                        "en": "Pattern",
+                                        "fi": "Kuvio"
+                                    }
+                                },
+                                {
+                                    "value": "fragrance",
+                                    "label": {
+                                        "en": "Fragrance",
+                                        "fi": "Tuoksu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "productShowVariants",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show variants in product lists",
+                                "fi": "Näytä variaatiot tuotelistauksissa"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowVariantImgsOnHover",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show variant images when cursor is over",
+                                "fi": "Näytä variaation kuvat kun osoitin on päällä"
+                            },
+                            "default": false,
+                            "conditions": [
+                                "!productShowVariants eq false",
+                                "!productShowVariantOptionAsImage eq false"
+                            ]
+                        },
+                        {
+                            "id": "productShowVariantOption1",
+                            "type": "select",
+                            "label": {
+                                "en": "Show variant option 1",
+                                "fi": "Näytä variaation valinta 1"
+                            },
+                            "default": "color",
+                            "options": [
+                                {
+                                    "value": "color",
+                                    "label": {
+                                        "en": "Color",
+                                        "fi": "Väri"
+                                    }
+                                },
+                                {
+                                    "value": "size",
+                                    "label": {
+                                        "en": "Size",
+                                        "fi": "Koko"
+                                    }
+                                },
+                                {
+                                    "value": "material",
+                                    "label": {
+                                        "en": "Material",
+                                        "fi": "Materiaali"
+                                    }
+                                },
+                                {
+                                    "value": "style",
+                                    "label": {
+                                        "en": "Style",
+                                        "fi": "Tyyli"
+                                    }
+                                },
+                                {
+                                    "value": "favlor",
+                                    "label": {
+                                        "en": "Flavor",
+                                        "fi": "Maku"
+                                    }
+                                },
+                                {
+                                    "value": "pattern",
+                                    "label": {
+                                        "en": "Pattern",
+                                        "fi": "Kuvio"
+                                    }
+                                },
+                                {
+                                    "value": "fragrance",
+                                    "label": {
+                                        "en": "Fragrance",
+                                        "fi": "Tuoksu"
+                                    }
+                                }
+                            ],
+                            "conditions": [
+                                "!productShowVariants eq false"
+                            ]
+                        },
+                        {
+                            "id": "productShowVariantOption2",
+                            "type": "select",
+                            "label": {
+                                "en": "Show variant option 2",
+                                "fi": "Näytä variaation valinta 2"
+                            },
+                            "default": "size",
+                            "options": [
+                                {
+                                    "value": false,
+                                    "label": {
+                                        "en": "Disabled",
+                                        "fi": "Poissa käytöstä"
+                                    }
+                                },
+                                {
+                                    "value": "color",
+                                    "label": {
+                                        "en": "Color",
+                                        "fi": "Väri"
+                                    }
+                                },
+                                {
+                                    "value": "size",
+                                    "label": {
+                                        "en": "Size",
+                                        "fi": "Koko"
+                                    }
+                                },
+                                {
+                                    "value": "material",
+                                    "label": {
+                                        "en": "Material",
+                                        "fi": "Materiaali"
+                                    }
+                                },
+                                {
+                                    "value": "style",
+                                    "label": {
+                                        "en": "Style",
+                                        "fi": "Tyyli"
+                                    }
+                                },
+                                {
+                                    "value": "favlor",
+                                    "label": {
+                                        "en": "Flavor",
+                                        "fi": "Maku"
+                                    }
+                                },
+                                {
+                                    "value": "pattern",
+                                    "label": {
+                                        "en": "Pattern",
+                                        "fi": "Kuvio"
+                                    }
+                                },
+                                {
+                                    "value": "fragrance",
+                                    "label": {
+                                        "en": "Fragrance",
+                                        "fi": "Tuoksu"
+                                    }
+                                }
+                            ],
+                            "conditions": [
+                                "!productShowVariants eq false",
+                                "!productShowVariantOption1 eq false"
+                            ]
+                        },
+                        {
+                            "id": "productShowVariantOption3",
+                            "type": "select",
+                            "label": {
+                                "en": "Show variant option 3",
+                                "fi": "Näytä variaation valinta 3"
+                            },
+                            "default": false,
+                            "options": [
+                                {
+                                    "value": false,
+                                    "label": {
+                                        "en": "Disabled",
+                                        "fi": "Poissa käytöstä"
+                                    }
+                                },
+                                {
+                                    "value": "color",
+                                    "label": {
+                                        "en": "Color",
+                                        "fi": "Väri"
+                                    }
+                                },
+                                {
+                                    "value": "size",
+                                    "label": {
+                                        "en": "Size",
+                                        "fi": "Koko"
+                                    }
+                                },
+                                {
+                                    "value": "material",
+                                    "label": {
+                                        "en": "Material",
+                                        "fi": "Materiaali"
+                                    }
+                                },
+                                {
+                                    "value": "style",
+                                    "label": {
+                                        "en": "Style",
+                                        "fi": "Tyyli"
+                                    }
+                                },
+                                {
+                                    "value": "favlor",
+                                    "label": {
+                                        "en": "Flavor",
+                                        "fi": "Maku"
+                                    }
+                                },
+                                {
+                                    "value": "pattern",
+                                    "label": {
+                                        "en": "Pattern",
+                                        "fi": "Kuvio"
+                                    }
+                                },
+                                {
+                                    "value": "fragrance",
+                                    "label": {
+                                        "en": "Fragrance",
+                                        "fi": "Tuoksu"
+                                    }
+                                }
+                            ],
+                            "conditions": [
+                                "!productShowVariants eq false",
+                                "!productShowVariantOption1 eq false",
+                                "!productShowVariantOption2 eq false"
+                            ]
+                        },
+                        {
+                            "type": "spacer"
+                        },
+                        {
+                            "id": "productShowName",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Name",
+                                "fi": "Nimi"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowManufacturer",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Manufacturer",
+                                "fi": "Valmistaja"
+                            },
+                            "default": false
+                        },
+                        {
+                            "id": "productShowPromotion",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Promotion",
+                                "fi": "Kampanja"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowPricing",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Price information",
+                                "fi": "Hintatiedot"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowRating",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Rating",
+                                "fi": "Tuotearvosteluluokitus"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowNewBadge",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "New badge",
+                                "fi": "Uutuusmerkki"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowPromotionBadge",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Promotion badge",
+                                "fi": "Kampanjamerkki"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowDiscountBadge",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Discount badge",
+                                "fi": "Alennusmerkki"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowOutOfStockBadge",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Out of stock badge",
+                                "fi": "Loppumerkki"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowDiscountPercentage",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show discount as percentage",
+                                "fi": "Näytä alennus prosenttina"
+                            },
+                            "default": false
+                        },
+                        {
+                            "id": "productWrapName",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Wrap product name into multiple lines",
+                                "fi": "Rivitä tuotenimi usealle riville"
+                            },
+                            "default": false
+                        },
+                        {
+                            "id": "productShowAddToCart",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Add to cart button",
+                                "fi": "Lisää ostoskoriin -painike"
+                            },
+                            "default": true
+                        },
+                        {
+                            "id": "productShowStockBalance",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Stock balance",
+                                "fi": "Saatavuus"
+                            },
+                            "default": false
                         }
                     ]
                 },
                 {
-                    "id": "productImageAspectRatioFit",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Image area fill",
-                        "fi": "Kuva-alueen täyttö"
-                    },
-                    "default": "cover",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "contain",
-                            "label": "Off"
+                            "type": "title",
+                            "label": {
+                                "en": "Article",
+                                "fi": "Artikkeli"
+                            }
                         },
                         {
-                            "value": "cover",
-                            "label": "On"
+                            "id": "articleImageAspectRatio",
+                            "type": "select",
+                            "label": {
+                                "en": "Aspect ratio",
+                                "fi": "Kuvasuhde"
+                            },
+                            "default": "1:1",
+                            "options": [
+                                {
+                                    "value": "9:13",
+                                    "label": "9:13"
+                                },
+                                {
+                                    "value": "4:3",
+                                    "label": "4:3"
+                                },
+                                {
+                                    "value": "3:4",
+                                    "label": "3:4"
+                                },
+                                {
+                                    "value": "1:1",
+                                    "label": "1:1"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "articleImageAspectRatioFit",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Image area fill",
+                                "fi": "Kuva-alueen täyttö"
+                            },
+                            "default": "cover",
+                            "options": [
+                                {
+                                    "value": "contain",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "cover",
+                                    "label": "On"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "articlePerRow",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Articles per row",
+                                "fi": "Artikkeleita per rivi"
+                            },
+                            "default": 3,
+                            "options": [
+                                {
+                                    "value": 2,
+                                    "label": "2"
+                                },
+                                {
+                                    "value": 3,
+                                    "label": "3"
+                                },
+                                {
+                                    "value": 4,
+                                    "label": "4"
+                                },
+                                {
+                                    "value": 5,
+                                    "label": "5"
+                                },
+                                {
+                                    "value": 6,
+                                    "label": "6"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "articleShowAuthor",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show author",
+                                "fi": "Näytä kirjoittaja"
+                            },
+                            "default": false
                         }
                     ]
                 },
                 {
-                    "id": "productPerRow",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Products per row",
-                        "fi": "Tuotteita per rivi"
-                    },
-                    "default": 5,
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": 2,
-                            "label": "2"
+                            "type": "title",
+                            "label": {
+                                "en": "Registration",
+                                "fi": "Rekisteröinti"
+                            }
                         },
                         {
-                            "value": 3,
-                            "label": "3"
+                            "type": "checkbox",
+                            "id": "registerCompanyInformation",
+                            "label": {
+                                "en": "Show company information",
+                                "fi": "Näytä yritystiedot"
+                            },
+                            "default": false
                         },
                         {
-                            "value": 4,
-                            "label": "4"
+                            "type": "checkbox",
+                            "id": "registerAdditionalInformation",
+                            "label": {
+                                "en": "Show additional information",
+                                "fi": "Näytä lisätiedot"
+                            },
+                            "default": false
                         },
                         {
-                            "value": 5,
-                            "label": "5"
-                        },
-                        {
-                            "value": 6,
-                            "label": "6"
+                            "id": "showPolicyAgreementAsText",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show policy agreement as a text",
+                                "fi": "Näytä ehtojen hyväksyminen tekstinä"
+                            },
+                            "default": false
                         }
                     ]
                 },
                 {
-                    "id": "productShowVariantOptionAsImage",
-                    "type": "select",
-                    "label": {
-                        "en": "Show variant option as an image",
-                        "fi": "Näytä variaation valinta kuvana"
-                    },
-                    "default": "color",
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": false,
-                            "label": {
-                                "en": "Disabled",
-                                "fi": "Poissa käytöstä"
-                            }
+                            "type": "title",
+                            "label": "Klarna"
                         },
                         {
-                            "value": "color",
+                            "type": "text",
+                            "id": "klarnaClientId",
                             "label": {
-                                "en": "Color",
-                                "fi": "Väri"
-                            }
-                        },
-                        {
-                            "value": "size",
-                            "label": {
-                                "en": "Size",
-                                "fi": "Koko"
-                            }
-                        },
-                        {
-                            "value": "material",
-                            "label": {
-                                "en": "Material",
-                                "fi": "Materiaali"
-                            }
-                        },
-                        {
-                            "value": "style",
-                            "label": {
-                                "en": "Style",
-                                "fi": "Tyyli"
-                            }
-                        },
-                        {
-                            "value": "favlor",
-                            "label": {
-                                "en": "Flavor",
-                                "fi": "Maku"
-                            }
-                        },
-                        {
-                            "value": "pattern",
-                            "label": {
-                                "en": "Pattern",
-                                "fi": "Kuvio"
-                            }
-                        },
-                        {
-                            "value": "fragrance",
-                            "label": {
-                                "en": "Fragrance",
-                                "fi": "Tuoksu"
-                            }
+                                "en": "Client id",
+                                "fi": "Asiakastunnus"
+                            },
+                            "placeholder": "11111111-2222-3333-4444-555555555555"
                         }
                     ]
-                },
-                {
-                    "id": "productShowVariants",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show variants in product lists",
-                        "fi": "Näytä variaatiot tuotelistauksissa"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowVariantImgsOnHover",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show variant images when cursor is over",
-                        "fi": "Näytä variaation kuvat kun osoitin on päällä"
-                    },
-                    "default": false,
-                    "conditions": [
-                        "!productShowVariants eq false",
-                        "!productShowVariantOptionAsImage eq false"
-                    ]
-                },
-                {
-                    "id": "productShowVariantOption1",
-                    "type": "select",
-                    "label": {
-                        "en": "Show variant option 1",
-                        "fi": "Näytä variaation valinta 1"
-                    },
-                    "default": "color",
-                    "options": [
-                        {
-                            "value": "color",
-                            "label": {
-                                "en": "Color",
-                                "fi": "Väri"
-                            }
-                        },
-                        {
-                            "value": "size",
-                            "label": {
-                                "en": "Size",
-                                "fi": "Koko"
-                            }
-                        },
-                        {
-                            "value": "material",
-                            "label": {
-                                "en": "Material",
-                                "fi": "Materiaali"
-                            }
-                        },
-                        {
-                            "value": "style",
-                            "label": {
-                                "en": "Style",
-                                "fi": "Tyyli"
-                            }
-                        },
-                        {
-                            "value": "favlor",
-                            "label": {
-                                "en": "Flavor",
-                                "fi": "Maku"
-                            }
-                        },
-                        {
-                            "value": "pattern",
-                            "label": {
-                                "en": "Pattern",
-                                "fi": "Kuvio"
-                            }
-                        },
-                        {
-                            "value": "fragrance",
-                            "label": {
-                                "en": "Fragrance",
-                                "fi": "Tuoksu"
-                            }
-                        }
-                    ],
-                    "conditions": [
-                        "!productShowVariants eq false"
-                    ]
-                },
-                {
-                    "id": "productShowVariantOption2",
-                    "type": "select",
-                    "label": {
-                        "en": "Show variant option 2",
-                        "fi": "Näytä variaation valinta 2"
-                    },
-                    "default": "size",
-                    "options": [
-                        {
-                            "value": false,
-                            "label": {
-                                "en": "Disabled",
-                                "fi": "Poissa käytöstä"
-                            }
-                        },
-                        {
-                            "value": "color",
-                            "label": {
-                                "en": "Color",
-                                "fi": "Väri"
-                            }
-                        },
-                        {
-                            "value": "size",
-                            "label": {
-                                "en": "Size",
-                                "fi": "Koko"
-                            }
-                        },
-                        {
-                            "value": "material",
-                            "label": {
-                                "en": "Material",
-                                "fi": "Materiaali"
-                            }
-                        },
-                        {
-                            "value": "style",
-                            "label": {
-                                "en": "Style",
-                                "fi": "Tyyli"
-                            }
-                        },
-                        {
-                            "value": "favlor",
-                            "label": {
-                                "en": "Flavor",
-                                "fi": "Maku"
-                            }
-                        },
-                        {
-                            "value": "pattern",
-                            "label": {
-                                "en": "Pattern",
-                                "fi": "Kuvio"
-                            }
-                        },
-                        {
-                            "value": "fragrance",
-                            "label": {
-                                "en": "Fragrance",
-                                "fi": "Tuoksu"
-                            }
-                        }
-                    ],
-                    "conditions": [
-                        "!productShowVariants eq false",
-                        "!productShowVariantOption1 eq false"
-                    ]
-                },
-                {
-                    "id": "productShowVariantOption3",
-                    "type": "select",
-                    "label": {
-                        "en": "Show variant option 3",
-                        "fi": "Näytä variaation valinta 3"
-                    },
-                    "default": false,
-                    "options": [
-                        {
-                            "value": false,
-                            "label": {
-                                "en": "Disabled",
-                                "fi": "Poissa käytöstä"
-                            }
-                        },
-                        {
-                            "value": "color",
-                            "label": {
-                                "en": "Color",
-                                "fi": "Väri"
-                            }
-                        },
-                        {
-                            "value": "size",
-                            "label": {
-                                "en": "Size",
-                                "fi": "Koko"
-                            }
-                        },
-                        {
-                            "value": "material",
-                            "label": {
-                                "en": "Material",
-                                "fi": "Materiaali"
-                            }
-                        },
-                        {
-                            "value": "style",
-                            "label": {
-                                "en": "Style",
-                                "fi": "Tyyli"
-                            }
-                        },
-                        {
-                            "value": "favlor",
-                            "label": {
-                                "en": "Flavor",
-                                "fi": "Maku"
-                            }
-                        },
-                        {
-                            "value": "pattern",
-                            "label": {
-                                "en": "Pattern",
-                                "fi": "Kuvio"
-                            }
-                        },
-                        {
-                            "value": "fragrance",
-                            "label": {
-                                "en": "Fragrance",
-                                "fi": "Tuoksu"
-                            }
-                        }
-                    ],
-                    "conditions": [
-                        "!productShowVariants eq false",
-                        "!productShowVariantOption1 eq false",
-                        "!productShowVariantOption2 eq false"
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "id": "productShowName",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Name",
-                        "fi": "Nimi"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowManufacturer",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Manufacturer",
-                        "fi": "Valmistaja"
-                    },
-                    "default": false
-                },
-                {
-                    "id": "productShowPromotion",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Promotion",
-                        "fi": "Kampanja"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowPricing",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Price information",
-                        "fi": "Hintatiedot"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowRating",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Rating",
-                        "fi": "Tuotearvosteluluokitus"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowNewBadge",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "New badge",
-                        "fi": "Uutuusmerkki"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowPromotionBadge",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Promotion badge",
-                        "fi": "Kampanjamerkki"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowDiscountBadge",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Discount badge",
-                        "fi": "Alennusmerkki"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowOutOfStockBadge",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Out of stock badge",
-                        "fi": "Loppumerkki"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowDiscountPercentage",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show discount as percentage",
-                        "fi": "Näytä alennus prosenttina"
-                    },
-                    "default": false
-                },
-                {
-                    "id": "productWrapName",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Wrap product name into multiple lines",
-                        "fi": "Rivitä tuotenimi usealle riville"
-                    },
-                    "default": false
-                },
-                {
-                    "id": "productShowAddToCart",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Add to cart button",
-                        "fi": "Lisää ostoskoriin -painike"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "productShowStockBalance",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Stock balance",
-                        "fi": "Saatavuus"
-                    },
-                    "default": false
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Article",
-                        "fi": "Artikkeli"
-                    }
-                },
-                {
-                    "id": "articleImageAspectRatio",
-                    "type": "select",
-                    "label": {
-                        "en": "Aspect ratio",
-                        "fi": "Kuvasuhde"
-                    },
-                    "default": "1:1",
-                    "options": [
-                        {
-                            "value": "9:13",
-                            "label": "9:13"
-                        },
-                        {
-                            "value": "4:3",
-                            "label": "4:3"
-                        },
-                        {
-                            "value": "3:4",
-                            "label": "3:4"
-                        },
-                        {
-                            "value": "1:1",
-                            "label": "1:1"
-                        }
-                    ]
-                },
-                {
-                    "id": "articleImageAspectRatioFit",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Image area fill",
-                        "fi": "Kuva-alueen täyttö"
-                    },
-                    "default": "cover",
-                    "options": [
-                        {
-                            "value": "contain",
-                            "label": "Off"
-                        },
-                        {
-                            "value": "cover",
-                            "label": "On"
-                        }
-                    ]
-                },
-                {
-                    "id": "articlePerRow",
-                    "type": "radio-pill",
-                    "label": {
-                        "en": "Articles per row",
-                        "fi": "Artikkeleita per rivi"
-                    },
-                    "default": 3,
-                    "options": [
-                        {
-                            "value": 2,
-                            "label": "2"
-                        },
-                        {
-                            "value": 3,
-                            "label": "3"
-                        },
-                        {
-                            "value": 4,
-                            "label": "4"
-                        },
-                        {
-                            "value": 5,
-                            "label": "5"
-                        },
-                        {
-                            "value": 6,
-                            "label": "6"
-                        }
-                    ]
-                },
-                {
-                    "id": "articleShowAuthor",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show author",
-                        "fi": "Näytä kirjoittaja"
-                    },
-                    "default": false
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Registration",
-                        "fi": "Rekisteröinti"
-                    }
-                },
-                {
-                    "type": "checkbox",
-                    "id": "registerCompanyInformation",
-                    "label": {
-                        "en": "Show company information",
-                        "fi": "Näytä yritystiedot"
-                    },
-                    "default": false
-                },
-                {
-                    "type": "checkbox",
-                    "id": "registerAdditionalInformation",
-                    "label": {
-                        "en": "Show additional information",
-                        "fi": "Näytä lisätiedot"
-                    },
-                    "default": false
-                },
-                {
-                    "id": "showPolicyAgreementAsText",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show policy agreement as a text",
-                        "fi": "Näytä ehtojen hyväksyminen tekstinä"
-                    },
-                    "default": false
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": "Klarna"
-                },
-                {
-                    "type": "text",
-                    "id": "klarnaClientId",
-                    "label": {
-                        "en": "Client id",
-                        "fi": "Asiakastunnus"
-                    },
-                    "placeholder": "11111111-2222-3333-4444-555555555555"
                 }
             ]
         },
@@ -3053,10 +3061,6 @@
             "label": {
                 "en": "Social media",
                 "fi": "Sosiaalinen media"
-            },
-            "info": {
-                "en": "Control which social media channels are displayed in the online store.",
-                "fi": "Hallita mitkä sosiaalisen median kanavat näytetään verkkokaupassa."
             },
             "settings": [
                 {
@@ -3174,10 +3178,6 @@
                 "en": "Marketing",
                 "fi": "Markkinointi"
             },
-            "info": {
-                "en": "Manage marketing and SEO settings. For example, enable newsletter popup.",
-                "fi": "Hallitse markkinointi- ja hakukoneoptimointiasetuksia. Ota esimerkiksi käyttöön uutiskirjeen ponnahdusikkuna."
-            },
             "settings": [
                 {
                     "type": "heading",
@@ -3191,168 +3191,175 @@
                     }
                 },
                 {
-                    "type": "title",
-                    "label": {
-                        "en": "Newsletter pop-up",
-                        "fi": "Uutiskirjeen ponnahdusikkuna"
-                    }
-                },
-                {
-                    "id": "newsletterPopup",
-                    "type": "checkbox",
-                    "label": {
-                        "en": "Show newsletter pop-up",
-                        "fi": "Näytä uutiskirjeen ponnahdusikkuna"
-                    },
-                    "default": true
-                },
-                {
-                    "id": "newsletterPopupDelay",
-                    "type": "select",
-                    "label": {
-                        "en": "Delay before the newsletter pop-up is shown",
-                        "fi": "Viive ennen kuin uutiskirjeen ponnahdusikkunan näytetään"
-                    },
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "5",
-                            "label": "5 s"
+                            "type": "title",
+                            "label": {
+                                "en": "Newsletter pop-up",
+                                "fi": "Uutiskirjeen ponnahdusikkuna"
+                            }
                         },
                         {
-                            "value": "10",
-                            "label": "10 s"
+                            "id": "newsletterPopup",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show newsletter pop-up",
+                                "fi": "Näytä uutiskirjeen ponnahdusikkuna"
+                            },
+                            "default": false
                         },
                         {
-                            "value": "15",
-                            "label": "15 s"
+                            "id": "newsletterPopupDelay",
+                            "type": "select",
+                            "label": {
+                                "en": "Delay before the newsletter pop-up is shown",
+                                "fi": "Viive ennen kuin uutiskirjeen ponnahdusikkunan näytetään"
+                            },
+                            "options": [
+                                {
+                                    "value": "5",
+                                    "label": "5 s"
+                                },
+                                {
+                                    "value": "10",
+                                    "label": "10 s"
+                                },
+                                {
+                                    "value": "15",
+                                    "label": "15 s"
+                                },
+                                {
+                                    "value": "20",
+                                    "label": "20 s"
+                                },
+                                {
+                                    "value": "25",
+                                    "label": "25 s"
+                                },
+                                {
+                                    "value": "30",
+                                    "label": "30 s"
+                                }
+                            ],
+                            "default": "5",
+                            "conditions": [
+                                "!newsletterPopup eq false"
+                            ]
                         },
                         {
-                            "value": "20",
-                            "label": "20 s"
+                            "id": "newsletterPopupCookieDuration",
+                            "type": "select",
+                            "label": {
+                                "en": "Duration before the newsletter pop-up is shown again",
+                                "fi": "Aika ennen kuin uutiskirjeen ponnahdusikkuna näytetään uudelleen"
+                            },
+                            "options": [
+                                {
+                                    "value": "86400",
+                                    "label": {
+                                        "en": "1 day",
+                                        "fi": "1 päivä"
+                                    }
+                                },
+                                {
+                                    "value": "604800",
+                                    "label": {
+                                        "en": "1 week",
+                                        "fi": "1 viikko"
+                                    }
+                                },
+                                {
+                                    "value": "2629744",
+                                    "label": {
+                                        "en": "1 month",
+                                        "fi": "1 kuukausi"
+                                    }
+                                },
+                                {
+                                    "value": "31556926",
+                                    "label": {
+                                        "en": "1 year",
+                                        "fi": "1 vuosi"
+                                    }
+                                }
+                            ],
+                            "default": "86400",
+                            "conditions": [
+                                "!newsletterPopup eq false"
+                            ]
                         },
                         {
-                            "value": "25",
-                            "label": "25 s"
+                            "id": "newsletterPopupImg",
+                            "type": "image-picker",
+                            "label": {
+                                "en": "Image",
+                                "fi": "Kuva"
+                            },
+                            "adjustments": true,
+                            "conditions": [
+                                "!newsletterPopup eq false"
+                            ]
                         },
                         {
-                            "value": "30",
-                            "label": "30 s"
+                            "type": "label",
+                            "label": {
+                                "en": "You can manage the texts of the newsletter pop-up from the translations of the theme.",
+                                "fi": "Voit hallita uutiskirjeen ponnahdusikkunan tekstejä teeman käännöksistä."
+                            },
+                            "conditions": [
+                                "!newsletterPopup eq false"
+                            ]
                         }
-                    ],
-                    "default": "5",
-                    "conditions": [
-                        "!newsletterPopup eq false"
                     ]
                 },
                 {
-                    "id": "newsletterPopupCookieDuration",
-                    "type": "select",
-                    "label": {
-                        "en": "Duration before the newsletter pop-up is shown again",
-                        "fi": "Aika ennen kuin uutiskirjeen ponnahdusikkuna näytetään uudelleen"
-                    },
-                    "options": [
+                    "type": "setting-group",
+                    "settings": [
                         {
-                            "value": "86400",
+                            "type": "title",
                             "label": {
-                                "en": "1 day",
-                                "fi": "1 päivä"
+                                "en": "Search engine structured data",
+                                "fi": "Hakukoneille jäsennetty tieto"
                             }
                         },
                         {
-                            "value": "604800",
-                            "label": {
-                                "en": "1 week",
-                                "fi": "1 viikko"
-                            }
+                            "id": "schemaWebsite",
+                            "type": "checkbox",
+                            "label": "Website",
+                            "default": true
                         },
                         {
-                            "value": "2629744",
-                            "label": {
-                                "en": "1 month",
-                                "fi": "1 kuukausi"
-                            }
+                            "id": "schemaOrganization",
+                            "type": "checkbox",
+                            "label": "Organization",
+                            "default": true
                         },
                         {
-                            "value": "31556926",
-                            "label": {
-                                "en": "1 year",
-                                "fi": "1 vuosi"
-                            }
+                            "id": "schemaProduct",
+                            "type": "checkbox",
+                            "label": "Product",
+                            "default": true
+                        },
+                        {
+                            "id": "schemaBlogPosting",
+                            "type": "checkbox",
+                            "label": "BlogPosting",
+                            "default": true
+                        },
+                        {
+                            "id": "schemaBreadcrumbList",
+                            "type": "checkbox",
+                            "label": "BreadcrumbList",
+                            "default": true
+                        },
+                        {
+                            "id": "schemaItemList",
+                            "type": "checkbox",
+                            "label": "ItemList",
+                            "default": true
                         }
-                    ],
-                    "default": "86400",
-                    "conditions": [
-                        "!newsletterPopup eq false"
                     ]
-                },
-                {
-                    "id": "newsletterPopupImg",
-                    "type": "image-picker",
-                    "label": {
-                        "en": "Image",
-                        "fi": "Kuva"
-                    },
-                    "adjustments": true,
-                    "conditions": [
-                        "!newsletterPopup eq false"
-                    ]
-                },
-                {
-                    "type": "label",
-                    "label": {
-                        "en": "You can manage the texts of the newsletter pop-up from the translations of the theme.",
-                        "fi": "Voit hallita uutiskirjeen ponnahdusikkunan tekstejä teeman käännöksistä."
-                    },
-                    "conditions": [
-                        "!newsletterPopup eq false"
-                    ]
-                },
-                {
-                    "type": "spacer"
-                },
-                {
-                    "type": "title",
-                    "label": {
-                        "en": "Search engine structured data",
-                        "fi": "Hakukoneille jäsennetty tieto"
-                    }
-                },
-                {
-                    "id": "schemaWebsite",
-                    "type": "checkbox",
-                    "label": "Website",
-                    "default": true
-                },
-                {
-                    "id": "schemaOrganization",
-                    "type": "checkbox",
-                    "label": "Organization",
-                    "default": true
-                },
-                {
-                    "id": "schemaProduct",
-                    "type": "checkbox",
-                    "label": "Product",
-                    "default": true
-                },
-                {
-                    "id": "schemaBlogPosting",
-                    "type": "checkbox",
-                    "label": "BlogPosting",
-                    "default": true
-                },
-                {
-                    "id": "schemaBreadcrumbList",
-                    "type": "checkbox",
-                    "label": "BreadcrumbList",
-                    "default": true
-                },
-                {
-                    "id": "schemaItemList",
-                    "type": "checkbox",
-                    "label": "ItemList",
-                    "default": true
                 }
             ]
         }

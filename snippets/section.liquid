@@ -229,6 +229,10 @@
                 }
             {%- endif -%}
 
+            {%- if sectionContainerPaddingX -%}
+                --style-grid-container-padding-x: {{ sectionContainerPaddingX }};
+            {%- endif -%}
+
             {%- if sectionHighlightItems -%}
                 --section-highlight-item-padding: var(--style-grid-gutter-width);
             {%- endif %}
@@ -247,6 +251,16 @@
                     {%- assign styleBorderColorBrightness = style.border_color | color_brightness -%}
                     {%- assign styleButtonBgColorColorBrightness = style.btn_bg_color | color_brightness -%}
                     {%- assign styleAccentColorBrightness = style.accent_color | color_brightness -%}
+
+                    {%- assign bsBodyBg = style.bg_color -%}
+                    {%- assign bsBodyColor = style.text_color | color_min_contrast: bsBodyBg -%}
+                    {%- assign bsSecondaryBg = style.bg_color | color_darken: 30 -%}
+                    {%- assign bsSecondaryColor = style.text_color | color_modify: 'alpha', 0.75 | color_min_contrast: bsSecondaryBg -%}
+                    {%- assign bsTertiaryBg = style.bg_color | color_darken: 10 -%}
+                    {%- assign bsTertiaryColor = style.text_color | color_modify: 'alpha', 0.5 | color_min_contrast: bsTertiaryBg -%}
+                    {%- assign bsEmphasisColor = style.bg_color | color_min_contrast: style.text_color -%}
+                    {%- assign bsLinkColor = style.text_color | color_min_contrast: style.bg_color -%}
+                    {%- assign bsLinkHoverColor = style.text_color | color_min_contrast: style.bg_color -%}
 
                     {%- for data in style -%}
                         {%- assign key = data[0] | handle | replace: '_', '-' -%}
@@ -273,11 +287,11 @@
                     {%- endif -%}
 
                     {%- if styleTextColorBrightness > 190 -%}
-                        --style-text-accent-color: {{ style.text_color | color_darken: 10 }};
-                        --style-text-muted-color: {{ style.text_color | color_darken: 30 }};
+                        --style-text-accent-color: {{ style.text_color | color_darken: 10 | color_min_contrast: style.bg_color }};
+                        --style-text-muted-color: {{ style.text_color | color_darken: 30 | color_min_contrast: style.bg_color }};
                     {%- else -%}
-                        --style-text-accent-color: {{ style.text_color | color_lighten: 10 }};
-                        --style-text-muted-color: {{ style.text_color | color_lighten: 30 }};
+                        --style-text-accent-color: {{ style.text_color | color_lighten: 10 | color_min_contrast: style.bg_color }};
+                        --style-text-muted-color: {{ style.text_color | color_lighten: 30 | color_min_contrast: style.bg_color }};
                     {%- endif -%}
 
                     {%- if styleTableBgColorBrightness > 190 -%}
@@ -329,44 +343,44 @@
                     {%- endif -%}
 
                     {%- if styleAccentColorBrightness > 190 -%}
-                        --style-accent-text-color: #000;
+                        --style-accent-text-color: {{ '#000000' | color_min_contrast: style.accent_color }}
                     {%- else -%}
-                        --style-accent-text-color: #fff;
+                        --style-accent-text-color: {{ '#ffffff' | color_min_contrast: style.accent_color }}
                     {%- endif -%}
 
                     --style-bg-light-color: {{ style.bg_color | color_lighten: 35 }};
                     --style-border-focus-color: {{ style.border_color | color_lighten: 25 }};
                     --style-btn-border-color: {{ style.btn_bg_color }};
-                    --style-form-placeholder-color: {{ style.form_text_color | color_lighten: 15 }};
-                    --style-form-bg-readonly-color: {{ style.form_bg_color | color_lighten: 15 }};
-                    --style-text-darker-color: {{ style.text_color | color_darken: 5 }};
-                    --style-accent-faded-color: {{ style.accent_color | color_lighten: 30 }};
+                    --style-form-placeholder-color: {{ style.form_text_color | color_lighten: 15 | color_min_contrast: style.form_bg_color }};
+                    --style-form-bg-readonly-color: {{ style.form_bg_color | color_lighten: 15 | color_min_contrast: style.form_text_color }};
+                    --style-text-darker-color: {{ style.text_color | color_darken: 5 | color_min_contrast: style.bg_color }};
+                    --style-accent-faded-color: {{ style.accent_color | color_lighten: 30 | color_min_contrast: style.bg_color }};
                     
-                    --style-loader-color: {{ style.icon_color }};
-                    --style-loader-faded-color: {{ style.icon_color | color_modify: 'alpha', 0.1 }};
+                    --style-loader-color: {{ style.icon_color  }};
+                    --style-loader-faded-color: {{ style.icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: style.bg_color }};
 
-                    --bs-body-bg: {{ style.bg_color }};
-                    --bs-body-bg-rgb: {{ style.bg_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-body-color: {{ style.text_color }};
-                    --bs-body-color-rgb: {{ style.text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-body-bg: {{ bsBodyBg }};
+                    --bs-body-bg-rgb: {{ bsBodyBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-body-color: {{ bsBodyColor }};
+                    --bs-body-color-rgb: {{ bsBodyColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-secondary-bg: {{ style.bg_color | color_darken: 30 }};
-                    --bs-secondary-bg-rgb: {{ style.bg_color | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-secondary-color: {{ style.text_color | color_modify: 'alpha', 0.75 }};
-                    --bs-secondary-color-rgb: {{ style.text_color | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-secondary-bg: {{ bsSecondaryBg }};
+                    --bs-secondary-bg-rgb: {{ bsSecondaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-secondary-color: {{ bsSecondaryColor }};
+                    --bs-secondary-color-rgb: {{ bsSecondaryColor | color_desaturate: 25 | color_min_contrast: bsSecondaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-tertiary-bg: {{ style.bg_color | color_darken: 10 }};
-                    --bs-tertiary-bg-rgb: {{ style.bg_color | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-tertiary-color: {{ style.text_color | color_modify: 'alpha', 0.5 }};
-                    --bs-tertiary-color-rgb: {{ style.text_color | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-tertiary-bg: {{ bsTertiaryBg }};
+                    --bs-tertiary-bg-rgb: {{ bsTertiaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-tertiary-color: {{ bsTertiaryColor }};
+                    --bs-tertiary-color-rgb: {{ bsTertiaryColor | color_desaturate: 50 | color_min_contrast: bsTertiaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-emphasis-color: {{ style.accent_color }};
-                    --bs-emphasis-color-rgb: {{ style.accent_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-emphasis-color: {{ bsEmphasisColor }};
+                    --bs-emphasis-color-rgb: {{ bsEmphasisColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-link-color: {{ style.link_color }};
-                    --bs-link-color-rgb: {{ style.link_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-link-hover-color: {{ style.link_color }};
-                    --bs-link-hover-color-rgb: {{ style.link_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-link-color: {{ bsLinkColor }};
+                    --bs-link-color-rgb: {{ bsLinkColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-link-hover-color: {{ bsLinkHoverColor }};
+                    --bs-link-hover-color-rgb: {{ bsLinkHoverColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-border-color: var(--style-border-color);
                     --bs-heading-color: var(--style-heading-color);
@@ -389,9 +403,9 @@
                         {%- assign bgColorBrightness = bgColor | color_brightness -%}
 
                         {%- if bgColorBrightness > 190 -%}
-                            {%- assign contentColor = '#000000' -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
                         {%- else -%}
-                            {%- assign contentColor = '#ffffff' -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
                         {%- endif -%}
 
                     {%- else -%}
@@ -409,6 +423,16 @@
                     {%- assign styleBorderColorBrightness = contentColor | color_brightness -%}
                     {%- assign styleButtonBgColorColorBrightness = contentColor | color_brightness -%}
 
+                    {%- assign bsBodyBg = bgColor -%}
+                    {%- assign bsBodyColor = contentColor | color_min_contrast: bsBodyBg -%}
+                    {%- assign bsSecondaryBg =  bgColor | color_darken: 30 -%}
+                    {%- assign bsSecondaryColor = contentColor | color_modify: 'alpha', 0.75 | color_min_contrast: bsSecondaryBg -%}
+                    {%- assign bsTertiaryBg = bgColor | color_darken: 10 -%}
+                    {%- assign bsTertiaryColor = bgColor | color_modify: 'alpha', 0.5 | color_min_contrast: bsTertiaryBg -%}
+                    {%- assign bsEmphasisColor = bgColor | color_min_contrast: contentColor -%}
+                    {%- assign bsLinkColor = contentColor | color_min_contrast: bgColor -%}
+                    {%- assign bsLinkHoverColor = contentColor | color_min_contrast: bgColor -%}
+
                     {%- if styleBgColorBrightness > 190 -%}
                         --style-secondary-bg-color: {{ bgColor | color_darken: 5 }};
                     {%- else -%}
@@ -417,26 +441,26 @@
 
                     --style-bg-color: {{ bgColor }};
                     --style-border-color: {{ contentColor }};
-                    --style-heading-color: {{ contentColor }};
-                    --style-subheading-color: {{ contentColor }};
-                    --style-text-color: {{ contentColor }};
-                    --style-link-color: {{ contentColor }};
-                    --style-accent-color: {{ contentColor }};
-                    --style-icon-color: {{ contentColor }};
+                    --style-heading-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-subheading-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-text-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-link-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-accent-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-icon-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-btn-bg-color: {{ contentColor }};
-                    --style-btn-text-color: {{ bgColor }};
-                    --style-product-title-color: {{ contentColor }};
-                    --style-price-color: {{ contentColor }};
-                    --style-sale-price-color: {{ contentColor }};
+                    --style-btn-text-color: {{ bgColor | color_min_contrast: contentColor }};
+                    --style-product-title-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-price-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-sale-price-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-badge-bg-color: {{ contentColor }};
-                    --style-badge-text-color: {{ bgColor }};
+                    --style-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-new-badge-bg-color: {{ contentColor }};
-                    --style-new-badge-text-color: {{ contentColor }};
+                    --style-new-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-discount-badge-bg-color: {{ contentColor }};
-                    --style-discount-badge-text-color: {{ contentColor }};
+                    --style-discount-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-review-icon-color: {{ contentColor }};
                     --style-table-bg-color: {{ bgColor }};
-                    --style-table-text-color: {{ contentColor }};
+                    --style-table-text-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-table-border-color: {{ contentColor }};
 
                     {%- if styleformBgColorBrightness > 190 -%}
@@ -448,9 +472,9 @@
                     {%- endif -%}
 
                     --style-form-bg-color: {{ contentColor }};
-                    --style-form-text-color: {{ bgColor }};
-                    --style-form-placeholder-color: {{ bgColor | color_lighten: 15 }};
-                    --style-form-bg-readonly-color: {{ contentColor | color_lighten: 15 }};
+                    --style-form-text-color: {{ bgColor | color_min_contrast: contentColor }};
+                    --style-form-placeholder-color: {{ bgColor | color_lighten: 15 | color_min_contrast: contentColor }};
+                    --style-form-bg-readonly-color: {{ contentColor | color_lighten: 15 | color_min_contrast: bgColor }};
 
                     {%- if styleformBorderColorBrightness > 190 -%}
                         --style-form-border-color: {{ contentColor | color_darken: 5 }};
@@ -463,11 +487,11 @@
                     {%- endif -%}
 
                     {%- if styleTextColorBrightness > 190 -%}
-                        --style-text-accent-color: {{ contentColor | color_darken: 10 }};
-                        --style-text-muted-color: {{ contentColor | color_darken: 30 }};
+                        --style-text-accent-color: {{ contentColor | color_darken: 10 | color_min_contrast: bgColor }};
+                        --style-text-muted-color: {{ contentColor | color_darken: 30 | color_min_contrast: bgColor }};
                     {%- else -%}
-                        --style-text-accent-color: {{ contentColor | color_lighten: 10 }};
-                        --style-text-muted-color: {{ contentColor | color_lighten: 30 }};
+                        --style-text-accent-color: {{ contentColor | color_lighten: 10 | color_min_contrast: bgColor }};
+                        --style-text-muted-color: {{ contentColor | color_lighten: 30 | color_min_contrast: bgColor }};
                     {%- endif -%}
 
                     {%- if styleTableBgColorBrightness > 190 -%}
@@ -486,7 +510,7 @@
                         --swiper-pagination-bullet-border-color: {{ bgColor | color_darken: 70 }};
                         --style-bg-hover-color: {{ bgColor | color_darken: 5 }};
                         --style-bg-accent-color: {{ bgColor | color_darken: 10 }};
-                        --style-bg-disabled-color: {{ bgColorbgColor | color_darken: 30 }};
+                        --style-bg-disabled-color: {{ bgColor | color_darken: 30 }};
                     {%- else -%}
                         --pswp-bg-color: {{ contentColor }};
                         --swiper-btn-bg-color: {{ contentColor }};
@@ -518,38 +542,38 @@
                         --style-btn-border-active-color: {{ contentColor | color_lighten: 13 }};
                     {%- endif -%}
 
-                    --style-accent-text-color: {{ contentColor }};
+                    --style-accent-text-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-bg-light-color: {{ bgColor | color_lighten: 35 }};
                     --style-border-focus-color: {{ contentColor | color_lighten: 25 }};
                     --style-btn-border-color: {{ contentColor }};
-                    --style-text-darker-color: {{ contentColor | color_darken: 5 }};
-                    --style-accent-faded-color: {{ bgColor | color_lighten: 30 }};
+                    --style-text-darker-color: {{ contentColor | color_darken: 5 | color_min_contrast: bgColor }};
+                    --style-accent-faded-color: {{ bgColor | color_lighten: 30 | color_min_contrast: bgColor }};
                     
-                    --style-loader-color: {{ contentColor }};
-                    --style-loader-faded-color: {{ contentColor | color_modify: 'alpha', 0.1 }};
+                    --style-loader-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-loader-faded-color: {{ contentColor | color_modify: 'alpha', 0.1 | color_min_contrast: bgColor }};
 
-                    --bs-body-bg: {{ bgColor }};
-                    --bs-body-bg-rgb: {{ bgColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-body-color: {{ contentColor }};
-                    --bs-body-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-body-bg: {{ bsBodyBg }};
+                    --bs-body-bg-rgb: {{ bsBodyBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-body-color: {{ bsBodyColor }};
+                    --bs-body-color-rgb: {{ bsBodyColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-secondary-bg: {{ bgColor | color_darken: 30 }};
-                    --bs-secondary-bg-rgb: {{ bgColor | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-secondary-color: {{ contentColor | color_modify: 'alpha', 0.75 }};
-                    --bs-secondary-color-rgb: {{ contentColor | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-secondary-bg: {{ bsSecondaryBg }};
+                    --bs-secondary-bg-rgb: {{ bsSecondaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-secondary-color: {{ bsSecondaryColor }};
+                    --bs-secondary-color-rgb: {{ bsSecondaryColor | color_desaturate: 25 | color_min_contrast: bsSecondaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-tertiary-bg: {{ bgColor | color_darken: 10 }};
-                    --bs-tertiary-bg-rgb: {{ bgColor | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-tertiary-color: {{ contentColor | color_modify: 'alpha', 0.5 }};
-                    --bs-tertiary-color-rgb: {{ contentColor | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-tertiary-bg: {{ bsTertiaryBg }};
+                    --bs-tertiary-bg-rgb: {{ bsTertiaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-tertiary-color: {{ bsTertiaryColor }};
+                    --bs-tertiary-color-rgb: {{ bsTertiaryColor | color_desaturate: 50 | color_min_contrast: bsTertiaryBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-emphasis-color: {{ bgColor }};
-                    --bs-emphasis-color-rgb: {{ bgColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-emphasis-color: {{ bsEmphasisColor }};
+                    --bs-emphasis-color-rgb: {{ bsEmphasisColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-                    --bs-link-color: {{ contentColor }};
-                    --bs-link-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-                    --bs-link-hover-color: {{ contentColor }};
-                    --bs-link-hover-color-rgb: {{ contentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-link-color: {{ bsLinkColor }};
+                    --bs-link-color-rgb: {{ bsLinkColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+                    --bs-link-hover-color: {{ bsLinkHoverColor }};
+                    --bs-link-hover-color-rgb: {{ bsLinkHoverColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
                     --bs-border-color: var(--style-border-color);
                     --bs-heading-color: var(--style-heading-color);

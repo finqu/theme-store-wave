@@ -15,7 +15,7 @@
 	- categoryImgDimming: {Int} Category image dimming percent
     - categoryImgAspectRatio: {Int} Category image aspect ratio
     - categoryImgFit: {Int} Category image fit
-    - categoryImgCircle: {String} Show category image as circle shape, works only with 1:1 aspect ratio and fit enabled
+    - categoryImgShape: {String} Category image shape (default | circle)
 
 	Usage:
 	{% render 'category-carousel', items: items, sectionHandle: '#finqu-section-category-template' %}
@@ -30,7 +30,7 @@
 {%- assign carouselCategoryImgDimming = categoryImgDimming | default: 0 -%}
 {%- assign carouselCategoryImgAspectRatio = categoryImgAspectRatio | default: '1:1' -%}
 {%- assign carouselCategoryImgFit = categoryImgFit -%}
-{%- assign carouselCategoryImgCircle = categoryImgCircle -%}
+{%- assign carouselCategoryImgShape = categoryImgShape -%}
 
 {% if carouselCategoryImgFit != false %}
     {%- assign carouselCategoryImgFit = carouselCategoryImgFit | default: true -%}
@@ -219,12 +219,12 @@
 
                     {% endif %}
 
-                    <div class="aspect-ratio-{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% if carouselCategoryImgAspectRatio == '1:1' and carouselCategoryImgFit and carouselCategoryImgCircle %} rounded-circle{% endif %}">
+                    <div class="aspect-ratio-{% if carouselCategoryImgShape == 'circle' %}1-1{% else %}{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% endif %}{% if carouselCategoryImgShape == 'circle' %} rounded-circle{% endif %}">
 
                         <div class="aspect-ratio-container">
 
                             {%- capture class -%}
-                                aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}
+                                aspect-ratio-item{% if carouselCategoryImgFit or carouselCategoryImgShape == 'circle' %} aspect-ratio-item-cover{% endif %}
                             {%- endcapture -%}
 
                             {% render 'placeholder-svg', type: 'category', class: class %}
@@ -310,7 +310,7 @@
 
                 {% endif %}
 
-                <div class="aspect-ratio-{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% if carouselCategoryImgAspectRatio == '1:1' and carouselCategoryImgFit and carouselCategoryImgCircle %} rounded-circle{% endif %}">
+                <div class="aspect-ratio-{% if carouselCategoryImgShape == 'circle' %}1-1{% else %}{{ carouselCategoryImgAspectRatio | replace: ':', '-' }}{% endif %}{% if carouselCategoryImgShape == 'circle' %} rounded-circle{% endif %}">
 
                     <div class="aspect-ratio-container">
 
@@ -333,13 +333,13 @@
                                     alt="{{ imgAlt }}"
                                     data-src="{{ img | thumb: imgSizeSm }}"
                                     data-srcset="{{ img | thumb: imgSizeSm }} 1x, {{ img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                    class="lazy aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %}style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
+                                    class="lazy aspect-ratio-item{% if carouselCategoryImgFit or carouselCategoryImgShape == 'circle' %} aspect-ratio-item-cover{% endif %}"{% if img.offset_left or img.offset_top %}style="--object-position: {{ img.offset_left }}% {{ img.offset_top }}%"{% endif %}>
                             </picture>
 
                         {% else %}
 
                             {%- capture class -%}
-                                aspect-ratio-item{% if carouselCategoryImgFit %} aspect-ratio-item-cover{% endif %}
+                                aspect-ratio-item{% if carouselCategoryImgFit or carouselCategoryImgShape == 'circle'  %} aspect-ratio-item-cover{% endif %}
                             {%- endcapture -%}
 
                             {% render 'placeholder-svg', type: 'category', class: class %}

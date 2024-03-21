@@ -12,7 +12,7 @@
         {%- assign items = categories.root -%}
     {%- endif -%}
 
-    {% render 'category-carousel', items: items, sectionHandle: sectionHandle, carouselPagination: section.settings.carouselPagination, carouselNavigation: section.settings.carouselNavigation, carouselStyle: section.settings.carouselStyle, categoryPerView: section.settings.carouselItemsPerView, categoryTextPosition: section.settings.textPosition, categoryTextColor: section.settings.textColor, categoryImgDimming: section.settings.imgDimming, categoryImgAspectRatio: section.settings.imgAspectRatio, categoryImgFit: section.settings.imgFit, categoryImgCircle: section.settings.imgCircle, carouselFreemode: true, carouselAutoplaySpeed: section.settings.carouselAutoplaySpeed %}
+    {% render 'category-carousel', items: items, sectionHandle: sectionHandle, carouselPagination: section.settings.carouselPagination, carouselNavigation: section.settings.carouselNavigation, carouselStyle: section.settings.carouselStyle, categoryPerView: section.settings.carouselItemsPerView, categoryTextPosition: section.settings.textPosition, categoryTextColor: section.settings.textColor, categoryImgDimming: section.settings.imgDimming, categoryImgAspectRatio: section.settings.imgAspectRatio, categoryImgFit: section.settings.imgFit, categoryImgShape: section.settings.imgShape, carouselFreemode: true, carouselAutoplaySpeed: section.settings.carouselAutoplaySpeed %}
 
 {%- endcapture -%}
 
@@ -304,6 +304,31 @@
                                     "conditions": ["textPosition eq over"]
                                 },
                                 {
+                                    "id": "imgShape",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Image shape",
+                                        "fi": "Kuvan muoto"
+                                    },
+                                    "default": "default",
+                                    "options": [
+                                        {
+                                            "value": "default",
+                                            "label": {
+                                                "en": "Default",
+                                                "fi": "Oletus"
+                                            }
+                                        },
+                                        {
+                                            "value": "circle",
+                                            "label": {
+                                                "en": "Circle",
+                                                "fi": "Ympyrä"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
                                     "id": "imgAspectRatio",
                                     "type": "select",
                                     "label": {
@@ -328,7 +353,8 @@
                                             "value": "1:1",
                                             "label": "1:1"
                                         }
-                                    ]
+                                    ],
+                                    "conditions": ["imgShape eq default"]
                                 },
                                 {
                                     "id": "imgFit",
@@ -337,20 +363,8 @@
                                         "en": "Image area fill",
                                         "fi": "Kuva-alueen täyttö"
                                     },
-                                    "default": true
-                                },
-                                {
-                                    "id": "imgCircle",
-                                    "type": "checkbox",
-                                    "label": {
-                                        "en": "Circular shaped image",
-                                        "fi": "Ympyrän muotoinen kuva"
-                                    },
-                                    "default": false,
-                                    "conditions": [
-                                        "imgAspectRatio eq 1:1",
-                                        "imgFit eq true"
-                                    ]
+                                    "default": true,
+                                    "conditions": ["imgShape eq default"]
                                 },
                                 {
                                     "type": "title",

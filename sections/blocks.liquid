@@ -1,20 +1,18 @@
+{%- if section.settings.blockGutterWidth != 'nil' -%}
+
+    {%- capture sectionStyle -%}
+        #finqu-section-{{ section.id }} {
+            --block-padding-bottom: {{- section.settings.blockGutterWidth -}};
+        }
+    {%- endcapture -%}
+
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
 {%- capture sectionContent -%}
 
-    <blockquote class="blockquote">
-    
-        <div class="d-inline-flex flex-column aling-self-{{ section.settings.sectionTextAlign }} text-richtext">
-
-            {%- if section.settings.showQuotes -%}
-                <span class="d-block text-start">
-                    {%- render 'icon', icon: 'quote-open', class: 'svg-icon-2x' -%}
-                </span>
-            {%- endif -%}
-
-            {{- section.settings.richtext -}}
-
-        </div>
-
-    </blockquote>
+    {% container %}
 
 {%- endcapture -%}
 
@@ -23,57 +21,15 @@
 {% schema %}
 {
     "name": {
-        "en": "Quote block",
-        "fi": "Lainauslohko"
+        "en": "Blocks",
+        "fi": "Lohkot"
     },
     "tag": "section",
-    "class": "section section-blockquote",
-    "category": "theme-testimonial",
+    "class": "section section-blocks",
+    "category": "theme-featured",
     "settings": {
         "list_type": "tabs",
         "groups": [
-            {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "richtext",
-                        "type": "richtext",
-                        "mode": "simple",
-                        "label": {
-                            "en": "Content",
-                            "fi": "Sisältö"
-                        }
-                    }
-                ]
-            },
             {
                 "title": {
                     "en": "Settings",
@@ -89,11 +45,34 @@
                             },
                             "settings": [
                                 {
+                                    "id": "sectionHighlightItems",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Content highlight",
+                                        "fi": "Sisällön korostaminen"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": false,
+                                            "label": "Off"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
                                     "id": "sectionTextAlign",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Content text align",
-                                        "fi": "Sisällön tekstin tasaus"
+                                        "en": "Content align",
+                                        "fi": "Sisällön tasaus"
                                     },
                                     "default": "nil",
                                     "options": [
@@ -116,104 +95,33 @@
                                     ]
                                 },
                                 {
-                                    "id": "showQuotes",
+                                    "id": "blockGutterWidth",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Show quotes",
-                                        "fi": "Näytä lainausmerkit"
+                                        "en": "Content elements gap",
+                                        "fi": "Sisällön elementtien väli"
                                     },
-                                    "default": true,
+                                    "default": "nil",
                                     "options": [
                                         {
-                                            "value": false,
-                                            "label": "Off"
+                                            "value": "nil",
+                                            "label": "Auto"
                                         },
                                         {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionOverlineTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
+                                            "value": "2rem",
+                                            "label": "S"
                                         },
                                         {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Main title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
+                                            "value": "4rem",
+                                            "label": "M"
                                         },
                                         {
-                                            "value": "h2",
-                                            "label": "H2"
+                                            "value": "6rem",
+                                            "label": "L"
                                         },
                                         {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
+                                            "value": "8rem",
+                                            "label": "XL"
                                         }
                                     ]
                                 }
@@ -296,25 +204,6 @@
                                                 "en": "Color scheme 5",
                                                 "fi": "Värityyli 5"
                                             }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
                                         }
                                     ]
                                 },
@@ -414,9 +303,20 @@
     },
     "presets": [
         {
-            "settings": {
-                "richtext": "Kirjoita supermahtava asiakaskommentti tähän."
-            }
+            "blocks": [
+                {
+                    "name": "heading",
+                    "settings": {
+                        "title": "Otsikko"
+                    }
+                },
+                {
+                    "name": "text",
+                    "settings": {
+                        "richtext": "Kerro asiakkaillesi brändistäsi. Mainosta tuotetta, kerro tulevista tapahtumista tai jaa tietoa kaupastasi."
+                    }
+                }
+            ]
         }
     ]
 }

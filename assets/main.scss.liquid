@@ -7,6 +7,8 @@
 {%- assign styleBorderColorBrightness = settings.style_border_color | color_brightness -%}
 {%- assign styleButtonBgColorColorBrightness = settings.style_btn_bg_color | color_brightness -%}
 {%- assign styleAccentColorBrightness = settings.style_accent_color | color_brightness -%}
+{%- assign bodySecondaryBg = settings.style_bg_color | color_darken: 30 -%}
+{%- assign bodyTertiaryBg = settings.style_bg_color | color_darken: 10 -%}
 
 $font-size-base: 1rem * {{- settings.textScale -}};
 $font-family-base: {{- settings.bodyTextFont -}};
@@ -122,11 +124,11 @@ $spacers: (
 $body-bg: {{ settings.style_bg_color }};
 $body-color: {{ settings.style_text_color }};
 
-$body-secondary-bg: {{ settings.style_bg_color | color_darken: 30 }};
-$body-secondary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.75 }};
+$body-secondary-bg: {{ bodySecondaryBg }};
+$body-secondary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.75 | color_min_contrast: bodySecondaryBg }};
 
-$body-tertiary-bg: {{ settings.style_bg_color | color_darken: 10 }};
-$body-tertiary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.5 }};
+$body-tertiary-bg: {{ bodyTertiaryBg }};
+$body-tertiary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.5 | color_min_contrast: bodyTertiaryBg }};
 
 $body-emphasis-color: {{ settings.style_accent_color }};
 
@@ -158,11 +160,11 @@ $link-hover-color: {{ settings.style_link_color }};
 	{%- endif -%}
 
 	{%- if styleTextColorBrightness > 190 -%}
-		--style-text-accent-color: {{ settings.style_text_color | color_darken: 10 }};
-		--style-text-muted-color: {{ settings.style_text_color | color_darken: 30 }};
+		--style-text-accent-color: {{ settings.style_text_color | color_darken: 10 | color_min_contrast: settings.style_bg_color }};
+		--style-text-muted-color: {{ settings.style_text_color | color_darken: 30 | color_min_contrast: settings.style_bg_color }};
 	{%- else -%}
-		--style-text-accent-color: {{ settings.style_text_color | color_lighten: 10 }};
-		--style-text-muted-color: {{ settings.style_text_color | color_lighten: 30 }};
+		--style-text-accent-color: {{ settings.style_text_color | color_lighten: 10 | color_min_contrast: settings.style_bg_color }};
+		--style-text-muted-color: {{ settings.style_text_color | color_lighten: 30 | color_min_contrast: settings.style_bg_color }};
 	{%- endif -%}
 
 	{%- if styleTableBgColorBrightness > 190 -%}
@@ -218,9 +220,9 @@ $link-hover-color: {{ settings.style_link_color }};
 	{%- endif -%}
 
 	{%- if styleAccentColorBrightness > 190 -%}
-		--style-accent-text-color: #000;
+		--style-accent-text-color: {{ '#000000' | color_min_contrast: settings.style_accent_color }}
 	{%- else -%}
-		--style-accent-text-color: #fff;
+		--style-accent-text-color: {{ '#ffffff' | color_min_contrast: settings.style_accent_color }}
 	{%- endif -%}
 
 	--pswp-icon-stroke-width: 0px;
@@ -234,7 +236,7 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-form-bg-color: {{ settings.style_form_bg_color }};
 	--style-form-placeholder-color: {{ settings.style_form_text_color | color_lighten: 15 }};
 	--style-form-bg-readonly-color: {{ settings.style_form_bg_color | color_lighten: 15 }};
-	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 }};
+	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 | color_min_contrast: settings.style_bg_color }};
 	--style-accent-faded-color: {{ settings.style_accent_color | color_lighten: 30 }};
 	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
 	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
@@ -248,7 +250,7 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-footer-text-color: {{ settings.style_footer_text_color }};
 
 	--style-loader-color: {{ settings.style_icon_color }};
-	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 }};
+	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: settings.style_bg_color }};
 
 	--style-border-radius: {{ settings.styleBorderRadius }};
 	--style-btn-border-radius: {{ settings.styleButtonBorderRadius }};

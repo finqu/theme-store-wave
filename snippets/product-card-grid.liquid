@@ -74,34 +74,25 @@
     {%- assign showVariants = settings.productShowVariants -%}
 {%- endif -%}
 
-{%- if store.customer_accounts_optional == true or store.customer_accounts_require_approval == true and customer.has_access -%}
-    {%- assign accountHasApproval = true -%}
-{%- endif -%}
-
-{% unless store.customer_accounts_require_approval == false or accountHasApproval %}
+{% unless store.customer_has_purchase_right %}
     {%- assign showPricing = false -%}
     {%- assign showStockBalance = false -%}
     {%- assign showAddToCart = false -%}
 {% endunless %}
 
-{%- if product.only_preview -%}
-    {%- assign showStockBalance = false -%}
-    {%- assign showAddToCart = false -%}
-{%- endif -%}
-
-{% unless product.inventory_policy == 'continue' or product.in_stock and product.buy_directly %}
+{% unless product.is_directly_buyable %}
     {%- assign showAddToCart = false -%}
 {% endunless %}
 
 {%- assign productName = product.title | default: '' -%}
 {%- assign productManufacturerName = product.manufacturer.title | default: '' -%}
-{%- assign productPrice = product.price | default: '' -%}
-{%- assign productNetPrice = product.net_price | default: '' -%}
-{%- assign productOriginalNetPrice = product.original_net_price | default: '' -%}
-{%- assign productOriginalPrice = product.original_price | default: '' -%}
+{%- assign productPrice = product.default_or_selected_variant.price | default: '' -%}
+{%- assign productNetPrice = product.default_or_selected_variant.net_price | default: '' -%}
+{%- assign productOriginalNetPrice = product.default_or_selected_variant.original_net_price | default: '' -%}
+{%- assign productOriginalPrice = product.default_or_selected_variant.original_price | default: '' -%}
 {%- assign productRating = product.rating -%}
 {%- assign productMaxRating = product.max_rating -%}
-{%- assign productHasDiscount = product.has_discount | default: false -%}
+{%- assign productHasDiscount = productPrice != productOriginalPrice -%}
 {%- assign productUrl = product | link | default: '' -%}
 
 {% if url %}
@@ -172,7 +163,7 @@
                         type="button"
                         class="product-wishlist-action"
                         data-wishlist-{{- wishlist -}}="{{ product.id }}"
-                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}">
                         {%- render 'icon', icon: 'like', class: 'svg-icon-fw' -%}
                     </button>
 
@@ -190,7 +181,7 @@
                     type="button"
                     class="product-quick-add-action btn btn-text"
                     data-cart-add="{{ product.id }}"
-                    data-cart-quantity="{{ product.min_amount }}">
+                    data-cart-quantity="{{ product.default_or_selected_variant.min_amount }}">
 
                         <div class="product-quick-add-action-inner">
 
@@ -424,12 +415,12 @@
 
                     {%- endif -%}
 
-                    {%- if showPromotion and product.promotion -%}
+                    {%- if showPromotion and product.default_or_selected_variant.promotion -%}
 
                         <div class="product-promotion mt-1">
 
                             <span class="text-sale-price small">
-                                {{- product.promotion.title | strip -}}{% if product.promotion.description %}: {{ product.promotion.description -}}{%- endif -%}
+                                {{- product.default_or_selected_variant.promotion.title | strip -}}{% if product.default_or_selected_variant.promotion.description %}: {{ product.default_or_selected_variant.promotion.description -}}{%- endif -%}
                             </span>
 
                         </div>
@@ -508,11 +499,11 @@
                                                 {%- assign optionDisabled = false -%}
                                             {%- endif -%}
                                         {%- when 2 -%}
-                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                            {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                 {% assign optionDisabled = false %}
                                             {%- endif -%}
                                         {%- when 3 -%}
-                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                            {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                 {% assign optionDisabled = false %}
                                             {%- endif -%}
                                     {%- endcase -%}
@@ -559,11 +550,11 @@
                                                 {%- assign optionDisabled = false -%}
                                             {%- endif -%}
                                         {%- when 2 -%}
-                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                            {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                 {% assign optionDisabled = false %}
                                             {%- endif -%}
                                         {%- when 3 -%}
-                                            {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                            {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                 {% assign optionDisabled = false %}
                                             {%- endif -%}
                                     {%- endcase -%}
@@ -639,11 +630,11 @@
                                                     {%- assign optionDisabled = false -%}
                                                 {%- endif -%}
                                             {%- when 2 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                             {%- when 3 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                         {%- endcase -%}
@@ -736,11 +727,11 @@
                                                     {%- assign optionDisabled = false -%}
                                                 {%- endif -%}
                                             {%- when 2 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                             {%- when 3 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                         {%- endcase -%}
@@ -787,11 +778,11 @@
                                                     {%- assign optionDisabled = false -%}
                                                 {%- endif -%}
                                             {%- when 2 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                             {%- when 3 -%}
-                                                {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {% assign optionDisabled = false %}
                                                 {%- endif -%}
                                         {%- endcase -%}
@@ -836,22 +827,22 @@
 
             <div class="product-stock-balance">
 
-                {%- if product.in_stock == false and product.inventory_policy == 'deny' -%}
+                {%- if product.default_or_selected_variant.is_out_of_stock -%}
 
                     <span class="product-stock-balance-out-of-stock">
-                        {{- 'product.out_of_stock' | t -}}
+                        {{- 'product.is_out_of_stock' | t -}}
                     </span>
 
-                {%- elsif product.stock_alarm and product.stock and product.inventory_policy == 'deny' -%}
+                {%- elsif product.default_or_selected_variant.is_low_on_stock and product.default_or_selected_variant.stock and product.default_or_selected_variant.inventory_policy == 'deny' -%}
 
                     <span class="product-stock-balance-low-on-stock">
-                        {{- 'product.low_on_stock_dynamic' | t: amount: product.stock -}}
+                        {{- 'product.low_on_stock_dynamic' | t: amount: product.default_or_selected_variant.stock -}}
                     </span>
 
                 {%- else -%}
 
                     <span class="product-stock-balance-in-stock">
-                        {{- 'product.in_stock' | t -}}
+                        {{- 'product.is_available' | t -}}
                     </span>
 
                 {%- endif -%}

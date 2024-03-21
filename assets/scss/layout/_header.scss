@@ -259,7 +259,8 @@ $cart-offcanvas-width: 28rem;
             }
 
             .site-header-logo-text {
-                @include font-size($font-size-base * 2.3);
+                word-break: break-all;
+                font-size: clamp(1rem, 1.5vw, 2rem);
             }
 
             .site-header-nav-container {
@@ -325,12 +326,14 @@ $cart-offcanvas-width: 28rem;
                     left: 0;
                     top: 0;
                     right: 0;
+                    overflow: hidden;
 
                     &:not(.is-megamenu) {
                         box-shadow: 0 10px 25px rgb(0 0 0 / 15%);
             
                         &.site-header-submenu-active {
                             border-bottom: 0;
+                            overflow: visible;
                         }
 
                         .site-header-sublevel {
@@ -408,6 +411,7 @@ $cart-offcanvas-width: 28rem;
                     &.site-header-submenu-active {
                         visibility: visible;
                         opacity: 1;
+                        overflow: visible;
 
                         .site-header-submenu-item {
                             

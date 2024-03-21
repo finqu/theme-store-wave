@@ -1,26 +1,3 @@
-{%- assign imgSizeSm = '175,175' -%}
-{%- assign imgSizeMd = '118,118' -%}
-
-{%- case section.settings.colPerRow -%}
-    {% when 3 %}
-        {%- assign imgSizeLg = '430,430' -%}
-    {% when 4 %}
-        {%- assign imgSizeLg = '320,320' -%}
-    {% when 5 %}
-        {%- assign imgSizeLg = '254,254' -%}
-    {% when 6 %}
-        {%- assign imgSizeLg = '210,210' -%}
-    {% when 7 %}
-        {%- assign imgSizeLg = '178,178' -%}
-    {% when 8 %}
-        {%- assign imgSizeLg = '155,155' -%}
-    {% when 9 %}
-        {%- assign imgSizeLg = '136,136' -%}
-{%- endcase -%}
-
-{%- assign imgWidth = imgSizeLg | split: ',' | first -%}
-{%- assign imgHeight = imgSizeLg | split: ',' | last -%}
-
 {%- if section.settings.logoAlign != 'nil' -%}
     {%- assign logoAlign = section.settings.logoAlign -%}
 {%- else -%}
@@ -33,9 +10,41 @@
 
         {% for item in section.settings.setting_blocks.items %}
 
+            {%- assign imgSizeSm = '175,175' -%}
+            {%- assign imgSizeMd = '118,118' -%}
+
+            {%- case section.settings.colPerRow -%}
+                {% when 3 %}
+                    {%- assign imgSizeLg = '430,430' -%}
+                {% when 4 %}
+                    {%- assign imgSizeLg = '320,320' -%}
+                {% when 5 %}
+                    {%- assign imgSizeLg = '254,254' -%}
+                {% when 6 %}
+                    {%- assign imgSizeLg = '210,210' -%}
+                {% when 7 %}
+                    {%- assign imgSizeLg = '178,178' -%}
+                {% when 8 %}
+                    {%- assign imgSizeLg = '155,155' -%}
+                {% when 9 %}
+                    {%- assign imgSizeLg = '136,136' -%}
+            {%- endcase -%}
+
+            {%- if item.settings.imgScaleRatio < 1 -%}
+                {%- capture imgSizeSm -%}{{- imgSizeSm | split: ',' | first | times: item.settings.imgScaleRatio | round -}},{{- imgSizeSm | split: ',' | last | times: item.settings.imgScaleRatio | round -}}{%- endcapture %}
+                {%- capture imgSizeLg -%}{{- imgSizeLg | split: ',' | first | times: item.settings.imgScaleRatio | round -}},{{- imgSizeLg | split: ',' | last | times: item.settings.imgScaleRatio | round -}}{%- endcapture %}
+                {%- capture imgSizeLg -%}{{- imgSizeLg | split: ',' | first | times: item.settings.imgScaleRatio | round -}},{{- imgSizeLg | split: ',' | last | times: item.settings.imgScaleRatio | round -}}{%- endcapture %}
+                {%- assign imgSizeSm = imgSizeSm -%}
+                {%- assign imgSizeMd = imgSizeMd -%}
+                {%- assign imgSizeLg = imgSizeLg -%}
+            {%- endif -%}
+
+            {%- assign imgWidth = imgSizeLg | split: ',' | first -%}
+            {%- assign imgHeight = imgSizeLg | split: ',' | last -%}
+
             <div class="col d-flex align-items-center justify-content-center">
 
-                <div class="aspect-ratio-auto" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+                <div class="aspect-ratio-auto" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% if item.settings.imgScaleRatio < 1 %} style="--img-scale-ratio: {{ item.settings.imgScaleRatio }}"{% endif %}>
 
                     <div class="aspect-ratio-container">
 
@@ -199,6 +208,18 @@
                                     "fi": "Kuva"
                                 },
                                 "adjustments": true
+                            },
+                            {
+                                "id": "imgScaleRatio",
+                                "label": {
+                                    "en": "Image scaling",
+                                    "fi": "Kuvan skaalaus"
+                                },
+                                "type": "range",
+                                "min": 0.3,
+                                "max": 1,
+                                "step": 0.1,
+                                "default": 1
                             }
                         ]
                     }

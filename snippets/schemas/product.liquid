@@ -14,8 +14,8 @@
     {%- for image in product.images -%}
         {{- image -}},
     {%- endfor -%}
-    {%- if product.customizations -%}
-        {%- for group in product.customizations -%}
+    {%- if product.default_or_selected_variant.customizations -%}
+        {%- for group in product.default_or_selected_variant.customizations -%}
             {%- for option in group.options -%}
                 {%- if option.image -%}
                     {{- option.image -}},
@@ -152,12 +152,16 @@
                 "@type": "Offer",
                 "url": "{{ variant.url | full_url }}",
                 "priceCurrency": "{{ store.currency.iso_code }}",
-                "price": "{{ variant.price | money }}",
-                {%- if variant.has_discount and variant.discount_information and variant.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
-                    "priceValidUntil": "{{ variant.discount_information.ends | date: '%Y-%m-%d' }}",
+                {%- if store.customer_has_purchase_right -%}
+                    "price": "{{ variant.price | money }}",
+                    {%- if variant.discount_information and variant.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
+                        "priceValidUntil": "{{ variant.discount_information.ends | date: '%Y-%m-%d' }}",
+                    {%- endif -%}
+                {%- else -%}
+                    "price": null,
                 {%- endif -%}
                 "itemCondition": "https://schema.org/NewCondition",
-                "availability": "https://schema.org/{% if variant.in_stock %}InStock{% else %}OutOfStock{% endif %}"{%- if store.name -%},
+                "availability": "https://schema.org/{% if variant.is_available %}InStock{% else %}OutOfStock{% endif %}"{%- if store.name -%},
                     "seller": {
                         "@type": "Organization",
                         "name": {{ store.name | json }}
@@ -185,14 +189,14 @@
     {%- if product.seo_description or product.short_description or product.description -%}
         "description": {{ product.seo_description | default: product.short_description | default: product.description | strip_html | truncate: 4997, '...' | json }},
     {%- endif -%}
-    {%- if product.sku -%}
-        "sku": {{ product.sku | json }},
+    {%- if product.default_or_selected_variant.sku -%}
+        "sku": {{ product.default_or_selected_variant.sku | json }},
     {%- endif -%}
-    {%- if product.gtin -%}
-        "gtin": {{ product.gtin | json }},
+    {%- if product.default_or_selected_variant.gtin -%}
+        "gtin": {{ product.default_or_selected_variant.gtin | json }},
     {%- endif -%}
-    {%- if product.product_number -%}
-        "mpn": {{ product.product_number | json }},
+    {%- if product.default_or_selected_variant.product_number -%}
+        "mpn": {{ product.default_or_selected_variant.product_number | json }},
     {%- endif -%}
     {%- if product.manufacturer -%}
         "brand": {
@@ -232,12 +236,16 @@
         "@type": "Offer",
         "url": "{{ product | link | full_url }}",
         "priceCurrency": "{{ store.currency.iso_code }}",
-        "price": "{{ product.price | money }}",
-        {%- if product.has_discount and product.discount_information and product.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
-            "priceValidUntil": "{{ product.discount_information.ends | date: '%Y-%m-%d' }}",
+        {%- if store.customer_has_purchase_right -%}
+            "price": "{{ product.default_or_selected_variant.price | money }}",
+            {%- if product.has_discount and product.default_or_selected_variant.discount_information and product.default_or_selected_variant.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
+                "priceValidUntil": "{{ product.default_or_selected_variant.discount_information.ends | date: '%Y-%m-%d' }}",
+            {%- endif -%}
+        {%- else -%}
+            "price": null,
         {%- endif -%}
         "itemCondition": "https://schema.org/NewCondition",
-        "availability": "https://schema.org/{% if product.in_stock %}InStock{% else %}OutOfStock{% endif %}"{%- if store.name -%},
+        "availability": "https://schema.org/{% if product.default_or_selected_variant.is_available %}InStock{% else %}OutOfStock{% endif %}"{%- if store.name -%},
             "seller": {
                 "@type": "Organization",
                 "name": {{ store.name | json }}

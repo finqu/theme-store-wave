@@ -22,8 +22,20 @@
         border-style: solid;
         border-color: var(--style-form-border-color);
         border-radius: $input-border-radius;
-        color: var(--style-form-text-color);
-        background-color: var(--style-form-bg-color);
+
+        &:not(:disabled):not(.disabled) {
+
+            &:hover,
+            &:focus,
+            &:active {
+                border-color: var(--style-form-border-focus-color);
+            }
+        }
+
+        &:not(.btn-primary):not(.btn-secondary) {
+            color: var(--style-form-text-color);
+            background-color: var(--style-form-bg-color);
+        }
 
         &.btn-icon {
 

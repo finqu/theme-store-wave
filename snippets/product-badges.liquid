@@ -39,13 +39,17 @@
 
 {%- assign position = position | default: settings.styleProductBadgePosition -%}
 {%- assign positionClass = 'product-badge-position-' | append: position -%}
-{%- assign productHasDiscount = productHasDiscount | default: product.has_discount | default: false -%}
-{%- assign productOutOfStock = productOutOfStock | default: product.out_of_stock | default: false -%}
-{%- assign productIsNew = productIsNew | default: product.is_new | default: false -%}
-{%- assign productDiscountPercent = productDiscountPercent | default: product.discount_percent | default: 0 -%}
+{%- assign productHasDiscount = productHasDiscount | default: false -%}
+{%- assign productOutOfStock = productOutOfStock | default: product.default_or_selected_variant.is_out_of_stock | default: false -%}
+{%- assign productIsNew = productIsNew | default: product.default_or_selected_variant.is_new | default: false -%}
+{%- assign productDiscountPercent = productDiscountPercent | default: product.default_or_selected_variant.discount_information.amount | default: 0 -%}
 
-{%- if store.customer_accounts_require_approval == true and customer.has_access -%}
-    {%- assign accountHasApproval = true -%}
+{%- if productHasDiscount == false and product.default_or_selected_variant.price != product.default_or_selected_variant.original_price -%}
+    {%- assign productHasDiscount = true -%}
+{%- endif -%}
+
+{%- if showOutOfStock != false -%}
+    {%- assign showOutOfStock = settings.productShowOutOfStockBadge -%}
 {%- endif -%}
 
 <div class="product-badges {{ positionClass }}">
@@ -62,14 +66,14 @@
 
     {%- endif -%}
 
-    {%- if store.customer_accounts_require_approval == false or accountHasApproval -%}
+    {%- if store.customer_has_purchase_right -%}
 
-         {%- if showPromotion and product.promotion and productOutOfStock == false -%}
+         {%- if showPromotion and product.default_or_selected_variant.promotion and productOutOfStock == false -%}
 
             <div class="product-badge product-badge-promotion">
 
                 <span class="product-badge-content">
-                    {{- product.promotion.title | strip -}}
+                    {{- product.default_or_selected_variant.promotion.title | strip -}}
                 </span>
 
             </div>
@@ -99,7 +103,7 @@
         <div class="product-badge">
 
             <span class="product-badge-content">
-                {{- 'product.out_of_stock' | t -}}
+                {{- 'product.is_out_of_stock' | t -}}
             </span>
 
         </div>

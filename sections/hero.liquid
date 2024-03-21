@@ -1,4 +1,4 @@
-{%- assign sectionMinHeight = section.settings.sectionMinHeight | append: 'vh' -%}
+{%- assign sectionHeight = section.settings.sectionHeight | append: 'vh' -%}
 
 {%- if section.settings.sectionOverline -%}
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
@@ -12,35 +12,39 @@
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 {%- endif -%}
 
-{%- if section.settings.sectionTextAlign == 'nil' -%}
-    {%- assign textAlign = settings.sectionTextAlign -%}
+{%- if section.settings.textHorizontalAlign == 'nil' -%}
+    {%- assign textHorizontalAlign = settings.sectionTextAlign -%}
 {%- else -%}
-    {%- assign textAlign = section.settings.sectionTextAlign -%}
+    {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
 {%- endif -%}
 
 {%- capture sectionContent -%}
 
-    <div class="row gy-5 justify-content-{{ textAlign }}">
+    <div class="d-flex align-items-{{ section.settings.textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
 
-        <div class="text-container col align-self-center max-w-lg-60">
-            
-            <div class="text-{{ textAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+        <div class="container py-6 d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
 
-                {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+            <div class="text-container max-w-lg-60">
+                
+                <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+                    {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
-                {% if section.settings.btnLink.text %}
+                    {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
 
-                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+                    {% if section.settings.btnLink.text %}
 
-                    <div class="mt-7" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
-                        {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLink.text, url: section.settings.btnLink.url, target: section.settings.btnLink.target -%}
+                        <div class="mt-7" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                    </div>
+                            {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLink.text, url: section.settings.btnLink.url, target: section.settings.btnLink.target -%}
 
-                {% endif %}
+                        </div>
+
+                    {% endif %}
+
+                </div>
 
             </div>
 
@@ -50,7 +54,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textAlign, sectionMinHeight: sectionMinHeight %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: sectionHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
 
 {% schema %}
 {
@@ -131,11 +135,11 @@
                             },
                             "settings": [
                                 {
-                                    "id": "sectionTextAlign",
+                                    "id": "textHorizontalAlign",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Text align",
-                                        "fi": "Tekstin tasaus"
+                                        "en": "Text horizontal align",
+                                        "fi": "Tekstin tasaus vaakasuunnassa"
                                     },
                                     "default": "center",
                                     "options": [
@@ -154,6 +158,29 @@
                                         {
                                             "value": "end",
                                             "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "textVerticalAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Text vertical align",
+                                        "fi": "Tekstin tasaus pystysuunnassa"
+                                    },
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-top #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-middle #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-bottom #}"
                                         }
                                     ]
                                 },
@@ -461,11 +488,11 @@
                                     "conditions": ["sectionPaddingMode eq custom"]
                                 },
                                 {
-                                    "id": "sectionMinHeight",
+                                    "id": "sectionHeight",
                                     "type": "select",
                                     "label": {
-                                        "en": "Minimum height",
-                                        "fi": "Minimi korkeus"
+                                        "en": "Height",
+                                        "fi": "Korkeus"
                                     },
                                     "type": "range",
                                     "min": 40,

@@ -51,7 +51,7 @@
 
                 {% for value in option.values %}
 
-                    {% unless product.notifications_supported %}
+                    {% unless product.default_or_selected_variant.notifications_supported %}
 
                         {%- assign optionDisabled = true -%}
 
@@ -63,11 +63,11 @@
                                         {%- assign optionDisabled = false -%}
                                     {%- endif -%}
                                 {%- when 2 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                                 {%- when 3 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                             {%- endcase -%}
@@ -122,11 +122,11 @@
                                         {%- assign optionDisabled = false -%}
                                     {%- endif -%}
                                 {%- when 2 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                                 {%- when 3 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                             {%- endcase -%}
@@ -135,13 +135,13 @@
 
                         <div class="form-check-img">
 
-                            <input class="product-option-value form-check-input{% if optionDisabled and product.notifications_supported %} disabled{% endif %}"
+                            <input class="product-option-value form-check-input{% if optionDisabled and product.default_or_selected_variant.notifications_supported %} disabled{% endif %}"
                                 type="radio"
                                 id="product-option-value-{{ optionPosition }}-{{ forloop.index0 }}"
                                 name="{{ option.handle }}"
                                 value="{{ value }}"
                                 {% if option.selected_value == value %}checked{% endif %}
-                                {% if optionDisabled and product.notifications_supported == false %}disabled{% endif %}>
+                                {% if optionDisabled and product.default_or_selected_variant.notifications_supported == false %}disabled{% endif %}>
 
                             <label for="product-option-value-{{ optionPosition }}-{{ forloop.index0 }}" class="form-check-label w-px-70" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}">
 
@@ -211,11 +211,11 @@
                                         {%- assign optionDisabled = false -%}
                                     {%- endif -%}
                                 {%- when 2 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                                 {%- when 3 -%}
-                                    {%- if option1.value == product.selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                         {% assign optionDisabled = false %}
                                     {%- endif -%}
                             {%- endcase -%}
@@ -224,13 +224,13 @@
 
                         <div class="{% if option.type == 'color' and value.color %}form-check-color-swatch form-check-color-swatch-inline{% else %}form-check-badge{% endif %}"{% if option.type == 'color' and value.color %} style="--swatch-color: {{ value.color }}"{% endif %}>
 
-                            <input class="product-option-value form-check-input{% if optionDisabled and product.notifications_supported %} disabled{% endif %}"
+                            <input class="product-option-value form-check-input{% if optionDisabled and product.default_or_selected_variant.notifications_supported %} disabled{% endif %}"
                                 type="radio"
                                 id="product-option-value-{{ optionPosition }}-{{ forloop.index0 }}"
                                 name="{{ option.handle }}"
                                 value="{{ value }}"
                                 {% if option.selected_value == value %}checked{% endif %}
-                                {% if optionDisabled and product.notifications_supported == false %}disabled{% endif %}>
+                                {% if optionDisabled and product.default_or_selected_variant.notifications_supported == false %}disabled{% endif %}>
 
                             {% if option.type == 'color' and value.color %}
 

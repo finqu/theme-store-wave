@@ -31,7 +31,7 @@
 
                 {% if item.settings.img %}
 
-                    <div class="aspect-ratio-{{ section.settings.imgFit | yepnope: '1-1', 'auto' }} max-w-px-140 mb-g mx-auto">
+                    <div class="aspect-ratio-{% if section.settings.imgFit or section.settings.imgShape == 'circle' %}1-1{% else %}auto{% endif %} max-w-px-140 mb-g mx-auto{% if section.settings.imgShape == 'circle' %} rounded-circle{% endif %}">
 
                         <div class="aspect-ratio-container">
 
@@ -40,7 +40,7 @@
                                     alt="{{ item.settings.img.alt }}"
                                     data-src="{{ item.settings.img | thumb: '150,150' }}"
                                     data-srcset="{{ item.settings.img | thumb: '150,150' }} 1x, {{ item.settings.img | thumb: '150,150' | thumb:'@2x' }} 2x"
-                                    class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+                                    class="lazy aspect-ratio-item{% if section.settings.imgFit or section.settings.imgShape == 'circle' %} aspect-ratio-item-cover{% endif %}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
                             </picture>
 
                         </div>
@@ -397,13 +397,39 @@
                                     ]
                                 },
                                 {
+                                    "id": "imgShape",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Image shape",
+                                        "fi": "Kuvan muoto"
+                                    },
+                                    "default": "default",
+                                    "options": [
+                                        {
+                                            "value": "default",
+                                            "label": {
+                                                "en": "Default",
+                                                "fi": "Oletus"
+                                            }
+                                        },
+                                        {
+                                            "value": "circle",
+                                            "label": {
+                                                "en": "Circle",
+                                                "fi": "Ympyrä"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
                                     "id": "imgFit",
                                     "type": "checkbox",
                                     "label": {
                                         "en": "Image area fill",
                                         "fi": "Kuva-alueen täyttö"
                                     },
-                                    "default": true
+                                    "default": true,
+                                    "conditions": ["imgShape eq default"]
                                 },
                                 {
                                     "id": "showQuotes",

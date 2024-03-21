@@ -1,10 +1,10 @@
 {%- assign product = section.settings.product -%}
 {%- assign productName = product.title | default: '' -%}
 {%- assign productManufacturerName = product.manufacturer.title | default: '' -%}
-{%- assign productPrice = product.price | default: '' -%}
-{%- assign productNetPrice = product.net_price | default: '' -%}
-{%- assign productOriginalNetPrice = product.original_net_price | default: '' -%}
-{%- assign productOriginalPrice = product.original_price | default: '' -%}
+{%- assign productPrice = product.default_or_selected_variant.price | default: '' -%}
+{%- assign productNetPrice = product.default_or_selected_variant.net_price | default: '' -%}
+{%- assign productOriginalNetPrice = product.default_or_selected_variant.original_net_price | default: '' -%}
+{%- assign productOriginalPrice = product.default_or_selected_variant.original_price | default: '' -%}
 {%- assign productRating = product.rating -%}
 {%- assign productMaxRating = product.max_rating -%}
 {%- assign productHasDiscount = product.has_discount | default: false -%}
@@ -99,7 +99,7 @@
 
             {% endif %}
 
-            {%- if section.settings.showPricing -%}
+            {%- if section.settings.showPricing and store.customer_has_purchase_right -%}
 
                 {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
@@ -123,12 +123,12 @@
 
                     {%- endif -%}
 
-                    {%- if section.settings.showPromotion and product.promotion -%}
+                    {%- if section.settings.showPromotion and product.default_or_selected_variant.promotion -%}
 
                         <div class="product-promotion mt-1">
 
                             <span class="text-sale-price">
-                                {{- product.promotion.title | strip -}}{% if product.promotion.description %}: {{ product.promotion.description -}}{%- endif -%}
+                                {{- product.default_or_selected_variant.promotion.title | strip -}}{% if product.default_or_selected_variant.promotion.description %}: {{ product.default_or_selected_variant.promotion.description -}}{%- endif -%}
                             </span>
 
                         </div>

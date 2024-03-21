@@ -830,7 +830,7 @@
                 {%- if product.default_or_selected_variant.is_out_of_stock -%}
 
                     <span class="product-stock-balance-out-of-stock">
-                        {{- 'product.is_out_of_stock' | t -}}
+                        {{- 'product.out_of_stock' | t -}}
                     </span>
 
                 {%- elsif product.default_or_selected_variant.is_low_on_stock and product.default_or_selected_variant.stock and product.default_or_selected_variant.inventory_policy == 'deny' -%}

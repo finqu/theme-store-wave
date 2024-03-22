@@ -3,11 +3,26 @@
 
 .input-group {
 
+    @if $enable-input-borders == 'false' {
+        --style-form-border-color: transparent;
+
+        .btn:not(:disabled):not(.disabled):focus,
+        .input-group-text:focus,
+        .form-control:focus {
+            border-color: transparent
+        }
+    }
+
     &.input-group-focus {
 
-        .btn,
-        .input-group-text {
-            border-color: var(--style-form-border-focus-color)
+        .btn:not(:disabled):not(.disabled),
+        .input-group-text,
+        .form-control {
+            border-color: var(--style-form-border-focus-color);
+
+            &:hover {
+                border-color: var(--style-form-border-focus-color);
+            }
         }
     }
 
@@ -16,8 +31,13 @@
 	}
  
 	.btn {
+        --style-btn-border-color: var(--style-form-border-color);
 		--style-btn-border-radius: var(--style-input-border-radius);
         --style-icon-color: var(--style-form-text-color);
+        --#{$prefix}btn-padding-x: #{$input-btn-padding-x};
+        --#{$prefix}btn-padding-y: #{$input-btn-padding-y};
+        --#{$prefix}btn-font-size: #{$input-btn-font-size};
+        --#{$prefix}btn-line-height: #{$input-btn-line-height};
         border-width: $input-border-width;
         border-style: solid;
         border-color: var(--style-form-border-color);
@@ -25,10 +45,12 @@
 
         &:not(:disabled):not(.disabled) {
 
-            &:hover,
-            &:focus,
-            &:active {
-                border-color: var(--style-form-border-focus-color);
+            &:hover {
+                @if $enable-input-borders == 'false' {
+                    border-color: transparent;
+                } @else {
+                    border-color: var(--style-form-border-focus-color);
+                }
             }
         }
 

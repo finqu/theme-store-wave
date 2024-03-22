@@ -181,7 +181,7 @@
                     type="button"
                     class="product-quick-add-action btn btn-text"
                     data-cart-add="{{ product.id }}"
-                    data-cart-quantity="{{ product.default_or_selected_variant.min_amount }}">
+                    data-cart-quantity="{{ product.min_quantity }}">
 
                         <div class="product-quick-add-action-inner">
 
@@ -842,7 +842,7 @@
                 {%- else -%}
 
                     <span class="product-stock-balance-in-stock">
-                        {{- 'product.is_available' | t -}}
+                        {{- 'product.in_stock' | t -}}
                     </span>
 
                 {%- endif -%}

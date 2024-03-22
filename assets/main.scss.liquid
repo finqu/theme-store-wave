@@ -97,9 +97,9 @@ $aspect-ratios: (
 $product-image-aspect-ratio-fit: {{- settings.productImageAspectRatioFit -}};
 $article-image-aspect-ratio-fit: {{- settings.articleImageAspectRatioFit -}};
 
-$product-wrap-name: {{- settings.productWrapName | yepnope: 'true', 'false' -}};
+$product-wrap-name: {%- if settings.productWrapName -%}'true'{%- else -%}'false'{%- endif -%};
 
-$section-highlight-item-border: {{- settings.sectionHighlightItemBorder | yepnope: 'true', 'false' -}};
+$section-highlight-item-border: {%- if settings.sectionHighlightItemBorder -%}'true'{%- else -%}'false'{%- endif -%};
 $section-text-align: {{- settings.sectionTextAlign -}};
 
 $spacer: 1rem;
@@ -120,6 +120,8 @@ $spacers: (
 	'g': var(--style-grid-gutter-width),
 	'c': var(--style-grid-container-padding-x)
 );
+
+$enable-input-borders: {%- if settings.styleInputBorder -%}'true'{%- else -%}'false'{%- endif -%};
 
 $body-bg: {{ settings.style_bg_color }};
 $body-color: {{ settings.style_text_color }};

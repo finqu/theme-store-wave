@@ -896,7 +896,7 @@
                                 {%- else -%}
 
                                     <span class="product-stock-balance-in-stock">
-                                        {{- 'product.is_available' | t -}}
+                                        {{- 'product.in_stock' | t -}}
                                     </span>
 
                                 {%- endif -%}
@@ -917,7 +917,7 @@
                                             <input
                                                 type="hidden"
                                                 name="quantity"
-                                                value="{{ product.default_or_selected_variant.min_amount }}">
+                                                value="{{ product.min_quantity }}">
                                         {% endunless %}
 
                                         {% unless product.has_only_default_variant %}
@@ -1014,9 +1014,9 @@
                                                             id="product-quantity-input"
                                                             name="quantity"
                                                             class="product-quantity-input"
-                                                            value="{{ product.default_or_selected_variant.min_amount }}"
-                                                            min="{% if product.default_or_selected_variant.min_amount %}{{ product.default_or_selected_variant.min_amount }}{% else %}1{% endif %}"
-                                                            {% if product.default_or_selected_variant.max_amount %}max="{{ product.default_or_selected_variant.max_amount }}"{% endif %}pattern="[0-9]{1,3}">
+                                                            value="{{ product.min_quantity }}"
+                                                            min="{% if product.min_quantity %}{{ product.min_quantity }}{% else %}1{% endif %}"
+                                                            {% if product.max_quantity %}max="{{ product.max_quantity }}"{% endif %}pattern="[0-9]{1,3}">
 
                                                         <button type="button" class="btn btn-text product-quantity-increase">
                                                             {%- render 'icon', icon: 'add' -%}
@@ -1578,7 +1578,7 @@
                                                     type="button"
                                                     class="btn btn-secondary btn-sm"
                                                     data-cart-add="{{ relatedItem.id }}"
-                                                    data-cart-quantity="{{ relatedItem.default_or_selected_variant.min_amount }}">
+                                                    data-cart-quantity="{{ relatedItem.min_quantity }}">
                                                     {{- 'cart.quick_add' | t -}}
                                                 </button>
 

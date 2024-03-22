@@ -14,7 +14,6 @@
         --style-form-placeholder-color: {{ settings.style_footer_text_color }};
         --style-form-text-color: {{ settings.style_footer_text_color }};
         --style-form-border-color: {{ settings.style_footer_text_color }};
-        --style-form-bg-color: {{ settings.style_footer_bg_color }};
         --style-form-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
         --style-form-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
         --style-form-border-disabled-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 10 }};
@@ -49,10 +48,24 @@
             --style-heading-color: {{ settings.style_footer_text_color | color_darken: 10 }};
             --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_darken: 5 }};
             --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_darken: 10 }};
+
+            {%- if settings.styleInputBorder -%}
+                --style-form-bg-color: {{ settings.style_footer_bg_color }};
+            {%- else -%}
+                --style-form-bg-color: {{ settings.style_footer_bg_color | color_darken: 5 }};
+            {%- endif -%}
+
         {%- else -%}
+
             --style-heading-color: {{ settings.style_footer_text_color | color_lighten: 10 }};
             --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_lighten: 5 }};
             --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_lighten: 10 }};
+
+            {%- if settings.styleInputBorder -%}
+                --style-form-bg-color: {{ settings.style_footer_bg_color }};
+            {%- else -%}
+                --style-form-bg-color: {{ settings.style_footer_bg_color | color_lighten: 5 }};
+            {%- endif -%}
         {%- endif -%}
 
         --bs-body-bg: {{ settings.style_footer_bg_color }};

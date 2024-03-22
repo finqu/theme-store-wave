@@ -264,9 +264,14 @@
 // Form floating
 .form-floating {
 
+	@if $enable-input-borders == 'false' {
+		--#{$prefix}border-color: transparent;
+        --style-form-border-color: transparent;
+    }
+
 	& > label {
 		width: 100%;
-		line-height: 1.5;
+		line-height: $form-floating-line-height;
 	}
 
 	& > .form-control ~ label,
@@ -335,4 +340,10 @@ textarea {
 			border-radius: min(var(--style-input-border-radius), 20px);
 		}
 	}
+}
+@if $enable-input-borders == 'false' {
+	.form-control {
+		--#{$prefix}border-color: transparent;
+        --style-form-border-color: transparent;
+    }
 }

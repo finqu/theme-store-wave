@@ -359,9 +359,14 @@ $input-disabled-bg: var(--style-form-bg-disabled-color);
 $input-disabled-border-color: var(--style-form-border-disabled-color);
 
 $input-color: var(--style-form-text-color);
-$input-border-color: var(--style-form-border-color);
 $input-border-width: $input-btn-border-width;
 $input-box-shadow: none;
+
+@if $enable-input-borders == 'true' {
+	$input-border-color: transparent;
+} @else {
+	$input-border-color: transparent;
+}
 
 $input-border-radius: var(--style-input-border-radius);
 $input-border-radius-lg: var(--style-input-border-radius);
@@ -422,7 +427,7 @@ $btn-link-focus-shadow-rgb: none;
 
 // Form
 $form-floating-height: add(2.90rem, $input-height-border);
-$form-floating-line-height: 1;
+$form-floating-line-height: 1.25;
 $form-floating-padding-x: $input-padding-x;
 $form-floating-padding-y: 0.8rem;
 $form-floating-input-padding-t: 1.525rem;

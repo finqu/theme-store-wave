@@ -134,19 +134,23 @@ export default class Cart {
                         return;
                     }
 
-                    if (!itemId || !quantity) {
+                    if (!itemId) {
                         return;
                     }
 
-                    this.addItem(parseInt(itemId, 10), parseInt(quantity, 10), customizations, e.target.hasAttribute('data-cart-checkout'));
+                    this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), customizations, e.target.hasAttribute('data-cart-checkout'));
                 }
 
             } else {
 
-                const itemId = parseInt(e.target.getAttribute('data-cart-add'), 10);
-                const quantity = parseInt(e.target.getAttribute('data-cart-quantity'), 10);
+                const itemId = e.target.getAttribute('data-cart-add');
+                const quantity = e.target.getAttribute('data-cart-quantity');
 
-                this.addItem(itemId, quantity, [], e.target.hasAttribute('data-cart-checkout'));
+                if (!itemId) {
+                    return;
+                }
+
+                this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), [], e.target.hasAttribute('data-cart-checkout'));
             }
         };
 

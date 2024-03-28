@@ -174,9 +174,19 @@
                 {%- if product.images -%}
 
                     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+                    {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
 
-                    {% assign img1 = product.images[0] %}
-                    {% assign img2 = product.images[1] %}
+                    {%- if product.first_available_variant.image -%}
+
+                        {%- assign img1 = product.first_available_variant.image -%}
+                        {%- assign img2 = generalImages[0] -%}
+
+                    {%- else -%}
+
+                        {%- assign img1 = generalImages[0] -%}
+                        {%- assign img2 = generalImages[1] -%}
+                        
+                    {%- endif -%}
                     
                     {%- if settings.productImageAspectRatio == '9:13' -%}
 

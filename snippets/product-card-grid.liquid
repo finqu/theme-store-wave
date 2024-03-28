@@ -205,109 +205,145 @@
 
                 {%- if product.images -%}
 
-                    {% assign images = product.images | slice: 0,2 | compact %}
+                    {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
 
-                    {%- for image in images -%}
+                    {%- if product.first_available_variant.image -%}
 
+                        {%- assign img1 = product.first_available_variant.image -%}
+                        {%- assign img2 = generalImages[0] -%}
+
+                    {%- else -%}
+
+                        {%- assign img1 = generalImages[0] -%}
+                        {%- assign img2 = generalImages[1] -%}
+                        
+                    {%- endif -%}
+
+                    {%- if settings.productImageAspectRatio == '9:13' -%}
+
+                        {%- assign imgSizeSm = '388,388' -%}
+                        {%- assign imgSizeMd = '330,330' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '850,850' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '560,560' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '416,416' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '330,330' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '272,272' -%}
+                        {%- endcase -%}
+
+                    {%- elsif settings.productImageAspectRatio == '4:3' -%}
+
+                        {%- assign imgSizeSm = '280,210' -%}
+                        {%- assign imgSizeMd = '240,180' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '613,460' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '413,310' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '313,235' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,190' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,160' -%}
+                        {%- endcase -%}
+
+                    {%- elsif settings.productImageAspectRatio == '3:4' -%}
+
+                        {%- assign imgSizeSm = '280,373' -%}
+                        {%- assign imgSizeMd = '240,320' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,800' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,533' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,400' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,320' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,267' -%}
+                        {%- endcase -%}
+
+                    {%- elsif settings.productImageAspectRatio == '1:1' -%}
+
+                        {%- assign imgSizeSm = '280,280' -%}
+                        {%- assign imgSizeMd = '240,240' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,600' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,400' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,300' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,240' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,200' -%}
+                        {%- endcase -%}
+
+                    {%- endif -%}
+
+                    <div class="product-media-img-container aspect-ratio-container">
+
+                        <picture>
+                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                {{- img1 | thumb: imgSizeLg }} 1x,
+                                {{- img1 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                {{- img1 | thumb: imgSizeMd }} 1x,
+                                {{- img1 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                            <source data-srcset="
+                                {{- img1 | thumb: imgSizeSm }} 1x,
+                                {{- img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                            <img
+                                alt="{{ productName }}" 
+                                data-src="{{ img1 | thumb: imgSizeSm }}"
+                                data-srcset="{{ img1 | thumb: imgSizeSm }} 1x, {{ img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item featured-img">
+                        </picture>
+
+                    </div>
+
+                    {% if img2 %}
+                        
                         <div class="product-media-img-container aspect-ratio-container">
-
-                            {%- if settings.productImageAspectRatio == '9:13' -%}
-
-                                {%- assign imgSizeSm = '388,388' -%}
-                                {%- assign imgSizeMd = '330,330' -%}
-
-                                {%- case productPerRow -%}
-                                    {% when '2' %}
-                                        {%- assign imgSizeLg = '850,850' -%}
-                                    {% when '3' %}
-                                        {%- assign imgSizeLg = '560,560' -%}
-                                    {% when '4' %}
-                                        {%- assign imgSizeLg = '416,416' -%}
-                                    {% when '5' %}
-                                        {%- assign imgSizeLg = '330,330' -%}
-                                    {% when '6' %}
-                                        {%- assign imgSizeLg = '272,272' -%}
-                                {%- endcase -%}
-
-                            {%- elsif settings.productImageAspectRatio == '4:3' -%}
-
-                                {%- assign imgSizeSm = '280,210' -%}
-                                {%- assign imgSizeMd = '240,180' -%}
-
-                                {%- case productPerRow -%}
-                                    {% when '2' %}
-                                        {%- assign imgSizeLg = '613,460' -%}
-                                    {% when '3' %}
-                                        {%- assign imgSizeLg = '413,310' -%}
-                                    {% when '4' %}
-                                        {%- assign imgSizeLg = '313,235' -%}
-                                    {% when '5' %}
-                                        {%- assign imgSizeLg = '240,190' -%}
-                                    {% when '6' %}
-                                        {%- assign imgSizeLg = '200,160' -%}
-                                {%- endcase -%}
-
-                            {%- elsif settings.productImageAspectRatio == '3:4' -%}
-
-                                {%- assign imgSizeSm = '280,373' -%}
-                                {%- assign imgSizeMd = '240,320' -%}
-
-                                {%- case productPerRow -%}
-                                    {% when '2' %}
-                                        {%- assign imgSizeLg = '600,800' -%}
-                                    {% when '3' %}
-                                        {%- assign imgSizeLg = '400,533' -%}
-                                    {% when '4' %}
-                                        {%- assign imgSizeLg = '300,400' -%}
-                                    {% when '5' %}
-                                        {%- assign imgSizeLg = '240,320' -%}
-                                    {% when '6' %}
-                                        {%- assign imgSizeLg = '200,267' -%}
-                                {%- endcase -%}
-
-                            {%- elsif settings.productImageAspectRatio == '1:1' -%}
-
-                                {%- assign imgSizeSm = '280,280' -%}
-                                {%- assign imgSizeMd = '240,240' -%}
-
-                                {%- case productPerRow -%}
-                                    {% when '2' %}
-                                        {%- assign imgSizeLg = '600,600' -%}
-                                    {% when '3' %}
-                                        {%- assign imgSizeLg = '400,400' -%}
-                                    {% when '4' %}
-                                        {%- assign imgSizeLg = '300,300' -%}
-                                    {% when '5' %}
-                                        {%- assign imgSizeLg = '240,240' -%}
-                                    {% when '6' %}
-                                        {%- assign imgSizeLg = '200,200' -%}
-                                {%- endcase -%}
-
-                            {%- endif -%}
 
                             <picture>
                                 <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                    {{- image | thumb: imgSizeLg }} 1x,
-                                    {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+                                    {{- img2 | thumb: imgSizeLg }} 1x,
+                                    {{- img2 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
 
                                 <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
-                                    {{- image | thumb: imgSizeMd }} 1x,
-                                    {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+                                    {{- img2 | thumb: imgSizeMd }} 1x,
+                                    {{- img2 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
 
                                 <source data-srcset="
-                                    {{- image | thumb: imgSizeSm }} 1x,
-                                    {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+                                    {{- img2 | thumb: imgSizeSm }} 1x,
+                                    {{- img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
 
                                 <img
                                     alt="{{ productName }}" 
-                                    data-src="{{ image | thumb: imgSizeSm }}"
-                                    data-srcset="{{ image | thumb: imgSizeSm }} 1x, {{ image | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item{% if forloop.first %} featured-img{% endif %}">
+                                    data-src="{{ img2 | thumb: imgSizeSm }}"
+                                    data-srcset="{{ img2 | thumb: imgSizeSm }} 1x, {{ img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
                             </picture>
 
                         </div>
 
-                    {%- endfor -%}
+                    {% endif %}
 
                 {%- else -%}
 
@@ -452,13 +488,14 @@
             {% assign variantsOption2Arr = product.variants | map: 'option2' %}
             {% assign variantsOption3Arr = product.variants | map: 'option3' %}
             {% assign variantsHasImage = product.variants | where: 'image' | compact %}
+            {% assign variantsWithTaxonomyArr = product.options_with_values | where: 'taxonomy_attribute' %}
             {% assign visibleOptionsCount = 1 %}
 
-            {% if settings.productShowVariantOption2 %}
+            {% if settings.productShowVariantOption2TaxonomyType %}
                 {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
             {% endif %}
 
-            {% if settings.productShowVariantOption3 %}
+            {% if settings.productShowVariantOption3TaxonomyType %}
                 {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
             {% endif %}
 
@@ -468,11 +505,26 @@
 
                     {%- case forloop.index -%}
                         {% when 1 %}
-                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption1 | first -%}
+                            {%- for item in variantsWithTaxonomyArr -%}
+                                {%- if item.taxonomy_attribute.type == settings.productShowVariantOption1TaxonomyType -%}
+                                    {%- assign option = item -%}
+                                    {%- break -%}
+                                {%- endif -%}
+                            {%- endfor -%}
                         {% when 2 %}
-                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption2 | first -%}
+                            {%- for item in variantsWithTaxonomyArr -%}
+                                {%- if item.taxonomy_attribute.type == settings.productShowVariantOption2TaxonomyType -%}
+                                    {%- assign option = item -%}
+                                    {%- break -%}
+                                {%- endif -%}
+                            {%- endfor -%}
                         {% when 3 %}
-                            {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption3 | first -%}
+                            {%- for item in variantsWithTaxonomyArr -%}
+                                {%- if item.taxonomy_attribute.type == settings.productShowVariantOption3TaxonomyType -%}
+                                    {%- assign option = item -%}
+                                    {%- break -%}
+                                {%- endif -%}
+                            {%- endfor -%}
                     {%- endcase -%}
 
                     {% unless option %}
@@ -481,13 +533,17 @@
 
                     {%- assign optionPosition = option.sort_order | plus: 1 -%}
 
-                    {% if option.type == 'color' %}
-
-                        {% assign colorOptionValuesWithColor = option.values | where: 'color' %}
+                    {% if option.taxonomy_attribute.type == 'color' %}
 
                         <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap">
 
-                            {% for value in colorOptionValuesWithColor %}
+                            {%- assign colorCount = 0 -%}
+
+                            {% for value in option.values %}
+
+                                {%- unless value.taxonomy_value.colors or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor -%}
+                                    {%- continue -%}
+                                {%- endunless -%}
 
                                 {%- assign optionDisabled = true -%}
 
@@ -510,7 +566,17 @@
 
                                 {%- endfor -%}
 
-                                <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs" style="--swatch-color: {{ value.color }}">
+                                {%- capture swatchColor -%}
+                                    {%- if value.taxonomy_value.colors.size == 1 -%}
+                                        {{- value.taxonomy_value.colors[0] -}}
+                                    {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                        linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                    {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                        linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                    {%- endif -%}
+                                {%- endcapture -%}
+
+                                <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
 
                                     <input class="form-check-input{% if optionDisabled %} disabled{% endif %}"
                                         type="hidden"
@@ -522,14 +588,16 @@
 
                                 </div>
 
-                                {% if forloop.index == 5 and option.values.size > 5 %}
-                                    {% break %}
-                                {% endif %}
+                                {%- assign colorCount = colorCount | plus: 1 -%}
+
+                                {%- if colorCount == 5 and option.values.size > 5 -%}
+                                    {%- break -%}
+                                {%- endif -%}
 
                             {% endfor %}
 
-                            {% if colorOptionValuesWithColor.size < option.values.size and option.values.size > 5 %}
-                                <small class="lh-1">+{{ option.values.size | minus: colorOptionValuesWithColor.size }}</small>
+                            {% if colorCount < option.values.size and option.values.size > 5 %}
+                                <small class="lh-1">+{{ option.values.size | minus: colorCount }}</small>
                             {% endif %}
 
                         </div>
@@ -591,7 +659,7 @@
 
             {% endif %}
 
-            {% if variantsHasImage and settings.productShowVariantOptionAsImage and settings.productShowVariantImgsOnHover %} 
+            {% if variantsHasImage and settings.productShowVariantOptionTaxonomyTypeAsImage and settings.productShowVariantImgsOnHover %} 
 
                 {% capture variantsHoverTemplate %}
 
@@ -599,11 +667,26 @@
 
                         {%- case forloop.index -%}
                             {% when 1 %}
-                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption1 | first -%}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == settings.productShowVariantOption1TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
                             {% when 2 %}
-                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption2 | first -%}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == settings.productShowVariantOption2TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
                             {% when 3 %}
-                                {%- assign option = product.options_with_values | where: 'type', settings.productShowVariantOption3 | first -%}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == settings.productShowVariantOption3TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
                         {%- endcase -%}
 
                         {% unless option %}
@@ -612,7 +695,7 @@
 
                         {%- assign optionPosition = option.sort_order | plus: 1 -%}
 
-                        {% if option.type == settings.productShowVariantOptionAsImage %}
+                        {% if option.taxonomy_attribute.type == settings.productShowVariantOptionTaxonomyTypeAsImage %}
 
                             {% assign optionValuesWithImg = option.values | where: 'image' %}
 
@@ -709,13 +792,17 @@
 
                             </div>
 
-                        {% elsif option.type == 'color' %}
+                        {% elsif option.taxonomy_attribute.type == 'color' %}
 
-                            {% assign colorOptionValuesWithColor = option.values | where: 'color' %}
+                            {%- assign colorCount = 0 -%}
 
                             <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap">
 
-                                {% for value in colorOptionValuesWithColor %}
+                                {% for value in option.values %}
+
+                                    {%- unless value.taxonomy_value.colors or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor -%}
+                                        {%- continue -%}
+                                    {%- endunless -%}
 
                                     {%- assign optionDisabled = true -%}
 
@@ -738,7 +825,17 @@
 
                                     {%- endfor -%}
 
-                                    <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs" style="--swatch-color: {{ value.color }}">
+                                    {%- capture swatchColor -%}
+                                        {%- if value.taxonomy_value.colors.size == 1 -%}
+                                            {{- value.taxonomy_value.colors[0] -}}
+                                        {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                            linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                        {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                            linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                        {%- endif -%}
+                                    {%- endcapture -%}
+
+                                    <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
 
                                         <input class="form-check-input{% if optionDisabled %} disabled{% endif %}"
                                             type="hidden"
@@ -750,14 +847,14 @@
 
                                     </div>
 
-                                    {% if forloop.index == 5 and option.values.size > 5 %}
-                                        {% break %}
-                                    {% endif %}
+                                    {%- if colorCount == 5 and option.values.size > 5 -%}
+                                        {%- break -%}
+                                    {%- endif -%}
 
                                 {% endfor %}
 
-                                {% if colorOptionValuesWithColor.size < option.values.size and option.values.size > 5 %}
-                                    <small class="lh-1">+{{ option.values.size | minus: colorOptionValuesWithColor.size }}</small>
+                                {% if colorCount < option.values.size and option.values.size > 5 %}
+                                    <small class="lh-1">+{{ option.values.size | minus: colorCount }}</small>
                                 {% endif %}
 
                             </div>

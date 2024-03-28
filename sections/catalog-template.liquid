@@ -30,7 +30,7 @@
 
                             <span class="catalog-filter-btn-text">
 
-                                {% if filter.param_name contains 'filter.attribute' %}
+                                {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
 
                                     <span>{{ filter.label }}</span>
 
@@ -54,7 +54,65 @@
 
                             {% if filter.type == 'list' %}
 
-                                {% if filter.param_name == 'filter.availability' %}
+                                {% if filter.param_name contains 'filter.taxonomy.' %}
+
+                                    {% if filter.taxonomy_attribute.type == 'color' %}
+                                        <div class="form-check-color-swatches-container form-check-color-swatches-gap-lg">
+                                    {% endif %}
+
+                                    {% for value in filter.values %}
+
+                                        {% if filter.taxonomy_attribute.type == 'color' %}
+
+                                            {%- capture swatchColor -%}
+                                                {%- if value.taxonomy_value.colors.size == 1 -%}
+                                                    {{- value.taxonomy_value.colors[0] -}}
+                                                {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                                    linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                                {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                                    linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                                {%- endif -%}
+                                            {%- endcapture -%}
+
+                                            <div class="{% if swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}form-check-color-swatch form-check-color-swatch-sm{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}{% else %}form-check-badge{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                                <input type="checkbox" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label"></label>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                    <span>{{ value.label }}</span>
+
+                                                    <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                            </div>
+
+                                        {% else %}
+
+                                            <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                <input type="checkbox" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                    <span>{{ value.label }}</span>
+
+                                                    <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                </label>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if filter.taxonomy_attribute.type == 'color' %}
+                                        </div>
+                                    {% endif %}
+
+                                {% elsif filter.param_name == 'filter.availability' %}
 
                                     {% for value in filter.values %}
 
@@ -65,7 +123,7 @@
                                             <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
 
                                                 {%- capture paramTranslationKey -%}
-                                                    filters.{{- value.param_name -}}.values.{{- value.value | times: 1 | yepnope: 'in_stock', 'out_of_stock' | handle | replace: '-', '_' -}}
+                                                    filters.{{- value.param_name -}}.values.{%- if value.value > 0 -%}in_stock{%- else -%}out_of_stock{%- endif -%}
                                                 {%- endcapture -%}
 
                                                 <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
@@ -88,7 +146,7 @@
 
                                             <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
 
-                                                {% if filter.param_name contains 'filter.attribute' or filter.param_name contains 'filter.manufacturer' %}
+                                                 {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.manufacturer' %}
 
                                                     <span>{{ value.label }}</span>
 
@@ -245,7 +303,7 @@
 
                                     <span class="catalog-activated-filter-text">
 
-                                        {% if filter.param_name contains 'filter.attribute' %}
+                                        {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
 
                                             <span>{{ filter.label }}</span>
 
@@ -451,7 +509,7 @@
 
                                             <span class="filters-mobile-navigation-menu-item-header-text">
 
-                                                {% if filter.param_name contains 'filter.attribute' %}
+                                                {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
 
                                                     <span>{{ filter.label }}</span>
 
@@ -477,7 +535,65 @@
 
                                         {% if filter.type == 'list' %}
 
-                                            {% if filter.param_name == 'filter.availability' %}
+                                            {% if filter.param_name contains 'filter.taxonomy.' %}
+
+                                                {% if filter.taxonomy_attribute.type == 'color' %}
+                                                    <div class="form-check-color-swatches-container form-check-color-swatches-gap-lg">
+                                                {% endif %}
+
+                                                {% for value in filter.values %}
+
+                                                    {% if filter.taxonomy_attribute.type == 'color' %}
+
+                                                        {%- capture swatchColor -%}
+                                                            {%- if value.taxonomy_value.colors.size == 1 -%}
+                                                                {{- value.taxonomy_value.colors[0] -}}
+                                                            {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                                            {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                                            {%- endif -%}
+                                                        {%- endcapture -%}
+
+                                                        <div class="{% if swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}form-check-color-swatch form-check-color-swatch-sm{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}{% else %}form-check-badge{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                                            <input type="checkbox" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label"></label>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                                <span>{{ value.label }}</span>
+
+                                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                        </div>
+
+                                                    {% else %}
+
+                                                        <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                            <input type="checkbox" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                                <span>{{ value.label }}</span>
+
+                                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                            </label>
+
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                {% endfor %}
+
+                                                {% if filter.taxonomy_attribute.type == 'color' %}
+                                                    </div>
+                                                {% endif %}
+
+                                            {% elsif filter.param_name == 'filter.availability' %}
 
                                                 {% for value in filter.values %}
 
@@ -488,7 +604,7 @@
                                                         <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
 
                                                             {%- capture paramTranslationKey -%}
-                                                                filters.{{- value.param_name -}}.values.{{- value.value | times: 1 | yepnope: 'in_stock', 'out_of_stock' | handle | replace: '-', '_' -}}
+                                                                filters.{{- value.param_name -}}.values.{%- if value.value > 0 -%}in_stock{%- else -%}out_of_stock{%- endif -%}
                                                             {%- endcapture -%}
 
                                                             <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
@@ -511,7 +627,7 @@
 
                                                         <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
 
-                                                            {% if filter.param_name contains 'filter.attribute' or filter.param_name contains 'filter.manufacturer' %}
+                                                            {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.manufacturer' %}
 
                                                                 <span>{{ value.label }}</span>
 

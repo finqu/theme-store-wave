@@ -245,8 +245,7 @@ export default {
 
             const isWishlistTemplate = document.querySelector('body').classList.contains('template-customers-wishlist');
 
-            document.querySelectorAll('[data-wishlist-add]').forEach(el => { el.addEventListener('click', () => {
-
+            const add = (el) => {
                 const iconEl = el.querySelector('.svg-icon');
                 const id = el.getAttribute('data-wishlist-add');
                 const itemCountEls = document.querySelectorAll('[data-wishlist-item-count]');
@@ -304,10 +303,9 @@ export default {
                         }
                     }));
                 });
-            })});
+            };
 
-            document.querySelectorAll('[data-wishlist-remove]').forEach(el => { el.addEventListener('click', () => {
-
+            const remove = (el) => {
                 const iconEl = el.querySelector('.svg-icon');
                 const id = el.getAttribute('data-wishlist-remove');
                 const itemEl = document.querySelector('[data-wishlist-item="'+id+'"]');
@@ -373,10 +371,9 @@ export default {
                         }
                     }));
                 });
-            })});
+            };
 
-            document.querySelectorAll('[data-wishlist-toggle]').forEach(el => { el.addEventListener('click', () => {
-
+            const toggle = (el) => {
                 const textEl = el.querySelector('.text');
                 const iconEl = el.querySelector('.svg-icon');
                 const id = el.getAttribute('data-wishlist-toggle');
@@ -510,7 +507,22 @@ export default {
                         }));
                     });
                 }
-            })});
+            };
+
+            document.addEventListener('click', (e) => {
+
+                if (e.target.hasAttribute('data-wishlist-add')) {
+                    return add(e.target);
+                }
+    
+                if (e.target.hasAttribute('data-wishlist-remove')) {
+                    return remove(e.target);
+                }
+    
+                if (e.target.hasAttribute('data-wishlist-toggle')) {
+                    return toggle(e.target);
+                }
+            });
         }
 
         if (theme.store.accessibility.showBackToTopButton) {

@@ -88,9 +88,15 @@
 
             {% if option.title %}
 
-                {%- assign optionHasColorValues = option.values | where: 'color' -%}
+                {%- assign optionTaxonomyValues = option.values | where: 'taxonomy_value' -%}
 
-                {% if optionHasColorValues or option.type == settings.productShowVariantOptionAsImage and variantsHasImage %}
+                {%- if optionTaxonomyValues -%}
+                    {%- assign taxanomyHasColors = optionTaxonomyValues | where: 'colors' -%}
+                    {%- assign taxanomyHasTypeTransparent = optionTaxonomyValues | where: 'is_transparent' -%}
+                    {%- assign taxanomyHasTypeMulticolor = optionTaxonomyValues | where: 'is_multicolor' -%}
+                {%- endif -%}
+
+                {% if taxanomyHasColors or taxanomyHasTypeTransparent or taxanomyHasTypeMulticolor or option.taxonomy_attribute.type == settings.productShowVariantOptionTaxonomyTypeAsImage and variantsHasImage %}
 
                     <label class="form-label text-title{% if highlightLabel %} fw-bold{% endif %}">
                         {{ option.title }}: {{ option.selected_value.title }}
@@ -106,7 +112,7 @@
 
             {% endif %}
 
-            {% if variantsHasImage and option.type == settings.productShowVariantOptionAsImage %}
+            {% if variantsHasImage and option.taxonomy_attribute.type == settings.productShowVariantOptionTaxonomyTypeAsImage %}
 
                 <div class="form-check-imgs-container">
 
@@ -197,7 +203,7 @@
 
             {% else %}
 
-                <div class="{% if option.type == 'color' %}form-check-color-swatches-container{% else %}form-check-badges-container{% endif %}">
+                <div class="{% if option.taxonomy_attribute.type == 'color' %}form-check-color-swatches-container{% else %}form-check-badges-container{% endif %}">
 
                     {% for value in option.values %}
 
@@ -222,7 +228,17 @@
 
                         {%- endfor -%}
 
-                        <div class="{% if option.type == 'color' and value.color %}form-check-color-swatch form-check-color-swatch-inline{% else %}form-check-badge{% endif %}"{% if option.type == 'color' and value.color %} style="--swatch-color: {{ value.color }}"{% endif %}>
+                        {%- capture swatchColor -%}
+                            {%- if value.taxonomy_value.colors.size == 1 -%}
+                                {{- value.taxonomy_value.colors[0] -}}
+                            {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                            {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                            {%- endif -%}
+                        {%- endcapture -%}
+
+                        <div class="{% if option.taxonomy_attribute.type == 'color' and swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}form-check-color-swatch form-check-color-swatch-inline{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}{% else %}form-check-badge{% endif %}"{% if option.taxonomy_attribute.type == 'color' and swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
 
                             <input class="product-option-value form-check-input{% if optionDisabled and product.default_or_selected_variant.notifications_supported %} disabled{% endif %}"
                                 type="radio"
@@ -232,7 +248,7 @@
                                 {% if option.selected_value == value %}checked{% endif %}
                                 {% if optionDisabled and product.default_or_selected_variant.notifications_supported == false %}disabled{% endif %}>
 
-                            {% if option.type == 'color' and value.color %}
+                            {% if option.taxonomy_attribute.type == 'color' and swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}
 
                                 <label for="product-option-value-{{ optionPosition }}-{{ forloop.index0 }}" class="form-check-label"{% unless optionDisabled %} data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}"{% endunless %}></label>
 

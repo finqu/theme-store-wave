@@ -10,33 +10,11 @@
     {% render 'schemas/product' %}
 {% endcomment %}
 
-{%- capture imageArr -%}
-    {%- for image in product.images -%}
-        {{- image -}},
-    {%- endfor -%}
-    {%- if product.default_or_selected_variant.customizations -%}
-        {%- for group in product.default_or_selected_variant.customizations -%}
-            {%- for option in group.options -%}
-                {%- if option.image -%}
-                    {{- option.image -}},
-                {%- endif -%}
-                {%- if option.child_group -%}
-                    {%- for option in option.child_group.options -%}
-                        {%- if option.image -%}
-                            {{- option.image -}},
-                        {%- endif -%}
-                    {%- endfor -%}
-                {%- endif -%}
-            {%- endfor -%}
-        {%- endfor -%}
-    {%- endif -%}
-{%- endcapture -%}
-
-{%- assign imageArr = imageArr | strip | split: ',' | compact -%}
-{%- assign colorOption = product.options_with_values | find: 'type', 'color' -%}
-{%- assign sizeOption = product.options_with_values | find: 'type', 'size' -%}
-{%- assign materialOption = product.options_with_values | find: 'type', 'material' -%}
-{%- assign patternOption = product.options_with_values | find: 'type', 'pattern' -%}
+{%- assign taxonomies = product.options_with_values | where: 'taxonomy_attribute' -%}
+{%- assign colorOption = taxonomies | find: 'type', 'color' -%}
+{%- assign sizeOption = taxonomies | find: 'type', 'size' -%}
+{%- assign materialOption = taxonomies | find: 'type', 'material' -%}
+{%- assign patternOption = taxonomies | find: 'type', 'pattern' -%}
 {%- assign hasSupportedVariantOptions = colorOption or sizeOption or materialOption or patternOption -%}
 
 {%- if product.variants.size > 1 and hasSupportedVariantOptions -%}
@@ -60,6 +38,34 @@
     {%- endif -%}
 
     {%- assign variesBy = variesBy | split: ',' | compact -%}
+
+{%- else -%}
+
+    {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
+
+    {%- capture imageArr -%}
+        {%- for image in generalImages -%}
+            {{- image -}},
+        {%- endfor -%}
+        {%- if product.default_or_selected_variant.customizations -%}
+            {%- for group in product.default_or_selected_variant.customizations -%}
+                {%- for option in group.options -%}
+                    {%- if option.image -%}
+                        {{- option.image -}},
+                    {%- endif -%}
+                    {%- if option.child_group -%}
+                        {%- for option in option.child_group.options -%}
+                            {%- if option.image -%}
+                                {{- option.image -}},
+                            {%- endif -%}
+                        {%- endfor -%}
+                    {%- endif -%}
+                {%- endfor -%}
+            {%- endfor -%}
+        {%- endif -%}
+    {%- endcapture -%}
+
+    {%- assign imageArr = imageArr | strip | split: ',' | compact -%}
 
 {%- endif -%}
 
@@ -122,7 +128,7 @@
         {%- endif -%}
         {%- capture variantOptions -%}
             {%- for item in variant.options -%}
-                {%- case item.option.type -%}
+                {%- case item.option.taxonomy_attribute.type -%}
                     {%- when 'color' -%}"color": {{ item.value.title | json -}},
                     {%- when 'size' -%}"size": {{ item.value.title | json -}},
                     {%- when 'material' -%}"material": {{ item.value.title | json -}},

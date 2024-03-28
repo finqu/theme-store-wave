@@ -69,6 +69,14 @@
 	flex-wrap: wrap;
 	margin-top: -#{spacer(4) / 2};
 
+	&.form-check-color-swatches-gap-lg {
+		margin-top: -#{spacer(4)};
+
+		.form-check-color-swatch {
+			margin-top: spacer(4);
+		}
+	}
+
 	&.form-check-color-swatches-no-wrap {
 		margin-top: 0;
 		flex-wrap: nowrap;
@@ -77,17 +85,26 @@
 			margin-top: 0;
 		}
 	}
+
+	.form-check-color-swatch {
+		margin-top: spacer(4) / 2;
+		width: 100%;
+
+		&.form-check-color-swatch-inline {
+			width: auto;
+		}
+	}
 }
 
 .form-check-color-swatch {
 	display: flex;
 	align-items: center;
+	width: 100%;
 	--swatch-size: 2rem;
 	--swatch-border-size: 2px;
 
 	&.form-check-color-swatch-inline {
 		display: inline-flex;
-		margin-top: spacer(4) / 2;
 		padding-right: $form-check-inline-margin-end / 2;
 	}
 
@@ -101,6 +118,36 @@
 		--swatch-border-size: 1px;
 	}
 
+	&.form-check-color-swatch-transparent {
+		--swatch-color: rgba(255, 255, 255);
+		--swatch-accent-color: rgba(100, 100, 100, .5);
+
+		.form-check-input {
+
+			& + .form-check-label {
+				font-size: 5px;
+				background-color: var(--swatch-color);
+				background-size: 2em 2em; 
+				background-position: 0 0, 1em 0, 1em -1em, 0 -1em; 
+				background-image:
+					linear-gradient(45deg, var(--swatch-accent-color) 25%, transparent 25%), 
+					linear-gradient(135deg, var(--swatch-accent-color) 25%, transparent 25%),
+					linear-gradient(45deg, transparent 75%, var(--swatch-accent-color) 75%),
+					linear-gradient(135deg, transparent 75%, var(--swatch-accent-color) 75%);
+			}
+		}
+	}
+
+	&.form-check-color-swatch-multicolor {
+
+		.form-check-input {
+
+			& + .form-check-label {
+				background: linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%);
+			}
+		}
+	}
+
 	.form-check-input {
 		display: none;
 		appearance: none;
@@ -111,7 +158,7 @@
 			height: var(--swatch-size);
 			margin: 0;
 			border-radius: 50%;
-			background-color: var(--swatch-color, --style-form-bg-color);
+			background: var(--swatch-color, --style-form-bg-color);
 			cursor: pointer;
 			@include transition($form-check-transition);
 

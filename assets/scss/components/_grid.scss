@@ -12,20 +12,14 @@
 	--style-grid-container-width: calc(100% - 2 * var(--style-grid-container-padding-x));
 }
 
-.container-compact {
-	@include make-container();
-	@include media-breakpoint-up(md) {
-		max-width: 850px;
-		--style-grid-container-width: 850px;
-		--style-grid-container-width: calc(850px - 2 * var(--style-grid-container-padding-x));
-	}
-}
-
-.container-tiny {
-	@include make-container();
-	@include media-breakpoint-up(md) {
-		max-width: 650px;
-		--style-grid-container-width: calc(650px - 2 * var(--style-grid-container-padding-x));
+@each $key, $container-max-width in $container-custom-max-widths {
+	.container-#{$key} {
+		@include make-container();
+		@include media-breakpoint-up(md) {
+			max-width: $container-max-width;
+			--style-grid-container-width: $container-max-width;
+			--style-grid-container-width: calc($container-max-width - 2 * var(--style-grid-container-padding-x));
+		}
 	}
 }
 

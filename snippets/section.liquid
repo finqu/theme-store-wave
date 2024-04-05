@@ -3,7 +3,7 @@
 
     Accepts:
     - section: {Object} Section Liquid object
-    - sectionContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionContainer: {String} 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionTitle: {String}
     - sectionTitleClass: {String}
     - sectionTitleTag {String}
@@ -22,7 +22,7 @@
     - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
     - sectionHeader {Boolean}
     - sectionHeaderClass {String}
-    - sectionHeaderContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionHeaderContainer: {String} 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionHeaderSecondaryAction: {String}
     - sectionHeaderAnimation: {Boolean}
     - sectionHeaderGapScale: {Float}
@@ -37,7 +37,7 @@
     - sectionColorScheme: {String}
     - sectionOverlay: {Boolean}
     - sectionContentClass {String}
-    - sectionContentContainer: {String} 'none', 'fixed', 'fluid', 'compact', 'tiny'
+    - sectionContentContainer: {String} 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionContentAnimation: {Boolean}
     - sectionTextAlign: {String} 'start', 'center', 'end'
     - sectionAnimation {String}
@@ -51,7 +51,7 @@
 {% endcomment %}
 
 {%- assign section = section -%}
-{%- assign sectionContainer = sectionContainer | default: 'fixed' -%}
+{%- assign sectionContainer = sectionContainer | default: section.settings.sectionContainer | default: 'fixed' -%}
 {%- assign sectionHeight = sectionHeight | default: section.settings.sectionHeight -%}
 {%- assign sectionInnerGap = sectionInnerGap | default: section.settings.sectionInnerGap | default: settings.sectionInnerGap -%}
 {%- assign sectionGutterWidth = sectionGutterWidth | default: section.settings.sectionGutterWidth -%}
@@ -83,6 +83,10 @@
 {%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
 {%- assign sectionPaddingMode = sectionPaddingMode | default: section.settings.sectionPaddingMode -%}
 {%- assign sectionAdditionalTitles = sectionAdditionalTitles | default: section.settings.sectionAdditionalTitles | default: false -%}
+
+{%- if sectionContainer == 'nil' -%}
+    {%- assign sectionContainer = 'fixed' -%}
+{%- endif -%}
 
 {%- unless sectionAdditionalTitles -%}
     {%- assign sectionOverline = false -%}

@@ -12,8 +12,10 @@ export default function() {
         const siteMobileNavigationShowLayerEls = containerEl.querySelectorAll('[name="site-mobile-navigation-show-layer"]');
         const siteMobileNavigationHideLayerEls = containerEl.querySelectorAll('[name="site-mobile-navigation-hide-layer"]');
         const siteMobileHeaderScrollDownClass = 'site-mobile-header-container-hide';
+        const siteMobileHeaderScrollVisibleClass = 'site-mobile-header-container-show';
+        const siteMobileHeaderScrollTransitionClass = 'site-mobile-header-container-transition';
+        let siteMobileHeaderPositionStyle = theme.utils.getCssVariable('position', containerEl);
         let lastScroll = 0;
-        let currentScroll = 0;
 
         const openMobileNavigation = () => {
 
@@ -40,6 +42,10 @@ export default function() {
             siteMobileNavigationToggleEl.querySelectorAll('svg').forEach((el) => {
                 el.classList.toggle('d-none')
             });
+
+            if (siteMobileHeaderPositionStyle !== 'sticky' && !siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollVisibleClass)) {
+                siteMobileHeaderContainerEl.classList.add(siteMobileHeaderScrollVisibleClass);
+            }
             
             document.body.classList.add('disable-scroll');
         };
@@ -60,25 +66,52 @@ export default function() {
                 el.classList.toggle('d-none')
             });
 
+            if (siteMobileHeaderPositionStyle !== 'sticky' && siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollVisibleClass)) {
+                siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollVisibleClass);
+            }
+
             document.body.classList.remove('disable-scroll');
         };
 
         window.addEventListener('scroll', () => {
 
-            currentScroll = window.scrollY;
+            const currentScroll = window.scrollY;
+            
+            siteMobileHeaderPositionStyle = theme.utils.getCssVariable('position', containerEl);
 
             if (currentScroll <= 200) {
+
+                if (siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollVisibleClass)) {
+                    siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollVisibleClass);
+                }
+
+                if (siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollTransitionClass)) {
+                    siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollTransitionClass);
+                }
+                
                 return;
             }
 
             if (currentScroll > lastScroll && !siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollDownClass)) {
 
                 siteMobileHeaderContainerEl.classList.add(siteMobileHeaderScrollDownClass);
-                closeMobileNavigation();
+                siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollVisibleClass);
 
             } else if (currentScroll < lastScroll && siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollDownClass)) {
 
                 siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollDownClass);
+                siteMobileHeaderContainerEl.classList.add(siteMobileHeaderScrollVisibleClass);
+            }
+
+            if (siteMobileHeaderPositionStyle === 'sticky' && !siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollTransitionClass)) {
+
+                setTimeout(() => {
+                    siteMobileHeaderContainerEl.classList.add(siteMobileHeaderScrollTransitionClass);
+                }, 10);
+
+            } else if (siteMobileHeaderPositionStyle !== 'sticky' && siteMobileHeaderContainerEl.classList.contains(siteMobileHeaderScrollTransitionClass)) {
+
+                siteMobileHeaderContainerEl.classList.remove(siteMobileHeaderScrollTransitionClass);
             }
 
             lastScroll = currentScroll;
@@ -401,19 +434,24 @@ export default function() {
         const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
         const siteHeaderScrollDownClass = 'site-header-container-hide';
         const siteHeaderScrollVisibleClass = 'site-header-container-show';
+        const siteHeaderScrollTransitionClass = 'site-header-container-transition';
         let lastScroll = 0;
 
         window.addEventListener('scroll', () => {
 
             const currentScroll = window.scrollY;
+            const siteHeaderPositionStyle = theme.utils.getCssVariable('position', containerEl);
 
             if (currentScroll <= 200) {
 
                 if (siteHeaderContainerEl.classList.contains(siteHeaderScrollVisibleClass)) {
                     siteHeaderContainerEl.classList.remove(siteHeaderScrollVisibleClass);
-                    containerEl.style.zIndex = null;
                 }
 
+                if (siteHeaderContainerEl.classList.contains(siteHeaderScrollTransitionClass)) {
+                    siteHeaderContainerEl.classList.remove(siteHeaderScrollTransitionClass);
+                }
+                
                 return;
             }
 
@@ -422,15 +460,21 @@ export default function() {
                 siteHeaderContainerEl.classList.add(siteHeaderScrollDownClass);
                 siteHeaderContainerEl.classList.remove(siteHeaderScrollVisibleClass);
 
-                setTimeout(() => {
-                    containerEl.style.zIndex = -1;
-                }, 500);
-
             } else if (currentScroll < lastScroll && siteHeaderContainerEl.classList.contains(siteHeaderScrollDownClass)) {
 
                 siteHeaderContainerEl.classList.remove(siteHeaderScrollDownClass);
                 siteHeaderContainerEl.classList.add(siteHeaderScrollVisibleClass);
-                containerEl.style.zIndex = null;
+            }
+
+            if (siteHeaderPositionStyle === 'sticky' && !siteHeaderContainerEl.classList.contains(siteHeaderScrollTransitionClass)) {
+
+                setTimeout(() => {
+                    siteHeaderContainerEl.classList.add(siteHeaderScrollTransitionClass);
+                }, 10);
+
+            } else if (siteHeaderPositionStyle !== 'sticky' && siteHeaderContainerEl.classList.contains(siteHeaderScrollTransitionClass)) {
+
+                siteHeaderContainerEl.classList.remove(siteHeaderScrollTransitionClass);
             }
 
             lastScroll = currentScroll;
@@ -491,10 +535,11 @@ export default function() {
 
                         if (!isMegamenu) {
 
-                            const submenuWidth = submenuEl.querySelector('.site-header-submenu-item').getBoundingClientRect().width;
+                            const submenuItemEL =  submenuEl.querySelector('.site-header-submenu-item');
+                            const submenuItemWidth = submenuItemEL.getBoundingClientRect().width;
                             const bodyPosRight = document.body.getBoundingClientRect().right;
                             let submenuPosLeft = menuItemEl.getBoundingClientRect().left;
-                            const submenuPosRight = submenuPosLeft + submenuWidth;
+                            const submenuPosRight = submenuPosLeft + submenuItemWidth;
 
                             if (submenuPosRight > bodyPosRight) {
                                 submenuPosLeft = submenuPosLeft - (submenuPosRight - bodyPosRight);

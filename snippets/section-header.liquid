@@ -30,6 +30,11 @@
 {% assign sectionTitleTag = sectionTitleTag | default: 'span' %}
 {% assign sectionSubtitleTag = sectionSubtitleTag | default: 'span' %}
 {% assign sectionOverlineTag = sectionOverlineTag | default: 'span' %}
+{% assign sectionHeaderContainer = sectionHeaderContainer | default: 'fixed' %}
+
+{%- if sectionHeaderContainer == 'nil' -%}
+    {%- assign sectionHeaderContainer = 'fixed' -%}
+{%- endif -%}
 
 {%- unless sectionAnimation == false -%}
     {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}

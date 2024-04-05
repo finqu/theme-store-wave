@@ -63,6 +63,12 @@ $container-max-widths: (
 	xxl: {{ settings.styleGridContainerMaxWidthXxl }}
 );
 
+$container-custom-max-widths: (
+	tiny: {{ settings.styleGridContainerMaxWidthTiny }},
+	compact: {{ settings.styleGridContainerMaxWidthCompact }},
+	fair: {{ settings.styleGridContainerMaxWidthFair }}
+);
+
 $container-padding-x: var(--style-grid-container-padding-x);
 
 $grid-columns: 12;
@@ -280,6 +286,10 @@ $link-hover-color: {{ settings.style_link_color }};
 	}
 
 	@each $key, $val in $container-max-widths {
+		--style-container-max-width-#{$key}: #{$val};
+	}
+
+	@each $key, $val in $container-custom-max-widths {
 		--style-container-max-width-#{$key}: #{$val};
 	}
 

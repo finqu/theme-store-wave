@@ -12,6 +12,12 @@
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 {%- endif -%}
 
+{%- if section.settings.textHorizontalAlign == 'nil' -%}
+    {%- assign textHorizontalAlign = settings.sectionTextAlign -%}
+{%- else -%}
+    {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
+{%- endif -%}
+
 {%- capture sectionContent -%}
 
     {%- if section.settings.collageLayout == 1 -%}
@@ -164,7 +170,7 @@
 
                     <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
 
-                        <div class="g-col-12 place-self-end-center" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}" data-yolo="{{ item.settings.btnLink.text }}">
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}" data-yolo="{{ item.settings.btnLink.text }}">
 
                             {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
 
@@ -183,278 +189,6 @@
         </div>
 
     {%- elsif section.settings.collageLayout == 2 -%}
-
-        {%- assign imgSizeSm = '400,229' -%}
-        {%- assign imgSizeMd = '560,319' -%}
-        {%- assign imgSizeLg = '650,370' -%}
-
-        {%- capture sectionStyle -%}
-            {% if section.settings.sectionPaddingBottom == 0 %}
-                #finqu-section-{{ section.id }} + .section-promotion-collage {
-                    --section-padding-top: var(--style-grid-gutter-width);
-                }
-            {%- endif -%}
-            {%- for item in section.settings.setting_blocks.items -%}
-                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
-                {%- if colorShemeBrightness > 190 -%}
-                    {%- assign accentTextColor = '#000' -%}
-                {%- else -%}
-                    {%- assign accentTextColor = '#fff' -%}
-                {%- endif -%}
-                #finqu-section-{{ section.id }} .section-content .grid > div:nth-child({{ forloop.index}}) {
-                    --style-heading-color: {{ item.settings.colorScheme }};
-                    --style-subheading-color: {{ item.settings.colorScheme }};
-                    --style-text-color: {{ item.settings.colorScheme }};
-                    --style-link-color: {{ item.settings.colorScheme }};
-                    --style-icon-color: {{ item.settings.colorScheme }};
-                    --style-btn-bg-color: {{ item.settings.colorScheme }};
-                    --style-btn-text-color: {{ accentTextColor }};
-                    --style-btn-border-color: {{ item.settings.colorScheme }};
-                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
-                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
-                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
-                    --style-accent-color: {{ item.settings.colorScheme }};
-                    --style-accent-text-color: {{ accentTextColor }};
-                    {%- if colorShemeBrightness > 190 -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
-                    {%- else -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
-                    {%- endif -%}
-                }
-            {%- endfor -%}
-        {%- endcapture -%}
-
-        <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
-        <div class="collage-grid grid">
-
-            {% for item in section.settings.setting_blocks.items %}
-
-                {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-
-                <div class="g-col-12 g-col-md-6 position-relative img-indicator-zoom text-inherit">
-
-                    {%- if item.settings.btnLink.url %}
-                        <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
-                    {%- endif %}
-
-                    <div class="aspect-ratio-16-9">
-
-                        <div class="aspect-ratio-container">
-
-                            {%- if item.settings.img -%}
-
-                                <picture>
-
-                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                                    <source data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeSm }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                                    <img
-                                        alt="{{ item.settings.img.alt }}"
-                                        data-src="{{ item.settings.img | thumb: imgSizeSm }}"
-                                        data-srcset="{{ item.settings.img | thumb: imgSizeSm }} 1x, {{ item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                        class="lazy aspect-ratio-item aspect-ratio-item-cover"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
-
-                                </picture>
-
-                            {%- elsif request.design_mode -%}
-
-                                {%- capture class -%}
-                                    aspect-ratio-item aspect-ratio-item-cover
-                                {%- endcapture -%}
-
-                                {% render 'placeholder-svg', type: 'image', class: class %}
-                    
-                            {%- endif -%}
-
-                        </div>
-
-                    </div>
-
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
-
-                        <div class="g-col-12 place-self-center">
-
-                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
-
-                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: section.settings.sectionContentTextAlign %}
-
-                            {%- if item.settings.btnLink.text -%}
-
-                                <div class="d-flex mt-4 justify-content-{{ section.settings.sectionContentTextAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
-
-                                </div>
-
-                            {%- endif -%}
-
-                        </div>
-                    
-                    </div>
-
-                    {%- if item.settings.btnLink.url %}
-                        </a>
-                    {%- endif %}
-                
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    {%- elsif section.settings.collageLayout == 3 -%}
-
-        {%- assign imgSizeSm = '400,229' -%}
-        {%- assign imgSizeMd = '370,280' -%}
-        {%- assign imgSizeLg = '430,325' -%}
-
-        {%- capture sectionStyle -%}
-            {% if section.settings.sectionPaddingBottom == 0 %}
-                #finqu-section-{{ section.id }} + .section-promotion-collage {
-                    --section-padding-top: var(--style-grid-gutter-width);
-                }
-            {%- endif -%}
-            {%- for item in section.settings.setting_blocks.items -%}
-                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
-                {%- if colorShemeBrightness > 190 -%}
-                    {%- assign accentTextColor = '#000' -%}
-                {%- else -%}
-                    {%- assign accentTextColor = '#fff' -%}
-                {%- endif -%}
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
-                    --style-heading-color: {{ item.settings.colorScheme }};
-                    --style-subheading-color: {{ item.settings.colorScheme }};
-                    --style-text-color: {{ item.settings.colorScheme }};
-                    --style-link-color: {{ item.settings.colorScheme }};
-                    --style-icon-color: {{ item.settings.colorScheme }};
-                    --style-btn-bg-color: {{ item.settings.colorScheme }};
-                    --style-btn-text-color: {{ accentTextColor }};
-                    --style-btn-border-color: {{ item.settings.colorScheme }};
-                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
-                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
-                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
-                    --style-accent-color: {{ item.settings.colorScheme }};
-                    --style-accent-text-color: {{ accentTextColor }};
-                    {%- if colorShemeBrightness > 190 -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
-                    {%- else -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
-                    {%- endif -%}
-                }
-            {%- endfor -%}
-        {%- endcapture -%}
-
-        <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
-        <div class="collage-grid grid">
-
-            {% for item in section.settings.setting_blocks.items %}
-
-                {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-
-                <div class="g-col-12 g-col-md-4 position-relative img-indicator-zoom text-inherit">
-
-                    {%- if item.settings.btnLink.url %}
-                        <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
-                    {%- endif %}
-
-                    <div class="aspect-ratio-16-9 aspect-ratio-md-4-3">
-
-                        <div class="aspect-ratio-container">
-
-                            {%- if item.settings.img -%}
-
-                                <picture>
-
-                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                                    <source data-srcset="
-                                        {{- item.settings.img | thumb: imgSizeSm }} 1x,
-                                        {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                                    <img
-                                        alt="{{ item.settings.img.alt }}"
-                                        data-src="{{ item.settings.img | thumb: imgSizeSm }}"
-                                        data-srcset="{{ item.settings.img | thumb: imgSizeSm }} 1x, {{ item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                        class="lazy aspect-ratio-item aspect-ratio-item-cover"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
-
-                                </picture>
-
-                            {%- elsif request.design_mode -%}
-
-                                {%- capture class -%}
-                                    aspect-ratio-item aspect-ratio-item-cover
-                                {%- endcapture -%}
-
-                                {% render 'placeholder-svg', type: 'image', class: class %}
-                    
-                            {%- endif -%}
-
-                        </div>
-
-                    </div>
-
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
-
-                        <div class="g-col-12">
-
-                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
-
-                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: section.settings.sectionContentTextAlign %}
-
-                            {%- if item.settings.btnLink.text -%}
-
-                                <div class="d-flex mt-4 justify-content-{{ section.settings.sectionContentTextAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
-
-                                </div>
-
-                            {%- endif -%}
-
-                        </div>
-                    
-                    </div>
-
-                    {%- if item.settings.btnLink.url %}
-                        </a>
-                    {%- endif %}
-                
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    {%- elsif section.settings.collageLayout == 4 -%}
 
         {%- capture sectionStyle -%}
             #finqu-section-{{ section.id }} .section-content .collage-grid {
@@ -606,15 +340,15 @@
 
                     <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
 
-                       <div class="g-col-12">
+                       <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
                             {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
-                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: section.settings.sectionContentTextAlign %}
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
 
                             {%- if item.settings.btnLink.text -%}
 
-                                <div class="d-flex mt-4 justify-content-{{ section.settings.sectionContentTextAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
                                     {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
 
@@ -636,11 +370,169 @@
 
         </div>
 
-    {%- elsif section.settings.collageLayout == 5 -%}
+    {%- elsif section.settings.collageLayout == 3 -%}
 
-        {%- assign imgSizeSm = '400,229' -%}
-        {%- assign imgSizeMd = '560,319' -%}
-        {%- assign imgSizeLg = '650,792' -%}
+        {%- case section.settings.imgAspectRatio -%}
+            {% when '16:9' %}
+                {%- assign imgSizeSm = '400,229' -%}
+                {%- assign imgSizeMd = '560,319' -%}
+                {%- assign imgSizeLg = '650,370' -%}
+            {% when '4:3' %}
+                {%- assign imgSizeSm = '420,317' -%}
+                {%- assign imgSizeMd = '560,422' -%}
+                {%- assign imgSizeLg = '650,490' -%}
+            {% when '1:1' %}
+                {%- assign imgSizeSm = '400,400' -%}
+                {%- assign imgSizeMd = '560,560' -%}
+                {%- assign imgSizeLg = '650,650' -%}
+        {%- endcase -%}
+
+        {%- capture sectionStyle -%}
+            {% if section.settings.sectionPaddingBottom == 0 %}
+                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                    --section-padding-top: var(--style-grid-gutter-width);
+                }
+            {%- endif -%}
+            {%- for item in section.settings.setting_blocks.items -%}
+                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
+                {%- if colorShemeBrightness > 190 -%}
+                    {%- assign accentTextColor = '#000' -%}
+                {%- else -%}
+                    {%- assign accentTextColor = '#fff' -%}
+                {%- endif -%}
+                #finqu-section-{{ section.id }} .section-content .grid > div:nth-child({{ forloop.index}}) {
+                    --style-heading-color: {{ item.settings.colorScheme }};
+                    --style-subheading-color: {{ item.settings.colorScheme }};
+                    --style-text-color: {{ item.settings.colorScheme }};
+                    --style-link-color: {{ item.settings.colorScheme }};
+                    --style-icon-color: {{ item.settings.colorScheme }};
+                    --style-btn-bg-color: {{ item.settings.colorScheme }};
+                    --style-btn-text-color: {{ accentTextColor }};
+                    --style-btn-border-color: {{ item.settings.colorScheme }};
+                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
+                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
+                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
+                    --style-accent-color: {{ item.settings.colorScheme }};
+                    --style-accent-text-color: {{ accentTextColor }};
+                    {%- if colorShemeBrightness > 190 -%}
+                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
+                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
+                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
+                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
+                    {%- else -%}
+                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
+                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
+                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
+                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
+                    {%- endif -%}
+                }
+            {%- endfor -%}
+        {%- endcapture -%}
+
+        <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+        <div class="collage-grid grid">
+
+            {% for item in section.settings.setting_blocks.items %}
+
+                {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
+
+                <div class="g-col-12 g-col-md-6 position-relative img-indicator-zoom text-inherit place-content-{{ section.settings.textVerticalAlign }}">
+
+                    {%- if item.settings.btnLink.url %}
+                        <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
+                    {%- endif %}
+
+                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- if item.settings.img -%}
+
+                                <picture>
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeSm }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        alt="{{ item.settings.img.alt }}"
+                                        data-src="{{ item.settings.img | thumb: imgSizeSm }}"
+                                        data-srcset="{{ item.settings.img | thumb: imgSizeSm }} 1x, {{ item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                        class="lazy aspect-ratio-item aspect-ratio-item-cover"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+
+                                </picture>
+
+                            {%- elsif request.design_mode -%}
+
+                                {%- capture class -%}
+                                    aspect-ratio-item aspect-ratio-item-cover
+                                {%- endcapture -%}
+
+                                {% render 'placeholder-svg', type: 'image', class: class %}
+                    
+                            {%- endif -%}
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
+
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
+
+                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
+
+                            {%- if item.settings.btnLink.text -%}
+
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+
+                                </div>
+
+                            {%- endif -%}
+
+                        </div>
+                    
+                    </div>
+
+                    {%- if item.settings.btnLink.url %}
+                        </a>
+                    {%- endif %}
+                
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {%- elsif section.settings.collageLayout == 4 -%}
+
+        {%- case section.settings.imgAspectRatio -%}
+            {% when '16:9' %}
+                {%- assign imgSizeSm = '420,240' -%}
+                {%- assign imgSizeMd = '370,212' -%}
+                {%- assign imgSizeLg = '430,246' -%}
+            {% when '4:3' %}
+                {%- assign imgSizeSm = '420,317' -%}
+                {%- assign imgSizeMd = '370,280' -%}
+                {%- assign imgSizeLg = '430,325' -%}
+            {% when '1:1' %}
+                {%- assign imgSizeSm = '420,420' -%}
+                {%- assign imgSizeMd = '370,370' -%}
+                {%- assign imgSizeLg = '430,430' -%}
+        {%- endcase -%}
 
         {%- capture sectionStyle -%}
             {% if section.settings.sectionPaddingBottom == 0 %}
@@ -692,13 +584,13 @@
 
                 {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
 
-                <div class="g-col-12 g-col-md-4 position-relative img-indicator-zoom text-inherit">
+                <div class="g-col-12 g-col-md-4 position-relative img-indicator-zoom text-inherit place-content-{{ section.settings.textVerticalAlign }}">
 
                     {%- if item.settings.btnLink.url %}
                         <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
                     {%- endif %}
 
-                    <div class="aspect-ratio-1-1">
+                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}">
 
                         <div class="aspect-ratio-container">
 
@@ -742,15 +634,15 @@
 
                     <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
 
-                        <div class="g-col-12 place-self-center">
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
                             {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
-                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: section.settings.sectionContentTextAlign %}
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
 
                             {%- if item.settings.btnLink.text -%}
 
-                                <div class="d-flex mt-4 justify-content-{{ section.settings.sectionContentTextAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
                                     {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
 
@@ -776,7 +668,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionContentTextAlign: textHorizontalAlign %}
 
 {% schema %}
 {
@@ -824,6 +716,30 @@
                             "en": "Subtitle",
                             "fi": "Alaotsikko"
                         }
+                    },
+                    {
+                        "id": "imgAspectRatio",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Image aspect ratio",
+                            "fi": "Kuvasuhde"
+                        },
+                        "default": "16:9",
+                        "options": [
+                            {
+                                "value": "16:9",
+                                "label": "16:9"
+                            },
+                            {
+                                "value": "4:3",
+                                "label": "4:3"
+                            },
+                            {
+                                "value": "1:1",
+                                "label": "1:1"
+                            }
+                        ],
+                        "conditions": ["collageLayout in 3,4"]
                     }
                 ]
             },
@@ -854,10 +770,7 @@
                                     "en": "Top title",
                                     "fi": "Yläotsikko"
                                 },
-                                "conditions": [
-                                    "sectionAdditionalTitles eq true",
-                                    "collageLayout in 2,3"
-                                ]
+                                "conditions": ["sectionAdditionalTitles eq true"]
                             },
                             {
                                 "id": "title",
@@ -865,8 +778,7 @@
                                 "label": {
                                     "en": "Main title",
                                     "fi": "Pääotsikko"
-                                },
-                                "conditions": ["collageLayout in 2,3,4,5"]
+                                }
                             },
                             {
                                 "id": "subtitle",
@@ -874,8 +786,7 @@
                                 "label": {
                                     "en": "Subtitle",
                                     "fi": "Alaotsikko"
-                                },
-                                "conditions": ["collageLayout in 2,3,4"]
+                                }
                             },
                             {
                                 "id": "btnLink",
@@ -951,11 +862,11 @@
                                     ]
                                 },
                                 {
-                                    "id": "sectionContentTextAlign",
+                                    "id": "textHorizontalAlign",
                                     "type": "radio-pill",
                                     "label": {
-                                        "en": "Content text align",
-                                        "fi": "Sisällön tekstin tasaus"
+                                        "en": "Text horizontal align",
+                                        "fi": "Tekstin tasaus vaakasuunnassa"
                                     },
                                     "default": "nil",
                                     "options": [
@@ -974,6 +885,29 @@
                                         {
                                             "value": "end",
                                             "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "textVerticalAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Text vertical align",
+                                        "fi": "Tekstin tasaus pystysuunnassa"
+                                    },
+                                    "default": "start",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-top #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-middle #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-bottom #}"
                                         }
                                     ]
                                 },
@@ -1302,6 +1236,8 @@
         {
             "settings": {
                 "collageLayout": 1,
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "end",
                 "setting_blocks": {
                     "items": [
                         {
@@ -1393,127 +1329,17 @@
                 }
             }
         },
-        {
+                {
             "settings": {
                 "collageLayout": 2,
-                "sectionContentTextAlign": "center",
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "end",
                 "setting_blocks": {
                     "items": [
                         {
                             "type": "image",
                             "settings": {
                                 "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 3,
-                "sectionContentTextAlign": "start",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
-                                "btnLink": {
-                                    "text": "Shoppaile nyt"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
-                                "btnLink": {
-                                    "text": "Shoppaile nyt"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
-                                "btnLink": {
-                                    "text": "Shoppaile nyt"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 4,
-                "sectionContentTextAlign": "start",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1531,8 +1357,6 @@
                             "type": "image",
                             "settings": {
                                 "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1550,8 +1374,6 @@
                             "type": "image",
                             "settings": {
                                 "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1569,8 +1391,6 @@
                             "type": "image",
                             "settings": {
                                 "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1588,8 +1408,6 @@
                             "type": "image",
                             "settings": {
                                 "colorScheme": "#ffffff",
-                                "title": "Mainoksen otsikko",
-                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1609,9 +1427,10 @@
         },
         {
             "settings": {
-                "collageLayout": 5,
-                "sectionContentTextAlign": "center",
-                "btnStyle": "link",
+                "collageLayout": 3,
+                "imgAspectRatio": "16:9",
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "center",
                 "setting_blocks": {
                     "items": [
                         {
@@ -1619,6 +1438,51 @@
                             "settings": {
                                 "colorScheme": "#ffffff",
                                 "title": "Mainoksen otsikko",
+                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorScheme": "#ffffff",
+                                "title": "Mainoksen otsikko",
+                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "settings": {
+                "collageLayout": 4,
+                "imgAspectRatio": "1:1",
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "center",
+                "setting_blocks": {
+                    "items": [
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorScheme": "#ffffff",
+                                "title": "Mainoksen otsikko",
+                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1637,6 +1501,7 @@
                             "settings": {
                                 "colorScheme": "#ffffff",
                                 "title": "Mainoksen otsikko",
+                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1655,7 +1520,8 @@
                             "settings": {
                                 "colorScheme": "#ffffff",
                                 "title": "Mainoksen otsikko",
-                                "link": {
+                                "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
+                                "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
                                 "img": {

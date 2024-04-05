@@ -29,6 +29,10 @@
 {%- assign sectionContentContainer = sectionContentContainer | default: 'fixed' -%}
 {%- assign sectionTabs = sectionTabs | strip -%}
 
+{%- if sectionContentContainer == 'nil' -%}
+    {%- assign sectionContentContainer = 'fixed' -%}
+{%- endif -%}
+
 {%- unless sectionAnimation == false -%}
     {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}
 {%- endunless -%}

@@ -51,11 +51,11 @@
 
                         <div class="d-flex position-absolute top-0 start-0 w-100 h-100">
 
-                            <div class="container-fluid py-6 align-self-{{ section.settings.textVerticalAlign }}">
+                            <div class="container-fluid py-c align-self-{{ section.settings.textVerticalAlign }}">
 
                                 <div class="text-{{ textHorizontalAlign }}{% if section.settings.carouselEffect == 'slide' %} animate__animated animate__fadeInUp animate__delay-2s animate__slow{% endif %}">
 
-                                    {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: item.settings.overline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: false %}
+                                    {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: item.settings.overline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: fals, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScalee %}
 
                                     {% if item.settings.btnLink.text %}
 
@@ -124,6 +124,18 @@
     "tag": "section",
     "class": "section section-hero-carousel",
     "category": "theme-hero",
+    "keywords": {
+        "en": [
+            "Carousel",
+            "Slider",
+            "Lander"
+        ],
+        "fi": [
+            "Karuselli",
+            "Slideri",
+            "Laskeutumissivu"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -301,6 +313,18 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "id": "sectionHeaderFontSizeScale",
+                                    "label": {
+                                        "en": "Headings scaling",
+                                        "fi": "Otsikoiden skaalaus"
+                                    },
+                                    "type": "range",
+                                    "min": 1,
+                                    "max": 2,
+                                    "step": 0.1,
+                                    "default": "1"
                                 },
                                 {
                                     "id": "imgDimming",
@@ -686,7 +710,7 @@
                             "type": "image",
                             "settings": {
                                 "title": "Uusi mahtava Hero-otsikko!",
-                                "subtitle": "Kerro asiakkaillesi tästä Hero-osiosta.",
+                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -704,7 +728,7 @@
                             "type": "image",
                             "settings": {
                                 "title": "Uusi mahtava Hero-otsikko!",
-                                "subtitle": "Kerro asiakkaillesi tästä Hero-osiosta.",
+                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },

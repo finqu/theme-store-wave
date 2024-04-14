@@ -26,44 +26,6 @@
 
             </div>
 
-            <div class="col text-end">
-
-                <div class="dropdown">
-
-                    <button type="button" class="btn btn-text text-muted" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-
-                        <span class="me-1">
-
-                            {%- for option in sortOptions -%}
-
-                                {%- if option == activeSortOption -%}
-                                    {{- option | prepend: 'filters.sort-by.' | t -}}
-                                {%- endif -%}
-
-                            {%- endfor -%}
-
-                        </span>
-
-                        {%- render 'icon', icon: 'angle-down' -%}
-
-                    </button>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-
-                        {% for option in sortOptions %}
-
-                            <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
-                                {{- option | prepend: 'filters.sort-by.' | t -}}
-                            </button>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
 	    <div class="row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ settings.productPerRow }}">

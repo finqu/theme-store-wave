@@ -4,7 +4,15 @@ Handlebars.registerHelper('t', function(key, options) {
     return new Handlebars.SafeString(theme.utils.t(key, options.hash));
 });
 
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+Handlebars.registerHelper('ifCond', function (v1 = null, operator, v2 = null, options) {
+
+    if (typeof v1 === 'undefined') {
+        v1 = false;
+    }
+
+    if (typeof v2 === 'undefined') {
+        v2 = false;
+    }
 
     switch (operator) {
         case '==':
@@ -91,10 +99,6 @@ Handlebars.registerHelper('assign', function (key, val, options) {
     }
 
     options.data.root[key] = val;
-});
-
-Handlebars.registerHelper('add', function(firstValue, secondValue) {
-    return new Handlebars.SafeString(firstValue+secondValue);
 });
 
 Handlebars.registerHelper('add', function(firstValue, secondValue) {

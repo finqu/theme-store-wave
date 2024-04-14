@@ -30,6 +30,13 @@
 
 		&.section-highlight-items {
 
+			&.section-has-color-scheme:not(:has(.section-highlight-item))  {
+
+				.section-bg {
+					background-color: var(--style-bg-color);
+				}
+			}
+
 			.section-bg {
 				background-color: var(--style-secondary-bg-color);
 			}
@@ -39,8 +46,8 @@
 				padding: var(--section-highlight-item-padding);
 				border-radius: var(--style-border-radius);
 				@if $section-highlight-item-border == 'true' {
-                    border: 1px solid var(--style-border-color);
-                }
+					border: 1px solid var(--style-border-color);
+				}
 
 				&.section-highlight-item-padding-auto {
 					padding: inherit;
@@ -177,7 +184,7 @@
 			.overline-container {
 
 				.overline {
-					color: var(--style-subheading-color);
+					color: var(--style-overline-color);
 				}
 			}
 		}
@@ -187,6 +194,7 @@
 		display: flex;
 		text-align: var(--section-header-text-align, var(--section-text-align, inherit));
 		color: var(--style-text-color);
+		width: 100%;
 		@include rfs(spacer(1), --style-spacer-1);
 		@include rfs(spacer(3), --style-spacer-3);
 		@include rfs(spacer(6), --style-spacer-6);
@@ -382,7 +390,7 @@
 			    hyphens: auto;
 				margin-bottom: 0;
 				@if $subheadings-letter-spacing != '0' {
-					text-transform: $subheadings-text-transform;
+					letter-spacing: $subheadings-letter-spacing;
 				}
 			    @if $subheadings-text-transform != 'none' {
 					text-transform: $subheadings-text-transform;
@@ -409,20 +417,20 @@
 			}
 
 			.overline {
-				@include font-size($h4-font-size);
-				font-family: $subheadings-font-family;
-				font-weight: $subheadings-font-weight;
-				font-style: $subheadings-font-style;
+				@include font-size($h5-font-size);
+				font-family: $overlines-font-family;
+				font-weight: $overlines-font-weight;
+				font-style: $overlines-font-style;
 				line-height: $headings-line-height;
 				overflow-wrap: break-word;
 			    word-wrap: break-word;
 			    hyphens: auto;
 				margin-bottom: 0;
-				@if $subheadings-letter-spacing != '0' {
-					text-transform: $subheadings-text-transform;
+				@if $overlines-letter-spacing != '0' {
+					letter-spacing: $overlines-letter-spacing;
 				}
-			    @if $subheadings-text-transform != 'none' {
-					text-transform: $subheadings-text-transform;
+			    @if $overlines-text-transform != 'none' {
+					text-transform: $overlines-text-transform;
 				}
 			}
 		}
@@ -681,5 +689,78 @@
 	    	z-index: -1;
 			background-position: var(--section-bg-img-pos, 50% 50%);
 		}
+	}
+}
+
+@supports (font-size: 1cqi) {
+
+	.section {
+
+		.section-header {
+			--font-size-min: #{rfs-fluid-value($font-size-base)};
+			--font-size-preferred: 4.3cqi;
+			--font-size-max: #{rfs-value($h1-font-size)};
+			--font-size-scale: var(--section-header-font-size-scale, 1);
+
+			@include media-breakpoint-up(lg) {
+				--font-size-preferred: 10cqi;
+			}
+
+			.title-container {
+				container-type: inline-size;
+
+				.title {
+					font-size: clamp(var(--font-size-min), var(--font-size-preferred), calc(var(--font-size-max) * var(--font-size-scale)));
+
+					&.h1 {
+						--font-size-max: #{rfs-value($h1-font-size)};
+					}
+	
+					&.h2 {
+						--font-size-max: #{rfs-value($h2-font-size)};
+					}
+	
+					&.h3 {
+						--font-size-max: #{rfs-value($h3-font-size)};
+					}
+	
+					&.h4 {
+						--font-size-max: #{rfs-value($h4-font-size)};
+					}
+	
+					&.h5 {
+						--font-size-max: #{rfs-value($h5-font-size)};
+					}
+	
+					&.h6 {
+						--font-size-max: #{rfs-value($h6-font-size)};
+					}
+	
+					@each $display, $font-size in $display-font-sizes {
+						&.display-#{$display} {
+							--font-size-max: #{rfs-value($font-size)};
+						}
+					}
+				}
+			}
+
+			.subtitle-container {
+				container-type: inline-size;
+
+				.subtitle {
+					--font-size-max: #{rfs-value($h4-font-size)};
+					font-size: clamp(var(--font-size-min), var(--font-size-preferred), calc(var(--font-size-max) * var(--font-size-scale)));
+				}
+			}
+
+			.overline-container {
+				container-type: inline-size;
+
+				.overline {
+					--font-size-max: #{rfs-value($h5-font-size)};
+					font-size: clamp(var(--font-size-min), var(--font-size-preferred), calc(var(--font-size-max) * var(--font-size-scale)));
+				}
+			}
+		} 
 	}
 }

@@ -20,7 +20,8 @@
 {%- capture variantData -%}
     [{%- for variant in product.variants -%}
         {
-            "url": "{{ variant.url }}",
+            "title": {{- variant.title | json -}},
+            "url": "{{- variant.url -}}",
             "hasImage": {{- variant.image | yepnope: true, false | json -}},
             "options": [
                 {%- for option in variant.options -%}
@@ -50,6 +51,10 @@
             <select class="product-option-value form-select" name="{{ option.handle }}">
 
                 {% for value in option.values %}
+
+                    {%- unless value.variant -%}
+                        {%- continue -%}
+                    {%- endunless -%}
 
                     {% unless product.default_or_selected_variant.notifications_supported %}
 
@@ -117,6 +122,10 @@
                 <div class="form-check-imgs-container">
 
                     {% for value in option.values %}
+
+                        {%- unless value.variant -%}
+                            {%- continue -%}
+                        {%- endunless -%}
 
                         {%- assign optionDisabled = true -%}
 
@@ -206,6 +215,10 @@
                 <div class="{% if option.taxonomy_attribute.type == 'color' %}form-check-color-swatches-container{% else %}form-check-badges-container{% endif %}">
 
                     {% for value in option.values %}
+
+                        {%- unless value.variant -%}
+                            {%- continue -%}
+                        {%- endunless -%}
 
                         {%- assign optionDisabled = true -%}
 

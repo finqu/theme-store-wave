@@ -117,6 +117,19 @@ $utilities: map-merge(
                 "stretch-center": stretch center
             )
         ),
+        "justify-content": (
+            responsive: true,
+            property: justify-content,
+            values: (
+                start: flex-start,
+                end: flex-end,
+                center: center,
+                between: space-between,
+                around: space-around,
+                evenly: space-evenly,
+                auto: var(--section-content-text-align, var(--section-text-align))
+            )
+        ),
         "cursor": (
             property: cursor,
             class: cursor,
@@ -251,6 +264,115 @@ $utilities: map-merge(
                 sm: $line-height-sm,
                 base: $line-height-base,
                 lg: $line-height-lg
+            )
+        ),
+        "rounded": (
+            property: border-radius,
+            class: rounded,
+            values: (
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill),
+                btn: var(--style-btn-border-radius),
+                input: var(--style-input-border-radius),
+                component: var(--style-component-border-radius),
+                image: var(--style-image-border-radius),
+                product-image: var(--style-product-image-border-radius)
+            )
+        ),
+        "rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: rounded-top,
+            values: (
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill),
+                btn: var(--style-btn-border-radius),
+                input: var(--style-input-border-radius),
+                component: var(--style-component-border-radius),
+                image: var(--style-image-border-radius),
+                product-image: var(--style-product-image-border-radius)
+            )
+        ),
+        "rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: rounded-end,
+            values: (
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill),
+                btn: var(--style-btn-border-radius),
+                input: var(--style-input-border-radius),
+                component: var(--style-component-border-radius),
+                image: var(--style-image-border-radius),
+                product-image: var(--style-product-image-border-radius)
+            )
+        ),
+        "rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: rounded-bottom,
+            values: (
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill),
+                btn: var(--style-btn-border-radius),
+                input: var(--style-input-border-radius),
+                component: var(--style-component-border-radius),
+                image: var(--style-image-border-radius),
+                product-image: var(--style-product-image-border-radius)
+            )
+        ),
+        "rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: rounded-start,
+            values: (
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill),
+                btn: var(--style-btn-border-radius),
+                input: var(--style-input-border-radius),
+                component: var(--style-component-border-radius),
+                image: var(--style-image-border-radius),
+                product-image: var(--style-product-image-border-radius)
+            )
+        ),
+        "container-type": (
+            property: container-type,
+            class: ct,
+            values: (
+                normal: normal,
+                size: size,
+                inline-size: inline-size
             )
         )
     )

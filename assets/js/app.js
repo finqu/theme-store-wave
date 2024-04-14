@@ -111,7 +111,7 @@ export default class App {
 			}
 		});
 
-		bodyObserver.observe(document.querySelector('body'), {
+		bodyObserver.observe(document.body, {
 			childList: true,
 			subtree: true
 		});

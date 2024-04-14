@@ -4,15 +4,16 @@
 	Accepts:
 	- sectionContent: {String}
 	- sectionContentWidth: {String}
-	- sectionContentAlign: {String}
+	- sectionContentAlign: {String} 'nil', 'start', 'center', 'end'
     - sectionContentClass: {String}
-    - sectionContentContainer: {String}
+    - sectionContentContainer: {String}  'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionAnimation: {String}
     - sectionAnimationRepeat: {Boolean}
 	- sectionHandle: {String}
     - sectionTabs: {String}
     - sectionTabsClass: {String}
     - sectionAction: {String}
+    - sectionHeaderTextAlign: {String} 'nil', 'start', 'center', 'end'
 
 	Usage:
 	Render this snippet inside of element with a "section" class.
@@ -31,6 +32,22 @@
 
 {%- if sectionContentContainer == 'nil' -%}
     {%- assign sectionContentContainer = 'fixed' -%}
+{%- endif -%}
+
+{%- if sectionContentTextAlign == nil and section -%}
+
+    {%- if section.settings.sectionContentTextAlign and section.settings.sectionContentTextAlign != 'nil' -%}
+        {%- assign sectionContentTextAlign = section.settings.sectionContentTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionHeaderTextAlign == nil and section -%}
+    
+    {%- if section.settings.sectionHeaderTextAlign and section.settings.sectionHeaderTextAlign != 'nil' -%}
+        {%- assign sectionHeaderTextAlign = section.settings.sectionHeaderTextAlign -%}
+    {%- endif -%}
+
 {%- endif -%}
 
 {%- unless sectionAnimation == false -%}
@@ -111,16 +128,7 @@
 
         {%- else -%}
 
-            {%- case sectionContentAlign -%}
-                {% when 'start' %}
-                    {%- assign contentAlign = 'justify-content-start' -%}
-                {% when 'center' %}
-                    {%- assign contentAlign = 'justify-content-center' -%}
-                {% when 'end' %}
-                    {%- assign contentAlign = 'justify-content-end' -%}
-            {%- endcase -%}
-
-            <div class="row g-0 {{ contentAlign }}">
+            <div class="row g-0 justify-content-{{ sectionContentAlign }}">
 
                 <div class="col-12 col-md-{{ sectionContentWidth }}"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
 

@@ -260,6 +260,8 @@ export default function() {
         const siteHeaderSearchToggleEls = containerEl.querySelectorAll('.site-search-toggle');
         const siteHeaderSearchContainerEl = containerEl.querySelector('.site-search-container');
         const siteHeaderSearchInputEl = siteHeaderSearchContainerEl.querySelector('[name="q"]');
+        
+        let searchRequestController = null;
 
         const search = (siteSearchEl, siteSearchResultsEl, q) => {
 
@@ -278,7 +280,13 @@ export default function() {
 
             if (theme.store.accessibility.showSearchAutocomplete) {
 
-                fetch('/api/search/suggest?q='+q)
+                if (searchRequestController !== null) {
+                    searchRequestController.abort();
+                }
+
+                searchRequestController = new AbortController();
+
+                fetch('/api/search/suggest?q='+q, { signal: searchRequestController.signal })
                     .then(res => res.json())
                     .then(data => {
 
@@ -302,6 +310,11 @@ export default function() {
                                 items: data
                             }
                         }))
+
+                        searchRequestController = null;
+                    })
+                    .catch(() => {
+                        searchRequestController = null;
                     });
                 
             } else {
@@ -356,7 +369,7 @@ export default function() {
 
             siteSearchQueryEl.addEventListener('input', theme.utils.debounce(e => {
                 search(el, siteSearchResultsEl, e.target.value);
-            }, 300, false));
+            }, 300));
 
             if (theme.store.accessibility.showSearchAutocomplete) {
 

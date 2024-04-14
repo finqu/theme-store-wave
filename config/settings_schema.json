@@ -506,6 +506,14 @@
                                     }
                                 },
                                 {
+                                    "id": "style_overline_color",
+                                    "type": "color",
+                                    "label": {
+                                        "en": "Overline color",
+                                        "fi": "Yläotsikon väri"
+                                    }
+                                },
+                                {
                                     "id": "style_text_color",
                                     "type": "color",
                                     "label": {
@@ -810,6 +818,14 @@
                                                 "fi": "Alaotsikon väri"
                                             },
                                             "nullable": true
+                                        },
+                                        {
+                                            "id": "overline_color",
+                                            "type": "color",
+                                            "label": {
+                                                "en": "Overline color",
+                                                "fi": "Yläotsikon väri"
+                                            }
                                         },
                                         {
                                             "id": "text_color",
@@ -1155,7 +1171,8 @@
                                         "icon_color": "#1a1a1a",
                                         "heading_color": "#1a1a1a",
                                         "subheading_color": "#1a1a1a",
-                                        "btn_bg_color": "#1a1a1a",
+                                        "overline_color": "#1a1a1a",
+                                        "btn_bg_color": "#000000",
                                         "btn_text_color": "#ffffff",
                                         "table_bg_color": "#ffffff",
                                         "table_text_color": "#333333",
@@ -1191,8 +1208,9 @@
                                         "icon_color": "#000000",
                                         "heading_color": "#000000",
                                         "subheading_color": "#000000",
-                                        "btn_bg_color": "",
-                                        "btn_text_color": "",
+                                        "overline_color": "#000000",
+                                        "btn_bg_color": "#000000",
+                                        "btn_text_color": "#ffffff",
                                         "table_bg_color": "#ffffff",
                                         "table_text_color": "#000000",
                                         "table_border_color": "#c5c5c5",
@@ -1227,8 +1245,9 @@
                                         "icon_color": "#000000",
                                         "heading_color": "#000000",
                                         "subheading_color": "#000000",
-                                        "btn_bg_color": "",
-                                        "btn_text_color": "",
+                                        "overline_color": "#000000",
+                                        "btn_bg_color": "#ffffff",
+                                        "btn_text_color": "#000000",
                                         "table_bg_color": "#ffffff",
                                         "table_text_color": "#000000",
                                         "table_border_color": "#cacaca",
@@ -1263,8 +1282,9 @@
                                         "icon_color": "#ffffff",
                                         "heading_color": "#ffffff",
                                         "subheading_color": "#ffffff",
-                                        "btn_bg_color": "",
-                                        "btn_text_color": "",
+                                        "overline_color": "#ffffff",
+                                        "btn_bg_color": "#ffffff",
+                                        "btn_text_color": "#000000",
                                         "table_bg_color": "#ffffff",
                                         "table_text_color": "#333333",
                                         "table_border_color": "#292929",
@@ -1299,8 +1319,9 @@
                                         "icon_color": "#ffffff",
                                         "heading_color": "#ffffff",
                                         "subheading_color": "#ffffff",
-                                        "btn_bg_color": "",
-                                        "btn_text_color": "",
+                                        "overline_color": "#ffffff",
+                                        "btn_bg_color": "#ffffff",
+                                        "btn_text_color": "#000000",
                                         "table_bg_color": "#ffffff",
                                         "table_text_color": "#000000",
                                         "table_border_color": "#000000",
@@ -1381,7 +1402,7 @@
                             "type": "radio-pill",
                             "label": {
                                 "en": "Line height",
-                                "fi": "Rivinkorkeus"
+                                "fi": "Rivin korkeus"
                             },
                             "default": "1.5",
                             "options": [
@@ -1835,6 +1856,166 @@
                         },
                         {
                             "id": "subheadingTextTransform",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font design",
+                                "fi": "Fontin muotoilu"
+                            },
+                            "default": "none",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "uppercase",
+                                    "label": {
+                                        "en": "Uppercase",
+                                        "fi": "Isot kirjaimet"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "setting-group",
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Overline",
+                                "fi": "Yläotsikko"
+                            }
+                        },
+                        {
+                            "id": "overlineFont",
+                            "type": "font-picker",
+                            "label": {
+                                "en": "Font",
+                                "fi": "Fontti"
+                            },
+                            "families": [
+                                "Open Sans",
+                                "Lato",
+                                "Roboto",
+                                "Barlow",
+                                "Inter",
+                                "Assistant",
+                                "Amiri",
+                                "Jost",
+                                "Cormorant Garamond",
+                                "Roboto Condensed",
+                                "Roboto Slab",
+                                "Raleway",
+                                "Ubuntu",
+                                "Nunito",
+                                "Rubik",
+                                "Josefin Sans",
+                                "Lora",
+                                "Dosis",
+                                "Libre Baskerville",
+                                "Yanone Kaffeesatz",
+                                "Balsamiq Sans",
+                                "KoHo",
+                                "Averia Libre",
+                                "Sansita",
+                                "Tourney",
+                                "Grandstander",
+                                "Prompt",
+                                "Montserrat",
+                                "Poppins",
+                                "Source Sans Pro",
+                                "Noto Sans",
+                                "Merriweather",
+                                "Playfair Display"
+                            ],
+                            "variants": [
+                                "Regular",
+                                "italic",
+                                "700"
+                            ]
+                        },
+                        {
+                            "id": "overlineLetterSpacing",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font letter-spacing",
+                                "fi": "Fontin kirjainväli"
+                            },
+                            "default": "1px",
+                            "options": [
+                                {
+                                    "value": "0",
+                                    "label": "Off"
+                                },
+                                {
+                                    "value": "1px",
+                                    "label": "S"
+                                },
+                                {
+                                    "value": "3px",
+                                    "label": "M"
+                                },
+                                {
+                                    "value": "5px",
+                                    "label": "L"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "overlineFontWeight",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font weight",
+                                "fi": "Fontin paksuus"
+                            },
+                            "default": "400",
+                            "options": [
+                                {
+                                    "value": "400",
+                                    "label": "400"
+                                },
+                                {
+                                    "value": "500",
+                                    "label": "500"
+                                },
+                                {
+                                    "value": "700",
+                                    "label": "700"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "overlineFontStyle",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Font style",
+                                "fi": "Fontin tyyli"
+                            },
+                            "default": "normal",
+                            "options": [
+                                {
+                                    "value": "normal",
+                                    "label": {
+                                        "en": "Normal",
+                                        "fi": "Normaali"
+                                    }
+                                },
+                                {
+                                    "value": "italic",
+                                    "label": {
+                                        "en": "Italic",
+                                        "fi": "Kursivoitu"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "overlineTextTransform",
                             "type": "radio-pill",
                             "label": {
                                 "en": "Font design",
@@ -3106,8 +3287,8 @@
                         "fi": "Sosiaalinen media"
                     },
                     "subheading": {
-                        "en": "Control which social media channels are displayed in the online store.",
-                        "fi": "Hallita mitkä sosiaalisen median kanavat näytetään verkkokaupassa."
+                        "en": "Manage the social media channels displayed in the online store.",
+                        "fi": "Hallitse verkkokaupassa näkyviä sosiaalisen median kanavia."
                     }
                 },
                 {

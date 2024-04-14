@@ -1875,584 +1875,584 @@
 </div>
 
 {% schema %}
-    {
-        "name": {
-            "en": "Header",
-            "fi": "Ylätunniste"
-        },
-        "tag": "section",
-        "is_creatable": false,
-        "is_removable": false,
-        "class": "section section-site-header",
-        "settings": {
-            "list_type": "tabs",
-            "groups": [
-                {
-                    "title": {
-                        "en": "Content",
-                        "fi": "Sisältö"
-                    },
-                    "settings": [
-                        {
-                            "id": "gridContainer",
-                            "type": "hidden"
-                        },
-                        {
-                            "id": "headerItemsPaddingY",
-                            "type": "hidden"
-                        },
-                        {
-                            "id": "logoImg",
-                            "type": "image-picker",
-                            "label": {
-                                "en": "Logo",
-                                "fi": "Logo"
-                            }
-                        },
-                        {
-                            "id": "logoSize",
-                            "label": {
-                                "en": "Logo size",
-                                "fi": "Logon koko"
-                            },
-                            "type": "range",
-                            "min": 80,
-                            "max": 200,
-                            "step": 10,
-                            "default": 100,
-                            "unit": "px",
-                            "conditions": ["!logoImg eq false"]
-                        },
-                        {
-                            "id": "logoPosition",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Logo position",
-                                "fi": "Logon sijainti"
-                            },
-                            "default": "center",
-                            "options": [
-                                {
-                                    "value": "start",
-                                    "label": {
-                                        "en": "Left",
-                                        "fi": "Vasemmalla"
-                                    }
-                                },
-                                {
-                                    "value": "center",
-                                    "label": {
-                                        "en": "Center",
-                                        "fi": "Keskellä"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "id": "mobileLogoPosition",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Logo position on mobile device",
-                                "fi": "Logon sijainti mobiililaitteella"
-                            },
-                            "default": "center",
-                            "options": [
-                                {
-                                    "value": "start",
-                                    "label": {
-                                        "en": "Left",
-                                        "fi": "Vasemmalla"
-                                    }
-                                },
-                                {
-                                    "value": "center",
-                                    "label": {
-                                        "en": "Center",
-                                        "fi": "Keskellä"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+{
+    "name": {
+        "en": "Header",
+        "fi": "Ylätunniste"
+    },
+    "tag": "section",
+    "is_creatable": false,
+    "is_removable": false,
+    "class": "section section-site-header",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
                 },
-                {
-                    "title": {
-                        "en": "Navigation",
-                        "fi": "Navigointi"
+                "settings": [
+                    {
+                        "id": "gridContainer",
+                        "type": "hidden"
                     },
-                    "settings": [
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Navigation",
-                                "fi": "Navigaatio"
-                            }
-                        },
-                        {
-                            "id": "menu",
-                            "type": "menu",
-                            "label": {
-                                "en": "Main menu",
-                                "fi": "Päävalikko"
-                            },
-                            "default": "main"
-                        },
-                        {
-                            "id": "menuItemsAlign",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Menu position",
-                                "fi": "Valikon sijainti"
-                            },
-                            "default": "start",
-                            "options": [
-                                {
-                                    "value": "start",
-                                    "label": {
-                                        "en": "Left",
-                                        "fi": "Vasemmalla"
-                                    }
-                                },
-                                {
-                                    "value": "center",
-                                    "label": {
-                                        "en": "Center",
-                                        "fi": "Keskellä"
-                                    }
-                                }
-                            ],
-                            "conditions": ["logoPosition eq start"]
-                        },
-                        {
-                            "type": "title",
-                            "label": {
-                                "en": "Mobile navigation",
-                                "fi": "Mobiilinavigaatio"
-                            }
-                        },
-                        {
-                            "id": "mobileMenu",
-                            "type": "menu",
-                            "label": {
-                                "en": "Main menu",
-                                "fi": "Päävalikko"
-                            },
-                            "default": "main"
-                        },
-                        {
-                            "id": "mobileMenuSecondaryTitle",
-                            "type": "text",
-                            "label": {
-                                "en": "Secondary menu title",
-                                "fi": "Toisisijaisn valikon otsikko"
-                            },
-                            "conditions": ["!mobileMenuSecondary eq blank"]
-                        },
-                        {
-                            "id": "mobileMenuSecondary",
-                            "type": "menu",
-                            "label": {
-                                "en": "Secondary menu",
-                                "fi": "Toisisijainen valikko"
-                            },
-                            "default": "",
-                            "allow_empty": true
-                        },
-                        {
-                            "id": "mobileNavigationSimple",
-                            "type": "checkbox",
-                            "label": {
-                                "en": "Show mobile navigation in a simple design",
-                                "fi": "Näytä mobiilinavigaatio yksinkertaisena"
-                            },
-                            "default": false
-                        },
-                        {
-                            "id": "mobileShowSocialIconsInNavigation",
-                            "type": "checkbox",
-                            "label": {
-                                "en": "Show social media icons in mobile navigation",
-                                "fi": "Näytä mobiilinavigaatiossa sosiaalisen median kuvakkeet"
-                            },
-                            "default": true
-                        },
-                        {
-                            "id": "mobileShowSearchInNavigation",
-                            "type": "checkbox",
-                            "label": {
-                                "en": "Show search box in mobile navigation",
-                                "fi": "Näytä mobiilinavigaatiossa hakukenttä"
-                            },
-                            "default": true
+                    {
+                        "id": "headerItemsPaddingY",
+                        "type": "hidden"
+                    },
+                    {
+                        "id": "logoImg",
+                        "type": "image-picker",
+                        "label": {
+                            "en": "Logo",
+                            "fi": "Logo"
                         }
-                    ]
+                    },
+                    {
+                        "id": "logoSize",
+                        "label": {
+                            "en": "Logo size",
+                            "fi": "Logon koko"
+                        },
+                        "type": "range",
+                        "min": 80,
+                        "max": 200,
+                        "step": 10,
+                        "default": 100,
+                        "unit": "px",
+                        "conditions": ["!logoImg eq false"]
+                    },
+                    {
+                        "id": "logoPosition",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Logo position",
+                            "fi": "Logon sijainti"
+                        },
+                        "default": "center",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": {
+                                    "en": "Left",
+                                    "fi": "Vasemmalla"
+                                }
+                            },
+                            {
+                                "value": "center",
+                                "label": {
+                                    "en": "Center",
+                                    "fi": "Keskellä"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "mobileLogoPosition",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Logo position on mobile device",
+                            "fi": "Logon sijainti mobiililaitteella"
+                        },
+                        "default": "center",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": {
+                                    "en": "Left",
+                                    "fi": "Vasemmalla"
+                                }
+                            },
+                            {
+                                "value": "center",
+                                "label": {
+                                    "en": "Center",
+                                    "fi": "Keskellä"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Navigation",
+                    "fi": "Navigointi"
                 },
-                {
-                    "title": {
-                        "en": "Megamenu",
-                        "fi": "Jättivalikko"
-                    },
-                    "id": "megamenus",
-                    "call_to_action": {
-                        "en": "Add a megamenu",
-                        "fi": "Lisää jättivalikko"
-                    },
-                    "is_sortable": true,
-                    "setting_blocks": [
-                        {
-                            "type": "menu",
-                            "title": {
-                                "en": "Megamenu",
-                                "fi": "Jättivalikko"
-                            },
-                            "settings": [
-                                {
-                                    "id": "index",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Mainmenu's link index for megamenu",
-                                        "fi": "Päävalikon linkin numero jättivalikolle"
-                                    },
-                                    "default": "",
-                                    "options": [
-                                        {
-                                            "value": "1",
-                                            "label": "1"
-                                        },
-                                        {
-                                            "value": "2",
-                                            "label": "2"
-                                        },
-                                        {
-                                            "value": "3",
-                                            "label": "3"
-                                        },
-                                        {
-                                            "value": "4",
-                                            "label": "4"
-                                        },
-                                        {
-                                            "value": "5",
-                                            "label": "5"
-                                        },
-                                        {
-                                            "value": "6",
-                                            "label": "6"
-                                        },
-                                        {
-                                            "value": "7",
-                                            "label": "7"
-                                        },
-                                        {
-                                            "value": "8",
-                                            "label": "8"
-                                        },
-                                        {
-                                            "value": "9",
-                                            "label": "9"
-                                        },
-                                        {
-                                            "value": "10",
-                                            "label": "10"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "colPerRow",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Columns per row",
-                                        "fi": "Sarakkeita per rivi"
-                                    },
-                                    "default": "5",
-                                    "options": [
-                                        {
-                                            "value": "2",
-                                            "label": "2"
-                                        },
-                                        {
-                                            "value": "3",
-                                            "label": "3"
-                                        },
-                                        {
-                                            "value": "4",
-                                            "label": "4"
-                                        },
-                                        {
-                                            "value": "5",
-                                            "label": "5"
-                                        }
-                                    ],
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "menu",
-                                    "type": "menu",
-                                    "label": {
-                                        "en": "Menu",
-                                        "fi": "Valikko"
-                                    },
-                                    "default": "",
-                                    "allow_empty": true,
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Promotion 1",
-                                        "fi": "Mainos 1"
-                                    },
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion1Img",
-                                    "type": "image-picker",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    },
-                                    "adjustments": true,
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion1ImgAspectRatio",
-                                    "type": "select",
-                                    "label": {
-                                        "en": "Aspect ratio",
-                                        "fi": "Kuvasuhde"
-                                    },
-                                    "default": "4:3",
-                                    "options": [
-                                        {
-                                            "value": "16:9",
-                                            "label": "16:9"
-                                        },
-                                        {
-                                            "value": "9:13",
-                                            "label": "9:13"
-                                        },
-                                        {
-                                            "value": "4:3",
-                                            "label": "4:3"
-                                        },
-                                        {
-                                            "value": "1:1",
-                                            "label": "1:1"
-                                        }
-                                    ],
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion1Img eq false"
-                                    ]
-                                },
-                                {
-                                    "id": "promotion1Link",
-                                    "type": "url",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "include_target": true,
-                                    "include_text": true,
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion1Img eq false"
-                                    ]
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Promotion 2",
-                                        "fi": "Mainos 2"
-                                    },
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion2Img",
-                                    "type": "image-picker",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    },
-                                    "adjustments": true,
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion2ImgAspectRatio",
-                                    "type": "select",
-                                    "label": {
-                                        "en": "Aspect ratio",
-                                        "fi": "Kuvasuhde"
-                                    },
-                                    "default": "4:3",
-                                    "options": [
-                                        {
-                                            "value": "16:9",
-                                            "label": "16:9"
-                                        },
-                                        {
-                                            "value": "9:13",
-                                            "label": "9:13"
-                                        },
-                                        {
-                                            "value": "4:3",
-                                            "label": "4:3"
-                                        },
-                                        {
-                                            "value": "1:1",
-                                            "label": "1:1"
-                                        }
-                                    ],
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion2Img eq false"
-                                    ]
-                                },
-                                {
-                                    "id": "promotion2Link",
-                                    "type": "url",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "include_target": true,
-                                    "include_text": true,
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion2Img eq false"
-                                    ]
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Promotion 3",
-                                        "fi": "Mainos 3"
-                                    },
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion3Img",
-                                    "type": "image-picker",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    },
-                                    "adjustments": true,
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion3ImgAspectRatio",
-                                    "type": "select",
-                                    "label": {
-                                        "en": "Aspect ratio",
-                                        "fi": "Kuvasuhde"
-                                    },
-                                    "default": "4:3",
-                                    "options": [
-                                        {
-                                            "value": "16:9",
-                                            "label": "16:9"
-                                        },
-                                        {
-                                            "value": "9:13",
-                                            "label": "9:13"
-                                        },
-                                        {
-                                            "value": "4:3",
-                                            "label": "4:3"
-                                        },
-                                        {
-                                            "value": "1:1",
-                                            "label": "1:1"
-                                        }
-                                    ],
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion3Img eq false"
-                                    ]
-                                },
-                                {
-                                    "id": "promotion3Link",
-                                    "type": "url",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "include_target": true,
-                                    "include_text": true,
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion3Img eq false"
-                                    ]
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Promotion 4",
-                                        "fi": "Mainos 4"
-                                    },
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion4Img",
-                                    "type": "image-picker",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    },
-                                    "adjustments": true,
-                                    "conditions": ["!index eq blank"]
-                                },
-                                {
-                                    "id": "promotion4ImgAspectRatio",
-                                    "type": "select",
-                                    "label": {
-                                        "en": "Aspect ratio",
-                                        "fi": "Kuvasuhde"
-                                    },
-                                    "default": "4:3",
-                                    "options": [
-                                        {
-                                            "value": "16:9",
-                                            "label": "16:9"
-                                        },
-                                        {
-                                            "value": "9:13",
-                                            "label": "9:13"
-                                        },
-                                        {
-                                            "value": "4:3",
-                                            "label": "4:3"
-                                        },
-                                        {
-                                            "value": "1:1",
-                                            "label": "1:1"
-                                        }
-                                    ],
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion4Img eq false"
-                                    ]
-                                },
-                                {
-                                    "id": "promotion4Link",
-                                    "type": "url",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "include_target": true,
-                                    "include_text": true,
-                                    "conditions": [
-                                        "!index eq blank",
-                                        "!promotion4Img eq false"
-                                    ]
-                                }
-                            ]
+                "settings": [
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Navigation",
+                            "fi": "Navigaatio"
                         }
-                    ]
-                }
-            ]
-        }
+                    },
+                    {
+                        "id": "menu",
+                        "type": "menu",
+                        "label": {
+                            "en": "Main menu",
+                            "fi": "Päävalikko"
+                        },
+                        "default": "main"
+                    },
+                    {
+                        "id": "menuItemsAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Menu position",
+                            "fi": "Valikon sijainti"
+                        },
+                        "default": "start",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": {
+                                    "en": "Left",
+                                    "fi": "Vasemmalla"
+                                }
+                            },
+                            {
+                                "value": "center",
+                                "label": {
+                                    "en": "Center",
+                                    "fi": "Keskellä"
+                                }
+                            }
+                        ],
+                        "conditions": ["logoPosition eq start"]
+                    },
+                    {
+                        "type": "title",
+                        "label": {
+                            "en": "Mobile navigation",
+                            "fi": "Mobiilinavigaatio"
+                        }
+                    },
+                    {
+                        "id": "mobileMenu",
+                        "type": "menu",
+                        "label": {
+                            "en": "Main menu",
+                            "fi": "Päävalikko"
+                        },
+                        "default": "main"
+                    },
+                    {
+                        "id": "mobileMenuSecondaryTitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Secondary menu title",
+                            "fi": "Toisisijaisn valikon otsikko"
+                        },
+                        "conditions": ["!mobileMenuSecondary eq blank"]
+                    },
+                    {
+                        "id": "mobileMenuSecondary",
+                        "type": "menu",
+                        "label": {
+                            "en": "Secondary menu",
+                            "fi": "Toisisijainen valikko"
+                        },
+                        "default": "",
+                        "allow_empty": true
+                    },
+                    {
+                        "id": "mobileNavigationSimple",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show mobile navigation in a simple design",
+                            "fi": "Näytä mobiilinavigaatio yksinkertaisena"
+                        },
+                        "default": false
+                    },
+                    {
+                        "id": "mobileShowSocialIconsInNavigation",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show social media icons in mobile navigation",
+                            "fi": "Näytä mobiilinavigaatiossa sosiaalisen median kuvakkeet"
+                        },
+                        "default": true
+                    },
+                    {
+                        "id": "mobileShowSearchInNavigation",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show search box in mobile navigation",
+                            "fi": "Näytä mobiilinavigaatiossa hakukenttä"
+                        },
+                        "default": true
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Megamenu",
+                    "fi": "Jättivalikko"
+                },
+                "id": "megamenus",
+                "call_to_action": {
+                    "en": "Add a megamenu",
+                    "fi": "Lisää jättivalikko"
+                },
+                "is_sortable": true,
+                "setting_blocks": [
+                    {
+                        "type": "menu",
+                        "title": {
+                            "en": "Megamenu",
+                            "fi": "Jättivalikko"
+                        },
+                        "settings": [
+                            {
+                                "id": "index",
+                                "type": "radio-pill",
+                                "label": {
+                                    "en": "Mainmenu's link index for megamenu",
+                                    "fi": "Päävalikon linkin numero jättivalikolle"
+                                },
+                                "default": "",
+                                "options": [
+                                    {
+                                        "value": "1",
+                                        "label": "1"
+                                    },
+                                    {
+                                        "value": "2",
+                                        "label": "2"
+                                    },
+                                    {
+                                        "value": "3",
+                                        "label": "3"
+                                    },
+                                    {
+                                        "value": "4",
+                                        "label": "4"
+                                    },
+                                    {
+                                        "value": "5",
+                                        "label": "5"
+                                    },
+                                    {
+                                        "value": "6",
+                                        "label": "6"
+                                    },
+                                    {
+                                        "value": "7",
+                                        "label": "7"
+                                    },
+                                    {
+                                        "value": "8",
+                                        "label": "8"
+                                    },
+                                    {
+                                        "value": "9",
+                                        "label": "9"
+                                    },
+                                    {
+                                        "value": "10",
+                                        "label": "10"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "colPerRow",
+                                "type": "radio-pill",
+                                "label": {
+                                    "en": "Columns per row",
+                                    "fi": "Sarakkeita per rivi"
+                                },
+                                "default": "5",
+                                "options": [
+                                    {
+                                        "value": "2",
+                                        "label": "2"
+                                    },
+                                    {
+                                        "value": "3",
+                                        "label": "3"
+                                    },
+                                    {
+                                        "value": "4",
+                                        "label": "4"
+                                    },
+                                    {
+                                        "value": "5",
+                                        "label": "5"
+                                    }
+                                ],
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "menu",
+                                "type": "menu",
+                                "label": {
+                                    "en": "Menu",
+                                    "fi": "Valikko"
+                                },
+                                "default": "",
+                                "allow_empty": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "type": "title",
+                                "label": {
+                                    "en": "Promotion 1",
+                                    "fi": "Mainos 1"
+                                },
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion1Img",
+                                "type": "image-picker",
+                                "label": {
+                                    "en": "Image",
+                                    "fi": "Kuva"
+                                },
+                                "adjustments": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion1ImgAspectRatio",
+                                "type": "select",
+                                "label": {
+                                    "en": "Aspect ratio",
+                                    "fi": "Kuvasuhde"
+                                },
+                                "default": "4:3",
+                                "options": [
+                                    {
+                                        "value": "16:9",
+                                        "label": "16:9"
+                                    },
+                                    {
+                                        "value": "9:13",
+                                        "label": "9:13"
+                                    },
+                                    {
+                                        "value": "4:3",
+                                        "label": "4:3"
+                                    },
+                                    {
+                                        "value": "1:1",
+                                        "label": "1:1"
+                                    }
+                                ],
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion1Img eq false"
+                                ]
+                            },
+                            {
+                                "id": "promotion1Link",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true,
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion1Img eq false"
+                                ]
+                            },
+                            {
+                                "type": "title",
+                                "label": {
+                                    "en": "Promotion 2",
+                                    "fi": "Mainos 2"
+                                },
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion2Img",
+                                "type": "image-picker",
+                                "label": {
+                                    "en": "Image",
+                                    "fi": "Kuva"
+                                },
+                                "adjustments": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion2ImgAspectRatio",
+                                "type": "select",
+                                "label": {
+                                    "en": "Aspect ratio",
+                                    "fi": "Kuvasuhde"
+                                },
+                                "default": "4:3",
+                                "options": [
+                                    {
+                                        "value": "16:9",
+                                        "label": "16:9"
+                                    },
+                                    {
+                                        "value": "9:13",
+                                        "label": "9:13"
+                                    },
+                                    {
+                                        "value": "4:3",
+                                        "label": "4:3"
+                                    },
+                                    {
+                                        "value": "1:1",
+                                        "label": "1:1"
+                                    }
+                                ],
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion2Img eq false"
+                                ]
+                            },
+                            {
+                                "id": "promotion2Link",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true,
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion2Img eq false"
+                                ]
+                            },
+                            {
+                                "type": "title",
+                                "label": {
+                                    "en": "Promotion 3",
+                                    "fi": "Mainos 3"
+                                },
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion3Img",
+                                "type": "image-picker",
+                                "label": {
+                                    "en": "Image",
+                                    "fi": "Kuva"
+                                },
+                                "adjustments": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion3ImgAspectRatio",
+                                "type": "select",
+                                "label": {
+                                    "en": "Aspect ratio",
+                                    "fi": "Kuvasuhde"
+                                },
+                                "default": "4:3",
+                                "options": [
+                                    {
+                                        "value": "16:9",
+                                        "label": "16:9"
+                                    },
+                                    {
+                                        "value": "9:13",
+                                        "label": "9:13"
+                                    },
+                                    {
+                                        "value": "4:3",
+                                        "label": "4:3"
+                                    },
+                                    {
+                                        "value": "1:1",
+                                        "label": "1:1"
+                                    }
+                                ],
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion3Img eq false"
+                                ]
+                            },
+                            {
+                                "id": "promotion3Link",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true,
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion3Img eq false"
+                                ]
+                            },
+                            {
+                                "type": "title",
+                                "label": {
+                                    "en": "Promotion 4",
+                                    "fi": "Mainos 4"
+                                },
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion4Img",
+                                "type": "image-picker",
+                                "label": {
+                                    "en": "Image",
+                                    "fi": "Kuva"
+                                },
+                                "adjustments": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion4ImgAspectRatio",
+                                "type": "select",
+                                "label": {
+                                    "en": "Aspect ratio",
+                                    "fi": "Kuvasuhde"
+                                },
+                                "default": "4:3",
+                                "options": [
+                                    {
+                                        "value": "16:9",
+                                        "label": "16:9"
+                                    },
+                                    {
+                                        "value": "9:13",
+                                        "label": "9:13"
+                                    },
+                                    {
+                                        "value": "4:3",
+                                        "label": "4:3"
+                                    },
+                                    {
+                                        "value": "1:1",
+                                        "label": "1:1"
+                                    }
+                                ],
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion4Img eq false"
+                                ]
+                            },
+                            {
+                                "id": "promotion4Link",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true,
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion4Img eq false"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     }
+}
 {% endschema %}

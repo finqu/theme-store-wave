@@ -589,9 +589,7 @@
 
                                 <div class="cart-item-media-img-container aspect-ratio-container">
 
-                                    {{#if item.image}}
-
-                                        {{ assign 'imgSrc' item.image.original }}
+                                    {{#if item.image.original}}
 
                                         {{#ifCond productImageAspectRatio '===' 9:13}}
                                             {{ assign 'imgSize' '110,142' }}
@@ -612,8 +610,8 @@
                                         <picture>
                                             <img
                                                 alt="{{ item.name }}"
-                                                data-src="{{> image src=@root.imgSrc size=@root.imgSize }}"
-                                                data-srcset="{{> image src=@root.imgSrc size=@root.imgSize }} 1x, {{> image src=@root.imgSrc size=@root.imgSize scale='2x' }} 2x"
+                                                data-src="{{> image src=item.image.original size=@root.imgSize }}"
+                                                data-srcset="{{> image src=item.image.original size=@root.imgSize }} 1x, {{> image src=item.image.original size=@root.imgSize scale='2x' }} 2x"
                                                 class="lazy d-block mx-auto img-fluid aspect-ratio-item">
                                         </picture>
 
@@ -1284,7 +1282,7 @@
 
                             <div class="aspect-ratio-container">
 
-                                {{#ifCond image '&&' image.original}}
+                                {{#if image.original}}
 
                                     {{#ifCond productImageAspectRatio '===' 9:13}}
                                         {{ assign 'imgSize' '50,81' }}
@@ -1317,7 +1315,7 @@
                                         alt="{{ name }}"
                                         data-src="{{> placeholder_svg type='image' base64=true }}">
 
-                                {{/ifCond}}
+                                {{/if}}
 
                             </div>
 

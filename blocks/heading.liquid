@@ -16,7 +16,7 @@
 
 <div class="block-inner">
 
-    {%- render 'section-header', sectionOverline: block.settings.overline, sectionOverlineTag: block.settings.overlineTag, sectionTitle: title, sectionTitleClass: block.settings.titleClass, sectionTitleTag: block.settings.titleTag, sectionSubtitle: block.settings.subtitle, sectionSubtitleTag: block.settings.subtitleTag, sectionHeaderContainer: 'none' -%}
+    {%- render 'section-header', sectionOverline: block.settings.overline, sectionOverlineTag: block.settings.overlineTag, sectionTitle: title, sectionTitleTag: block.settings.titleTag, sectionSubtitle: block.settings.subtitle, sectionSubtitleTag: block.settings.subtitleTag, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale -%}
 
 </div>
 
@@ -98,6 +98,18 @@
                         ]
                     },
                     {
+                        "id": "sectionHeaderFontSizeScale",
+                        "label": {
+                            "en": "Headings scaling",
+                            "fi": "Otsikoiden skaalaus"
+                        },
+                        "type": "range",
+                        "min": 1,
+                        "max": 2,
+                        "step": 0.1,
+                        "default": "1"
+                    },
+                    {
                         "id": "blockPaddingMode",
                         "type": "radio-pill",
                         "label": {
@@ -166,37 +178,6 @@
                                     "en": "Text",
                                     "fi": "Teksti"
                                 }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "titleClass",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Main title size",
-                            "fi": "Pääotsikon koko"
-                        },
-                        "default": "",
-                        "options": [
-                            {
-                                "value": "",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "display-1",
-                                "label": "D1"
-                            },
-                            {
-                                "value": "display-2",
-                                "label": "D2"
-                            },
-                            {
-                                "value": "display-3",
-                                "label": "D3"
-                            },
-                            {
-                                "value": "display-4",
-                                "label": "D4"
                             }
                         ]
                     },

@@ -92,7 +92,7 @@
 
     <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-        {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+        {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale %}
 
         {% if section.settings.btnLink.text %}
 
@@ -120,7 +120,7 @@
 
         <div class="container py-6 d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
 
-            <div class="text-container max-w-lg-60">
+            <div class="text-container w-100 max-w-lg-60">
                 {{- textContent -}}
             </div>
 
@@ -141,6 +141,16 @@
     "tag": "section",
     "class": "section section-hero-split-images",
     "category": "theme-hero",
+    "keywords": {
+        "en": [
+            "Lander",
+            "Image"
+        ],
+        "fi": [
+            "Laskeutumissivu",
+            "Kuva"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -320,6 +330,18 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "id": "sectionHeaderFontSizeScale",
+                                    "label": {
+                                        "en": "Headings scaling",
+                                        "fi": "Otsikoiden skaalaus"
+                                    },
+                                    "type": "range",
+                                    "min": 1,
+                                    "max": 2,
+                                    "step": 0.1,
+                                    "default": "1"
                                 },
                                 {
                                     "id": "imgDimming",
@@ -556,7 +578,7 @@
         {
             "settings": {
                 "sectionTitle": "Uusi mahtava Hero-otsikko!",
-                "sectionSubtitle": "Kerro asiakkaillesi tästä Hero-osiosta.",
+                "sectionSubtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
                 "sectionColorScheme": "dark",
                 "btnLink": {
                     "text": "Shoppaile nyt"

@@ -143,19 +143,77 @@ export default {
 
         const cookiePolicyEl = document.querySelector('.cookie-policy');
 
+        let cookiePolicyFormEl = null;
+        let cookiePolicyInputEl = null;
+
+        const setDefaultStateForCookiePolicy = () => {
+
+            if (document.body.classList.contains('cookie-policy-visible')) {
+                document.body.classList.remove('cookie-policy-visible');
+            }
+
+            if (theme.store.cookiePolicy.position === 'middle') {
+                document.body.classList.remove('disable-scroll');
+            }
+
+            if (cookiePolicyFormEl && cookiePolicyInputEl) {
+
+                cookiePolicyInputEl.value = 'required';
+   
+                fetch(cookiePolicyFormEl.action, {
+                    method: cookiePolicyFormEl.method,
+                    body: new FormData(cookiePolicyFormEl)
+                });
+            }
+
+            theme.store.cookiePolicy.status = 'required';
+
+            this.initMarketing();
+        };
+
         if (!cookiePolicyEl) {
+
+            if (theme.store.cookiePolicy.status === null) {
+                setDefaultStateForCookiePolicy();
+            }
+
             return;
         }
 
         const cookiePolicyCloseEl = cookiePolicyEl.querySelector('[data-cookie-policy-close]');
         const cookiePolicyOpenEls = document.querySelectorAll('[data-cookie-policy-open]');
         const cookiePolicySubmitEls = cookiePolicyEl.querySelectorAll('[data-cookie-policy-submit]');
-        const cookiePolicyFormEl = cookiePolicyEl.querySelector('#cookie-policy-form');
-        const cookiePolicyInputEl = cookiePolicyFormEl.querySelector('[name="cookie_policy"]');
+
+        let cookiePolicyStateCheckInterval = null;
+
+        const cookiePolicyStateCheck = () => {
+
+            if ((!cookiePolicyEl || !theme.utils.checkVisibility(cookiePolicyEl)) && theme.store.cookiePolicy.status === null) {
+
+                if (cookiePolicyStateCheckInterval !== null) {
+                    clearInterval(cookiePolicyStateCheckInterval);
+                }
+                
+                setDefaultStateForCookiePolicy();
+
+                return;
+            }
+
+            if (cookiePolicyStateCheckInterval === null) {
+                cookiePolicyStateCheckInterval = setInterval(cookiePolicyStateCheck, 1000);
+            };
+        };
+
+        cookiePolicyFormEl = cookiePolicyEl.querySelector('#cookie-policy-form');
+        cookiePolicyInputEl = cookiePolicyFormEl.querySelector('[name="cookie_policy"]');
+
+        if (theme.store.cookiePolicy.status === null) {
+            cookiePolicyStateCheck();
+        }
 
         if (cookiePolicyCloseEl) {
 
-            cookiePolicyCloseEl.addEventListener('click', (e) => {
+            cookiePolicyCloseEl.addEventListener('click', () => {
 
                 document.body.classList.remove('cookie-policy-visible');
                 cookiePolicyEl.classList.add('d-none');
@@ -569,7 +627,7 @@ export default {
                 y: 0
             };
         
-            const mouseDownHandler = function (e) {
+            const mouseDownHandler = (e) => {
                 el.style.cursor = 'grabbing';
                 el.style.userSelect = 'none';
         
@@ -584,8 +642,7 @@ export default {
                 document.addEventListener('mouseup', mouseUpHandler);
             };
         
-            const mouseMoveHandler = function (e) {
-
+            const mouseMoveHandler = (e) => {
                 const dx = e.clientX - pos.x;
                 const dy = e.clientY - pos.y;
 
@@ -593,7 +650,7 @@ export default {
                 el.scrollLeft = pos.left - dx;
             };
         
-            const mouseUpHandler = function () {
+            const mouseUpHandler = () => {
                 el.style.cursor = 'grab';
                 el.style.removeProperty('user-select');
         
@@ -744,7 +801,7 @@ export default {
                         );
                     });
 
-                }, theme.store.marketing.newsletterPopup.delay);
+                }, theme.store.marketing.newsletterPopup.delay * 1000);
             }
         };
 

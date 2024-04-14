@@ -1,6 +1,6 @@
 import Countdown from './countdown';
 
-const debounce = function (func, wait, immediate) {
+const debounce = function (func, wait, immediate = false) {
 
 	let timeout = null;
 
@@ -469,6 +469,45 @@ const countdown = function (opts = {}) {
 	return new Countdown(opts);
 };
 
+const checkVisibility = function (el) {
+
+    if (!(el instanceof Element)) {
+		return false;
+	}
+
+    const style = getComputedStyle(el);
+
+    if (style.display === 'none') return false;
+
+    if (style.visibility !== 'visible') return false;
+
+    if (style.opacity < 0.1) return false;
+
+    if (el.offsetWidth + el.offsetHeight + el.getBoundingClientRect().height + el.getBoundingClientRect().width === 0) {
+        return false;
+    }
+    const elCenter = {
+        x: el.getBoundingClientRect().left + el.offsetWidth / 2,
+        y: el.getBoundingClientRect().top + el.offsetHeight / 2
+    };
+
+    if (elCenter.x < 0) return false;
+
+    if (elCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+
+    if (elCenter.y < 0) return false;
+
+    if (elCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+
+    let pointContainer = document.elementFromPoint(elCenter.x, elCenter.y);
+
+    do {
+        if (pointContainer === el) return true;
+    } while (pointContainer = pointContainer.parentNode);
+	
+    return false;
+}
+
 export {
 	debounce,
 	extend,
@@ -485,5 +524,6 @@ export {
 	getCssVariable,
 	productGridItemVariantImgSwapper,
 	cookies,
-	countdown
+	countdown,
+	checkVisibility
 };

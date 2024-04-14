@@ -12,11 +12,12 @@
 	- sectionDescription: {String}
 	- sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
 	- sectionHeaderClass: {String}
-	- sectionHeaderContainer {String}
+	- sectionHeaderContainer {String} 'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
 	- sectionHeaderGapScale: {Float}
+	- sectionHeaderFontSizeScale: {Float}
 	- sectionHeaderAction: {String}
 	- sectionHeaderSecondaryAction: {String}
-	- sectionHeaderTextAlign: {String}
+	- sectionHeaderTextAlign: {String} 'nil', 'start', 'center', 'end'
 	- sectionAnimation: {String}
 	- sectionAnimationRepeat: {Boolean}
 	- sectionHandle: {String}
@@ -36,36 +37,35 @@
     {%- assign sectionHeaderContainer = 'fixed' -%}
 {%- endif -%}
 
+{%- if sectionHeaderTextAlign == nil and section -%}
+    
+    {%- if section.settings.sectionHeaderTextAlign and section.settings.sectionHeaderTextAlign != 'nil' -%}
+        {%- assign sectionHeaderTextAlign = section.settings.sectionHeaderTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
 {%- unless sectionAnimation == false -%}
     {%- assign sectionAnimation = sectionAnimation | default: settings.sectionAnimation -%}
 {%- endunless -%}
 
 {% assign sectionAnimationOrder = 0 %}
 
-{%- if sectionHandle -%}
-
-	{%- if sectionHeaderGapScale or sectionHeaderTextAlign -%}
-
-		{%- capture sectionHeaderStyle -%}
-			{{ sectionHandle }} .section-header {
-				{% if sectionHeaderGapScale -%}
-					--section-header-gap-scale: {{ sectionHeaderGapScale }};
-				{%- endif -%}
-				{% if sectionHeaderTextAlign -%}
-					--section-header-text-align: {{ sectionHeaderTextAlign }};
-				{%- endif -%}
-			}
-		{%- endcapture -%}
-
-		{%- assign sectionHeaderStyle = sectionHeaderStyle | strip_newlines -%}
-
-		<style>{{ sectionHeaderStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
+{%- capture sectionHeaderStyle -%}
+	{%- if sectionHeaderGapScale -%}
+		--section-header-gap-scale: {{ sectionHeaderGapScale }};
 	{%- endif -%}
+	{%- if sectionHeaderTextAlign -%}
+		--section-header-text-align: {{ sectionHeaderTextAlign }};
+	{%- endif -%}
+	{%- if sectionHeaderFontSizeScale -%}
+		--section-header-font-size-scale: {{ sectionHeaderFontSizeScale }};
+	{%- endif -%}
+{%- endcapture -%}
 
-{%- endif -%}
+{%- assign sectionHeaderStyle = sectionHeaderStyle | strip_newlines | strip | replace: '  ', '' -%}
 
-<div class="section-header{% if sectionHeaderClass %} {{ sectionHeaderClass }}{% endif %}{% if sectionHeaderContainer == 'none' %} d-block{% endif %}">
+<div class="section-header{% if sectionHeaderClass %} {{ sectionHeaderClass }}{% endif %}{% if sectionHeaderContainer == 'none' %} d-block{% endif %}"{% if sectionHeaderStyle %} style="{{ sectionHeaderStyle }}"{% endif %}>
 
 	<div class="container{% if sectionHeaderContainer and sectionHeaderContainer != 'fixed' %}-{{- sectionHeaderContainer -}}{% endif %}">
 
@@ -149,7 +149,7 @@
 				{%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 			{%- endif -%}
 
-			<div class="title-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
+			<div class="title-container{% if sectionTitleClass contains 'display-' %} ct-inline-size{% endif %}"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
 
 				{% if sectionHeaderAction and sectionHeaderTextAlign == 'end' %}
 
@@ -161,7 +161,7 @@
 
 				{% if sectionTitle %}
 
-					<{{ sectionTitleTag }} class="title{% if sectionTitleClass %} {{ sectionTitleClass }}{% endif %}">
+					<{{ sectionTitleTag }} class="title{% if sectionTitleClass %} {{ sectionTitleClass }}{% endif %}{% if sectionTitleClass contains 'display-' %} fs-cqi{% endif %}">
 						{{- sectionTitle -}}
 					</{{ sectionTitleTag }}>
 

@@ -64,7 +64,7 @@
 
                 <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                    {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+                    {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale %}
 
                     {% if section.settings.btnLink.text %}
 
@@ -119,6 +119,14 @@
     "tag": "section",
     "class": "section section-hero-split-content",
     "category": "theme-hero",
+    "keywords": {
+        "en": [
+            "Lander"
+        ],
+        "fi": [
+            "Laskeutumissivu"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -280,6 +288,18 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "id": "sectionHeaderFontSizeScale",
+                                    "label": {
+                                        "en": "Headings scaling",
+                                        "fi": "Otsikoiden skaalaus"
+                                    },
+                                    "type": "range",
+                                    "min": 1,
+                                    "max": 2,
+                                    "step": 0.1,
+                                    "default": "1"
                                 },
                                 {
                                     "id": "imgDimming",
@@ -516,7 +536,7 @@
         {
             "settings": {
                 "sectionTitle": "Uusi mahtava Hero-otsikko!",
-                "sectionSubtitle": "Kerro asiakkaillesi tästä Hero-osiosta.",
+                "sectionSubtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
                 "btnLink": {
                     "text": "Shoppaile nyt"
                 },

@@ -33,12 +33,12 @@ export default function() {
     let categoryPaginateItemNextEl = categoryDynamicContentEl.querySelector('.paginate-item-next');
     let categorySortByActionEls = categoryDynamicContentEl.querySelectorAll('.sort-by-action');
     let categoryRemoveFilterEls = categoryDynamicContentEl.querySelectorAll('.category-remove-filter');
-
     let isProcessing = false;
+    let pageUrl = new URL(window.location.href);
 
-    const renderDynamicContent = (url, scrollTop = false) => {
+    const renderDynamicContent = (scrollTop = false) => {
 
-        const xhr = new XMLHttpRequest();
+        pageUrl.searchParams.set('section', 'category-template');
 
         categoryResetFiltersEls = categoryDynamicContentEl.querySelectorAll('.category-reset-filters');
         categoryPaginateItemPreviousEl = categoryDynamicContentEl.querySelector('.paginate-item-previous');
@@ -87,12 +87,15 @@ export default function() {
             categoryPaginateItemNextEl.disabled = true;
         }
 
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = () => {
+        fetch(pageUrl)
+            .then((res) => res.text())
+            .then((resText) => {
 
-            if (xhr.readyState === 4) {
+                pageUrl.searchParams.delete('section');
+                
+                history.pushState({}, '', pageUrl);
 
-                const dom = new DOMParser().parseFromString(xhr.responseText, 'text/html');
+                const dom = new DOMParser().parseFromString(resText, 'text/html');
                 const newCategoryDynamicContent = dom.querySelector('.section-category .category-dynamic-content');
                 const itemCountEl = dom.querySelector('[data-category-items-count]');
                 
@@ -128,12 +131,8 @@ export default function() {
                 categoryPaginateItemNextEl = categoryDynamicContentEl.querySelector('.paginate-item-next');
                 categorySortByActionEls = categoryDynamicContentEl.querySelectorAll('.sort-by-action');
                 categoryRemoveFilterEls = categoryDynamicContentEl.querySelectorAll('.category-remove-filter');
-
-                if (history.pushState) {
-                    window.history.pushState({path:url},'',url);
-                }
-
                 isProcessing = false;
+
                 categoryDynamicContentEl.classList.remove('category-dynamic-content-loading');
 
                 if (categoryRangeSliderEls.length) {
@@ -141,13 +140,13 @@ export default function() {
                         el.removeAttribute('disabled');
                     });
                 }
-        
+
                 if (categoryFilterInputEls.length) {
                     categoryFilterInputEls.forEach(el => {
                         el.disabled = false;
                     });
                 }
-        
+
                 if (categoryRemoveFilterEls.length) {
                     categoryRemoveFilterEls.forEach(el => {
                         el.disabled = false;
@@ -165,11 +164,11 @@ export default function() {
                         el.disabled = false;
                     });
                 }
-        
+
                 if (categoryPaginateItemPreviousEl) {
                     categoryPaginateItemPreviousEl.disabled = false;
                 }
-        
+
                 if (categoryPaginateItemNextEl) {
                     categoryPaginateItemNextEl.disabled = false;
                 }
@@ -180,10 +179,7 @@ export default function() {
                 }
 
                 bindEvents();
-            }
-        };
-
-        xhr.send();
+            });
     };
 
     const bindEvents = () => {
@@ -196,11 +192,9 @@ export default function() {
                     return;
                 }
 
-                const url = new URL(window.location);
+                pageUrl.searchParams.set('sort-by', e.target.value);
 
-                url.searchParams.set('sort-by', e.target.value);
-
-                renderDynamicContent(url.href);
+                renderDynamicContent();
             })});
         }
 
@@ -215,7 +209,10 @@ export default function() {
                 e.preventDefault();
 
                 if (e.target.hasAttribute('href')) {
-                    renderDynamicContent(e.target.getAttribute('href'), true);
+
+                    pageUrl = new URL(e.target.getAttribute('href'));
+
+                    renderDynamicContent(true);
                 }
             });
         }
@@ -231,7 +228,10 @@ export default function() {
                 e.preventDefault();
 
                 if (e.target.hasAttribute('href')) {
-                    renderDynamicContent(e.target.getAttribute('href'), true);
+                    
+                    pageUrl = new URL(e.target.getAttribute('href'));
+
+                    renderDynamicContent(true);
                 }
             });
         }
@@ -641,7 +641,7 @@ export default function() {
                     initialized = true;
                 }
 
-            }, 500, false));
+            }, 300));
 
             rangeSliderContainerEl.classList.add('has-pips');
         });
@@ -659,11 +659,10 @@ export default function() {
 
             e.preventDefault();
 
-            const pageUrl = new URL(window.location);
             const pageId = pageUrl.searchParams.get('page');
             const sortBy = pageUrl.searchParams.get('sort-by');
             const formData = new FormData(categoryFiltersFormEl);
-            let searchParams = new URLSearchParams(formData)
+            const searchParams = new URLSearchParams(formData);
 
             if (pageId) {
                 searchParams.append('page', pageId);
@@ -673,9 +672,9 @@ export default function() {
                 searchParams.append('sort-by', sortBy);
             }
 
-            const url = `${window.location.pathname}?${searchParams.toString()}`;
+            pageUrl.search = searchParams.toString();
 
-            renderDynamicContent(url);
+            renderDynamicContent();
         });
 
         categoryFiltersFormEl.querySelectorAll('.dropdown-menu').forEach(el => { el.addEventListener('click', e => {
@@ -700,8 +699,8 @@ export default function() {
             document.body.classList.remove('disable-scroll');
         });
 
-        containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:show')))});
-        containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:hide')))});
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', () => containerEl.dispatchEvent(new CustomEvent('theme:filters:show')))});
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]').forEach(el => { el.addEventListener('click', () => containerEl.dispatchEvent(new CustomEvent('theme:filters:hide')))});
 
         filtersMobileNavigationContainerEl.addEventListener('transitionend', e => {
 

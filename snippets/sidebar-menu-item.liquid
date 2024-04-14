@@ -1,0 +1,73 @@
+{% comment %}
+	Renders a sidebar menu item
+
+	Accepts:
+	- link: {Object} link Liquid object (required)
+
+	Usage:
+	{% render 'sidebar-menu-item', link: link %}
+{% endcomment %}
+
+{%- if link.links.size > 0 and link.current or link.child_current -%}
+
+	<li class="sidebar-menu-item{% if link.current %} active-item{% endif %}{% if link.current or link.child_current %} has-active-item{% endif %}">
+
+		{%- if link.current -%}
+
+			<span class="sidebar-menu-item-text">
+				{{- link.title -}}
+			</span>
+
+		{%- else -%}
+
+			<a href="{{ link.url }}" class="sidebar-menu-item-link">
+
+				<span class="sidebar-menu-item-text">
+					{{- link.title -}}
+				</span>
+
+			</a>
+
+		{%- endif -%}
+
+		{%- if link.links.size > 0 -%}
+
+	        <ul class="sidebar-menu-child-links-container">
+
+	            {%- for item in link.links -%}
+
+	                {%- render 'sidebar-menu-item', link: item -%}
+
+	            {%- endfor -%}
+
+	        </ul>
+
+	    {%- endif -%}
+
+	</li>
+
+{%- else -%}
+
+	<li class="sidebar-menu-item{% if link.current %} active-item{% endif %}">
+
+		{%- if link.current -%}
+
+			<span class="sidebar-menu-item-text">
+				{{- link.title -}}
+			</span>
+
+		{%- else -%}
+
+			<a href="{{ link.url }}" class="sidebar-menu-item-link">
+
+				<span class="sidebar-menu-item-text">
+					{{- link.title -}}
+				</span>
+
+			</a>
+
+		{%- endif -%}
+
+	</li>
+
+{%- endif -%}

@@ -123,7 +123,7 @@
 
             {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
-            {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionDescription: section.settings.richtext, sectionHeaderGapScale: 0.5 %}
+            {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionDescription: section.settings.richtext, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: section.settings.sectionHeaderTextAlign %}
 
              {% if section.settings.btnLink.text %}
 
@@ -142,6 +142,10 @@
                 {% if section.settings.setting_blocks.items.size > 0 %}
 
                     {% for product in section.settings.setting_blocks.items %}
+
+                        {%- if product.settings.product -%}
+                            {%- assign product = product.settings.product -%}
+                        {%- endif -%}
 
                         {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
@@ -214,6 +218,21 @@
     "tag": "section",
     "class": "section section-products-promotion",
     "category": "theme-product",
+    "keywords": {
+        "en": [
+            "Product",
+            "Promotion",
+            "Marketing",
+            "Advertisement",
+            "Campaign"
+        ],
+        "fi": [
+            "Tuote",
+            "Mainos",
+            "Markkinointi",
+            "Kampanja"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -480,6 +499,33 @@
                                         {
                                             "value": true,
                                             "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionHeaderTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Heading text align",
+                                        "fi": "Otsikon tekstin tasaus"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
                                         }
                                     ]
                                 },

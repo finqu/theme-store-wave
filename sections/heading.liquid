@@ -1,6 +1,6 @@
 {%- capture sectionContent -%}
 
-    {%- render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleClass: section.settings.titleClass, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionHeaderContainer: 'none' -%}
+    {%- render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale -%}
 
 {%- endcapture -%}
 
@@ -15,6 +15,19 @@
     "tag": "section",
     "class": "section section-heading",
     "category": "theme-featured",
+    "keywords": {
+        "en": [
+            "Heading",
+            "Title",
+            "Subtitle",
+            "Overline",
+            "Text"
+        ],
+        "fi": [
+            "Otsikko",
+            "Teksti"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -119,35 +132,16 @@
                                     ]
                                 },
                                 {
-                                    "id": "titleClass",
-                                    "type": "radio-pill",
+                                    "id": "sectionHeaderFontSizeScale",
                                     "label": {
-                                        "en": "Main title size",
-                                        "fi": "Pääotsikon koko"
+                                        "en": "Headings scaling",
+                                        "fi": "Otsikoiden skaalaus"
                                     },
-                                    "default": "",
-                                    "options": [
-                                        {
-                                            "value": "",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "display-1",
-                                            "label": "D1"
-                                        },
-                                        {
-                                            "value": "display-2",
-                                            "label": "D2"
-                                        },
-                                        {
-                                            "value": "display-3",
-                                            "label": "D3"
-                                        },
-                                        {
-                                            "value": "display-4",
-                                            "label": "D4"
-                                        }
-                                    ]
+                                    "type": "range",
+                                    "min": 1,
+                                    "max": 2,
+                                    "step": 0.1,
+                                    "default": "1"
                                 }
                             ]
                         },
@@ -410,7 +404,8 @@
     "presets": [
         {
             "settings": {
-                "sectionTitle": "Uusi mahtava otsikko"
+                "sectionTitle": "Uusi mahtava otsikko",
+                "sectionSubtitle": "Lisää sopiva alaotsikko ja kerro aiheesta tarkemmin muutamalla lauseella."
             }
         }
     ]

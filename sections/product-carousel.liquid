@@ -85,27 +85,31 @@
 
             <div class="swiper-slide promotion-slide{% if carouselProducts.size < 1 and request.design_mode == false %} min-h-px-350 min-h-px-md-500{% endif %}">
 
-                <div class="d-flex flex-column border-radius justify-content-end p-4 h-100 lazy bg-accent{% if tab.settings.promotionImg %} bg-size-cover{% endif %}" data-bg-set="{{- promotionImg | strip -}}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ carouselSlideIndex }}{% if section.settings.promotionImg.offset_left or section.settings.promotionImg.offset_top %} --bg-position: {{ section.settings.promotionImg.offset_left }}% {{ section.settings.promotionImg.offset_top }}%{% endif %}">
+                <div class="rounded-product-image overflow-hidden h-100">
 
-                    {% if section.settings.promotionText %}
+                    <div class="ct-inline-size d-flex flex-column justify-content-end p-4 h-100 img-indicator-zoom lazy bg-accent{% if tab.settings.promotionImg %} bg-size-cover{% endif %}" data-bg-set="{{- promotionImg | strip -}}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ carouselSlideIndex }}{% if section.settings.promotionImg.offset_left or section.settings.promotionImg.offset_top %} --bg-position: {{ section.settings.promotionImg.offset_left }}% {{ section.settings.promotionImg.offset_top }}%{% endif %}">
 
-                        <p class="display-5 text-style-accent">
-                            {{ section.settings.promotionText }}
-                        </p>
+                        {% if section.settings.promotionText %}
 
-                    {% endif %}
+                            <p class="display-5 fs-cqi text-style-accent">
+                                {{ section.settings.promotionText }}
+                            </p>
 
-                    {% if section.settings.promotionLinkResource.text %}
+                        {% endif %}
 
-                        <div>
+                        {% if section.settings.promotionLinkResource.text %}
 
-                            <a href="{{ section.settings.promotionLinkResource.url | default: '#' }}" class="lead text-underline-indicator">
-                                {{ section.settings.promotionLinkResource.text }}
-                            </a>
+                            <div>
 
-                        </div>
+                                <a href="{{ section.settings.promotionLinkResource.url | default: '#' }}" class="lead text-underline-indicator">
+                                    {{ section.settings.promotionLinkResource.text }}
+                                </a>
 
-                    {% endif %}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
@@ -184,6 +188,16 @@
     "tag": "section",
     "class": "section section-product-carousel",
     "category": "theme-product",
+    "keywords": {
+        "en": [
+            "Product",
+            "Carousel"
+        ],
+        "fi": [
+            "Tuote",
+            "Karuselli"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -628,6 +642,33 @@
                                         {
                                             "value": true,
                                             "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionHeaderTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Heading text align",
+                                        "fi": "Otsikon tekstin tasaus"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
                                         }
                                     ]
                                 },
@@ -1105,12 +1146,20 @@
     },
     "presets": [
         {
+            "name": {
+                "en": "Product carousel",
+                "fi": "Tuotekaruselli"
+            },
             "settings": {
                 "sectionTitle": "Uudet tulokkaat",
                 "listType": "new"
             }
         },
         {
+            "name": {
+                "en": "Product carousel with promotion",
+                "fi": "Tuotekaruselli mainoksella"
+            },
             "settings": {
                 "sectionTitle": "Uudet tulokkaat",
                 "listType": "new",

@@ -37,13 +37,12 @@
 			{%- assign show404PageTitle = true -%}
 		{%- endif -%}
 
-		{%- assign escapedPageTitle = page_title | escape -%}
+		{%- assign pageType = show404PageTitle | yepnope: '404', request.page_type | handle | replace: '-', '_' -%}
+		{%- capture systemPageTitleTranslationKey -%}system.pages.{{- pageType -}}{%- endcapture -%}
+		{%- assign pageTitle = systemPageTitleTranslationKey | t:default:page_title | escape -%}
+		{%- capture seoTitle -%}{{- pageTitle -}}{%- unless pageTitle contains store.name %} &ndash; {{ store.name }}{% endunless -%}{%- endcapture -%}
 
-		{%- capture seo_title -%}
-			{%- unless show404PageTitle -%}{{- page_title -}}{%- else -%}{{- 'system.pages.404' | t -}}{%- endunless -%}{%- unless escapedPageTitle contains store.name %} &ndash; {{ store.name }}{% endunless -%}
-		{%- endcapture -%}
-
-		<title>{{ seo_title | strip_newlines }}</title>
+		<title>{{ seoTitle | strip_newlines }}</title>
 
 		{%- if store.favicon -%}
 
@@ -101,7 +100,7 @@
 				});
 
 				{%- if request.design_mode == 'edit' -%}
-					document.addEventListener('finqu:section:load', (e) => {
+					document.addEventListener('finqu:section:load', () => {
 						if (window.KlarnaOnsiteService) {
 							KlarnaOnsiteService.push({ eventName: 'refresh-placements' });
 						}
@@ -131,6 +130,18 @@
 		{% section 'footer' %}
 		{% render 'cookie-policy' %}
 		{% render 'renderer-templates' %}
+
+		{%- if request.page_type == 'frontpage' -%}
+
+			{%- if settings.schemaOrganization -%}
+				{% render 'schemas/organization' %}
+			{%- endif -%}
+
+			{%- if settings.schemaWebsite -%}
+				{% render 'schemas/website' %}
+			{%- endif -%}
+			
+		{%- endif -%}
 
 	</body>
 

@@ -9,7 +9,6 @@ export default function() {
     const containerEl = document.querySelector('.section-catalog');
     const catalogSubcategoriesEl = containerEl.querySelector('.catalog-subcategories');
     const matchMedia = window.matchMedia(`(min-width: ${theme.utils.getCssVariable('--style-grid-breakpoint-lg')})`);
-    parseFloat(theme.utils.getCssVariable('--style-grid-gutter-width'), 10);
     let catalogFiltersFormEl = null;
 
     if (matchMedia.matches) {
@@ -34,12 +33,12 @@ export default function() {
     let catalogPaginateItemNextEl = catalogDynamicContentEl.querySelector('.paginate-item-next');
     let catalogSortByActionEls = catalogDynamicContentEl.querySelectorAll('.sort-by-action');
     let catalogRemoveFilterEls = catalogDynamicContentEl.querySelectorAll('.catalog-remove-filter');
-
     let isProcessing = false;
+    let pageUrl = new URL(window.location.href);
 
-    const renderDynamicContent = (url, scrollTop = false) => {
+    const renderDynamicContent = (scrollTop = false) => {
 
-        const xhr = new XMLHttpRequest();
+        pageUrl.searchParams.set('section', 'catalog-template');
 
         catalogResetFiltersEls = catalogDynamicContentEl.querySelectorAll('.catalog-reset-filters');
         catalogPaginateItemPreviousEl = catalogDynamicContentEl.querySelector('.paginate-item-previous');
@@ -47,7 +46,6 @@ export default function() {
         catalogSortByActionEls = catalogDynamicContentEl.querySelectorAll('.sort-by-action');
         catalogRemoveFilterEls = catalogDynamicContentEl.querySelectorAll('.catalog-remove-filter');
         isProcessing = true;
-
         catalogDynamicContentEl.classList.add('catalog-dynamic-content-loading');
 
         if (catalogRangeSliderEls.length) {
@@ -88,12 +86,15 @@ export default function() {
             catalogPaginateItemNextEl.disabled = true;
         }
 
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = () => {
+        fetch(pageUrl)
+            .then((res) => res.text())
+            .then((resText) => {
 
-            if (xhr.readyState === 4) {
+                pageUrl.searchParams.delete('section');
+                
+                history.pushState({}, '', pageUrl);
 
-                const dom = new DOMParser().parseFromString(xhr.responseText, 'text/html');
+                const dom = new DOMParser().parseFromString(resText, 'text/html');
                 const newCatalogDynamicContent = dom.querySelector('.section-catalog .catalog-dynamic-content');
                 const itemCountEl = dom.querySelector('[data-catalog-items-count]');
 
@@ -129,13 +130,8 @@ export default function() {
                 catalogPaginateItemNextEl = catalogDynamicContentEl.querySelector('.paginate-item-next');
                 catalogSortByActionEls = catalogDynamicContentEl.querySelectorAll('.sort-by-action');
                 catalogRemoveFilterEls = catalogDynamicContentEl.querySelectorAll('.catalog-remove-filter');
-
-                if (history.pushState) {
-                    window.history.pushState({path:url},'',url);
-                }
-
                 isProcessing = false;
-                catalogDynamicContentEl.remove.add('catalog-dynamic-content-loading');
+                catalogDynamicContentEl.classList.remove('catalog-dynamic-content-loading');
 
                 if (catalogRangeSliderEls.length) {
                     catalogRangeSliderEls.forEach(el => {
@@ -181,10 +177,7 @@ export default function() {
                 }
 
                 bindEvents();
-            }
-        };
-
-        xhr.send();
+            });
     };
 
     const bindEvents = () => {
@@ -197,11 +190,9 @@ export default function() {
                     return;
                 }
 
-                const url = new URL(window.location);
+                pageUrl.searchParams.set('sort-by', e.target.value);
 
-                url.searchParams.set('sort-by', e.target.value);
-
-                renderDynamicContent(url.href);
+                renderDynamicContent();
             })});
         }
 
@@ -216,7 +207,10 @@ export default function() {
                 e.preventDefault();
 
                 if (e.target.hasAttribute('href')) {
-                    renderDynamicContent(e.target.getAttribute('href'), true);
+
+                    pageUrl = new URL(e.target.getAttribute('href'));
+
+                    renderDynamicContent(true);
                 }
             });
         }
@@ -232,7 +226,10 @@ export default function() {
                 e.preventDefault();
 
                 if (e.target.hasAttribute('href')) {
-                    renderDynamicContent(e.target.getAttribute('href'), true);
+                    
+                    pageUrl = new URL(e.target.getAttribute('href'));
+
+                    renderDynamicContent(true);
                 }
             });
         }
@@ -419,7 +416,7 @@ export default function() {
 
         if (catalogResetFiltersEls.length) {
 
-            catalogResetFiltersEl.forEach(el => { el.addEventListener('click', e => {
+            catalogResetFiltersEls.forEach(el => { el.addEventListener('click', e => {
 
                 if (isProcessing) {
                     return;
@@ -642,7 +639,7 @@ export default function() {
                     initialized = true;
                 }
 
-            }, 500, false));
+            }, 300));
 
             rangeSliderContainerEl.classList.add('has-pips');
         });
@@ -660,11 +657,10 @@ export default function() {
 
             e.preventDefault();
 
-            const pageUrl = new URL(window.location);
             const pageId = pageUrl.searchParams.get('page');
             const sortBy = pageUrl.searchParams.get('sort-by');
             const formData = new FormData(catalogFiltersFormEl);
-            let searchParams = new URLSearchParams(formData)
+            const searchParams = new URLSearchParams(formData);
 
             if (pageId) {
                 searchParams.append('page', pageId);
@@ -674,9 +670,9 @@ export default function() {
                 searchParams.append('sort-by', sortBy);
             }
 
-            const url = `${window.location.pathname}?${searchParams.toString()}`;
+            pageUrl.search = searchParams.toString();
 
-            renderDynamicContent(url);
+            renderDynamicContent();
         });
 
         catalogFiltersFormEl.querySelectorAll('.dropdown-menu').forEach(el => { el.addEventListener('click', e => {
@@ -701,8 +697,8 @@ export default function() {
             document.body.classList.remove('disable-scroll');
         });
 
-        containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:show')))});
-        containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]').forEach(el => { el.addEventListener('click', (e) => containerEl.dispatchEvent(new Event('theme:filters:hide')))});
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-show"]').forEach(el => { el.addEventListener('click', () => containerEl.dispatchEvent(new CustomEvent('theme:filters:show')))});
+        containerEl.querySelectorAll('[name="filters-mobile-navigation-hide"]').forEach(el => { el.addEventListener('click', () => containerEl.dispatchEvent(new CustomEvent('theme:filters:hide')))});
 
         filtersMobileNavigationContainerEl.addEventListener('transitionend', e => {
 

@@ -21,14 +21,16 @@
     - sectionDescription: {String}
     - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
     - sectionHeader {Boolean}
+    - sectionHeaderTextAlign {String} 'nil', 'start', 'center', 'end'
     - sectionHeaderClass {String}
-    - sectionHeaderContainer: {String} 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
+    - sectionHeaderContainer: {String} 'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionHeaderSecondaryAction: {String}
     - sectionHeaderAnimation: {Boolean}
     - sectionHeaderGapScale: {Float}
+    - sectionHeaderFontSizeScale: {Float}
     - sectionTabs {String}
     - sectionContent: {String}
-    - sectionContentTextAlign: {String} 'start', 'center', 'end'
+    - sectionContentTextAlign: {String} 'nil', 'start', 'center', 'end'
     - sectionCustomContent: {String}
     - sectionBgImg: {String}
     - sectionBgImgPos: {String}
@@ -37,9 +39,9 @@
     - sectionColorScheme: {String}
     - sectionOverlay: {Boolean}
     - sectionContentClass {String}
-    - sectionContentContainer: {String} 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
+    - sectionContentContainer: {String} 'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
     - sectionContentAnimation: {Boolean}
-    - sectionTextAlign: {String} 'start', 'center', 'end'
+    - sectionTextAlign: {String} 'nil', 'start', 'center', 'end'
     - sectionAnimation {String}
     - sectionAnimationRepeat {Boolean}
     - sectionAction {String}
@@ -75,6 +77,7 @@
 {%- assign sectionOverlineTag = sectionOverlineTag | default: section.settings.sectionOverlineTag -%}
 {%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
 {%- assign sectionBreadcrumbs = sectionBreadcrumbs | default: nil -%}
+{%- assign sectionAction = sectionAction | strip -%}
 {%- assign sectionHeaderContainer = sectionHeaderContainer | default: sectionContainer -%}
 {%- assign sectionHeaderSecondaryAction = sectionHeaderSecondaryAction | default: nil -%}
 {%- assign sectionHeaderGapScale = sectionHeaderGapScale | default: settings.sectionHeaderGapScale -%}
@@ -202,6 +205,10 @@
             --section-header-gap-scale: {{ sectionHeaderGapScale }};
             --section-bg-img-pos: {{ sectionBgImgPos | replace: '-', ' ' }};
 
+            {%- if sectionHeaderFontSizeScale -%}
+                --section-header-font-size-scale: {{ sectionHeaderFontSizeScale }};
+            {%- endif -%}
+
             {%- if sectionTextAlign -%}
                 --section-text-align: {{ sectionTextAlign }};
             {%- endif -%}
@@ -243,6 +250,7 @@
 
             {%- if sectionColorScheme -%}
 
+                {%- assign sectionClasses = sectionClasses | append: ' section-has-color-scheme' -%}
                 {%- assign style = settings.styles[sectionColorScheme] -%}
 
                 {%- if style -%}
@@ -447,6 +455,7 @@
                     --style-border-color: {{ contentColor }};
                     --style-heading-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-subheading-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-overline-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-text-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-link-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-accent-color: {{ contentColor | color_min_contrast: bgColor }};

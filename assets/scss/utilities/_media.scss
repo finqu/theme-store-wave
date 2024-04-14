@@ -21,8 +21,18 @@ img.border-radius {
 }
 
 body.animations-enabled {
+
 	[data-aos] {
 		visibility: hidden;
+
+		&:not(.animate__animated) {
+			
+			.form-check-color-swatch .form-check-input:active + .form-check-label:before,
+			.form-check-color-swatch .form-check-input:checked + .form-check-label:before,
+			.form-check-color-swatch .form-check-input[type=checkbox]:indeterminate + .form-check-label:before {
+				visibility: hidden;
+			}
+		}
 	}
 
 	[data-aos].animate__animated {
@@ -30,20 +40,31 @@ body.animations-enabled {
 	}
 }
 
-.img-indicator-zoom:has(img) {
+.img-indicator-zoom {
 
-	img {
+	&.lazy {
 		transition: transform .95s cubic-bezier(.25,.46,.45,.94);
-
-		&.lazy:not(.initial):not(.lazy-disable-transition) {
-			transition: opacity .5s, transform .95s cubic-bezier(.25,.46,.45,.94);
+	
+		&:hover {
+			transform: scale(1.07);
 		}
 	}
 
-	&:hover {
+	&:has(img) {
 
 		img {
-			transform: scale(1.07);
+			transition: transform .95s cubic-bezier(.25,.46,.45,.94);
+	
+			&.lazy:not(.initial):not(.lazy-disable-transition) {
+				transition: opacity .5s, transform .95s cubic-bezier(.25,.46,.45,.94);
+			}
+		}
+	
+		&:hover {
+	
+			img {
+				transform: scale(1.07);
+			}
 		}
 	}
 }

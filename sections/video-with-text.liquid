@@ -497,511 +497,542 @@
 {% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionContentContainer: sectionContentContainer, sectionHeader: sectionHeader, sectionDescription: sectionDescription %}
 
 {% schema %}
-    {
-        "name": {
-            "en": "Video with text",
-            "fi": "Video tekstin kanssa"
-        },
-        "tag": "section",
-        "class": "section section-video-with-text",
-        "category": "theme-featured",
-        "settings": {
-            "list_type": "tabs",
-            "groups": [
-                {
-                    "title": {
-                        "en": "Content",
-                        "fi": "Sisältö"
+{
+    "name": {
+        "en": "Video",
+        "fi": "Video"
+    },
+    "tag": "section",
+    "class": "section section-video-with-text",
+    "category": "theme-featured",
+    "keywords": {
+        "en": [
+            "Video",
+            "Youtube",
+            "Vimeo"
+        ],
+        "fi": [
+            "Video",
+            "Youtube",
+            "Vimeo"
+        ]
+    },
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "settings": [
+                    {
+                        "id": "videoLayout",
+                        "type": "hidden"
                     },
-                    "settings": [
-                        {
-                            "id": "videoLayout",
-                            "type": "hidden"
+                    {
+                        "id": "sectionOverline",
+                        "type": "text",
+                        "label": {
+                            "en": "Top title",
+                            "fi": "Yläotsikko"
                         },
+                        "conditions": ["sectionAdditionalTitles eq true"]
+                    },
+                    {
+                        "id": "sectionTitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Main title",
+                            "fi": "Pääotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionSubtitle",
+                        "type": "text",
+                        "label": {
+                            "en": "Subtitle",
+                            "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "mode": "simple",
+                        "label": {
+                            "en": "Text",
+                            "fi": "Teksti"
+                        }
+                    },
+                    {
+                        "id": "btnLink",
+                        "type": "url",
+                        "label": {
+                            "en": "Button",
+                            "fi": "Painike"
+                        },
+                        "include_target": true,
+                        "include_text": true
+                    },
+                    {
+                        "id": "videoSrc",
+                        "type": "text",
+                        "label": {
+                            "en": "Video URL",
+                            "fi": "Videon URL-osoite"
+                        }
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
                         {
-                            "id": "sectionOverline",
-                            "type": "text",
-                            "label": {
-                                "en": "Top title",
-                                "fi": "Yläotsikko"
+                            "title": {
+                                "en": "Content",
+                                "fi": "Sisältö"
                             },
-                            "conditions": ["sectionAdditionalTitles eq true"]
+                            "settings": [
+                                {
+                                    "id": "sectionHighlightItems",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Content highlight",
+                                        "fi": "Sisällön korostaminen"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": false,
+                                            "label": "Off"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Text align",
+                                        "fi": "Tekstin tasaus"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "btnStyle",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Button style",
+                                        "fi": "Painikkeen tyyli"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "primary",
+                                            "label": {
+                                                "en": "Fill",
+                                                "fi": "Täytetty"
+                                            }
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": {
+                                                "en": "Outline",
+                                                "fi": "Ääriviivat"
+                                            }
+                                        },
+                                        {
+                                            "value": "link",
+                                            "label": {
+                                                "en": "Text",
+                                                "fi": "Teksti"
+                                            }
+                                        },
+                                        {
+                                            "value": "link-with-icon",
+                                            "label": {
+                                                "en": "Text with icon",
+                                                "fi": "Teksti kuvakkeella"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "videoLayout",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Video position",
+                                        "fi": "Videon sijainti"
+                                    },
+                                    "default": "start",
+                                    "options": [
+                                        {
+                                            "value": "1",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": "{# icon.align-bottom #}"
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "videoControls",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Show video controls",
+                                        "fi": "Näytä videon säätimet"
+                                    },
+                                    "default": true
+                                },
+                                {
+                                    "id": "videoAutoplay",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Video autoplay",
+                                        "fi": "Viodeon automaattinen toisto"
+                                    },
+                                    "default": false
+                                }
+                            ]
                         },
                         {
-                            "id": "sectionTitle",
-                            "type": "text",
-                            "label": {
-                                "en": "Main title",
-                                "fi": "Pääotsikko"
-                            }
-                        },
-                        {
-                            "id": "sectionSubtitle",
-                            "type": "text",
-                            "label": {
-                                "en": "Subtitle",
-                                "fi": "Alaotsikko"
-                            }
-                        },
-                        {
-                            "id": "richtext",
-                            "type": "richtext",
-                            "mode": "simple",
-                            "label": {
-                                "en": "Text",
-                                "fi": "Teksti"
-                            }
-                        },
-                        {
-                            "id": "btnLink",
-                            "type": "url",
-                            "label": {
-                                "en": "Button",
-                                "fi": "Painike"
+                            "title": {
+                                "en": "SEO",
+                                "fi": "SEO"
                             },
-                            "include_target": true,
-                            "include_text": true
+                            "settings": [
+                                {
+                                    "id": "sectionOverlineTag",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Top title SEO priority",
+                                        "fi": "Yläotsikon SEO-prioriteetti"
+                                    },
+                                    "default": "h3",
+                                    "options": [
+                                        {
+                                            "value": "h3",
+                                            "label": "H3"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": {
+                                                "en": "Text",
+                                                "fi": "Teksti"
+                                            }
+                                        }
+                                    ],
+                                    "conditions": ["sectionAdditionalTitles eq true"]
+                                },
+                                {
+                                    "id": "sectionTitleTag",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Main title SEO priority",
+                                        "fi": "Pääotsikon SEO-prioriteetti"
+                                    },
+                                    "default": "h2",
+                                    "options": [
+                                        {
+                                            "value": "h1",
+                                            "label": "H1"
+                                        },
+                                        {
+                                            "value": "h2",
+                                            "label": "H2"
+                                        },
+                                        {
+                                            "value": "h3",
+                                            "label": "H3"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": {
+                                                "en": "Text",
+                                                "fi": "Teksti"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionSubtitleTag",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Subtitle SEO priority",
+                                        "fi": "Alaotsikon SEO-prioriteetti"
+                                    },
+                                    "default": "h3",
+                                    "options": [
+                                        {
+                                            "value": "h3",
+                                            "label": "H3"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": {
+                                                "en": "Text",
+                                                "fi": "Teksti"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
-                            "id": "videoSrc",
-                            "type": "text",
-                            "label": {
-                                "en": "Video URL",
-                                "fi": "Videon URL-osoite"
-                            }
+                            "title": {
+                                "en": "Section",
+                                "fi": "Osio"
+                            },
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Color scheme",
+                                        "fi": "Värityyli"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": {
+                                                "en": "Disabled",
+                                                "fi": "Pois käytöstä"
+                                            }
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": {
+                                                "en": "Light background / Dark content",
+                                                "fi": "Vaalea tausta / Tumma sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": {
+                                                "en": "Dark background / Light content",
+                                                "fi": "Tumma tausta / Vaalea sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": {
+                                                "en": "Accent background / Adaptive content",
+                                                "fi": "Korostus tausta / Mukautuva sisältö"
+                                            }
+                                        },
+                                        {
+                                            "value": "1",
+                                            "label": {
+                                                "en": "Color scheme 1",
+                                                "fi": "Värityyli 1"
+                                            }
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": {
+                                                "en": "Color scheme 2",
+                                                "fi": "Värityyli 2"
+                                            }
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": {
+                                                "en": "Color scheme 3",
+                                                "fi": "Värityyli 3"
+                                            }
+                                        },
+                                        {
+                                            "value": "4",
+                                            "label": {
+                                                "en": "Color scheme 4",
+                                                "fi": "Värityyli 4"
+                                            }
+                                        },
+                                        {
+                                            "value": "5",
+                                            "label": {
+                                                "en": "Color scheme 5",
+                                                "fi": "Värityyli 5"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionAdditionalTitles",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Show additional titles",
+                                        "fi": "Näytä lisäotsikot"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "Off"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Padding",
+                                        "fi": "Välit"
+                                    },
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": {
+                                                "en": "Custom",
+                                                "fi": "Mukautettu"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingTop",
+                                    "label": {
+                                        "en": "Padding top",
+                                        "fi": "Väli ylhäällä"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                },
+                                {
+                                    "id": "sectionPaddingBottom",
+                                    "label": {
+                                        "en": "Padding bottom",
+                                        "fi": "Väli alhaalla"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                },
+                                {
+                                    "id": "sectionBgImg",
+                                    "type": "image-picker",
+                                    "label": {
+                                        "en": "Background image",
+                                        "fi": "Taustakuva"
+                                    },
+                                    "adjustments": true
+                                },
+                                {
+                                    "id": "sectionBgImgDimming",
+                                    "label": {
+                                        "en": "Image dimming",
+                                        "fi": "Kuvan tummennus"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%",
+                                    "conditions": ["!sectionBgImg eq false"]
+                                },
+                                {
+                                    "id": "sectionBgImgBlur",
+                                    "label": {
+                                        "en": "Image blur",
+                                        "fi": "Kuvan sumentaminen"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " ",
+                                    "conditions": ["!sectionBgImg eq false"]
+                                }
+                            ]
                         }
                     ]
-                },
-                {
-                    "title": {
-                        "en": "Settings",
-                        "fi": "Asetukset"
-                    },
-                    "settings": {
-                        "list_type": "list",
-                        "groups": [
-                            {
-                                "title": {
-                                    "en": "Content",
-                                    "fi": "Sisältö"
-                                },
-                                "settings": [
-                                    {
-                                        "id": "sectionHighlightItems",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Content highlight",
-                                            "fi": "Sisällön korostaminen"
-                                        },
-                                        "default": "nil",
-                                        "options": [
-                                            {
-                                                "value": "nil",
-                                                "label": "Auto"
-                                            },
-                                            {
-                                                "value": false,
-                                                "label": "Off"
-                                            },
-                                            {
-                                                "value": true,
-                                                "label": "On"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "sectionTextAlign",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Text align",
-                                            "fi": "Tekstin tasaus"
-                                        },
-                                        "default": "nil",
-                                        "options": [
-                                            {
-                                                "value": "nil",
-                                                "label": "Auto"
-                                            },
-                                            {
-                                                "value": "start",
-                                                "label": "{# icon.align-start #}"
-                                            },
-                                            {
-                                                "value": "center",
-                                                "label": "{# icon.align-center #}"
-                                            },
-                                            {
-                                                "value": "end",
-                                                "label": "{# icon.align-end #}"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "btnStyle",
-                                        "type": "select",
-                                        "label": {
-                                            "en": "Button style",
-                                            "fi": "Painikkeen tyyli"
-                                        },
-                                        "default": "nil",
-                                        "options": [
-                                            {
-                                                "value": "nil",
-                                                "label": "Auto"
-                                            },
-                                            {
-                                                "value": "primary",
-                                                "label": {
-                                                    "en": "Fill",
-                                                    "fi": "Täytetty"
-                                                }
-                                            },
-                                            {
-                                                "value": "secondary",
-                                                "label": {
-                                                    "en": "Outline",
-                                                    "fi": "Ääriviivat"
-                                                }
-                                            },
-                                            {
-                                                "value": "link",
-                                                "label": {
-                                                    "en": "Text",
-                                                    "fi": "Teksti"
-                                                }
-                                            },
-                                            {
-                                                "value": "link-with-icon",
-                                                "label": {
-                                                    "en": "Text with icon",
-                                                    "fi": "Teksti kuvakkeella"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "videoControls",
-                                        "type": "checkbox",
-                                        "label": {
-                                            "en": "Show video controls",
-                                            "fi": "Näytä videon säätimet"
-                                        },
-                                        "default": true
-                                    },
-                                    {
-                                        "id": "videoAutoplay",
-                                        "type": "checkbox",
-                                        "label": {
-                                            "en": "Video autoplay",
-                                            "fi": "Viodeon automaattinen toisto"
-                                        },
-                                        "default": false
-                                    }
-                                ]
-                            },
-                            {
-                                "title": {
-                                    "en": "SEO",
-                                    "fi": "SEO"
-                                },
-                                "settings": [
-                                    {
-                                        "id": "sectionOverlineTag",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Top title SEO priority",
-                                            "fi": "Yläotsikon SEO-prioriteetti"
-                                        },
-                                        "default": "h3",
-                                        "options": [
-                                            {
-                                                "value": "h3",
-                                                "label": "H3"
-                                            },
-                                            {
-                                                "value": "span",
-                                                "label": {
-                                                    "en": "Text",
-                                                    "fi": "Teksti"
-                                                }
-                                            }
-                                        ],
-                                        "conditions": ["sectionAdditionalTitles eq true"]
-                                    },
-                                    {
-                                        "id": "sectionTitleTag",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Main title SEO priority",
-                                            "fi": "Pääotsikon SEO-prioriteetti"
-                                        },
-                                        "default": "h2",
-                                        "options": [
-                                            {
-                                                "value": "h1",
-                                                "label": "H1"
-                                            },
-                                            {
-                                                "value": "h2",
-                                                "label": "H2"
-                                            },
-                                            {
-                                                "value": "h3",
-                                                "label": "H3"
-                                            },
-                                            {
-                                                "value": "span",
-                                                "label": {
-                                                    "en": "Text",
-                                                    "fi": "Teksti"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "sectionSubtitleTag",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Subtitle SEO priority",
-                                            "fi": "Alaotsikon SEO-prioriteetti"
-                                        },
-                                        "default": "h3",
-                                        "options": [
-                                            {
-                                                "value": "h3",
-                                                "label": "H3"
-                                            },
-                                            {
-                                                "value": "span",
-                                                "label": {
-                                                    "en": "Text",
-                                                    "fi": "Teksti"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "title": {
-                                    "en": "Section",
-                                    "fi": "Osio"
-                                },
-                                "settings": [
-                                    {
-                                        "id": "sectionColorScheme",
-                                        "type": "select",
-                                        "label": {
-                                            "en": "Color scheme",
-                                            "fi": "Värityyli"
-                                        },
-                                        "default": false,
-                                        "options": [
-                                            {
-                                                "value": false,
-                                                "label": {
-                                                    "en": "Disabled",
-                                                    "fi": "Pois käytöstä"
-                                                }
-                                            },
-                                            {
-                                                "value": "light",
-                                                "label": {
-                                                    "en": "Light background / Dark content",
-                                                    "fi": "Vaalea tausta / Tumma sisältö"
-                                                }
-                                            },
-                                            {
-                                                "value": "dark",
-                                                "label": {
-                                                    "en": "Dark background / Light content",
-                                                    "fi": "Tumma tausta / Vaalea sisältö"
-                                                }
-                                            },
-                                            {
-                                                "value": "accent",
-                                                "label": {
-                                                    "en": "Accent background / Adaptive content",
-                                                    "fi": "Korostus tausta / Mukautuva sisältö"
-                                                }
-                                            },
-                                            {
-                                                "value": "1",
-                                                "label": {
-                                                    "en": "Color scheme 1",
-                                                    "fi": "Värityyli 1"
-                                                }
-                                            },
-                                            {
-                                                "value": "2",
-                                                "label": {
-                                                    "en": "Color scheme 2",
-                                                    "fi": "Värityyli 2"
-                                                }
-                                            },
-                                            {
-                                                "value": "3",
-                                                "label": {
-                                                    "en": "Color scheme 3",
-                                                    "fi": "Värityyli 3"
-                                                }
-                                            },
-                                            {
-                                                "value": "4",
-                                                "label": {
-                                                    "en": "Color scheme 4",
-                                                    "fi": "Värityyli 4"
-                                                }
-                                            },
-                                            {
-                                                "value": "5",
-                                                "label": {
-                                                    "en": "Color scheme 5",
-                                                    "fi": "Värityyli 5"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "sectionAdditionalTitles",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Show additional titles",
-                                            "fi": "Näytä lisäotsikot"
-                                        },
-                                        "default": false,
-                                        "options": [
-                                            {
-                                                "value": false,
-                                                "label": "Off"
-                                            },
-                                            {
-                                                "value": true,
-                                                "label": "On"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "sectionPaddingMode",
-                                        "type": "radio-pill",
-                                        "label": {
-                                            "en": "Padding",
-                                            "fi": "Välit"
-                                        },
-                                        "default": "auto",
-                                        "options": [
-                                            {
-                                                "value": "auto",
-                                                "label": "Auto"
-                                            },
-                                            {
-                                                "value": "custom",
-                                                "label": {
-                                                    "en": "Custom",
-                                                    "fi": "Mukautettu"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "sectionPaddingTop",
-                                        "label": {
-                                            "en": "Padding top",
-                                            "fi": "Väli ylhäällä"
-                                        },
-                                        "type": "range",
-                                        "min": 0,
-                                        "max": 15,
-                                        "step": 1,
-                                        "default": "0",
-                                        "unit": "rem",
-                                        "conditions": ["sectionPaddingMode eq custom"]
-                                    },
-                                    {
-                                        "id": "sectionPaddingBottom",
-                                        "label": {
-                                            "en": "Padding bottom",
-                                            "fi": "Väli alhaalla"
-                                        },
-                                        "type": "range",
-                                        "min": 0,
-                                        "max": 15,
-                                        "step": 1,
-                                        "default": "0",
-                                        "unit": "rem",
-                                        "conditions": ["sectionPaddingMode eq custom"]
-                                    },
-                                    {
-                                        "id": "sectionBgImg",
-                                        "type": "image-picker",
-                                        "label": {
-                                            "en": "Background image",
-                                            "fi": "Taustakuva"
-                                        },
-                                        "adjustments": true
-                                    },
-                                    {
-                                        "id": "sectionBgImgDimming",
-                                        "label": {
-                                            "en": "Image dimming",
-                                            "fi": "Kuvan tummennus"
-                                        },
-                                        "type": "range",
-                                        "min": 0,
-                                        "max": 90,
-                                        "step": 5,
-                                        "default": "0",
-                                        "unit": "%",
-                                        "conditions": ["!sectionBgImg eq false"]
-                                    },
-                                    {
-                                        "id": "sectionBgImgBlur",
-                                        "label": {
-                                            "en": "Image blur",
-                                            "fi": "Kuvan sumentaminen"
-                                        },
-                                        "type": "range",
-                                        "min": 0,
-                                        "max": 10,
-                                        "step": 1,
-                                        "default": "0",
-                                        "unit": " ",
-                                        "conditions": ["!sectionBgImg eq false"]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "presets": [
-            {
-                "settings": {
-                    "videoLayout": "1",
-                    "richtext": "<p>Lisää video ja kerro siitä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>"
-                }
-            },
-            {
-                "settings": {
-                    "videoLayout": "2",
-                    "richtext": "<p>Lisää video ja kerro siitä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>"
-                }
-            },
-            {
-                "settings": {
-                    "videoLayout": "3",
-                    "richtext": "<p>Lisää video ja kerro siitä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>"
-                }
-            },
-            {
-                "settings": {
-                    "videoLayout": "4",
-                    "sectionPaddingMode": "custom",
-                    "sectionPaddingTop": "0",
-                    "sectionPaddingBottom": "0"
                 }
             }
         ]
-    }
+    },
+    "presets": [
+        {
+            "name": {
+                "en": "Video with text",
+                "fi": "Video tekstin kanssa"
+            },
+            "settings": {
+                "videoLayout": "1",
+                "richtext": "<p>Lisää video ja kerro siitä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>"
+            }
+        },
+        {
+            "name": {
+                "en": "Fullscreen video",
+                "fi": "Koko näytön video"
+            },
+            "settings": {
+                "videoLayout": "4",
+                "sectionPaddingMode": "custom",
+                "sectionPaddingTop": "0",
+                "sectionPaddingBottom": "0"
+            }
+        }
+    ]
+}
 {% endschema %}

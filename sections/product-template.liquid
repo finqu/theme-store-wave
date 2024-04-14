@@ -1159,7 +1159,7 @@
                                                         
                                                             {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
                                                             
-                                                            <span class="text">
+                                                            <span class="text pe-none">
 
                                                                 {%- if product.default_or_selected_variant.in_customers_wishlist -%}
                                                                     {{- 'wishlist.remove' | t -}}
@@ -1273,7 +1273,7 @@
                                                     
                                                         {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
                                                         
-                                                        <span class="text">
+                                                        <span class="text pe-none">
 
                                                             {%- if product.default_or_selected_variant.in_customers_wishlist -%}
                                                                 {{- 'wishlist.remove' | t -}}
@@ -1978,86 +1978,437 @@
 
         </div>
 
-        {% if product.similar.size > 0 or request.design_mode %}
+        {%- if rendered_partial != 'sections/product-template' -%}
 
-            {%- assign carouselTitle = 'product.similar_products' | t -%}
+            {% if product.similar.size > 0 or request.design_mode %}
 
-            <div class="mt-4 mt-md-g">
+                {%- assign carouselTitle = 'product.similar_products' | t -%}
 
-                {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
+                <div class="mt-4 mt-md-g">
 
-                <div class="product-carousel mt-4">
-                    {% render 'product-carousel', items: product.similar, carouselFreemode: true %}
+                    {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
+
+                    <div class="product-carousel mt-4">
+                        {% render 'product-carousel', items: product.similar, carouselFreemode: true %}
+                    </div>
+
                 </div>
 
-            </div>
+            {% endif %}
 
-        {% endif %}
+            {% if product.compatible.size > 0 or request.design_mode %}
 
-        {% if product.compatible.size > 0 or request.design_mode %}
+                {%- assign carouselTitle = 'product.compatible_products' | t -%}
 
-            {%- assign carouselTitle = 'product.compatible_products' | t -%}
+                <div class="mt-4 mt-md-g">
 
-            <div class="mt-4 mt-md-g">
+                    {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
 
-                {% render 'section-header', sectionTitle: carouselTitle, sectionHeaderContainer: 'none' %}
+                    <div class="product-carousel mt-4">
+                        {% render 'product-carousel', items: product.compatible, carouselFreemode: true %}
+                    </div>
 
-                <div class="product-carousel mt-4">
-                    {% render 'product-carousel', items: product.compatible, carouselFreemode: true %}
                 </div>
 
-            </div>
+            {% endif %}
 
-        {% endif %}
+            <script type="application/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.dispatchEvent(new CustomEvent('theme:product:view', {
+                        detail: {
+                            id: {{ product.id | json }},
+                            {%- if store.customer_has_purchase_right -%}
+                                price: {{ product.default_or_selected_variant.price | json }},
+                            {%- else -%}
+                                price: null,
+                            {%- endif -%}
+                            name: {{ product.title | json }},
+                            manufacturer: {{ product.manufacturer.title | json }},
+                            currency: {{ store.currency.iso_code | json }}
+                        }
+                    }));
+                });
+            </script>
 
-        <script type="application/javascript">
-            document.addEventListener('DOMContentLoaded', function() {
-                document.dispatchEvent(new CustomEvent('theme:product:view', {
-                    detail: {
-                        id: {{ product.id | json }},
-                        {%- if store.customer_has_purchase_right -%}
-                            price: {{ product.default_or_selected_variant.price | json }},
-                        {%- else -%}
-                            price: null,
-                        {%- endif -%}
-                        name: {{ product.title | json }},
-                        manufacturer: {{ product.manufacturer.title | json }},
-                        currency: {{ store.currency.iso_code | json }}
-                    }
-                }));
-            });
-        </script>
+        {%- endif -%}
 
     {% endif %}
 
 {%- endcapture -%}
 
-{% if request.uri contains 'create_review=true' and product.default_or_selected_variant.customer_has_reviewed == false and product.reviews_are_enabled %}
+{%- if rendered_partial == 'sections/product-template' -%}
 
-    {%- assign sectionTitle = 'product.write_product_review' | t -%}
-    {%- assign sectionSubtitle = product.title -%}
+    {{- sectionContent -}}
 
-    {% render 'section', section: section, sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContainer: 'tiny', sectionContentOverflow: 'clip', sectionInnerGap: '2rem' %}
+{%- else -%}
 
-{% else %}
+    {% if request.uri contains 'create_review=true' and product.default_or_selected_variant.customer_has_reviewed == false and product.reviews_are_enabled %}
 
-    {% if section.settings.showBreadcrumbs %}
-        {%- assign sectionBreadcrumbs = product.breadcrumbs -%}
+        {%- assign sectionTitle = 'product.write_product_review' | t -%}
+        {%- assign sectionSubtitle = product.title -%}
+
+        {% render 'section', section: section, sectionTitle: sectionTitle, sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionContainer: 'tiny', sectionContentOverflow: 'clip', sectionInnerGap: '2rem' %}
+
+    {% else %}
+
+        {% if section.settings.showBreadcrumbs %}
+            {%- assign sectionBreadcrumbs = product.breadcrumbs -%}
+        {% endif %}
+
+        {% render 'section', section: section, sectionContent: sectionContent, sectionBreadcrumbs: sectionBreadcrumbs, sectionContentAnimation: false, sectionInnerGap: '2rem' %}
+
     {% endif %}
 
-    {% render 'section', section: section, sectionContent: sectionContent, sectionBreadcrumbs: sectionBreadcrumbs, sectionContentAnimation: false, sectionInnerGap: '2rem' %}
+    {%- if settings.schemaProduct -%}
+        {% render 'schemas/product', product: product %}
+    {%- endif -%}
 
-{% endif %}
+    {%- if settings.schemaBreadcrumbList -%}
+        {% render 'schemas/breadcrumblist', breadcrumbs: product.breadcrumbs, currentItem: product %}
+    {%- endif -%}
 
-{%- if settings.schemaProduct -%}
-    {% render 'schemas/product', product: product %}
+    {%- if section.settings.showProductQuestionForm -%}
+
+        <div class="modal fade" id="product-question-modal" tabindex="-1" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header border-bottom-0 pb-0 justify-content-end">
+
+                        <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                            {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body pt-0">
+
+                        {% form 'contact' %}
+        
+                            {% if form.posted_successfully? %}
+
+                                <script type="application/javascript">
+                                    document.addEventListener('theme:ready', function() {
+                                        document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
+                                        theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
+                                    });
+                                </script>
+
+                                <p class="my-4">
+                                    {{- 'product.question.success' | t -}}
+                                </p>
+
+                            {% else %}
+
+                                {% if form.error %}
+
+                                    <script type="application/javascript">
+                                        document.addEventListener('theme:ready', function() {
+                                            theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
+                                        });
+                                    </script>
+
+                                {% endif %}
+                                
+                                <input
+                                    type="hidden"
+                                    name="subject"
+                                    value="{{- 'product.question.subject' | t: product_name: product.title | escape -}}">
+
+                                <span class="d-block h3 text-title">
+                                    {{- 'product.question.title' | t -}}
+                                </span>
+
+                                <div class="form-floating mb-4">
+
+                                    <input
+                                        type="text"
+                                        id="product-question-modal-name"
+                                        class="form-control"
+                                        name="name"
+                                        placeholder="{{ 'product.question.name' | t }}"
+                                        value="{{ form.submitted.name | escape }}"
+                                        required>
+
+                                    <label for="product-question-modal-name">
+                                        {{- 'product.question.name' | t -}}
+                                    </label>
+
+                                </div>
+
+                                <div class="form-floating mb-4">
+
+                                    <input
+                                        type="email"
+                                        id="product-question-modal-email"
+                                        class="form-control"
+                                        name="email"
+                                        placeholder="{{ 'product.question.email' | t }}"
+                                        value="{{ form.submitted.email | escape }}"
+                                        required>
+
+                                    <label for="product-question-modal-email">
+                                        {{- 'product.question.email' | t -}}
+                                    </label>
+
+                                </div>
+
+                                <div class="form-floating mb-4">
+
+                                    <textarea
+                                        id="product-question-modal-message"
+                                        name="message"
+                                        class="form-control"
+                                        placeholder="{{ 'product.question.message' | t }}"
+                                        required>{{ form.submitted.message | escape }}</textarea>
+
+                                    <label for="product-question-modal-message">
+                                        {{- 'product.question.message' | t -}}
+                                    </label>
+
+                                </div>
+
+                                {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                                <button type="submit" class="btn btn-primary btn-sm d-block w-100">
+                                    {{- 'product.question.cta' | t -}}
+                                </button>
+
+                            {% endif %}
+
+                        {% endform %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {%- endif -%}
+
+    {%- if product.size_chart -%}
+
+        <div class="modal fade" id="product-size-chart-modal" tabindex="-1" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header border-bottom-0 pb-0 justify-content-end">
+
+                        <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
+                            {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body pt-0 d-flex flex-column gap-g">
+
+                        <span class="d-block h3 text-title">
+                            {{- 'product.size_chart.title' | t -}}
+                        </span>
+
+                        {% if product.size_chart.measuring_guide_image or product.size_chart.measuring_guide_instructions %}
+
+                            {%- assign instructionsCharLength = product.size_chart.measuring_guide_instructions | strip_html | size %}
+
+                            <div class="row gy-4 mb-g{% if instructionsCharLength < 300 and product.size_chart.measuring_guide_image %} row-cols-1{% endif %}">
+
+                                {% if product.size_chart.measuring_guide_instructions %}
+
+                                    <div class="col text-richtext">
+                                        {{- product.size_chart.measuring_guide_instructions -}}
+                                    </div>
+
+                                {% endif %}
+
+                                {% if product.size_chart.measuring_guide_image %}
+
+                                    <div class="col-auto">
+
+                                        {% if product.size_chart.measuring_guide_instructions %}
+                                            {%- assign imgSizeSm = '356,356' -%}
+                                            {%- assign imgSizeMd = '335,335' -%}
+                                            {%- assign imgSizeLg = '335,335' -%}
+
+                                        {% else %}
+                                            {%- assign imgSizeSm = '356,356' -%}
+                                            {%- assign imgSizeMd = '680,680' -%}
+                                            {%- assign imgSizeLg = '680,680' -%}
+                                        {% endif %}
+
+                                        <picture>
+                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg }} 1x,
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd }} 1x,
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                            <source data-srcset="
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm }} 1x,
+                                                {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                class="lazy d-block img-fluid"
+                                                alt="{{ product.size_chart.measuring_guide_image.alt }}"
+                                                src="{{ product.size_chart.measuring_guide_image | thumb: imgSizeSm }}">
+                                        </picture>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if product.size_chart.conversion_table %}
+
+                            {%- assign theadCols = product.size_chart.conversion_table | first -%}
+
+                            <span class="d-block fw-bold">
+                                {{- 'product.size_chart.conversion_table' | t -}}
+                            </span>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-striped table-borderless text-center">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            {% for value in theadCols %}
+
+                                                <th scope="col" class="fw-normal">
+                                                    {{- value -}}
+                                                </th>
+
+                                            {% endfor %}
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {% for row in product.size_chart.conversion_table offset: 1 %}
+
+                                            <tr>
+
+                                                {% for value in row %}
+
+                                                    {% if forloop.first %}
+
+                                                        <th scope="row" class="fw-normal">
+                                                            {{- value -}}
+                                                        </th>
+
+                                                    {% else %}
+
+                                                        <td>
+                                                            {{- value -}}
+                                                        </td>
+
+                                                    {% endif %}
+
+                                                {% endfor %}
+
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if product.size_chart.measurements_table %}
+
+                            {%- assign theadCols = product.size_chart.measurements_table | first -%}
+
+                            <span class="d-block fw-bold">
+                                {{- 'product.size_chart.measurements_table' | t -}}
+                            </span>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-striped table-borderless text-center">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            {% for value in theadCols %}
+
+                                                <th scope="col" class="fw-normal">
+                                                    {{- value -}}
+                                                </th>
+
+                                            {% endfor %}
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {% for row in product.size_chart.measurements_table offset: 1 %}
+
+                                            <tr>
+
+                                                {% for value in row %}
+
+                                                    {% if forloop.first %}
+
+                                                        <th scope="row" class="fw-normal">
+                                                            {{- value -}}
+                                                        </th>
+
+                                                    {% else %}
+
+                                                        <td>
+                                                            {{- value -}}
+                                                        </td>
+
+                                                    {% endif %}
+
+                                                {% endfor %}
+
+                                            </tr>
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {%- endif -%}
+
 {%- endif -%}
 
-{%- if settings.schemaBreadcrumbList -%}
-    {% render 'schemas/breadcrumblist', breadcrumbs: product.breadcrumbs, currentItem: product %}
-{%- endif -%}
-
-{% if product.default_or_selected_variant.notifications_supported and product.default_or_selected_variant.is_out_of_stock %}
+{%- if product.default_or_selected_variant.notifications_supported and product.default_or_selected_variant.is_out_of_stock -%}
 
     <div class="modal fade" id="availability-notification-modal" tabindex="-1" aria-hidden="true">
 
@@ -2143,346 +2494,7 @@
 
     </div>
 
-{% endif %}
-
-{% if section.settings.showProductQuestionForm %}
-
-    <div class="modal fade" id="product-question-modal" tabindex="-1" aria-hidden="true">
-
-        <div class="modal-dialog modal-dialog-centered">
-
-            <div class="modal-content">
-
-                <div class="modal-header border-bottom-0 pb-0 justify-content-end">
-
-                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
-                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
-                    </button>
-
-                </div>
-
-                <div class="modal-body pt-0">
-
-                    {% form 'contact' %}
-    
-                        {% if form.posted_successfully? %}
-
-                            <script type="application/javascript">
-                                document.addEventListener('theme:ready', function() {
-                                    document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
-                                    theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
-                                });
-                            </script>
-
-                            <p class="my-4">
-                                {{- 'product.question.success' | t -}}
-                            </p>
-
-                        {% else %}
-
-                            {% if form.error %}
-
-                                <script type="application/javascript">
-                                    document.addEventListener('theme:ready', function() {
-                                        theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
-                                    });
-                                </script>
-
-                            {% endif %}
-                            
-                            <input
-                                type="hidden"
-                                name="subject"
-                                value="{{- 'product.question.subject' | t: product_name: product.title | escape -}}">
-
-                            <span class="d-block h3 text-title">
-                                {{- 'product.question.title' | t -}}
-                            </span>
-
-                            <div class="form-floating mb-4">
-
-                                <input
-                                    type="text"
-                                    id="product-question-modal-name"
-                                    class="form-control"
-                                    name="name"
-                                    placeholder="{{ 'product.question.name' | t }}"
-                                    value="{{ form.submitted.name | escape }}"
-                                    required>
-
-                                <label for="product-question-modal-name">
-                                    {{- 'product.question.name' | t -}}
-                                </label>
-
-                            </div>
-
-                            <div class="form-floating mb-4">
-
-                                <input
-                                    type="email"
-                                    id="product-question-modal-email"
-                                    class="form-control"
-                                    name="email"
-                                    placeholder="{{ 'product.question.email' | t }}"
-                                    value="{{ form.submitted.email | escape }}"
-                                    required>
-
-                                <label for="product-question-modal-email">
-                                    {{- 'product.question.email' | t -}}
-                                </label>
-
-                            </div>
-
-                            <div class="form-floating mb-4">
-
-                                <textarea
-                                    id="product-question-modal-message"
-                                    name="message"
-                                    class="form-control"
-                                    placeholder="{{ 'product.question.message' | t }}"
-                                    required>{{ form.submitted.message | escape }}</textarea>
-
-                                <label for="product-question-modal-message">
-                                    {{- 'product.question.message' | t -}}
-                                </label>
-
-                            </div>
-
-                            {% render 'form-error', error: form.error, class: 'mb-4' %}
-
-                            <button type="submit" class="btn btn-primary btn-sm d-block w-100">
-                                {{- 'product.question.cta' | t -}}
-                            </button>
-
-                        {% endif %}
-
-                    {% endform %}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-{% endif %}
-
-{% if product.size_chart %}
-
-    <div class="modal fade" id="product-size-chart-modal" tabindex="-1" aria-hidden="true">
-
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-
-            <div class="modal-content">
-
-                <div class="modal-header border-bottom-0 pb-0 justify-content-end">
-
-                    <button type="button" class="btn-text" data-bs-dismiss="modal" aria-label="{{- 'general.close' | t -}}">
-                        {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
-                    </button>
-
-                </div>
-
-                <div class="modal-body pt-0 d-flex flex-column gap-g">
-
-                    <span class="d-block h3 text-title">
-                        {{- 'product.size_chart.title' | t -}}
-                    </span>
-
-                    {% if product.size_chart.measuring_guide_image or product.size_chart.measuring_guide_instructions %}
-
-                        {%- assign instructionsCharLength = product.size_chart.measuring_guide_instructions | strip_html | size %}
-
-                        <div class="row gy-4 mb-g{% if instructionsCharLength < 300 and product.size_chart.measuring_guide_image %} row-cols-1{% endif %}">
-
-                            {% if product.size_chart.measuring_guide_instructions %}
-
-                                <div class="col text-richtext">
-                                    {{- product.size_chart.measuring_guide_instructions -}}
-                                </div>
-
-                            {% endif %}
-
-                            {% if product.size_chart.measuring_guide_image %}
-
-                                <div class="col-auto">
-
-                                    {% if product.size_chart.measuring_guide_instructions %}
-                                        {%- assign imgSizeSm = '356,356' -%}
-                                        {%- assign imgSizeMd = '335,335' -%}
-                                        {%- assign imgSizeLg = '335,335' -%}
-
-                                    {% else %}
-                                        {%- assign imgSizeSm = '356,356' -%}
-                                        {%- assign imgSizeMd = '680,680' -%}
-                                        {%- assign imgSizeLg = '680,680' -%}
-                                    {% endif %}
-
-                                    <picture>
-                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg }} 1x,
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd }} 1x,
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
-
-                                        <source data-srcset="
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm }} 1x,
-                                            {{- product.size_chart.measuring_guide_image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                                        <img
-                                            class="lazy d-block img-fluid"
-                                            alt="{{ product.size_chart.measuring_guide_image.alt }}"
-                                            src="{{ product.size_chart.measuring_guide_image | thumb: imgSizeSm }}">
-                                    </picture>
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-                    {% endif %}
-
-                    {% if product.size_chart.conversion_table %}
-
-                        {%- assign theadCols = product.size_chart.conversion_table | first -%}
-
-                        <span class="d-block fw-bold">
-                            {{- 'product.size_chart.conversion_table' | t -}}
-                        </span>
-
-                        <div class="table-responsive">
-
-                            <table class="table table-striped table-borderless text-center">
-
-                                <thead>
-
-                                    <tr>
-
-                                        {% for value in theadCols %}
-
-                                            <th scope="col" class="fw-normal">
-                                                {{- value -}}
-                                            </th>
-
-                                        {% endfor %}
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    {% for row in product.size_chart.conversion_table offset: 1 %}
-
-                                        <tr>
-
-                                            {% for value in row %}
-
-                                                {% if forloop.first %}
-
-                                                    <th scope="row" class="fw-normal">
-                                                        {{- value -}}
-                                                    </th>
-
-                                                {% else %}
-
-                                                    <td>
-                                                        {{- value -}}
-                                                    </td>
-
-                                                {% endif %}
-
-                                            {% endfor %}
-
-                                        </tr>
-
-                                    {% endfor %}
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    {% endif %}
-
-                    {% if product.size_chart.measurements_table %}
-
-                        {%- assign theadCols = product.size_chart.measurements_table | first -%}
-
-                        <span class="d-block fw-bold">
-                            {{- 'product.size_chart.measurements_table' | t -}}
-                        </span>
-
-                        <div class="table-responsive">
-
-                            <table class="table table-striped table-borderless text-center">
-
-                                <thead>
-
-                                    <tr>
-
-                                        {% for value in theadCols %}
-
-                                            <th scope="col" class="fw-normal">
-                                                {{- value -}}
-                                            </th>
-
-                                        {% endfor %}
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    {% for row in product.size_chart.measurements_table offset: 1 %}
-
-                                        <tr>
-
-                                            {% for value in row %}
-
-                                                {% if forloop.first %}
-
-                                                    <th scope="row" class="fw-normal">
-                                                        {{- value -}}
-                                                    </th>
-
-                                                {% else %}
-
-                                                    <td>
-                                                        {{- value -}}
-                                                    </td>
-
-                                                {% endif %}
-
-                                            {% endfor %}
-
-                                        </tr>
-
-                                    {% endfor %}
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-{% endif %}
+{%- endif -%}
 
 {% schema %}
 {

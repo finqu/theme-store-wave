@@ -1,7 +1,8 @@
 {%- assign activeSortOption = category.sort_by | default: category.default_sort_by -%}
 {%- assign animatedItemsCount = settings.productPerRow | times: 2 -%}
+{%- assign sidebarMenu = linklists[section.settings.sidebarMenu] -%}
 
-{%- if section.settings.showCategoryList and settings.productPerRow > 3 -%}
+{%- if sidebarMenu and settings.productPerRow > 3 -%}
     {%- assign productPerRow = settings.productPerRow | minus: 1 -%}
 {%- else -%}
     {%- assign productPerRow = settings.productPerRow -%}
@@ -15,13 +16,17 @@
 
 {%- capture categoryContentPlaceholder -%}
 
-    {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+    {%- if rendered_partial != 'sections/category-template' %}
 
-    <div data-aos="animate__fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
+        {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
-        {% render 'category-carousel', items: category.categories, carouselNavigation: 'on', sectionHandle: sectionHandle, categoryPerView: 8, categoryTextPosition: 'below', style: 2 %}
+        <div data-aos="animate__fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-    </div>
+            {% render 'category-carousel', items: category.categories, carouselNavigation: 'on', sectionHandle: sectionHandle, categoryPerView: 8, categoryTextPosition: 'below', style: 2 %}
+
+        </div>
+
+    {%- endif -%}
 
 {%- endcapture -%}
 
@@ -29,7 +34,7 @@
 
     {%- paginate category.products by 100 -%}
 
-        {% if category.categories %}
+        {%- if rendered_partial != 'sections/category-template' and category.categories -%}
 
             <div class="category-subcategories category-tags mb-6{% if section.settings.showCategoryList %} d-lg-none{% endif %}" data-aos="animate__fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
 
@@ -523,7 +528,7 @@
 
                 {% render 'pagination', paginate: paginate %}
 
-                {%- if settings.schemaItemList -%}
+                {%- if rendered_partial != 'sections/category-template' and settings.schemaItemList -%}
                     {% render 'schemas/itemlist', items: category.products, paginate: paginate %}
                 {%- endif -%}
 
@@ -806,27 +811,27 @@
 
 {%- capture sectionContent -%}
 
-    {% if section.settings.showCategoryList %}
+    {% if rendered_partial != 'sections/category-template' and sidebarMenu %}
 
         <div class="row">
 
             <div class="col-lg-3 d-none d-lg-block pe-lg-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-                {%- assign hasActiveCategory = false -%}
+                {%- assign hasActiveLink = false -%}
 
-                {%- for item in categories.root -%}
+                {%- for item in sidebarMenu.links -%}
 
-                    {%- if item.current and hasActiveCategory == false and item.categories.size == 0 -%}
-                        {%- assign hasActiveCategory = true -%}
+                    {%- if item.current and hasActiveLink == false and item.links.size == 0 -%}
+                        {%- assign hasActiveLink = true -%}
                     {%- endif -%}
 
                 {%- endfor -%}
 
-                <ul class="category-list section-highlight-item{% if hasActiveCategory %} no-active-subcategories{% endif %}{% if section.settings.highlightActiveSubcategory %} category-list-highlight-active-subcategory{% endif %}">
+                <ul class="sidebar-menu section-highlight-item{% if hasActiveLink %} no-active-child-links{% endif %}{% if section.settings.highlightActiveLink %} sidebar-menu-highlight-active-child-link{% endif %}">
 
-                    {% for item in categories.root %}
+                    {% for item in sidebarMenu.links %}
 
-                        {% render 'category-list-item', category: item, currentCategory: category %}
+                        {% render 'sidebar-menu-item', link: item %}
 
                     {% endfor %}
 
@@ -868,7 +873,7 @@
 
 {% render 'section', section: section, sectionContent: sectionContent, sectionTitle: category.title, sectionTitleTag: 'h1', sectionDescription: category.description, sectionBreadcrumbs: category.breadcrumbs, sectionContentAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
 
-{%- if settings.schemaBreadcrumbList -%}
+{%- if rendered_partial != 'sections/category-template' and settings.schemaBreadcrumbList -%}
     {% render 'schemas/breadcrumblist', breadcrumbs: sectionBreadcrumbs, currentItem: category %}
 {%- endif -%}
 
@@ -891,23 +896,23 @@
                 },
                 "settings": [
                     {
-                        "id": "showCategoryList",
-                        "type": "checkbox",
+                        "id": "sidebarMenu",
+                        "type": "menu",
                         "label": {
-                            "en": "Show product group list",
-                            "fi": "Näytä tuoteryhmälista"
+                            "en": "Menu",
+                            "fi": "Valikko"
                         },
-                        "default": false
+                        "allow_empty": true
                     },
                     {
-                        "id": "highlightActiveSubcategory",
+                        "id": "highlightActiveLink",
                         "type": "checkbox",
                         "label": {
-                            "en": "Highlight active subcategory",
-                            "fi": "Korosta aktiivinen alatuoteryhmä"
+                            "en": "Highlight active link",
+                            "fi": "Korosta aktiivinen linkki"
                         },
                         "default": true,
-                        "conditions": ["!showCategoryList eq false"]
+                        "conditions": ["!sidebarMenu eq blank"]
                     }
                 ]
             }

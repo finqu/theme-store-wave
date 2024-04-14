@@ -71,6 +71,7 @@
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
                     --style-heading-color: {{ item.settings.colorScheme }};
                     --style-subheading-color: {{ item.settings.colorScheme }};
+                    --style-overline-color: {{ item.settings.colorScheme }};
                     --style-text-color: {{ item.settings.colorScheme }};
                     --style-link-color: {{ item.settings.colorScheme }};
                     --style-icon-color: {{ item.settings.colorScheme }};
@@ -95,6 +96,24 @@
                     {%- endif -%}
                 }
             {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
         {%- endcapture -%}
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
@@ -168,7 +187,7 @@
 
                     </div>
 
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5{%- if section.settings.imgDimming != '0' %} z-1{%- endif -%}" style="--bs-gap: 0">
 
                         <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}" data-yolo="{{ item.settings.btnLink.text }}">
 
@@ -239,6 +258,7 @@
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
                     --style-heading-color: {{ item.settings.colorScheme }};
                     --style-subheading-color: {{ item.settings.colorScheme }};
+                    --style-overline-color: {{ item.settings.colorScheme }};
                     --style-text-color: {{ item.settings.colorScheme }};
                     --style-link-color: {{ item.settings.colorScheme }};
                     --style-icon-color: {{ item.settings.colorScheme }};
@@ -263,6 +283,24 @@
                     {%- endif -%}
                 }
             {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
         {%- endcapture -%}
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
@@ -338,7 +376,7 @@
 
                     </div>
 
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5{%- if section.settings.imgDimming != '0' %} z-1{%- endif -%}" style="--bs-gap: 0">
 
                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
@@ -403,6 +441,7 @@
                 #finqu-section-{{ section.id }} .section-content .grid > div:nth-child({{ forloop.index}}) {
                     --style-heading-color: {{ item.settings.colorScheme }};
                     --style-subheading-color: {{ item.settings.colorScheme }};
+                    --style-overline-color: {{ item.settings.colorScheme }};
                     --style-text-color: {{ item.settings.colorScheme }};
                     --style-link-color: {{ item.settings.colorScheme }};
                     --style-icon-color: {{ item.settings.colorScheme }};
@@ -427,6 +466,24 @@
                     {%- endif -%}
                 }
             {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
         {%- endcapture -%}
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
@@ -485,7 +542,7 @@
 
                     </div>
 
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5{%- if section.settings.imgDimming != '0' %} z-1{%- endif -%}" style="--bs-gap: 0">
 
                         <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
@@ -550,6 +607,7 @@
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
                     --style-heading-color: {{ item.settings.colorScheme }};
                     --style-subheading-color: {{ item.settings.colorScheme }};
+                    --style-overline-color: {{ item.settings.colorScheme }};
                     --style-text-color: {{ item.settings.colorScheme }};
                     --style-link-color: {{ item.settings.colorScheme }};
                     --style-icon-color: {{ item.settings.colorScheme }};
@@ -574,6 +632,24 @@
                     {%- endif -%}
                 }
             {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
         {%- endcapture -%}
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
@@ -632,7 +708,7 @@
 
                     </div>
 
-                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5" style="--bs-gap: 0">
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5{%- if section.settings.imgDimming != '0' %} z-1{%- endif -%}" style="--bs-gap: 0">
 
                         <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
@@ -679,6 +755,23 @@
     "tag": "section",
     "class": "section section-promotion-collage",
     "category": "theme-marketing",
+    "keywords": {
+        "en": [
+            "Product",
+            "Promotion",
+            "Collage",
+            "Marketing",
+            "Advertisement",
+            "Campaign"
+        ],
+        "fi": [
+            "Tuote",
+            "Mainos",
+            "Kollaasi",
+            "Markkinointi",
+            "Kampanja"
+        ]
+    },
     "settings": {
         "list_type": "tabs",
         "groups": [
@@ -953,6 +1046,32 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "id": "imgDimming",
+                                    "label": {
+                                        "en": "Image dimming",
+                                        "fi": "Kuvan tummennus"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%"
+                                },
+                                {
+                                    "id": "imgBlur",
+                                    "label": {
+                                        "en": "Image blur",
+                                        "fi": "Kuvan sumentaminen"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " "
                                 }
                             ]
                         },

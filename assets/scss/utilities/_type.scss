@@ -33,6 +33,64 @@ p {
 	}
 }
 
+@supports (font-size: 1cqi) {
+
+	.fs-cqi {
+		--font-size-min: #{rfs-fluid-value($font-size-base)};
+		--font-size-preferred: 4.3cqi;
+		--font-size-max: #{rfs-value($font-size-base)};
+		--font-size-scale: 1;
+
+		@include media-breakpoint-up(lg) {
+			--font-size-preferred: 10cqi;
+		}
+
+		font-size: clamp(var(--font-size-min), var(--font-size-preferred), calc(var(--font-size-max) * var(--font-size-scale)));
+	}
+
+	h1, .h1 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h1-font-size)};
+		}
+	}
+
+	h2, .h2 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h2-font-size)};
+		}
+	}
+
+	h3, .h3 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h3-font-size)};
+		}
+	}
+
+	h4, .h4 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h4-font-size)};
+		}
+	}
+
+	h5, .h5 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h5-font-size)};
+		}
+	}
+
+	h6, .h6 {
+		&.fs-cgi {
+			--font-size-max: #{rfs-value($h6-font-size)};
+		}
+	}
+
+	@each $display, $font-size in $display-font-sizes {
+		.display-#{$display}.fs-cqi {
+			--font-size-max: #{rfs-value($font-size)};
+		}
+	}
+}
+
 .text-underline-indicator,
 .text-underline-indicator.btn,
 .text-underline-indicator.btn-link,
@@ -151,6 +209,10 @@ p {
 
 .text-subtitle {
 	color: var(--style-subheading-color);
+}
+
+.text-overline {
+	color: var(--style-overline-color);
 }
 
 .text-product-title {
@@ -281,7 +343,15 @@ a.text-reset:focus {
 }
 
 .text-align-auto {
-	text-align: var(--section-content-text-align);
+	text-align: var(--section-text-align);
+}
+
+.text-header-align-auto {
+	text-align: var(--section-header-text-align, var(--section-text-align));
+}
+
+.text-content-align-auto {
+	text-align: var(--section-content-text-align, var(--section-text-align));
 }
 
 .blockquote {

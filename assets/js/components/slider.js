@@ -175,12 +175,12 @@ export default class Slider {
 
                 windowWidth = window.innerWidth;
             }
-        }, 150, false));
+        }, 150));
 
         document.addEventListener('finqu:section:unload', theme.utils.debounce(e => {
             if (this.el === e.target) {
                 this.swiper.destroy();
             }
-        }, 250, false));
+        }, 250));
     }
 }

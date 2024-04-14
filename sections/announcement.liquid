@@ -72,175 +72,175 @@
 {% endif %}
 
 {% schema %}
-    {
-        "name": {
-            "en": "Announcement",
-            "fi": "Ilmoitus"
-        },
-        "tag": "section",
-        "is_creatable": false,
-        "is_removable": false,
-        "class": "section section-site-announcement",
-        "settings": {
-            "list_type": "tabs",
-            "groups": [
-                {
-                    "title": {
-                        "en": "Content",
-                        "fi": "Sisältö"
-                    },
-                    "id": "items",
-                    "call_to_action": {
-                        "en": "Add a announcement",
-                        "fi": "Lisää ilmoitus"
-                    },
-                    "is_sortable": true,
-                    "setting_blocks": [
-                        {
-                            "type": "text",
-                            "title": {
-                                "en": "Announcement",
-                                "fi": "ilmoitus"
-                            },
-                            "settings": [
-                                {
-                                    "id": "announcementLink",
-                                    "type": "url",
-                                    "label": {
-                                        "en": "Text",
-                                        "fi": "Teksti"
-                                    },
-                                    "include_target": true,
-                                    "include_text": true
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "title": {
-                        "en": "Settings",
-                        "fi": "Asetukset"
-                    },
-                    "settings": [
-                        {
-                            "id": "announcementStatus",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Show announcement",
-                                "fi": "Näytä ilmoitus"
-                            },
-                            "default": true,
-                            "options": [
-                                {
-                                    "value": false,
-                                    "label": "Off"
-                                },
-                                {
-                                    "value": true,
-                                    "label": "On"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "announcementTextAlign",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Content align",
-                                "fi": "Sisällön tasaus"
-                            },
-                            "default": "nil",
-                            "options": [
-                                {
-                                    "value": "nil",
-                                    "label": "Auto"
-                                },
-                                {
-                                    "value": "start",
-                                    "label": "{# icon.align-start #}"
-                                },
-                                {
-                                    "value": "center",
-                                    "label": "{# icon.align-center #}"
-                                },
-                                {
-                                    "value": "end",
-                                    "label": "{# icon.align-end #}"
-                                }
-                            ],
-                            "conditions": ["announcementStatus eq true"]
-                        },
-                        {
-                            "id": "announcementVisibility",
-                            "type": "radio-pill",
-                            "label": {
-                                "en": "Visibility",
-                                "fi": "Näkyvyys"
-                            },
-                            "default": "all",
-                            "options": [
-                                {
-                                    "value": "all",
-                                    "label": {
-                                        "en": "On all pages",
-                                        "fi": "Kaikilla sivuilla"
-                                    }
-                                },
-                                {
-                                    "value": "frontpage",
-                                    "label": {
-                                        "en": "On frontpage",
-                                        "fi": "Etusivulla"
-                                    }
-                                }
-                            ],
-                            "conditions": ["announcementStatus eq true"]
-                        },
-                        {
-                            "id": "carouselAutoplaySpeed",
-                            "label": {
-                                "en": "Autoplay",
-                                "fi": "Automaattinen toisto"
-                            },
-                            "type": "radio-pill",
-                            "default": 3,
-                            "options": [
-                                {
-                                    "value": 3,
-                                    "label": "3 s"
-                                },
-                                {
-                                    "value": 5,
-                                    "label": "5 s"
-                                },
-                                {
-                                    "value": 10,
-                                    "label": "10 s"
-                                }
-                            ],
-                            "conditions": ["announcementStatus eq true"]
-                        }
-                    ]
-                }
-            ]
-        },
-        "presets": [
+{
+    "name": {
+        "en": "Announcement",
+        "fi": "Ilmoitus"
+    },
+    "tag": "section",
+    "is_creatable": false,
+    "is_removable": false,
+    "class": "section section-site-announcement",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
             {
-                "settings": {
-                    "setting_blocks": {
-                        "items": [
+                "title": {
+                    "en": "Content",
+                    "fi": "Sisältö"
+                },
+                "id": "items",
+                "call_to_action": {
+                    "en": "Add a announcement",
+                    "fi": "Lisää ilmoitus"
+                },
+                "is_sortable": true,
+                "setting_blocks": [
+                    {
+                        "type": "text",
+                        "title": {
+                            "en": "Announcement",
+                            "fi": "ilmoitus"
+                        },
+                        "settings": [
                             {
-                                "type": "text",
-                                "settings": {
-                                    "announcementLink": {
-                                        "text": "Kerro asiakkaillesi tulevista tapahtumista ja tarjouksista."
-                                    }
-                                }
+                                "id": "announcementLink",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true
                             }
                         ]
                     }
-                }
+                ]
+            },
+            {
+                "title": {
+                    "en": "Settings",
+                    "fi": "Asetukset"
+                },
+                "settings": [
+                    {
+                        "id": "announcementStatus",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Show announcement",
+                            "fi": "Näytä ilmoitus"
+                        },
+                        "default": true,
+                        "options": [
+                            {
+                                "value": false,
+                                "label": "Off"
+                            },
+                            {
+                                "value": true,
+                                "label": "On"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "announcementTextAlign",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Content align",
+                            "fi": "Sisällön tasaus"
+                        },
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "Auto"
+                            },
+                            {
+                                "value": "start",
+                                "label": "{# icon.align-start #}"
+                            },
+                            {
+                                "value": "center",
+                                "label": "{# icon.align-center #}"
+                            },
+                            {
+                                "value": "end",
+                                "label": "{# icon.align-end #}"
+                            }
+                        ],
+                        "conditions": ["announcementStatus eq true"]
+                    },
+                    {
+                        "id": "announcementVisibility",
+                        "type": "radio-pill",
+                        "label": {
+                            "en": "Visibility",
+                            "fi": "Näkyvyys"
+                        },
+                        "default": "all",
+                        "options": [
+                            {
+                                "value": "all",
+                                "label": {
+                                    "en": "On all pages",
+                                    "fi": "Kaikilla sivuilla"
+                                }
+                            },
+                            {
+                                "value": "frontpage",
+                                "label": {
+                                    "en": "On frontpage",
+                                    "fi": "Etusivulla"
+                                }
+                            }
+                        ],
+                        "conditions": ["announcementStatus eq true"]
+                    },
+                    {
+                        "id": "carouselAutoplaySpeed",
+                        "label": {
+                            "en": "Autoplay",
+                            "fi": "Automaattinen toisto"
+                        },
+                        "type": "radio-pill",
+                        "default": 3,
+                        "options": [
+                            {
+                                "value": 3,
+                                "label": "3 s"
+                            },
+                            {
+                                "value": 5,
+                                "label": "5 s"
+                            },
+                            {
+                                "value": 10,
+                                "label": "10 s"
+                            }
+                        ],
+                        "conditions": ["announcementStatus eq true"]
+                    }
+                ]
             }
         ]
-    }
+    },
+    "presets": [
+        {
+            "settings": {
+                "setting_blocks": {
+                    "items": [
+                        {
+                            "type": "text",
+                            "settings": {
+                                "announcementLink": {
+                                    "text": "Kerro asiakkaillesi tulevista tapahtumista ja tarjouksista."
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
 {% endschema %}

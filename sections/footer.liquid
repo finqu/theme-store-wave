@@ -112,9 +112,11 @@
             position: relative;
             padding-top: var(--section-padding-top);
         }
-        #finqu-section-{{ section.id }} .section-inner {
-            padding-top: 0;
-        }
+        {%- unless section.settings.footerLayout == '4' .%}
+            #finqu-section-{{ section.id }} .section-inner {
+                padding-top: 0;
+            }
+        {%- endunless -%}
     {%- endif -%}
     {%- if section.settings.footerBottomBorder -%}
         #finqu-section-{{ section.id }} .site-footer-bottom{% unless section.settings.footerBottomBorderFluid %} > .container{% endunless %}:before {

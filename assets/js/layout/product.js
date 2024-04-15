@@ -114,6 +114,7 @@ export default function() {
             productImageEls.forEach(el => {
 
                 LazyLoad.load(el, {
+                    use_native: true,
                     show_while_loading: true
                 });
             });

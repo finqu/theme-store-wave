@@ -53,7 +53,7 @@
 
                             <div class="container-fluid py-c align-self-{{ section.settings.textVerticalAlign }}">
 
-                                <div class="text-{{ textHorizontalAlign }}{% if section.settings.carouselEffect == 'slide' %} animate__animated animate__fadeInUp animate__delay-2s animate__slow{% endif %}">
+                                <div class="text-{{ textHorizontalAlign }}{% if section.settings.carouselEffect == 'slide' %} animate__animated animate__fadeInUp animate__delay animate__slow{% endif %}" style="--animate-delay: 2s">
 
                                     {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: item.settings.overline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: fals, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScalee %}
 

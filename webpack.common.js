@@ -83,13 +83,17 @@ module.exports = {
 				}
 			}
 		},
+		usedExports: true,
 		minimize: true,
 		minimizer: [
 			new TerserPlugin({
 				terserOptions: {
-					ecma: '2021'
+					ecma: '2021',
+					format: {
+						comments: false
+					}
 				},
-				extractComments: true
+				extractComments: false
 			}),
 			new CompressionPlugin({
 				test: /\.jp(e?)g$|\.png$|.svg$|\.js$|\.css(\?.*)?$/i,

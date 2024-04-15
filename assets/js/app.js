@@ -27,13 +27,23 @@ export default class App {
 			Modal: Modal
 		};
 
-		this.lazyLoad = new LazyLoad({
-            show_while_loading: true,
-            callback_error: (el) => {
-            	el.src = this.store.placeholderSvgs['image'];
-            	el.classList.add('svg-placeholder');
-            }
-        });
+		this.lazyLoadInstances = [
+			new LazyLoad({
+				elements_selector: 'img.lazy, iframe.lazy, video.lazy',
+				use_native: true,
+				callback_error: (el) => {
+					if (el.tagName === 'IMG') {
+						el.src = this.store.placeholderSvgs['image'];
+						el.classList.add('svg-placeholder');
+					}
+				}
+			}),
+			new LazyLoad({
+				elements_selector: '[data-bg-multi].lazy, [data-bg-multi-hidpi].lazy, [data-bg-set].lazy'
+			})
+		];
+
+		this.lazyLoad = (fs, ...args) => this.lazyLoadInstances.forEach((instance) => instance[fs](...args));
 
         this.SVGInject = SVGInject;
         this.SVGInject.setOptions({
@@ -41,10 +51,8 @@ export default class App {
 			copyAttributes: true,
 			makeIdsUnique: false,
 			afterInject: (img, svg) => {
-
 				svg.removeAttribute('width');
 				svg.removeAttribute('height');
-
 				svg.classList.remove('svg-inline');
 				svg.classList.add('svg-icon');
 			}
@@ -98,7 +106,7 @@ export default class App {
 				        	} else {
 
 				        		if (el.classList.contains('lazy')) {
-				        			this.lazyLoad.update();
+				        			this.lazyLoad('update');
 				        		}
 					        }
 				        }

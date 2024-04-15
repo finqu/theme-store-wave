@@ -6,8 +6,8 @@ export default {
 
         document.addEventListener('finqu:section:load', e => {
 
-            // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe for some reason
-            theme.lazyLoad.loadAll();
+            // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe
+            theme.lazyLoad('loadAll');
 
             for (const el of e.target.querySelectorAll('.swiper.swiper-standalone')) {
                 new Slider(el);
@@ -44,8 +44,8 @@ export default {
 
         document.addEventListener('finqu:block:load', () => {
 
-            // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe for some reason
-            theme.lazyLoad.loadAll();
+            // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe
+            theme.lazyLoad('loadAll');
         });
 
         document.addEventListener('finqu:block:edit', e => {

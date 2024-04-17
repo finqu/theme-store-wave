@@ -18,11 +18,24 @@
     {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
 {%- endif -%}
 
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} {
+        --style-grid-container-padding-y: var(--style-grid-container-padding-x);
+    }
+    @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+        #finqu-section-{{ section.id }} {
+            --style-grid-container-padding-x: 4rem;
+        }
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
 {%- capture sectionContent -%}
 
     <div class="d-flex align-items-{{ section.settings.textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
 
-        <div class="container py-c d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
+        <div class="container d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
 
             <div class="text-container w-100 max-w-lg-60">
                 
@@ -54,7 +67,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: sectionHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: sectionHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingY: '4rem' %}
 
 {% schema %}
 {

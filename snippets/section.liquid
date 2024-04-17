@@ -244,6 +244,10 @@
                 --style-grid-container-padding-x: {{ sectionContainerPaddingX }};
             {%- endif -%}
 
+            {%- if sectionContainerPaddingY -%}
+                --style-grid-container-padding-y: {{ sectionContainerPaddingY }};
+            {%- endif -%}
+
             {%- if sectionHighlightItems -%}
                 --section-highlight-item-padding: var(--style-grid-gutter-width);
             {%- endif %}
@@ -594,6 +598,11 @@
 
             {%- endif -%}
         }
+        {%- if sectionBgImgBlur != '0' -%}
+            {{ sectionHandle }} .section-bg {
+                filter: blur({{ sectionBgImgBlur }}px);
+            }
+        {%- endif -%}
     {%- endcapture -%}
 
     <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>

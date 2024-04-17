@@ -663,7 +663,7 @@ export default function() {
 
                         if (subjectEl) {
                             subjectEl.value = theme.utils.t('product.question.subject', {
-                                product_name: variant.title
+                                product_name: `${document.querySelector('.product-name-text')?.innerText} ${variant.title}`
                             });
                         }
                     }

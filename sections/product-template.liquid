@@ -826,58 +826,13 @@
 
                                 <div class="product-vat mt-1">
 
-                                    {% assign itemTaxPercent = settings.taxFreeShopping == true | yepnope: 0, product.default_or_selected_variant.rate | round %}
+                                    {% assign itemTaxPercent = settings.taxFreeShopping == true | yepnope: 0, product.default_or_selected_variant.rate %}
 
                                     <span class="product-vat-text text-muted">
                                         {{- 'product.vat_included_dynamic' | t, amount: itemTaxPercent -}}
                                     </span>
 
                                 </div>
-
-                            </div>
-
-                        {% endif %}
-
-                        {% if product.review_count > 0 and product.reviews_are_enabled %}
-
-                            <div class="product-review-rating mb-6">
-
-                                <button
-                                    type="button"
-                                    id="product-show-reviews"
-                                    class="btn btn-text">
-
-                                    <div class="product-review-icons">
-
-                                        {% for rating in (1..product.max_rating) %}
-
-                                            <div class="product-review-icon">
-
-                                                {% if product.rating >= rating %}
-
-                                                    {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
-
-                                                {% else %}
-
-                                                    {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
-
-                                                {% endif %}
-
-                                            </div>
-
-                                        {% endfor %}
-
-                                    </div>
-
-                                    <span class="product-review-text">
-                                        {%- if product.review_count == 1 -%}
-                                            {{- 'product.review_count_dynamic' | t: amount: product.review_count -}}
-                                        {%- else -%}
-                                            {{- 'product.review_count_plural_dynamic' | t: amount: product.review_count -}}
-                                        {%- endif -%}
-                                    </span>
-
-                                </button>
 
                             </div>
 
@@ -991,7 +946,8 @@
                                                         type="button"
                                                         class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
                                                         data-wishlist-toggle="{{ product.id }}"
-                                                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                                                        aria-label="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
                                                         {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
                                                     </button>
 
@@ -1011,7 +967,7 @@
 
                                                     <div class="product-inline-quantity max-w-px-120 min-h-px-40">
 
-                                                        <button type="button" class="btn btn-text product-quantity-decrease">
+                                                        <button type="button" class="btn btn-text product-quantity-decrease" aria-label="{{ 'general.decrease' | t }}">
                                                             {%- render 'icon', icon: 'subtract' -%}
                                                         </button>
 
@@ -1024,7 +980,7 @@
                                                             min="{% if product.min_quantity %}{{ product.min_quantity }}{% else %}1{% endif %}"
                                                             {% if product.max_quantity %}max="{{ product.max_quantity }}"{% endif %}pattern="[0-9]{1,3}">
 
-                                                        <button type="button" class="btn btn-text product-quantity-increase">
+                                                        <button type="button" class="btn btn-text product-quantity-increase" aria-label="{{ 'general.increase' | t }}">
                                                             {%- render 'icon', icon: 'add' -%}
                                                         </button>
 
@@ -1050,7 +1006,8 @@
                                                         type="button"
                                                         class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
                                                         data-wishlist-toggle="{{ product.id }}"
-                                                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                                                        aria-label="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
                                                         {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
                                                     </button>
 
@@ -1203,7 +1160,8 @@
                                                     type="button"
                                                     class="btn btn-text ms-1 btn btn-text p-2 product-wishlist-action bordered"
                                                     data-wishlist-toggle="{{ product.id }}"
-                                                    aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                                                    aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                                                    aria-label="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
                                                     {%- render 'icon', icon: 'like', class: 'svg-icon-lg svg-icon-fw' -%}
                                                 </button>
 
@@ -1669,7 +1627,7 @@
 
                         {% for attachment in product.attachments %}
 
-                            <div{% unless forloop.last == true %} class="border-bottom pb-4 mb-3"{% endunless %}" data-aos="{{ settings.sectionAnimation }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+                            <div{% unless forloop.last == true %} class="mb-3"{% endunless %} data-aos="{{ settings.sectionAnimation }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
 
                                 <a href="{{ attachment.href }}" class="d-flex align-items-center">
 
@@ -1874,7 +1832,7 @@
 
                             {% for review in product.reviews %}
 
-                                <div class="product-review section-highlight-item{% if settings.sectionHighlightItems == false %} pt-4 border-top{% endif %}">
+                                <div class="product-review section-highlight-item{% if settings.sectionHighlightItems == false and forloop.first == false %} pt-4 border-top{% endif %}">
 
                                     <div class="product-review-title mb-0">
 
@@ -1924,9 +1882,13 @@
 
                                         <div class="product-review-content">
 
-                                            <p class="mb-0">
-                                                <strong>{{ review.title }}</strong>
-                                            </p>
+                                            {% if review.title %}
+
+                                                <p class="mb-0 fw-medium">
+                                                    {{ review.title }}
+                                                </p>
+
+                                            {% endif %}
 
                                             {{ review.review }}
 
@@ -2093,10 +2055,11 @@
                                     document.addEventListener('theme:ready', function() {
                                         document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
                                         theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.show();
+                                        setTimeout(() => theme.bs.Modal.getOrCreateInstance('#product-question-modal')?.hide(), 5000);
                                     });
                                 </script>
 
-                                <p class="my-4">
+                                <p class="my-4 text-center">
                                     {{- 'product.question.success' | t -}}
                                 </p>
 
@@ -2433,16 +2396,17 @@
                             <script type="application/javascript">
                                 document.addEventListener('theme:ready', function() {
                                     theme.bs.Modal.getOrCreateInstance('#availability-notification-modal')?.show();
+                                    setTimeout(() => theme.bs.Modal.getOrCreateInstance('#availability-notification-modal')?.hide(), 5000);
                                 });
                             </script>
 
-                            <p class="my-4">
+                            <p class="my-4 text-center">
                                 {{- 'product.availability_notification.success' | t -}}
                             </p>
 
                         {% elsif product.subscribed_to_notifications %}
 
-                            <p class="my-4">
+                            <p class="my-4 text-center">
                                 {{- 'product.availability_notification.already_subscribed' | t -}}
                             </p>
 

@@ -62,7 +62,7 @@ export default class App {
 			this.aos = AOS;
 			this.aos.init({
 				disable: () => !document.body.classList.contains('animations-enabled'),
-                startEvent: 'load',
+                startEvent: 'DOMContentLoaded',
                 initClassName: false,
                 animatedClassName: 'animate__animated',
                 useClassNames: true,

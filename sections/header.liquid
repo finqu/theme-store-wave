@@ -308,7 +308,7 @@
 
                     <div class="site-mobile-header-item">
 
-                        <button type="button" class="site-mobile-navigation-toggle btn btn-text">
+                        <button type="button" class="site-mobile-navigation-toggle btn btn-text" aria-label="{{ 'general.navigation' | t }}">
 
                             {%- render 'icon', icon: 'navigation-menu', class: 'svg-icon-fw' -%}
                             {%- render 'icon', icon: 'close', class: 'd-none' -%}
@@ -321,7 +321,7 @@
 
                         <div class="site-mobile-header-item site-mobile-header-item-search">
 
-                            <button type="button" class="site-search-toggle btn btn-text">
+                            <button type="button" class="site-search-toggle btn btn-text" aria-label="{{ 'general.search' | t }}">
 
                                 {%- render 'icon', icon: 'search', class: 'svg-icon-fw' -%}
 
@@ -390,7 +390,7 @@
 
                         <div class="site-mobile-header-item site-mobile-header-item-search">
 
-                            <button type="button" class="site-search-toggle btn btn-text">
+                            <button type="button" class="site-search-toggle btn btn-text" aria-label="{{ 'general.search' | t }}">
 
                                 {%- render 'icon', icon: 'search', class: 'svg-icon-fw' -%}
 
@@ -420,7 +420,7 @@
 
                         <div class="site-mobile-header-item site-mobile-header-item-wishlist">
 
-                            <a href="{{ routes.account_wishlist_url }}" class="btn btn-text">
+                            <a href="{{ routes.account_wishlist_url }}" class="btn btn-text" aria-label="{{ 'wishlist.title' | t }}">
 
                                 <span class="site-mobile-header-item-counter{% if wishlist.products.size > 0 %} has-items{% endif %}">
 
@@ -440,7 +440,7 @@
 
                     <div class="site-mobile-header-item site-mobile-header-item-cart">
 
-                        <a href="{{ routes.cart_url }}" class="btn btn-text">
+                        <a href="{{ routes.cart_url }}" class="btn btn-text" aria-label="{{ 'cart.title' | t }}">
 
                             <span class="site-mobile-header-item-counter{% if cart.items.size > 0 %} has-items{% endif %}">
 
@@ -1162,7 +1162,7 @@
 
                         <div class="site-header-item site-header-item-search">
 
-                            <button type="button" class="site-search-toggle btn btn-text">
+                            <button type="button" class="site-search-toggle btn btn-text" aria-label="{{ 'general.search' | t }}">
 
                                 {%- render 'icon', icon: 'search' -%}
 
@@ -1176,7 +1176,7 @@
 
                         <div class="site-header-item site-header-item-account">
 
-                            <a href="{{ session.logged_in | yepnope: routes.account_url, routes.account_login_url }}" class="btn btn-text">
+                            <a href="{{ session.logged_in | yepnope: routes.account_url, routes.account_login_url }}" class="btn btn-text" aria-label="{{ session.logged_in | yepnope: 'account.title', 'login.title' | t }}">
 
                                 {%- render 'icon', icon: 'user' -%}
 
@@ -1190,7 +1190,7 @@
 
                         <div class="site-header-item site-header-item-wishlist">
 
-                            <a href="{{ routes.account_wishlist_url }}" class="btn btn-text">
+                            <a href="{{ routes.account_wishlist_url }}" class="btn btn-text" aria-label="{{ 'wishlist.title' | t }}">
 
                                 <span class="site-header-item-counter{% if wishlist.products.size > 0 %} has-items{% endif %}">
 
@@ -1210,7 +1210,7 @@
 
                     <div class="site-header-item site-header-item-cart">
 
-                        <a href="{{ routes.cart_url }}" class="btn btn-text">
+                        <a href="{{ routes.cart_url }}" class="btn btn-text" aria-label="{{ 'cart.title' | t }}">
 
                             <span class="site-header-item-counter{% if cart.items.size > 0 %} has-items{% endif %}">
 

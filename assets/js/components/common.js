@@ -500,6 +500,7 @@ export default {
                         }
 
                         el.setAttribute('aria-pressed', false);
+                        el.setAttribute('aria-label', theme.utils.t('wishlist.add'));
 
                         document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
                             detail: {
@@ -557,6 +558,7 @@ export default {
                         }
 
                         el.setAttribute('aria-pressed', true);
+                        el.setAttribute('aria-label', theme.utils.t('wishlist.remove'));
 
                         document.dispatchEvent(new CustomEvent('theme:wishlist:addItem', {
                             detail: {

@@ -300,7 +300,7 @@
 
         <div class="category-dynamic-content" data-aos="animate__fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
 
-            <div class="position-relative z-1 d-flex justify-content-between align-items-center mb-4 gap-g d-lg-none">
+            <div class="position-relative z-3 d-flex justify-content-between align-items-center mb-4 gap-g d-lg-none">
 
                 {% if category.filters.size > 0 and itemCount > 0 or category.active_filters.size > 0 %}
 
@@ -316,7 +316,7 @@
 
                 {% endif %}
 
-                {% if itemCount > 0 %}
+                {% if category.filters.size > 0 and itemCount > 0 %}
 
                     <div class="dropdown">
 
@@ -454,7 +454,7 @@
 
                     </div>
 
-                    <div class="col text-end d-none d-lg-block">
+                    <div class="col text-end{% if category.filters.size > 0 %} d-none d-lg-block{% endif %}">
 
                         <div class="dropdown">
 

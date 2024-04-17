@@ -1,0 +1,146 @@
+// Sizing
+// -----------------------------------------------------------------------------------------
+
+.w {
+    width: var(--width-relative, var(--width, auto));
+
+    @include media-breakpoint-up(sm) {
+        --width-relative: var(--width-sm, var(--width, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --width-relative: var(--width-md, var(--width-sm, var(--width, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --width-relative: var(--width-lg, var(--width-md, var(--width-sm, var(--width, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --width-relative: var(--width-xl, var(--width-lg, var(--width-md, var(--width-sm, var(--width, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --width-relative: var(--width-xxl, var(--width-xl, var(--width-lg, var(--width-md, var(--width-sm, var(--width, auto))))));
+    }
+}
+
+.h {
+    height: var(--height-relative, var(--height, auto));
+
+    @include media-breakpoint-up(sm) {
+        --height-relative: var(--height-sm, var(--height, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --height-relative: var(--height-md, var(--height-sm, var(--height, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --height-relative: var(--height-lg, var(--height-md, var(--height-sm, var(--height, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --height-relative: var(--height-xl, var(--height-lg, var(--height-md, var(--height-sm, var(--height, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --height-relative: var(--height-xxl, var(--height-xl, var(--height-lg, var(--height-md, var(--height-sm, var(--height, auto))))));
+    }
+}
+
+.max-w {
+    max-width: var(--max-width-relative, var(--max-width, none));
+
+    @include media-breakpoint-up(sm) {
+        --max-width-relative: var(--max-width-sm, var(--max-width, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --max-width-relative: var(--max-width-md, var(--max-width-sm, var(--max-width, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --max-width-relative: var(--max-width-lg, var(--max-width-md, var(--max-width-sm, var(--max-width, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --max-width-relative: var(--max-width-xl, var(--max-width-lg, var(--max-width-md, var(--max-width-sm, var(--max-width, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --max-width-relative: var(--max-width-xxl, var(--max-width-xl, var(--max-width-lg, var(--max-width-md, var(--max-width-sm, var(--max-width, auto))))));
+    }
+}
+
+.min-w {
+    min-width: var(--min-width-relative, var(--min-width, none));
+
+    @include media-breakpoint-up(sm) {
+        --min-width-relative: var(--min-width-sm, var(--min-width, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --min-width-relative: var(--min-width-md, var(--min-width-sm, var(--min-width, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --min-width-relative: var(--min-width-lg, var(--min-width-md, var(--min-width-sm, var(--min-width, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --min-width-relative: var(--min-width-xl, var(--min-width-lg, var(--min-width-md, var(--min-width-sm, var(--min-width, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --min-width-relative: var(--min-width-xxl, var(--min-width-xl, var(--min-width-lg, var(--min-width-md, var(--min-width-sm, var(--min-width, auto))))));
+    }
+}
+
+.max-h {
+    max-height: var(--max-height-relative, var(--max-height, none));
+
+    @include media-breakpoint-up(sm) {
+        --max-height-relative: var(--max-height-sm, var(--max-height, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --max-height-relative: var(--max-height-md, var(--max-height-sm, var(--max-height, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --max-height-relative: var(--max-height-lg, var(--max-height-md, var(--max-height-sm, var(--max-height, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --max-height-relative: var(--max-height-xl, var(--max-height-lg, var(--max-height-md, var(--max-height-sm, var(--max-height, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --max-height-relative: var(--max-height-xxl, var(--max-height-xl, var(--max-height-lg, var(--max-height-md, var(--max-height-sm, var(--max-height, auto))))));
+    }
+}
+
+.min-h {
+    min-height: var(--min-height-relative, var(--min-height, none));
+    
+    @include media-breakpoint-up(sm) {
+        --min-height-relative: var(--min-height-sm, var(--min-height, auto));
+    }
+
+    @include media-breakpoint-up(md) {
+        --min-height-relative: var(--min-height-md, var(--min-height-sm, var(--min-height, auto)));
+    }
+
+    @include media-breakpoint-up(lg) {
+        --min-height-relative: var(--min-height-lg, var(--min-height-md, var(--min-height-sm, var(--min-height, auto))));
+    }
+
+    @include media-breakpoint-up(xl) {
+        --min-height-relative: var(--min-height-xl, var(--min-height-lg, var(--min-height-md, var(--min-height-sm, var(--min-height, auto)))));
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --min-height-relative: var(--min-height-xxl, var(--min-height-xl, var(--min-height-lg, var(--min-height-md, var(--min-height-sm, var(--min-height, auto))))));
+    }
+}

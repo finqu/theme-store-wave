@@ -163,7 +163,8 @@
                         type="button"
                         class="product-wishlist-action"
                         data-wishlist-{{- wishlist -}}="{{ product.id }}"
-                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}">
+                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                        aria-label="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
                         {%- render 'icon', icon: 'like', class: 'svg-icon-fw' -%}
                     </button>
 
@@ -365,7 +366,7 @@
 
         {%- if productUrl -%}
 
-            <a href="{{ productUrl }}">
+            <a href="{{ productUrl }}" aria-label="{{ productName }}">
                 {{- productMedia -}}
             </a>
 
@@ -471,7 +472,7 @@
 
         {%- if product -%}
 
-            <a href="{{ productUrl }}">
+            <a href="{{ productUrl }}" aria-label="{{ productName }}">
                 {{- productCaptionInner -}}
             </a>
 

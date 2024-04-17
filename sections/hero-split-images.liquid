@@ -55,13 +55,13 @@
 
     {%- endcapture -%}
 
-    <div class="flex-grow-1 position-relative overflow-hidden min-vh-{{ section.settings.sectionMinHeight | divided_by: 2 }} min-vh-lg-{{ section.settings.sectionMinHeight }}{% if section.settings.imgMobile %} d-none d-md-block{% endif %}">
+    <div class="flex-grow-1 position-relative overflow-hidden min-h{% if section.settings.imgMobile %} d-none d-md-block{% endif %}" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
         <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgStart %} bg-size-cover{% endif %}" data-bg-set="{{- imgStartSrc | strip -}}"{% if section.settings.imgStart.offset_left or section.settings.imgStart.offset_top %} style="--bg-position: {{ section.settings.imgStart.offset_left }}% {{ section.settings.imgStart.offset_top }}%"{% endif %}></div>
 
     </div>
 
-    <div class="flex-grow-1 position-relative overflow-hidden min-vh-{{ section.settings.sectionMinHeight | divided_by: 2 }} min-vh-lg-{{ section.settings.sectionMinHeight }} d-none d-md-block">
+    <div class="flex-grow-1 position-relative overflow-hidden min-h d-none d-md-block" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
     
         <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgStart %} bg-size-cover{% endif %}" data-bg-set="{{- imgEndSrc | strip -}}"{% if section.settings.imgEnd.offset_left or section.settings.imgEnd.offset_top %} style="--bg-position: {{ section.settings.imgEnd.offset_left }}% {{ section.settings.imgEnd.offset_top }}%"{% endif %}></div>
 
@@ -69,7 +69,7 @@
 
     {% if section.settings.imgMobile %}
 
-        <div class="flex-grow-1 position-relative overflow-hidden min-vh-{{ section.settings.sectionMinHeight }} d-md-none">
+        <div class="flex-grow-1 position-relative overflow-hidden min-h d-md-none" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh">
 
             <div class="lazy position-absolute top-0 start-0 w-100 h-100 bg-size-cover" data-bg-set="{% if section.settings.imgDimming > 0 %}linear-gradient(0deg, rgb(0,0,0, {{- section.settings.imgDimming -}}%), rgb(0,0,0, {{- section.settings.imgDimming -}}%)) | {% endif %}url('{{- section.settings.imgMobile | thumb: '1920,1080' -}}') 1x, url('{{- section.settings.imgMobile | thumb: '1920,1080' | thumb: '@2x' -}}') 2x"{% if section.settings.imgMobile.offset_left or section.settings.imgMobile.offset_top %} style="--bg-position: {{ section.settings.imgMobile.offset_left }}% {{ section.settings.imgMobile.offset_top }}%"{% endif %}></div>
 
@@ -118,7 +118,7 @@
 
     <div class="d-flex align-items-{{ section.settings.textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
 
-        <div class="container py-6 d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
+        <div class="container d-flex justify-content-{{ section.settings.textHorizontalAlign }}">
 
             <div class="text-container w-100 max-w-lg-60">
                 {{- textContent -}}
@@ -130,7 +130,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0,  sectionContainerPaddingX: '4rem' %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingY: '4rem' %}
 
 {% schema %}
 {

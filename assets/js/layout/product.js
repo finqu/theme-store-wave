@@ -756,4 +756,6 @@ export default function() {
     if (containerEl.querySelector('.product-variants')) {
         initProductVariants();
     }
+
+    adjustHeight();
 }

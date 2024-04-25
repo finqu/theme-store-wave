@@ -704,33 +704,6 @@ export default {
             });
         });
 
-        document.querySelectorAll('.form-control').forEach(formControlEl => {
-
-            formControlEl.addEventListener('focus', () => {
-
-                if (!formControlEl.classList.contains('disabled') && !formControlEl.disabled && !formControlEl.readOnly) {
-
-                    const inputGroupEl = formControlEl.closest('.input-group');
-
-                    if (inputGroupEl && !inputGroupEl.classList.contains('input-group-focus')) {
-                        inputGroupEl.classList.add('input-group-focus');
-                    }
-                }
-            });
-
-            formControlEl.addEventListener('blur', theme.utils.debounce(() => {
-
-                if (!formControlEl.classList.contains('disabled') && !formControlEl.disabled && !formControlEl.readOnly) {
-
-                    const inputGroupEl = formControlEl.closest('.input-group');
-
-                    if (inputGroupEl && inputGroupEl.classList.contains('input-group-focus')) {
-                        inputGroupEl.classList.remove('input-group-focus');
-                    }
-                }
-            }, 100));
-        });
-
         document.querySelectorAll('[name="section-tab-action"]').forEach(sectionTabActionEl => {
             
             sectionTabActionEl.addEventListener('click', e => {

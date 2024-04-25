@@ -158,7 +158,7 @@
                 "@type": "Offer",
                 "url": "{{ variant.url | full_url }}",
                 "priceCurrency": "{{ store.currency.iso_code }}",
-                {%- if store.customer_has_purchase_right -%}
+                {%- if store.customer_has_purchase_right and product.default_or_selected_variant.in_preview == false -%}
                     "price": "{{ variant.price | money }}",
                     {%- if variant.discount_information and variant.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
                         "priceValidUntil": "{{ variant.discount_information.ends | date: '%Y-%m-%d' }}",
@@ -242,7 +242,7 @@
         "@type": "Offer",
         "url": "{{ product | link | full_url }}",
         "priceCurrency": "{{ store.currency.iso_code }}",
-        {%- if store.customer_has_purchase_right -%}
+        {%- if store.customer_has_purchase_right and product.default_or_selected_variant.in_preview == false -%}
             "price": "{{ product.default_or_selected_variant.price | money }}",
             {%- if product.has_discount and product.default_or_selected_variant.discount_information and product.default_or_selected_variant.discount_information.ends | date: '%s' > 'now' | date: '%s' -%}
                 "priceValidUntil": "{{ product.default_or_selected_variant.discount_information.ends | date: '%Y-%m-%d' }}",

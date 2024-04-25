@@ -1,23 +1,19 @@
 import Countdown from './countdown';
 
-const debounce = function (func, wait, immediate = false) {
-
+const debounce = (func, wait, immediate = false) => {
 	let timeout = null;
 
 	return function () {
-
 		const context = this;
 		const args = arguments;
-		const later = function () {
-
+		const later = () => {
 			timeout = null;
-
 			if (!immediate) {
 				func.apply(context, args);
 			}
 		};
 
-		let callNow = immediate && !timeout;
+		const callNow = immediate && !timeout;
 
 		clearTimeout(timeout);
 
@@ -29,43 +25,34 @@ const debounce = function (func, wait, immediate = false) {
 	};
 };
 
-const extend = function () {
+const extend = function (deep, ...args) {
+	let extended = {};
 
-    let extended = {};
-    let deep = false;
-    let i = 0;
-    const length = arguments.length;
+	if (typeof deep !== 'boolean') {
+		args.unshift(deep);
+		deep = false;
+	}
 
-    if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
-        deep = arguments[0];
-        i++;
-    }
+	const merge = (obj) => {
+		for (const prop in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				if (deep && typeof obj[prop] === 'object' && obj[prop] !== null) {
+					extended[prop] = extend(true, extended[prop], obj[prop]);
+				} else {
+					extended[prop] = obj[prop];
+				}
+			}
+		}
+	};
 
-    const merge = (obj) => {
+	args.forEach((obj) => {
+		merge(obj);
+	});
 
-        for (const prop in obj) {
-
-        	if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-
-	            if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-	                extended[prop] = extend(true, extended[prop], obj[prop]);
-	            } else {
-	                extended[prop] = obj[prop];
-	            }
-        	}
-        }
-    };
-
-    for (; i < length; i++) {
-        const obj = arguments[i];
-        merge(obj);
-    }
-
-    return extended;
+	return extended;
 };
 
 const t = function (key, vars = {}) {
-
 	let str = theme.store.translations[key];
 
 	if (!str) {
@@ -94,7 +81,6 @@ const t = function (key, vars = {}) {
 };
 
 const formatCurrency = function (opts = {}) {
-
 	const settings = Object.assign({
 		value: 0,
 		style: 'currency',
@@ -168,7 +154,6 @@ const formatCurrency = function (opts = {}) {
 };
 
 const formatNumber = function (opts = {}) {
-
 	const settings = Object.assign({
 		style: 'decimal',
 		value: 0
@@ -188,11 +173,9 @@ const formatNumber = function (opts = {}) {
 };
 
 const animate = function (el, animation, delay, duration) {
-
-	const prefix = 'animate__';
-
 	return new Promise((resolve, reject) => {
 
+		const prefix = 'animate__';
 		const node = el && el.nodeType ? el : document.querySelector(el);
 
 		let classes = [
@@ -232,7 +215,6 @@ const animate = function (el, animation, delay, duration) {
 };
 
 const loadScript = function (src, data = {}, onLoad, onError) {
-
 	return new Promise((resolve, reject) => {
 
 		if (!src) {
@@ -269,7 +251,6 @@ const loadScript = function (src, data = {}, onLoad, onError) {
 };
 
 const generateUuid = function () {
-
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         let r = (Math.random() * 16) | 0,
             v = c == 'x' ? r : (r & 0x3) | 0x8;
@@ -278,15 +259,11 @@ const generateUuid = function () {
 };
 
 const filterInput = function (el, filter, defaultVal, cb = null) {
-
 	if (!el || !filter) {
 		return false;
 	}
 
-    const events = [
-    	'change',
-        'blur'
-    ];
+    const events = ['change', 'blur'];
 
     let oldValue = defaultVal ? defaultVal : el.value;
     let oldSelectionStart = el.selectionStart;
@@ -328,12 +305,10 @@ const filterInput = function (el, filter, defaultVal, cb = null) {
 };
 
 const placeholderSvg = function (data) {
-
 	const type = data.type || 'image';
 	let placeholders = null;
 
-	switch(type) {
-
+	switch (type) {
 		case 'category':
 			placeholders = [
 				'category-1',
@@ -381,22 +356,21 @@ const placeholderSvg = function (data) {
 	const placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
 
 	if (data.base64) {
-
-		return 'data:image/svg+xml;base64,'+theme.store.placeholderSvgs[placeholder];
-
+		return 'data:image/svg+xml;base64,' + theme.store.placeholderSvgs[placeholder];
 	} else {
-
-		return `<img src="data:image/svg+xml;base64,${theme.store.placeholderSvgs[placeholder]}" class="svg-placeholder${data.class ? ' '+data.class : ''}"${data.width ? ' width="'+data.width+'"' : ''}${data.height ? ' height="'+data.height+'"' : ''} alt="">`;
+		return `<img src="data:image/svg+xml;base64,${theme.store.placeholderSvgs[placeholder]}" class="svg-placeholder${data.class ? ' ' + data.class : ''}"${data.width ? ' width="' + data.width + '"' : ''}${data.height ? ' height="' + data.height + '"' : ''} alt="">`;
 	}
 }
 
-const image = function(data) {
+const image = function(input = null) {
+	if (!input || typeof input !== 'object' || Object.keys(input).length === 0) {
+		return;
+	}
 
-	const url = new URL(data.src);
-	const scale = parseInt(data.scale, 10) || 1;
-	const sizeArr = data.size.split(',');
-	const width = scale * sizeArr[0];
-	const height = scale * (sizeArr[1] || sizeArr[0]);
+	const { src, scale, size } = input;
+	const url = new URL(src);
+	const scaleValue = parseInt(scale, 10) || 1;
+	const [width, height = width] = size.split(',').map(value => scaleValue * parseInt(value, 10));
 
 	url.searchParams.set('w', width);
 	url.searchParams.set('h', height);
@@ -417,7 +391,6 @@ const getCssVariable = function(variable = null, el = null) {
 }
 
 const productGridItemVariantImgSwapper = function (productVariantImgEl) {
-
 	if (!productVariantImgEl.value) {
 		return;
 	}
@@ -470,42 +443,39 @@ const countdown = function (opts = {}) {
 };
 
 const checkVisibility = function (el) {
-
-    if (!(el instanceof Element)) {
+	if (!(el instanceof Element)) {
 		return false;
 	}
 
-    const style = getComputedStyle(el);
+	const style = getComputedStyle(el);
 
-    if (style.display === 'none') return false;
+	if (style.display === 'none' || style.visibility !== 'visible' || style.opacity < 0.1) {
+		return false;
+	}
 
-    if (style.visibility !== 'visible') return false;
+	if (el.offsetWidth + el.offsetHeight + el.getBoundingClientRect().height + el.getBoundingClientRect().width === 0) {
+		return false;
+	}
 
-    if (style.opacity < 0.1) return false;
+	const elCenter = {
+		x: el.getBoundingClientRect().left + el.offsetWidth / 2,
+		y: el.getBoundingClientRect().top + el.offsetHeight / 2
+	};
 
-    if (el.offsetWidth + el.offsetHeight + el.getBoundingClientRect().height + el.getBoundingClientRect().width === 0) {
-        return false;
-    }
-    const elCenter = {
-        x: el.getBoundingClientRect().left + el.offsetWidth / 2,
-        y: el.getBoundingClientRect().top + el.offsetHeight / 2
-    };
+	if (elCenter.x < 0 || elCenter.x > (document.documentElement.clientWidth || window.innerWidth) ||
+		elCenter.y < 0 || elCenter.y > (document.documentElement.clientHeight || window.innerHeight)) {
+		return false;
+	}
 
-    if (elCenter.x < 0) return false;
+	let pointContainer = document.elementFromPoint(elCenter.x, elCenter.y);
 
-    if (elCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+	do {
+		if (pointContainer === el) {
+			return true;
+		}
+	} while (pointContainer = pointContainer.parentNode);
 
-    if (elCenter.y < 0) return false;
-
-    if (elCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
-
-    let pointContainer = document.elementFromPoint(elCenter.x, elCenter.y);
-
-    do {
-        if (pointContainer === el) return true;
-    } while (pointContainer = pointContainer.parentNode);
-	
-    return false;
+	return false;
 }
 
 export {

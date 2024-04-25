@@ -28,9 +28,7 @@
 
                             <div class="cart-item-media-img-container aspect-ratio-container">
 
-                                {{#if item.image}}
-
-                                    {{ assign 'imgSrc' item.image.original }}
+                                {{#if item.image.original}}
 
                                     {{#ifCond productImageAspectRatio '===' 9:13}}
                                         {{ assign 'imgSize' '110,142' }}
@@ -50,8 +48,8 @@
 
                                     <img
                                         alt="{{ item.name }}"
-                                        src="{{> image src=@root.imgSrc size=@root.imgSize }}"
-                                        srcset="{{> image src=@root.imgSrc size=@root.imgSize }} 1x, {{> image src=@root.imgSrc size=@root.imgSize scale='2x' }} 2x"
+                                        src="{{> image src=item.image.original size=@root.imgSize }}"
+                                        srcset="{{> image src=item.image.original size=@root.imgSize }} 1x, {{> image src=item.image.original size=@root.imgSize scale='2x' }} 2x"
                                         class="d-block mx-auto img-fluid aspect-ratio-item">
 
                                 {{else}}
@@ -153,7 +151,7 @@
                                                 {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
                                             </button>
 
-                                            <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+                                            <input type="text" inputmode="numeric" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
 
                                             <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}" aria-label="{{ t 'general.increase' }}">
                                                 {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}
@@ -712,7 +710,7 @@
                                         {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
                                     </button>
 
-                                    <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+                                    <input type="text" inputmode="numeric" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
 
                                     <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}" aria-label="{{ t 'general.increase' }}">
                                         {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}
@@ -1063,7 +1061,7 @@
                                         {% endraw %}{%- render 'icon', icon: 'subtract' -%}{% raw %}
                                     </button>
 
-                                    <input type="tel" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
+                                    <input type="text" inputmode="numeric" class="cart-item-quantity-input" value="{{ item.quantity }}" min="{{#if item.min_amount}}{{ item.min_amount }}{{else}}1{{/if}}"{{#if item.max_amount}} max="{{ item.max_amount }}"{{/if}} maxpattern="[0-9]{1,3}" data-cart-quantity-dynamic="{{ item.id }}">
 
                                     <button type="button" class="btn btn-text cart-item-quantity-increase" data-cart-quantity-increase="{{ item.id }}" aria-label="{{ t 'general.increase' }}">
                                         {% endraw %}{%- render 'icon', icon: 'add' -%}{% raw %}

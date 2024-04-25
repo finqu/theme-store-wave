@@ -2,9 +2,8 @@ import AWN from 'awesome-notifications';
 import { extend } from './utils';
 
 export default class Notify {
-
+    
     constructor() {
-
         this.opts = {
             position: 'top-right',
             maxNotifications: 5,
@@ -22,33 +21,27 @@ export default class Notify {
             }
         };
 
-        this.awn = new AWN(this.opts)
+        this.awn = new AWN(this.opts);
     }
 
-    tip(title = null, message = null, icon = null, onclick = null, opts = {}) {
-
-        let settings = {};
-
-        extend(true, settings, {
-            labels: {
-                tip: ''
-            }
-        }, opts);
-
-        const template = `
-            ${title ? `
-                <span class="d-block h5 text-title mb-0">
-                    ${title}
-                </span>
-            ` : '' }
-            ${message ? `
-                <p class="mb-0${title ? ' mt-3' : '' }">
-                    ${message}
-                </p>
-            ` : '' }
+    createTemplate(title, message) {
+        return `
+            ${title ? `<span class="d-block h5 text-title mb-0">${title}</span>` : ''}
+            ${message ? `<p class="mb-0${title ? ' mt-3' : ''}">${message}</p>` : ''}
         `;
+    }
 
-        const el = this.awn.tip(template, settings);
+    createNotification(type, title, message, onclick, opts) {
+        const settings = {
+            labels: {
+                [type]: ''
+            }
+        };
+
+        extend(true, settings, opts);
+
+        const template = this.createTemplate(title, message);
+        const el = this.awn[type](template, settings);
 
         if (typeof onclick === 'function') {
             el.addEventListener('click', onclick);
@@ -57,132 +50,24 @@ export default class Notify {
         return el;
     }
 
-    info(title = null, message = null, icon = null, onclick = null, opts = {}) {
-
-        let settings = {};
-
-        extend(true, settings, {
-            labels: {
-                info: ''
-            }
-        }, opts);
-
-        const template = `
-            ${title ? `
-                <span class="d-block h5 text-title mb-0">
-                    ${title}
-                </span>
-            ` : '' }
-            ${message ? `
-                <p class="mb-0${title ? ' mt-3' : '' }">
-                    ${message}
-                </p>
-            ` : '' }
-        `;
-
-        const el = this.awn.info(template, settings);
-
-        if (typeof onclick === 'function') {
-            el.addEventListener('click', onclick);
-        }
-
-        return el;
+    tip(title = null, message = null, onclick = null, opts = {}) {
+        return this.createNotification('tip', title, message, onclick, opts);
     }
 
-    warning(title = null, message = null, icon = null, onclick = null, opts = {}) {
-
-        let settings = {};
-
-        extend(true, settings, {
-            labels: {
-                warning: ''
-            }
-        }, opts);
-
-        const template = `
-            ${title ? `
-                <span class="d-block h5 text-title mb-0">
-                    ${title}
-                </span>
-            ` : '' }
-            ${message ? `
-                <p class="mb-0${title ? ' mt-3' : '' }">
-                    ${message}
-                </p>
-            ` : '' }
-        `;
-
-        const el = this.awn.warning(template, settings);
-
-        if (typeof onclick === 'function') {
-            el.addEventListener('click', onclick);
-        }
-
-        return el;
+    info(title = null, message = null, onclick = null, opts = {}) {
+        return this.createNotification('info', title, message, onclick, opts);
     }
 
-    success(title = null, message = null, icon = null, onclick = null, opts = {}) {
-
-        let settings = {};
-
-        extend(true, settings, {
-            labels: {
-                success: ''
-            }
-        }, opts);
-
-        const template = `
-            ${title ? `
-                <span class="d-block h5 text-title mb-0">
-                    ${title}
-                </span>
-            ` : '' }
-            ${message ? `
-                <p class="mb-0${title ? ' mt-3' : '' }">
-                    ${message}
-                </p>
-            ` : '' }
-        `;
-
-        const el = this.awn.success(template, settings);
-
-        if (typeof onclick === 'function') {
-            el.addEventListener('click', onclick);
-        }
-
-        return el;
+    warning(title = null, message = null, onclick = null, opts = {}) {
+        return this.createNotification('warning', title, message, onclick, opts);
     }
 
-    alert(title = null, message = null, icon = null, onclick = null, opts = {}) {
+    success(title = null, message = null, onclick = null, opts = {}) {
+        return this.createNotification('success', title, message, onclick, opts);
+    }
 
-        let settings = {};
-
-        extend(true, settings, {
-            labels: {
-                alert: ''
-            }
-        }, opts);
-
-        const template = `
-            ${title ? `
-                <span class="d-block h5 text-title mb-0">
-                    ${title}
-                </span>
-            ` : '' }
-            ${message ? `
-                <p class="mb-0${title ? ' mt-3' : '' }">
-                    ${message}
-                </p>
-            ` : '' }
-        `;
-
-        const el = this.awn.alert(template, settings);
-
-        if (typeof onclick === 'function') {
-            el.addEventListener('click', onclick);
-        }
-
-        return el;
+    alert(title = null, message = null, onclick = null, opts = {}) {
+        return this.createNotification('alert', title, message, onclick, opts);
     }
 
     async(promise, contentResolve = '', contentReject = '', contentLoading = '') {
@@ -193,17 +78,16 @@ export default class Notify {
         return this.awn.modal(content, size, opts);
     }
 
-    confirm(title = null, message = null, confirmCb = false, cancelCb =  false, opts = {}) {
-
-        let settings = {};
-
-        extend(true, settings, {
+    confirm(title = null, message = null, confirmCb = false, cancelCb = false, opts = {}) {
+        const settings = {
             labels: {
                 confirm: title
             }
-        }, opts);
+        };
 
-        return this.awn.confirm(message, confirmCb, cancelCb, opts)
+        extend(true, settings, opts);
+
+        return this.awn.confirm(message, confirmCb, cancelCb, opts);
     }
 
     asyncBlock(promise, contentResolve = '', contentReject = '', contentLoading = '') {

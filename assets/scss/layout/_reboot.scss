@@ -2,10 +2,13 @@
 // -----------------------------------------------------------------------------------------
 
 html {
+    height: 100%;
     -webkit-font-smoothing: antialiased;
 }
 
 body {
+    height: 100%;
+    background-color: var(--style-footer-bg-color);
     font-style: $font-style;
     @if $letter-spacing != '0' {
         letter-spacing: $letter-spacing;
@@ -28,6 +31,12 @@ body {
 
     &.is-ios {
 
+        // Blink input opacity to prevent automatic scroll to the focused element on IOS devices
+        @keyframes blinkInputFix {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
         // In order to prevent automatic zooming on IOS devices when the user
         // focuses on an input field we must set its font-size at least 16px.
         input[type="text"],
@@ -38,16 +47,10 @@ body {
         input[type="tel"],
         textarea {
             font-size: 16px !important;
-        }
 
-        // Blink input opacity to prevent automatic scroll to the focused element on IOS devices
-        @keyframes blinkInputFix {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        .form-control:focus {
-            animation: blinkInputFix 0.01s;
+            &:focus {
+                animation: blinkInputFix 0.01s;
+            }
         }
     }
 }

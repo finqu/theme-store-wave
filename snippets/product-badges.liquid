@@ -68,7 +68,7 @@
 
     {%- if store.customer_has_purchase_right -%}
 
-         {%- if showPromotion and product.default_or_selected_variant.promotion and productOutOfStock == false -%}
+         {%- if showPromotion and product.default_or_selected_variant.promotion and productOutOfStock == false and product.default_or_selected_variant.in_preview == false -%}
 
             <div class="product-badge product-badge-promotion">
 
@@ -80,7 +80,7 @@
 
         {%- endif -%}
 
-        {%- if showDiscount and productHasDiscount and productOutOfStock == false -%}
+        {%- if showDiscount and productHasDiscount and productOutOfStock == false and product.default_or_selected_variant.in_preview == false -%}
 
             <div class="product-badge product-badge-discount">
 
@@ -98,7 +98,7 @@
 
     {% endif %}
 
-    {%- if showOutOfStock and productOutOfStock -%}
+    {%- if showOutOfStock and productOutOfStock and product.default_or_selected_variant.in_preview == false -%}
 
         <div class="product-badge">
 

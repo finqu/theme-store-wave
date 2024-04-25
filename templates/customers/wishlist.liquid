@@ -20,7 +20,7 @@
 
             {% for product in wishlist.products %}
 
-                <div class="col" data-wishlist-item="{{ product.id }}"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+                <div class="col" data-wishlist-item="{{ product.default_or_selected_variant.product_id }}"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor=".section-wishlist" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
 
                     {%- render 'product-card-grid', product: product, wishlist: 'remove' -%}
 

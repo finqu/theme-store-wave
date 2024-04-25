@@ -5,15 +5,15 @@ export default function() {
     const accountCurrencyEl = containerEl.querySelector('#edit-account-currency');
     const accountLocaleEl = containerEl.querySelector('#edit-account-locale');
 
+    const submitFormHandler = () => {
+        localizationFormEl.submit();
+    };
+
     if (accountCurrencyEl) {
-        accountCurrencyEl.addEventListener('change', () => {
-            localizationFormEl.submit();
-        });
+        accountCurrencyEl.addEventListener('change', submitFormHandler);
     }
 
     if (accountLocaleEl) {
-        accountLocaleEl.addEventListener('change', ( )=> {
-            localizationFormEl.submit();
-        });
+        accountLocaleEl.addEventListener('change', submitFormHandler);
     }
 }

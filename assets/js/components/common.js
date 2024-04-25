@@ -12,7 +12,7 @@ import productLayout from '../layout/product';
 import registerLayout from '../layout/register';
 
 export default {
-	init: function() {
+	init() {
 
         this.initSection();
 
@@ -91,7 +91,7 @@ export default {
                 break;
         }
 	},
-    initCartMini: function() {
+    initCartMini() {
 
         document.addEventListener('theme:cart:render', () => {
 
@@ -139,7 +139,7 @@ export default {
             });
         });
     },
-    initCookiePolicy: function() {
+    initCookiePolicy() {
 
         const cookiePolicyEl = document.querySelector('.cookie-policy');
 
@@ -250,7 +250,7 @@ export default {
             })});
         }
     },
-    initAccessibility: function() {
+    initAccessibility() {
 
         const initBackToTopButton = () => {
 
@@ -301,7 +301,7 @@ export default {
 
         const initWishlist = () => {
 
-            const isWishlistTemplate = document.querySelector('body').classList.contains('template-customers-wishlist');
+            const isWishlistTemplate = document.body.classList.contains('template-customers-wishlist');
 
             const add = (el) => {
                 const iconEl = el.querySelector('.svg-icon');
@@ -378,6 +378,16 @@ export default {
                     method: 'DELETE'
                 }).then(() => {
 
+                    if (itemEl) {
+
+                        if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
+                            location.reload();
+                            return;
+                        }
+
+                        itemEl.remove();
+                    }
+
                     itemCountEls.forEach(el => {
         
                         const value = (parseInt(el.innerText) || 0) - 1;
@@ -411,16 +421,6 @@ export default {
 
                     if (iconEl) {
                         theme.utils.animate(iconEl, 'pulse');
-                    }
-
-                    if (itemEl) {
-
-                        if (isWishlistTemplate && document.querySelectorAll('[data-wishlist-item]').length === 1) {
-                            location.reload();
-                            return;
-                        }
-
-                        itemEl.remove();
                     }
 
                     document.dispatchEvent(new CustomEvent('theme:wishlist:removeItem', {
@@ -594,7 +594,7 @@ export default {
         }
         
     },
-    initLocalization: function() {
+    initLocalization() {
 
         document.querySelectorAll('form[name="localization"]').forEach(localizationFormEl => {
 
@@ -616,7 +616,7 @@ export default {
             }
         });
     },
-    initSection: function() {
+    initSection() {
 
         document.querySelectorAll('[class*="row-scroll-cols"]').forEach(el => {
 
@@ -780,7 +780,7 @@ export default {
 
         document.querySelectorAll('.product-card-grid-item input[name="product-variant-img"]').forEach(productVariantImgEl => theme.utils.productGridItemVariantImgSwapper(productVariantImgEl));
     },
-    initMarketing: function() {
+    initMarketing() {
 
         const initNewsletterPopup = () => {
 

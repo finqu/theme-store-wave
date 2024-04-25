@@ -1,6 +1,7 @@
 {%- assign footerBgColorBrightness = settings.style_footer_bg_color | color_brightness -%}
 {%- assign footerContentColorBrightness = settings.style_footer_text_color | color_brightness -%}
-{%- assign footerAccentColorBrightness = settings.style_footer_accent_color | color_brightness -%}
+{%- assign accentColor = settings.style_footer_accent_color | color_min_contrast: settings.style_footer_bg_color, 2 -%}
+{%- assign footerAccentColorBrightness = accentColor | color_brightness -%}
 
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} {
@@ -20,28 +21,28 @@
         --style-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
         --style-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
         --style-border-accent-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 50 }};
-        --style-btn-bg-color: {{ settings.style_footer_accent_color }};
-        --style-btn-border-color: {{ settings.style_footer_accent_color }};
-        --style-accent-color: {{ settings.style_footer_accent_color }};
+        --style-btn-bg-color: {{ accentColor }};
+        --style-btn-border-color: {{ accentColor }};
+        --style-accent-color: {{ accentColor }};
 
         {%- if footerAccentColorBrightness > 190 -%}
-            --style-btn-text-color: #000;
-            --style-accent-text-color: #000;
+            --style-btn-text-color: {{ '#000000' | color_min_contrast: accentColor }};
+            --style-accent-text-color: {{ '#000000' | color_min_contrast: accentColor }};
         {%- else -%}
-            --style-btn-text-color: #fff;
-            --style-accent-text-color: #fff;
+            --style-btn-text-color: {{ '#ffffff' | color_min_contrast: accentColor }};
+            --style-accent-text-color: {{ '#ffffff' | color_min_contrast: accentColor }};
         {%- endif -%}
 
         {%- if footerContentColorBrightness > 190 -%}
-            --style-btn-bg-active-color: {{ settings.style_footer_accent_color | color_darken: 10 }};
-            --style-btn-bg-hover-color: {{ settings.style_footer_accent_color | color_darken: 8 }};
-            --style-btn-border-hover-color: {{ settings.style_footer_accent_color | color_darken: 8 }};
-            --style-btn-border-active-color: {{ settings.style_footer_accent_color | color_darken: 13 }};
+            --style-btn-bg-active-color: {{ accentColor | color_darken: 10 }};
+            --style-btn-bg-hover-color: {{ accentColor | color_darken: 8 }};
+            --style-btn-border-hover-color: {{ accentColor | color_darken: 8 }};
+            --style-btn-border-active-color: {{ accentColor | color_darken: 13 }};
         {%- else -%}
-            --style-btn-bg-active-color: {{ settings.style_footer_accent_color | color_lighten: 10 }};
-            --style-btn-bg-hover-color: {{ settings.style_footer_accent_color | color_lighten: 8 }};
-            --style-btn-border-hover-color: {{ settings.style_footer_accent_color | color_lighten: 8 }};
-            --style-btn-border-active-color: {{ settings.style_footer_accent_color | color_lighten: 13 }};
+            --style-btn-bg-active-color: {{ accentColor | color_lighten: 10 }};
+            --style-btn-bg-hover-color: {{ accentColor | color_lighten: 8 }};
+            --style-btn-border-hover-color: {{ accentColor | color_lighten: 8 }};
+            --style-btn-border-active-color: {{ accentColor | color_lighten: 13 }};
         {%- endif -%}
 
         {%- if footerBgColorBrightness > 190 -%}
@@ -83,8 +84,8 @@
         --bs-tertiary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 }};
         --bs-tertiary-color-rgb: {{ settings.style_footer_text_color | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
-        --bs-emphasis-color: {{ settings.style_footer_accent_color }};
-        --bs-emphasis-color-rgb: {{ settings.style_footer_accent_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
+        --bs-emphasis-color: {{ accentColor }};
+        --bs-emphasis-color-rgb: {{ accentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
 
         --bs-link-color: {{ settings.style_footer_text_color }};
         --bs-link-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};

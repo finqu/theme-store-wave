@@ -160,6 +160,7 @@
 			border-radius: 50%;
 			background: var(--swatch-color, --style-form-bg-color);
 			cursor: pointer;
+			box-shadow: var(--style-form-border-color) 0px 0px 0px 0.5px;
 			@include transition($form-check-transition);
 
 			&:before {
@@ -312,8 +313,8 @@
 .form-floating {
 
 	@if $enable-input-borders == 'false' {
-		--#{$prefix}border-color: transparent;
-        --style-form-border-color: transparent;
+		--#{$prefix}border-color: var(--style-form-bg-color);
+        --style-form-border-color: var(--style-form-bg-color);
     }
 
 	& > label {
@@ -403,7 +404,7 @@ textarea {
 }
 @if $enable-input-borders == 'false' {
 	.form-control {
-		--#{$prefix}border-color: transparent;
-        --style-form-border-color: transparent;
+		--#{$prefix}border-color: var(--style-form-bg-color);
+        --style-form-border-color: var(--style-form-bg-color);
     }
 }

@@ -1,7 +1,6 @@
 class Countdown {
 
     constructor(opts = {}) {
-
         this.settings = Object.assign({
             el: null,
             datetime: null,

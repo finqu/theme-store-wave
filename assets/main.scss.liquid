@@ -1,4 +1,3 @@
-{%- assign style = settings.styles | first -%}
 {%- assign styleformBgColorBrightness = settings.style_form_bg_color | color_brightness -%}
 {%- assign styleformBorderColorBrightness = settings.style_form_border_color | color_brightness -%}
 {%- assign styleTextColorBrightness = settings.style_text_color | color_brightness -%}
@@ -150,12 +149,44 @@ $link-color: {{ settings.style_link_color }};
 $link-hover-color: {{ settings.style_link_color }};
 
 :root {
-	{%- for data in style -%}
-		{%- assign key = data[0] | handle | replace: '_', '-' -%}
-		{%- assign dataKey = 'style_' | append: data[0] -%}
-		{%- assign value = settings[dataKey] -%}	
-		--style-{{ key }}: {{ value }};
-	{%- endfor -%}
+	--style-accent-color: {{ settings.style_accent_color }};
+    --style-heading-color: {{ settings.style_heading_color }};
+    --style-subheading-color: {{ settings.style_subheading_color }};
+    --style-overline-color: {{ settings.style_overline_color }};
+    --style-text-color: {{ settings.style_text_color }};
+    --style-link-color: {{ settings.style_link_color }};
+    --style-icon-color: {{ settings.style_icon_color }};
+    --style-border-color: {{ settings.style_border_color }};
+    --style-btn-bg-color: {{ settings.style_btn_bg_color }};
+    --style-btn-text-color: {{ settings.style_btn_text_color }};
+    --style-bg-color: {{ settings.style_bg_color }};
+    --style-secondary-bg-color: {{ settings.style_secondary_bg_color }};
+    --style-product-title-color: {{ settings.style_product_title_color }};
+    --style-price-color: {{ settings.style_price_color }};
+    --style-sale-price-color: {{ settings.style_sale_price_color }};
+    --style-badge-bg-color: {{ settings.style_badge_bg_color }};
+    --style-badge-text-color: {{ settings.style_badge_text_color | color_min_contrast: settings.style_badge_bg_color }};
+    --style-new-badge-bg-color: {{ settings.style_new_badge_bg_color }};
+    --style-new-badge-text-color: {{ settings.style_new_badge_text_color | color_min_contrast: settings.style_new_badge_bg_color }};
+    --style-discount-badge-bg-color: {{ settings.style_discount_badge_bg_color }};
+    --style-discount-badge-text-color: {{ settings.style_discount_badge_text_color | color_min_contrast: settings.style_discount_badge_bg_color }};
+	--style-review-icon-color: {{ settings.style_review_icon_color | default: settings.style_icon_color }};
+    --style-table-bg-color: {{ settings.style_table_bg_color }};
+    --style-table-text-color: {{ settings.style_table_text_color }};
+    --style-table-border-color: {{ settings.style_table_border_color }};
+	--style-form-bg-color: {{ settings.style_form_bg_color }};
+    --style-form-text-color: {{ settings.style_form_text_color }};
+    --style-form-border-color: {{ settings.style_form_border_color }};
+
+	--style-header-bg-color: {{ settings.style_header_bg_color }};
+	--style-header-text-color: {{ settings.style_header_text_color }};
+	--style-header-accent-color: {{ settings.style_header_accent_color }};
+
+	--style-footer-bg-color: {{ settings.style_footer_bg_color }};
+	--style-footer-text-color: {{ settings.style_footer_text_color }};
+
+	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
+	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
 
 	{%- if styleformBgColorBrightness > 190 -%}
 		--style-form-bg-hover-color: {{ settings.style_form_bg_color | color_darken: 5 }};
@@ -247,21 +278,11 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-bg-light-color: {{ settings.style_bg_color | color_lighten: 35 }};
 	--style-border-focus-color: {{ settings.style_border_color | color_lighten: 25 }};
 	--style-btn-border-color: {{ settings.style_btn_bg_color }};
-	--style-form-bg-color: {{ settings.style_form_bg_color }};
+	
 	--style-form-placeholder-color: {{ settings.style_form_text_color | color_lighten: 15 }};
 	--style-form-bg-readonly-color: {{ settings.style_form_bg_color | color_lighten: 15 }};
 	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 | color_min_contrast: settings.style_bg_color }};
 	--style-accent-faded-color: {{ settings.style_accent_color | color_lighten: 30 }};
-	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
-	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
-	--style-review-icon-color: {{ settings.style_review_icon_color | default: settings.style_icon_color }};
-
-	--style-header-bg-color: {{ settings.style_header_bg_color }};
-	--style-header-text-color: {{ settings.style_header_text_color }};
-	--style-header-accent-color: {{ settings.style_header_accent_color }};
-
-	--style-footer-bg-color: {{ settings.style_footer_bg_color }};
-	--style-footer-text-color: {{ settings.style_footer_text_color }};
 
 	--style-loader-color: {{ settings.style_icon_color }};
 	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: settings.style_bg_color }};

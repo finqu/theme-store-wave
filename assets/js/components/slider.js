@@ -10,7 +10,6 @@ import 'swiper/css/parallax';
 export default class Slider {
 
     constructor(el) {
-
         this.el = el;
         this.opts = this.el.dataset;
 

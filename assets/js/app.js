@@ -10,7 +10,6 @@ import AOS from 'aos';
 export default class App {
 
 	constructor() {
-
 		if (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) {
             document.body.classList.add('is-ios');
         }

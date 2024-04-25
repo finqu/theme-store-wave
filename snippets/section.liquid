@@ -278,13 +278,117 @@
                     {%- assign bsLinkColor = style.text_color | color_min_contrast: style.bg_color -%}
                     {%- assign bsLinkHoverColor = style.text_color | color_min_contrast: style.bg_color -%}
 
-                    {%- for data in style -%}
-                        {%- assign key = data[0] | handle | replace: '_', '-' -%}
-                        {%- assign value = data[1] -%}
-                        {%- if value -%}
-                            --style-{{ key }}: {{ value }};
-                        {%- endif -%}
-                    {%- endfor -%}
+                    {%- if style.accent_color -%}
+                        --style-accent-color: {{ style.accent_color }};
+                    {%- endif -%}
+
+                    {%- if style.heading_color -%}
+                        --style-heading-color: {{ style.heading_color }};
+                    {%- endif -%}
+
+                    {%- if style.subheading_color -%}
+                        --style-subheading-color: {{ style.subheading_color }};
+                    {%- endif -%}
+
+                    {%- if style.overline_color -%}
+                        --style-overline-color: {{ style.overline_color }};
+                    {%- endif -%}
+
+                    {%- if style.text_color -%}
+                        --style-text-color: {{ style.text_color }};
+                    {%- endif -%}
+
+                    {%- if style.link_color -%}
+                        --style-link-color: {{ style.link_color }};
+                    {%- endif -%}
+
+                    {%- if style.icon_color -%}
+                        --style-icon-color: {{ style.icon_color }};
+                    {%- endif -%}
+
+                    {%- if style.border_color -%}
+                        --style-border-color: {{ style.border_color }};
+                    {%- endif -%}
+
+                    {%- if style.btn_bg_color -%}
+                        --style-btn-bg-color: {{ style.btn_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.btn_text_color -%}
+                        --style-btn-text-color: {{ style.btn_text_color }};
+                    {%- endif -%}
+
+                    {%- if style.bg_color -%}
+                        --style-bg-color: {{ style.bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.secondary_bg_color -%}
+                        --style-secondary-bg-color: {{ style.secondary_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.product_title_color -%}
+                        --style-product-title-color: {{ style.product_title_color }};
+                    {%- endif -%}
+
+                    {%- if style.price_color -%}
+                        --style-price-color: {{ style.price_color }};
+                    {%- endif -%}
+
+                    {%- if style.sale_price_color -%}
+                        --style-sale-price-color: {{ style.sale_price_color }};
+                    {%- endif -%}
+
+                    {%- if style.badge_bg_color -%}
+                        --style-badge-bg-color: {{ style.badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.badge_text_color -%}
+                        --style-badge-text-color: {{ style.badge_text_color | color_min_contrast: style.badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.new_badge_bg_color -%}
+                        --style-new-badge-bg-color: {{ style.new_badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.new_badge_text_color -%}
+                        --style-new-badge-text-color: {{ style.new_badge_text_color | color_min_contrast: style.new_badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.discount_badge_bg_color -%}
+                        --style-discount-badge-bg-color: {{ style.discount_badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.discount_badge_text_color -%}
+                        --style-discount-badge-text-color: {{ style.discount_badge_text_color | color_min_contrast: style.discount_badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.review_icon_color -%}
+                        --style-review-icon-color: {{ style.review_icon_color | default: style.icon_color }};
+                    {%- endif -%}
+
+                    {%- if style.table_bg_color -%}
+                        --style-table-bg-color: {{ style.table_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.table_text_color -%}
+                        --style-table-text-color: {{ style.table_text_color }};
+                    {%- endif -%}
+
+                    {%- if style.table_border_color -%}
+                        --style-table-border-color: {{ style.table_border_color }};
+                    {%- endif -%}
+
+                    {%- if style.form_bg_color -%}
+                        --style-form-bg-color: {{ style.form_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.form_text_color -%}
+                        --style-form-text-color: {{ style.form_text_color }};
+                    {%- endif -%}
+
+                    {%- if style.form_border_color -%}
+                        --style-form-border-color: {{ style.form_border_color }};
+                    {%- endif -%}
 
                     {%- if styleformBgColorBrightness > 190 -%}
                         --style-form-bg-hover-color: {{ style.form_bg_color | color_darken: 5 }};
@@ -295,7 +399,7 @@
                     {%- endif -%}
 
                     {%- if styleformBorderColorBrightness > 190 -%}
-                        --style-form-border-focus-color: {{ style.form_border_color | color_darken: 10 }};
+                        --style-form-border-focus-color: {{ style.form_border_color | color_dacolor_lightenrken: 10 }};
                         --style-form-border-disabled-color: {{ style.form_border_color | color_darken: 10 }};
                     {%- else -%}
                         --style-form-border-focus-color: {{ style.form_border_color | color_lighten: 10 }};
@@ -353,7 +457,7 @@
                         --style-btn-border-active-color: {{ style.btn_bg_color | color_darken: 13 }};
                     {%- else -%}
                         --style-btn-bg-active-color: {{ style.btn_bg_color | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ style.style_btn_bg_color | color_lighten: 8 }};
+                        --style-btn-bg-hover-color: {{ style.btn_bg_color | color_lighten: 8 }};
                         --style-btn-border-hover-color: {{ style.btn_bg_color | color_lighten: 8 }};
                         --style-btn-border-active-color: {{ style.btn_bg_color | color_lighten: 13 }};
                     {%- endif -%}
@@ -403,19 +507,41 @@
 
                 {%- else -%}
 
-                    {%- if sectionColorScheme == 'light' -%}
+                    {%- if sectionColorScheme == 'secondary' -%}
+
+                        {%- assign bgColor = settings.style_secondary_bg_color  -%}
+                        {%- assign bgColorBrightness = bgColor | color_brightness -%}
+
+                        {%- if bgColorBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
+                        {%- endif -%}
+
+                    {%- elsif sectionColorScheme == 'light' -%}
 
                         {%- assign bgColor = '#ffffff' -%}
                         {%- assign contentColor = '#000000' -%}
-
+                        
                     {%- elsif sectionColorScheme == 'dark' -%}
 
-                        {%- assign bgColor = '#000000' -%}
+                        {%- assign bgColor = '#000000'-%}
                         {%- assign contentColor = '#ffffff' -%}
 
                     {%- elsif sectionColorScheme == 'accent' -%}
 
                         {%- assign bgColor = settings.style_accent_color -%}
+                        {%- assign bgColorBrightness = bgColor | color_brightness -%}
+
+                        {%- if bgColorBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
+                        {%- endif -%}
+
+                    {%- elsif sectionColorScheme == 'custom' -%}
+
+                        {%- assign bgColor = section.settings.style_custom_color -%}
                         {%- assign bgColorBrightness = bgColor | color_brightness -%}
 
                         {%- if bgColorBrightness > 190 -%}
@@ -449,23 +575,17 @@
                     {%- assign bsLinkColor = contentColor | color_min_contrast: bgColor -%}
                     {%- assign bsLinkHoverColor = contentColor | color_min_contrast: bgColor -%}
 
-                    {%- if styleBgColorBrightness > 190 -%}
-                        --style-secondary-bg-color: {{ bgColor | color_darken: 5 }};
-                    {%- else -%}
-                        --style-secondary-bg-color: {{ bgColor | color_lighten: 5 }};
-                    {%- endif -%}
-
-                    --style-bg-color: {{ bgColor }};
-                    --style-border-color: {{ contentColor }};
+                    --style-accent-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-heading-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-subheading-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-overline-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-text-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-link-color: {{ contentColor | color_min_contrast: bgColor }};
-                    --style-accent-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-icon-color: {{ contentColor | color_min_contrast: bgColor }};
+                    --style-border-color: {{ contentColor }};
                     --style-btn-bg-color: {{ contentColor }};
                     --style-btn-text-color: {{ bgColor | color_min_contrast: contentColor }};
+                    --style-bg-color: {{ bgColor }};
                     --style-product-title-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-price-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-sale-price-color: {{ contentColor | color_min_contrast: bgColor }};
@@ -479,6 +599,14 @@
                     --style-table-bg-color: {{ bgColor }};
                     --style-table-text-color: {{ contentColor | color_min_contrast: bgColor }};
                     --style-table-border-color: {{ contentColor }};
+                    --style-form-bg-color: {{ contentColor }};
+                    --style-form-text-color: {{ bgColor | color_min_contrast: contentColor }};
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --style-secondary-bg-color: {{ bgColor | color_darken: 5 }};
+                    {%- else -%}
+                        --style-secondary-bg-color: {{ bgColor | color_lighten: 5 }};
+                    {%- endif -%}
 
                     {%- if styleformBgColorBrightness > 190 -%}
                         --style-form-bg-hover-color: {{ bgColor | color_darken: 5 }};
@@ -488,8 +616,6 @@
                         --style-form-bg-disabled-color: {{ bgColor | color_lighten: 10 }};
                     {%- endif -%}
 
-                    --style-form-bg-color: {{ contentColor }};
-                    --style-form-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-form-placeholder-color: {{ bgColor | color_lighten: 15 | color_min_contrast: contentColor }};
                     --style-form-bg-readonly-color: {{ contentColor | color_lighten: 15 | color_min_contrast: bgColor }};
 

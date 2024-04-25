@@ -502,7 +502,7 @@
 
                             {% assign url = product | within: category %}
 
-                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/category-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
 
                                 {%- render 'product-card-grid', product: product, url: url -%}
 
@@ -514,7 +514,7 @@
 
                         {% for num in (1..itemCount) %}
 
-                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
+                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/category-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
 
                                 {%- render 'product-card-grid' -%}
 

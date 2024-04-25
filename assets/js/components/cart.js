@@ -3,7 +3,6 @@ import Notify from './notify';
 export default class Cart {
 
     constructor(data = {}) {
-        
         this.cart = data;
         this.queue = [];
         this.processing = false;

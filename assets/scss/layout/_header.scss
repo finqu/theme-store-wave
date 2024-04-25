@@ -60,6 +60,8 @@ $cart-offcanvas-width: 28rem;
             .site-search-form-container {
                 background-color: var(--style-bg-color);
                 padding: spacer(2) 0;
+                --style-form-text-color: var(--style-text-color);
+                --style-form-bg-color: var(--style-bg-color);
     
                 .site-search-form {
 
@@ -217,9 +219,12 @@ $cart-offcanvas-width: 28rem;
                         align-items: center;
                         justify-content: center;
                         position: relative;
-                        padding: spacer(2);
                         min-width: 32px;
                         box-sizing: content-box;
+
+                        &:not(.site-header-logo) {
+                            padding: spacer(2);
+                        }
 
                         .svg-icon {
                             @include font-size($font-size-base * 1.6);
@@ -262,7 +267,7 @@ $cart-offcanvas-width: 28rem;
 
             .site-header-logo-text {
                 word-break: break-all;
-                font-size: clamp(1rem, 1.5vw, 2rem);
+                font-size: clamp(1rem, 1.7vw, 2rem);
             }
 
             .site-header-nav-container {
@@ -619,32 +624,36 @@ $cart-offcanvas-width: 28rem;
                         min-width: 32px;
                         box-sizing: content-box;
                     }
-                }
-            }
 
-            .site-mobile-header-logo-text {
-                @include font-size($font-size-base * 2.3);
-            }
+                    .site-mobile-header-item-logo {
+                        padding: 0 spacer(2);
+        
+                        .site-mobile-header-logo-text {
+                            @include font-size($font-size-base * 2.3);
+                        }
+                    }
 
-            .site-mobile-header-item-counter {
-                position: absolute;
-                top: 7px;
-                right: 4px;
-                height: 16px;
-                min-width: 16px;
-                border-radius: 50%;
-                display: none;
-                background-color: var(--style-accent-color);
-                color: var(--style-accent-text-color);
-
-                &.has-items {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .site-mobile-header-item-counter-text {
-                    font-size: 12px;
+                    .site-mobile-header-item-counter {
+                        position: absolute;
+                        top: 7px;
+                        right: 4px;
+                        height: 16px;
+                        min-width: 16px;
+                        border-radius: 50%;
+                        display: none;
+                        background-color: var(--style-accent-color);
+                        color: var(--style-accent-text-color);
+        
+                        &.has-items {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+        
+                        .site-mobile-header-item-counter-text {
+                            font-size: 12px;
+                        }
+                    }
                 }
             }
         }

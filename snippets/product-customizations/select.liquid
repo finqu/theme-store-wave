@@ -27,7 +27,7 @@
                 {% assign itemPrice = option.price %}
             {%- endif -%}
 
-            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock == true %}
+            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock %}
 
                 {% assign arg1 = true %}
 
@@ -45,7 +45,7 @@
 
                 {{ option.title }}
 
-                {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock == true and option.child_group != true %}
+                {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock and option.child_group != true and option.inventory_management %}
 
                     ({{ option.stock }} {{ unit }})
 

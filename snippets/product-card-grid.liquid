@@ -74,11 +74,11 @@
     {%- assign showVariants = settings.productShowVariants -%}
 {%- endif -%}
 
-{% unless store.customer_has_purchase_right %}
+{%- if store.customer_has_purchase_right == false or product.default_or_selected_variant.in_preview -%}
     {%- assign showPricing = false -%}
     {%- assign showStockBalance = false -%}
     {%- assign showAddToCart = false -%}
-{% endunless %}
+{%- endif -%}
 
 {% unless product.is_directly_buyable %}
     {%- assign showAddToCart = false -%}
@@ -92,8 +92,11 @@
 {%- assign productOriginalPrice = product.default_or_selected_variant.original_price | default: '' -%}
 {%- assign productRating = product.rating -%}
 {%- assign productMaxRating = product.max_rating -%}
-{%- assign productHasDiscount = productPrice != productOriginalPrice -%}
 {%- assign productUrl = product | link | default: '' -%}
+
+{%- if productPrice != productOriginalPrice -%}
+    {%- assign productHasDiscount = true -%}
+{%- endif -%}
 
 {% if url %}
     {%- assign productUrl = url -%}
@@ -162,9 +165,9 @@
                     <button
                         type="button"
                         class="product-wishlist-action"
-                        data-wishlist-{{- wishlist -}}="{{ product.id }}"
-                        aria-pressed="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'true', 'false' }}"
-                        aria-label="{{ product.default_or_selected_variant.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
+                        data-wishlist-{{- wishlist -}}="{{ product.default_or_selected_variant.product_id }}"
+                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                        aria-label="{{ product.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
                         {%- render 'icon', icon: 'like', class: 'svg-icon-fw' -%}
                     </button>
 

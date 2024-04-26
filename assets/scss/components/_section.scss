@@ -195,6 +195,7 @@
 		text-align: var(--section-header-text-align, var(--section-text-align, inherit));
 		color: var(--style-text-color);
 		width: 100%;
+		z-index: 1;
 		@include rfs(spacer(1), --style-spacer-1);
 		@include rfs(spacer(3), --style-spacer-3);
 		@include rfs(spacer(6), --style-spacer-6);
@@ -652,6 +653,7 @@
 		overflow: var(--section-content-overflow, visible);
 		text-align: var(--section-content-text-align);
 		height: 100%;
+		z-index: 1;
 
 		.section-tab-content {
 			position: absolute;
@@ -675,7 +677,6 @@
 	    left: 0;
 	    overflow: hidden;
 	    pointer-events: none;
-	    z-index: -1;
 
 		.section-bg {
 			position: absolute;
@@ -686,7 +687,6 @@
 		    background-size: cover;
 			background-repeat: no-repeat;
 	    	pointer-events: none;
-	    	z-index: -1;
 			background-position: var(--section-bg-img-pos, 50% 50%);
 		}
 	}

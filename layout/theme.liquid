@@ -19,7 +19,7 @@
 		{%- endfor -%}
 
 		{%- capture fontsStr -%}
-			{{- settings.bodyTextFont -}},{{- settings.headingFont -}},{{- settings.subheadingFont -}},{{- settings.overlineFont -}}{{- settings.accentFont -}},{{- settings.buttonFont -}},{{- settings.navigationFont -}}
+			{{- settings.bodyTextFont -}},{{- settings.headingFont -}},{{- settings.subheadingFont -}},{{- settings.overlineFont -}},{{- settings.accentFont -}},{{- settings.buttonFont -}},{{- settings.navigationFont -}}
 		{%- endcapture -%}
 		
 		{%- assign fonts = fontsStr | replace: ' ', '+' | split: ',' | uniq -%}

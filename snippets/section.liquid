@@ -362,6 +362,14 @@
                         --style-discount-badge-text-color: {{ style.discount_badge_text_color | color_min_contrast: style.discount_badge_bg_color }};
                     {%- endif -%}
 
+                    {%- if style.promotion_badge_bg_color -%}
+                        --style-promotion-badge-bg-color: {{ style.promotion_badge_bg_color }};
+                    {%- endif -%}
+
+                    {%- if style.promotion_badge_text_color -%}
+                        --style-promotion-badge-text-color: {{ style.promotion_badge_text_color | color_min_contrast: style.promotion_badge_bg_color }};
+                    {%- endif -%}
+
                     {%- if style.review_icon_color -%}
                         --style-review-icon-color: {{ style.review_icon_color | default: style.icon_color }};
                     {%- endif -%}
@@ -595,6 +603,8 @@
                     --style-new-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-discount-badge-bg-color: {{ contentColor }};
                     --style-discount-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
+                    --style-promotion-badge-bg-color: {{ contentColor }};
+                    --style-promotion-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
                     --style-review-icon-color: {{ contentColor }};
                     --style-table-bg-color: {{ bgColor }};
                     --style-table-text-color: {{ contentColor | color_min_contrast: bgColor }};

@@ -239,6 +239,7 @@ $link-hover-color: {{ settings.style_link_color }};
 		--pswp-bg: #000;
 		--pswp-placeholder-bg: #222;
 		--pswp-icon-color: #fff;
+		--swiper-theme-color: {{ settings.style_accent_color }};
 		--swiper-btn-bg-color: {{ settings.style_bg_color }};
 		--swiper-btn-color: {{ settings.style_icon_color }};
 		--swiper-btn-border-color: {{ settings.style_bg_color | color_darken: 30 }};
@@ -252,6 +253,7 @@ $link-hover-color: {{ settings.style_link_color }};
 		--pswp-bg: #fff;
 		--pswp-placeholder-bg: #222;
 		--pswp-icon-color: #000;
+		--swiper-theme-color: {{ settings.style_accent_color }};
 		--swiper-btn-bg-color: {{ settings.style_bg_color }};
 		--swiper-btn-color: {{ settings.style_icon_color }};
 		--swiper-btn-border-color: {{ settings.style_bg_color | color_lighten: 30 }};
@@ -300,6 +302,12 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-form-bg-readonly-color: {{ settings.style_form_bg_color | color_lighten: 15 }};
 	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 | color_min_contrast: settings.style_bg_color }};
 	--style-accent-faded-color: {{ settings.style_accent_color | color_lighten: 30 }};
+
+	{%- if settings.style_header_bg_color == settings.style_bg_color -%}
+		--style-submenu-accent-color: {{ settings.style_header_accent_color }};
+	{%- else -%}
+		--style-submenu-accent-color: {{ settings.style_accent_color | color_min_contrast: settings.style_bg_color }};
+	{%- endif -%}
 
 	--style-loader-color: {{ settings.style_icon_color }};
 	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: settings.style_bg_color }};

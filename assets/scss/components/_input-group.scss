@@ -6,14 +6,23 @@
     @if $enable-input-borders == 'false' {
         --style-form-border-color: var(--style-form-bg-color);
 
-        .btn:not(:disabled):not(.disabled):focus,
-        .input-group-text:focus,
-        .form-control:focus {
-            border-color: var(--style-form-border-color);
+        &:not(.disable-focus) {
+            .btn:not(:disabled):not(.disabled):focus,
+            .input-group-text:focus,
+            .form-control:focus {
+                border-color: var(--style-form-border-color);
+            }
+        }
+
+        &.disable-focus:focus-within {
+            .input-group-text:focus,
+            .form-control:focus {
+                border-color: var(--style-form-border-color);
+            }
         }
     }
 
-    &:focus-within {
+    &:not(.disable-focus):focus-within {
 
         .btn:not(.btn-primary):not(.btn-secondary):not(:disabled):not(.disabled),
         .btn:not(:disabled):not(.disabled),
@@ -23,6 +32,17 @@
 
             &:hover {
                 border-color: var(--style-form-border-focus-color);
+            }
+        }
+    }
+
+    &.disable-focus:focus-within {
+        .input-group-text,
+        .form-control {
+            border-color: var(--style-form-border-color);
+
+            &:hover {
+                border-color: var(--style-form-border-color);
             }
         }
     }

@@ -10,6 +10,7 @@
 	- sectionOverline: {String}
 	- sectionOverlineTag: {String}
 	- sectionDescription: {String}
+	- sectionDescriptionTruncate: {Boolean}
 	- sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
 	- sectionHeaderClass: {String}
 	- sectionHeaderContainer {String} 'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
@@ -41,6 +42,14 @@
     
     {%- if section.settings.sectionHeaderTextAlign and section.settings.sectionHeaderTextAlign != 'nil' -%}
         {%- assign sectionHeaderTextAlign = section.settings.sectionHeaderTextAlign -%}
+    {%- endif -%}
+
+{%- endif -%}
+
+{%- if sectionDescriptionTruncate == nil and section -%}
+    
+    {%- if section.settings.sectionDescriptionTruncate -%}
+        {%- assign sectionDescriptionTruncate = section.settings.sectionDescriptionTruncate -%}
     {%- endif -%}
 
 {%- endif -%}
@@ -203,7 +212,7 @@
 
 			<div class="description-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
 
-				{% if sectionDescription.size > 220 %}
+				{% if sectionDescriptionTruncate and sectionDescription.size > 220 %}
 
 					{%- assign descriptionCollapseId = sectionDescription | md5 -%}
 

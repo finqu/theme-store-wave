@@ -871,7 +871,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionTitle: category.title, sectionTitleTag: 'h1', sectionDescription: category.description, sectionBreadcrumbs: category.breadcrumbs, sectionContentAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem' %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionTitle: category.title, sectionTitleTag: 'h1', sectionDescription: category.description, sectionBreadcrumbs: category.breadcrumbs, sectionContentAnimation: false, sectionHeaderGapScale: 1, sectionInnerGap: '2rem', sectionDescriptionTruncate: true %}
 
 {%- if rendered_partial != 'sections/category-template' and settings.schemaBreadcrumbList -%}
     {% render 'schemas/breadcrumblist', breadcrumbs: sectionBreadcrumbs, currentItem: category %}

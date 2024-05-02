@@ -19,6 +19,7 @@
     - sectionInnerGap {String}
     - sectionGutterWidth {String}
     - sectionDescription: {String}
+    - sectionDescriptionTruncate: {Boolean}
     - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
     - sectionHeader {Boolean}
     - sectionHeaderTextAlign {String} 'nil', 'start', 'center', 'end'
@@ -76,6 +77,7 @@
 {%- assign sectionOverline = sectionOverline | default: section.settings.sectionOverline -%}
 {%- assign sectionOverlineTag = sectionOverlineTag | default: section.settings.sectionOverlineTag -%}
 {%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
+{%- assign sectionDescriptionTruncate = sectionDescriptionTruncate | default: section.settings.sectionDescriptionTruncate -%}
 {%- assign sectionBreadcrumbs = sectionBreadcrumbs | default: nil -%}
 {%- assign sectionAction = sectionAction | strip -%}
 {%- assign sectionHeaderContainer = sectionHeaderContainer | default: sectionContainer -%}
@@ -751,7 +753,7 @@
 
         {%- if sectionTitle or sectionSubtitle or sectionOverline or sectionDescription or sectionBreadcrumbs or sectionAction -%}
 
-            {%- render 'section-header', section: section, sectionTitle: sectionTitle, sectionTitleClass: sectionTitleClass, sectionTitleTag: sectionTitleTag, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionSubtitle: sectionSubtitle, sectionSubtitleTag: sectionSubtitleTag, sectionOverline: sectionOverline, sectionOverlineTag: sectionOverlineTag, sectionDescription: sectionDescription, sectionBreadcrumbs: sectionBreadcrumbs, sectionHeaderClass: sectionHeaderClass, sectionHeaderContainer: sectionHeaderContainer, sectionAnimation: sectionHeaderAnimation, sectionAnimationRepeat: sectionAnimationRepeat, sectionHandle: sectionHandle, sectionHeaderAction: sectionAction, sectionHeaderTextAlign: sectionHeaderTextAlign -%}
+            {%- render 'section-header', section: section, sectionTitle: sectionTitle, sectionTitleClass: sectionTitleClass, sectionTitleTag: sectionTitleTag, sectionHeaderSecondaryAction: sectionHeaderSecondaryAction, sectionSubtitle: sectionSubtitle, sectionSubtitleTag: sectionSubtitleTag, sectionOverline: sectionOverline, sectionOverlineTag: sectionOverlineTag, sectionDescription: sectionDescription, sectionDescriptionTruncate: sectionDescriptionTruncate, sectionBreadcrumbs: sectionBreadcrumbs, sectionHeaderClass: sectionHeaderClass, sectionHeaderContainer: sectionHeaderContainer, sectionAnimation: sectionHeaderAnimation, sectionAnimationRepeat: sectionAnimationRepeat, sectionHandle: sectionHandle, sectionHeaderAction: sectionAction, sectionHeaderTextAlign: sectionHeaderTextAlign -%}
 
         {%- endif -%}
 

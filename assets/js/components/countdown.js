@@ -50,8 +50,6 @@ class Countdown {
         if (this.targetDate - this.currentDate > 0) {
             this.updateInterval = setInterval(this.update.bind(this), 1000);
         }
-
-        return this;
     }
 
     update() {

@@ -12,6 +12,10 @@
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 {%- endif -%}
 
+{%- if section.settings.richtext -%}
+    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- endif -%}
+
 {%- if section.settings.sectionTextAlign == 'nil' -%}
     {%- assign sectionTextAlign = settings.sectionTextAlign -%}
 {% else %}
@@ -28,18 +32,6 @@
 {%- endcase -%}
 
 {%- capture sectionContent -%}
-
-    {% if section.settings.richtext %}
-
-        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-        <div data-aos="{{ settings.sectionAnimation }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}" data-aos-anchor="#finqu-section-{{ section.id }}">
-
-            {{ section.settings.richtext }}
-
-        </div>
-
-    {% endif %}
 
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
@@ -129,7 +121,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionDescription: section.settings.richtext, sectionHeaderGapScale: 0.70, sectionInnerGap: '2rem' %}
 
 {% schema %}
 {

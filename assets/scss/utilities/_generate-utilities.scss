@@ -147,6 +147,29 @@ $utilities: map-merge(
                 )
             )
         ),
+        "border-color": (
+            property: border-color,
+            class: border,
+            local-vars: (
+                "border-opacity": 1
+            ),
+            values: map-merge(
+                $utilities-border-colors,
+                (
+                    "accent": var(--style-accent-color)
+                )
+            )
+        ),
+        "subtle-border-color": (
+            property: border-color,
+            class: border,
+            values: map-merge(
+                $utilities-border-subtle,
+                (
+                    "accent": var(--style-accent-color)
+                )
+            )
+        ),
         "width": (
             property: width,
             class: w,

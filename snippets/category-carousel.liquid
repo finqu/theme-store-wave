@@ -275,7 +275,7 @@
             {%- if itemCategory -%}
 
                 {%- if item.settings.img -%}
-                    {%- assign img = item.settings.img-%}
+                    {%- assign img = item.settings.img -%}
                     {%- assign imgAlt = item.settings.img.alt -%}
                 {%- else -%}
                     {%- assign img = itemCategory.image -%}
@@ -284,7 +284,7 @@
                 
                 {%- assign resourceUrl = item.settings.resource.url | default: itemCategory | link -%}
                 {%- assign resourceTarget = item.settings.resource.target | default: '_self' -%}
-                {%- assign text = item.settings.text | default: itemCategory.title -%}
+                {%- assign text = item.settings.resource.text | default: itemCategory.title -%}
 
             {%- else -%}
 
@@ -292,7 +292,7 @@
                 {%- assign imgAlt = item.settings.img.alt -%}
                 {%- assign resourceUrl = item.settings.resource.url -%}
                 {%- assign resourceTarget = item.settings.resource.target | default: '_self' -%}
-                {%- assign text = item.settings.text -%}
+                {%- assign text = item.settings.resource.text -%}
 
             {%- endif -%}
 

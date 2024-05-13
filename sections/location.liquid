@@ -57,7 +57,7 @@
 
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
-    <div class="iframe-container{% unless section.settings.iframeFullscreen %} container{% endunless %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+    <div class="iframe-container{% unless section.settings.iframeFullscreen %} container{% endunless %}" data-aos="animation-zoomFade" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
         {%- if section.settings.iframe -%}
 
@@ -73,7 +73,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionCustomContent: sectionCustomContent, sectionHeader: false %}
+{% render 'section', section: section, sectionCustomContent: sectionCustomContent, sectionHeader: false, sectionOverflow: 'hidden' %}
 
 {% schema %}
 {

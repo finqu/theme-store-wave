@@ -1,9 +1,12 @@
+{%- if section.settings.contentAlign != 'nil' -%}
+    {%- assign contentAlign = section.settings.contentAlign -%}
+{%- else -%}
+    {%- assign contentAlign = settings.sectionTextAlign -%}
+{%- endif -%}
 
-{%- capture sectionStyle -%}
-    #finqu-section-{{ section.id }} {
-        --style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
-    }
-{%- endcapture -%}
+{%- if section.settings.gutterMode == 'custom' -%}
+    {%- assign sectionGutterWidth = section.settings.gutterWidth | append: 'rem'  -%}
+{%- endif -%}
 
 <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
@@ -93,7 +96,7 @@
 
     {% if section.settings.setting_blocks.items.size == 0 and request.design_mode == 'edit' %}
 
-        <div class="row gy-g row-cols-2 row-cols-lg-{{ section.settings.memberPerRow }}">
+        <div class="row gy-g row-cols-2 row-cols-lg-{{ section.settings.memberPerRow }} justify-content-{{ contentAlign }}">
 
             {% for num in (1..section.settings.memberPerRow) %}
 
@@ -113,7 +116,7 @@
 
                     </div>
 
-                    <div class="d-flex flex-column mt-g gap-1">
+                    <div class="d-flex flex-column mt-4 gap-1">
 
                         <h4 class="d-block mb-0 text-title">
                             {{- 'placeholder.member' | t -}} {{ forloop.index }}
@@ -133,7 +136,7 @@
 
     {% else %}
 
-        <div class="row gy-g row-cols-2 row-cols-lg-{{ section.settings.memberPerRow }}">
+        <div class="row gy-g row-cols-2 row-cols-lg-{{ section.settings.memberPerRow }} justify-content-{{ contentAlign }}">
 
             {% for item in section.settings.setting_blocks.items %}
 
@@ -181,7 +184,7 @@
 
                     {% if item.settings.name or item.settings.role or item.settings.additionalInformation %}
 
-                        <div class="d-flex flex-column mt-g gap-1">
+                        <div class="d-flex flex-column mt-4 gap-1">
 
                             {% if item.settings.name %}
 
@@ -221,7 +224,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false %}
+{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionGutterWidth: sectionGutterWidth %}
 
 {% schema %}
 {
@@ -384,7 +387,61 @@
                             },
                             "settings": [
                                 {
+                                    "id": "sectionHeaderTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Heading text align",
+                                        "fi": "Otsikon tekstin tasaus"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
                                     "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Content text align",
+                                        "fi": "Sisällön tekstin tasaus"
+                                    },
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "{# icon.align-center #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "contentAlign",
                                     "type": "radio-pill",
                                     "label": {
                                         "en": "Content align",
@@ -472,6 +529,42 @@
                                     },
                                     "default": true,
                                     "conditions": ["imgShape eq default"]
+                                },
+                                {
+                                    "id": "gutterMode",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Column gutter",
+                                        "fi": "Sarakkeiden väli"
+                                    },
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": {
+                                                "en": "Custom",
+                                                "fi": "Mukautettu"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "gutterWidth",
+                                    "label": {
+                                        "en": "Gutter",
+                                        "fi": "Väli"
+                                    },
+                                    "type": "range",
+                                    "min": 2,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "4",
+                                    "unit": "rem",
+                                    "conditions": ["gutterMode eq custom"]
                                 }
                             ]
                         },

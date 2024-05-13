@@ -27,7 +27,7 @@
 
         {%- capture slideContent -%}
 
-            <div class="section-highlight-item d-flex flex-column justify-content-end h-100{% if slideContentClass %} {{ slideContentClass }}{% endif %}">
+            <div class="section-highlight-item d-flex flex-column h-100{% if slideContentClass %} {{ slideContentClass }}{% endif %}">
 
                 {% if item.settings.img %}
 
@@ -81,7 +81,7 @@
 
                 {% if item.settings.description %}
 
-                    <div class="d-inline-flex flex-column align-self-{{ section.settings.sectionTextAlign }} mb-g text-muted">
+                    <div class="d-inline-flex flex-column align-self-{{ section.settings.sectionTextAlign }} mb-auto text-muted">
 
                         {%- if section.settings.showQuotes -%}
                             <span class="d-block text-start">

@@ -1,19 +1,19 @@
-// Category
+// Search
 // -----------------------------------------------------------------------------------------
 
-.section-category {
-
-    .category-filters .form-check-label {
+.section-search {
+    
+    .search-filters .form-check-label {
         display: flex;
         justify-content: space-between;
     }
 
-    .category-filters {
+    .search-filters {
 
-        .category-filter-dropdown {
+        .search-filter-dropdown {
             display: inline-flex;
 
-            .category-filter-btn {
+            .search-filter-btn {
                 @include font-size($font-size-base);
                 border: 1px solid var(--style-border-color);
                 border-radius: var(--style-btn-border-radius);
@@ -31,13 +31,13 @@
                     }
                 }
 
-                .category-filter-btn-text {
+                .search-filter-btn-text {
                     font-weight: $font-weight-normal;
                     margin-right: spacer(2);
                 }
             }
 
-            .category-filter-dropdown-menu {
+            .search-filter-dropdown-menu {
                 min-width: 250px;
                 overflow-y: auto;
                 max-height: 300px;
@@ -45,7 +45,7 @@
         }
     }
 
-    .category-activated-filters {
+    .search-activated-filters {
         margin-top: calc(spacer(3) * -1);
 
         .item {
@@ -59,18 +59,17 @@
                 padding: spacer(1) spacer(2);
                 @include font-size($font-size-base * 0.95);
 
-                &.category-remove-filter {
+                &.search-remove-filter {
                     margin-right: spacer(2);
                     color: var(--style-text-color);
                     background-color: var(--style-bg-accent-color);
-                    border-radius: var(--style-btn-border-radius);
 
-                    .category-activated-filter-icon {
+                    .search-activated-filter-icon {
                         margin-left: spacer(1);
                     }
                 }
 
-                &.category-reset-filters {
+                &.search-reset-filters {
                     margin-left: -#{spacer(2)};
                     color: var(--style-text-color);
                     background-color: var(--style-bg-color);
@@ -79,9 +78,9 @@
         }
     }
 
-    .category-dynamic-content {
+    .search-dynamic-content {
 
-        &.category-dynamic-content-loading {
+        &.search-dynamic-content-loading {
             opacity: 0.6 !important;
             pointer-events: none !important;
         }
@@ -232,152 +231,9 @@
                 }
             }
 
-            .category-filters {
+            .search-filters {
                 height: 100%;
                 overflow-y: scroll;
-            }
-        }
-    }
-
-    .sidebar-menu {
-        line-height: 20px;
-        padding-left: 0;
-        list-style: none;
-
-        &.sidebar-menu-highlight-active-child-link {
-
-            .sidebar-menu-child-links-container {
-                background-color: var(--style-bg-accent-color);
-            }
-
-            > .sidebar-menu-item {
-
-                > .sidebar-menu-child-links-container {
-                    padding-top: .80rem;
-                    margin-bottom: .80rem;
-                }
-            }
-        }
-
-        &.no-active-child-links {
-
-            > .sidebar-menu-item {
-
-                > .sidebar-menu-item-link > .sidebar-menu-item-text,
-                > .sidebar-menu-item-text {
-                    font-weight: $font-weight-bold;
-                    border-bottom-width: 2px;
-                }
-            }
-        }
-
-        .sidebar-menu-child-links-container {
-            list-style: none;
-            padding-left: spacer(3);
-        }
-
-        .sidebar-menu-item {
-
-            &.active-item {
-
-                > .sidebar-menu-item-link,
-                > .sidebar-menu-item-text {
-                    color: var(--style-accent-color);
-                }
-            }
-
-            &.has-active-item {
-                font-weight: $font-weight-bold;
-
-                .sidebar-menu-item-text {
-                    border-bottom-width: 2px;
-                }
-            }
-
-            .sidebar-menu-item-link {
-                display: block;
-                padding-bottom: .80rem;
-                color: var(--style-link-color);
-
-                &:hover {
-                    color: var(--style-link-color);
-
-                    .sidebar-menu-item-text {
-                        border-bottom-color: var(--style-link-color);
-                    }
-                }
-
-                .sidebar-menu-item-text {
-                    display: inline-block;
-                    padding-bottom: 0;
-                }
-            }
-
-            .sidebar-menu-item-text {
-                display: block;
-                padding-bottom: .80rem;
-                border-bottom: 1px solid transparent;
-                transition: border .15s ease-in-out;
-            }
-        }
-
-        .sidebar-menu-child-links-container {
-            padding-left: spacer(3);
-            list-style: none;
-        }
-    }
-
-    .category-subcategories {
-
-        &.category-tags {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            box-sizing: content-box;
-
-            .category-tag {
-                border: 1px solid var(--style-border-color);
-                border-radius: var(--style-btn-border-radius);
-
-                .category-tag-content {
-                    display: block;
-                    @include font-size($font-size-base);
-                    padding: .6rem .8rem;
-                    text-align: center;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-            }
-
-            .swiper-horizontal {
-                width: 100%;
-
-                .swiper-slide {
-                    width: auto;
-                }
-
-                .swiper-button-prev,
-                .swiper-button-next {
-                    width: 30px;
-                    height: 30px;
-                    margin-top: calc(0px - (30px / 2));
-                    z-index: 10;
-                }
-
-                .swiper-button-prev,
-                .swiper-rtl .swiper-button-next {
-                    font-size: 1.5rem;
-                    left: 4px;
-                    right: auto;
-                }
-
-                .swiper-button-next,
-                .swiper-rtl .swiper-button-prev {
-                    font-size: 1.5rem;
-                    right: 4px;
-                    left: auto;
-                }
             }
         }
     }

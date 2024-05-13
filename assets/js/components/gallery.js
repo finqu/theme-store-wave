@@ -26,7 +26,8 @@ export default class Gallery {
 		this.initialize();
 	}
 
-	initHandler = (el) => {
+	initHandler = (e) => {
+		const el = e.target;
 		let galleryItemEl = el.closest('.gallery-item');
 		let parentEl = galleryItemEl.parentElement;
 
@@ -54,110 +55,91 @@ export default class Gallery {
 
 	addDomItems = async () => {
 		const galleryItemEls = this.el.querySelectorAll('.gallery-item');
-		const maxLoadIndex = galleryItemEls.length;
-		let itemsToLoad = maxLoadIndex;
-		let loadIndex = 0;
 
 		if (galleryItemEls.length) {
 
 			await Promise.all([...galleryItemEls].map(async (galleryItemEl, i) => {
-
+				
 				const galleryImgSrcEl = galleryItemEl.querySelector('[data-gallery-img-src]');
 				const galleryIframeSrcEl = galleryItemEl.querySelector('[data-gallery-iframe-src]');
 				const galleryVideoSrcEl = galleryItemEl.querySelector('[data-gallery-video-src]');
 
-				if (this.imgPreload && galleryImgSrcEl) {
+				await new Promise((resolve) => {
 
-					const src = galleryImgSrcEl.dataset.galleryImgSrc;
-					const img = new Image();
+					if (this.imgPreload && galleryImgSrcEl) {
 
-					await new Promise((resolve) => {
+						const img = new Image();
+
 						img.onload = () => {
-							itemsToLoad--;
-							loadIndex++;
-
 							this.opts.dataSource.push({
 								index: i,
-								src: src,
+								src: img.src,
 								width: img.width,
 								height: img.height
 							});
 
-							if (itemsToLoad === 0) {
-								resolve();
-							}
+							resolve();
 						};
 
-						img.src = src;
-					});
+						img.onerror = () => {
+							resolve();
+						};
 
-				} else if (galleryImgSrcEl) {
+						img.src = galleryImgSrcEl.dataset.galleryImgSrc;
 
-					itemsToLoad--;
-					loadIndex++;
+					} else if (galleryImgSrcEl) {
 
-					this.opts.dataSource.push({
-						index: i,
-						src: galleryImgSrcEl.dataset.galleryImgSrc,
-						width: galleryImgSrcEl.dataset.galleryImgWidth,
-						height: galleryImgSrcEl.dataset.galleryImgHeight
-					});
+						this.opts.dataSource.push({
+							index: i,
+							src: galleryImgSrcEl.dataset.galleryImgSrc,
+							width: galleryImgSrcEl.dataset.galleryImgWidth,
+							height: galleryImgSrcEl.dataset.galleryImgHeight
+						});
 
-					if (itemsToLoad === 0) {
 						resolve();
-					}
 
-				} else if (galleryIframeSrcEl) {
+					} else if (galleryIframeSrcEl) {
 
-					itemsToLoad--;
-					loadIndex++;
-
-					this.opts.dataSource.push({
-						index: i,
-						html: `
-							<div class="pswp__iframe-container">
-								<div class="pswp__iframe-aspect-ratio-container">
-									<iframe class="pswp__iframe"
-										src="${galleryIframeSrcEl.dataset.galleryIframeSrc}"
-										width="960"
-										height="640"
-										frameborder="0"
-										webkitallowfullscreen
-										mozallowfullscreen
-										allowfullscreen></iframe>
-								</div>
-							</div>
-						`
-					});
-
-					if (itemsToLoad === 0) {
-						resolve();
-					}
-
-				} else if (galleryVideoSrcEl) {
-
-					itemsToLoad--;
-					loadIndex++;
-
-					this.opts.dataSource.push({
-						index: i,
-						html: `
-							<div class="pswp__video-container">
-								<div class="pswp__video-aspect-ratio-container">
-									<video class="pswp__video"
-										src="${galleryVideoSrcEl.dataset.galleryVideoSrc}"
-										width="960"
-										height="640"
-										controls>
+						this.opts.dataSource.push({
+							index: i,
+							html: `
+								<div class="pswp__iframe-container">
+									<div class="pswp__iframe-aspect-ratio-container">
+										<iframe class="pswp__iframe"
+											src="${galleryIframeSrcEl.dataset.galleryIframeSrc}"
+											width="960"
+											height="640"
+											frameborder="0"
+											webkitallowfullscreen
+											mozallowfullscreen
+											allowfullscreen></iframe>
 									</div>
 								</div>
 							`
-					});
+						});
 
-					if (itemsToLoad === 0) {
+						resolve();
+
+					} else if (galleryVideoSrcEl) {
+
+						this.opts.dataSource.push({
+							index: i,
+							html: `
+								<div class="pswp__video-container">
+									<div class="pswp__video-aspect-ratio-container">
+										<video class="pswp__video"
+											src="${galleryVideoSrcEl.dataset.galleryVideoSrc}"
+											width="960"
+											height="640"
+											controls>
+										</div>
+									</div>
+								`
+						});
+
 						resolve();
 					}
-				}
+				});
 			}));
 		}
 	};

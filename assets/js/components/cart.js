@@ -23,7 +23,7 @@ export default class Cart {
 
             e.preventDefault();
 
-            if (e.target.hasAttribute('data-cart-form')) {
+            if (e.target.matches('[data-cart-form]')) {
 
                 const cartFormVal = e.target.getAttribute('data-cart-form');
                 let cartFormEl = null;
@@ -137,7 +137,7 @@ export default class Cart {
                         return;
                     }
 
-                    this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), customizations, e.target.hasAttribute('data-cart-checkout'));
+                    this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), customizations, e.target.matches('[data-cart-checkout]'));
                 }
 
             } else {
@@ -149,7 +149,7 @@ export default class Cart {
                     return;
                 }
 
-                this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), [], e.target.hasAttribute('data-cart-checkout'));
+                this.addItem(parseInt(itemId, 10), parseInt(quantity || 1, 10), [], e.target.matches('[data-cart-checkout]'));
             }
         };
 
@@ -487,31 +487,31 @@ export default class Cart {
 
         document.addEventListener('click', e => {
 
-            if (e.target.hasAttribute('data-cart-add')) {
+            if (e.target.matches('[data-cart-add]')) {
                 return add(e);
             }
 
-            if (e.target.hasAttribute('data-cart-remove')) {
+            if (e.target.matches('[data-cart-remove]')) {
                 return remove(e);
             }
 
-            if (e.target.hasAttribute('data-cart-update')) {
+            if (e.target.matches('[data-cart-update]')) {
                 return update(e);
             }
 
-            if (e.target.hasAttribute('data-cart-quantity-decrease')) {
+            if (e.target.matches('[data-cart-quantity-decrease]')) {
                 return quantityDecrease(e);
             }
 
-            if (e.target.hasAttribute('data-cart-quantity-increase')) {
+            if (e.target.matches('[data-cart-quantity-increase]')) {
                 return quantityIncrease(e);
             }
 
-            if (e.target.hasAttribute('data-cart-clear')) {
+            if (e.target.matches('[data-cart-clear]')) {
                 return clear(e);
             }
 
-            if (e.target.hasAttribute('data-cart-checkout')) {
+            if (e.target.matches('[data-cart-checkout]')) {
                 return checkout(e);
             }
         });
@@ -711,9 +711,7 @@ export default class Cart {
             if (lastItem) {
 
                 if (theme.store.cart.showAddNotification && !checkout) {
-                    this.notify.success(theme.utils.t('cart.product_added_to_cart'), lastItem.name, null, () => {
-                        window.location.href = theme.store.routes.cartUrl;
-                    });
+                    this.notify.success(theme.utils.t('cart.product_added_to_cart'), lastItem.name, () => document.dispatchEvent(new CustomEvent('theme:cart:show')));
                 }
 
                 const eventDetail = lastItem;

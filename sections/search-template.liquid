@@ -1,62 +1,737 @@
 {%- assign searchTerm = search.search_term | rstrip -%}
 {%- assign activeSortOption = search.sort_by | default: search.default_sort_by -%}
 {%- assign animatedItemsCount = settings.productPerRow | times: 2 -%}
+{%- assign productPerRow = settings.productPerRow -%}
 
-{%- if search.results.size > 0 -%}
+{% if search.results.size == 0 and request.design_mode == 'edit' %}
     {%- assign itemCount = search.results.size -%}
-{%- elsif request.design_mode -%}
-    {%- assign itemCount = settings.productPerRow | times: 4 -%}
-{%- endif -%}
+{% else %}
+    {%- assign itemCount = search.results.size -%}
+{% endif %}
 
 {%- capture sectionContent -%}
 
-	{%- paginate search.results by 100 -%}
+    {%- paginate search.results by 100 -%}
 
-		<div class="row mb-g position-relative z-1" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+        {% if search.filters.size > 0 and itemCount > 0 or search.active_filters.size > 0 %}
 
-            <div class="col-auto">
+            <form id="search-filters-form" class="search-filters mb-2 d-none d-lg-block">
 
-                <span class="text-muted">
-                    {%- if itemCount == 1 -%}
-                        {{- 'general.product_count' | t: amount: itemCount -}}
-                    {%- else -%}
-                        {{- 'general.product_plural_count' | t: amount: itemCount -}}
-                    {%- endif -%}
-                </span>
+                {% for filter in search.filters %}
 
-            </div>
+                    <div class="search-filter-dropdown dropdown" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-            <div class="col text-end">
+                        <button class="search-filter-btn btn{% if settings.sectionHighlightItems %} border{% endif %}" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
 
-                <div class="dropdown">
+                            <span class="search-filter-btn-text">
 
-                    <button type="button" class="btn btn-text text-muted" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                                {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
 
-                        <span class="me-1">
+                                    <span>{{ filter.label }}</span>
 
-                            {% for option in search.sort_options %}
+                                {% else %}
 
-                                {% if option == activeSortOption %}
-                                    {{ option | prepend: 'filters.sort-by.' | t }}
+                                    {%- capture paramTranslationKey -%}
+                                        filters.{{- filter.param_name | replace: '-', '_' -}}.title
+                                    {%- endcapture -%}
+
+                                    <span>{{ paramTranslationKey | strip | t: default:filter.label }}</span>
+
                                 {% endif %}
 
-                            {% endfor %}
+                            </span>
 
+                            {%- render 'icon', icon: 'angle-down' -%}
+
+                        </button>
+
+                        <div class="search-filter-dropdown-menu dropdown-menu p-4">
+
+                            {% if filter.type == 'list' %}
+
+                                {% if filter.param_name contains 'filter.taxonomy.' %}
+
+                                    {% if filter.taxonomy_attribute.type == 'color' %}
+                                        <div class="form-check-color-swatches-container form-check-color-swatches-gap-lg">
+                                    {% endif %}
+
+                                    {% for value in filter.values %}
+
+                                        {% if filter.taxonomy_attribute.type == 'color' %}
+
+                                            {%- capture swatchColor -%}
+                                                {%- if value.taxonomy_value.colors.size == 1 -%}
+                                                    {{- value.taxonomy_value.colors[0] -}}
+                                                {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                                    linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                                {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                                    linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                                {%- endif -%}
+                                            {%- endcapture -%}
+
+                                            <div class="{% if swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}form-check-color-swatch form-check-color-swatch-sm{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}{% else %}form-check-badge{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                                <input type="checkbox" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label"></label>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                    <span>{{ value.label }}</span>
+
+                                                    <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                            </div>
+
+                                        {% else %}
+
+                                            <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                <input type="checkbox" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                    <span>{{ value.label }}</span>
+
+                                                    <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                </label>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if filter.taxonomy_attribute.type == 'color' %}
+                                        </div>
+                                    {% endif %}
+
+                                {% elsif filter.param_name == 'filter.availability' %}
+
+                                    {% for value in filter.values %}
+
+                                        <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                            <input type="radio" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                            <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                {%- capture paramTranslationKey -%}
+                                                    filters.{{- value.param_name -}}.values.{%- if value.value > 0 -%}in_stock{%- else -%}out_of_stock{%- endif -%}
+                                                {%- endcapture -%}
+
+                                                <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
+
+                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                            </label>
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                {% else %}
+
+                                    {% for value in filter.values %}
+
+                                        <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                            <input type="checkbox" id="input-{{ value.param_name }}-{{ value.value }}" class="input-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                            <label for="input-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                 {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.search' %}
+
+                                                    <span>{{ value.label }}</span>
+
+                                                {% else %}
+
+                                                    {%- capture paramTranslationKey -%}
+                                                        filters.{{- value.param_name -}}.values.{{- value.value | handle | replace: '-', '_' -}}
+                                                    {%- endcapture -%}
+
+                                                    <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
+
+                                                {% endif %}
+
+                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                            </label>
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                {% endif %}
+
+                            {% elsif filter.type == 'range' %}
+
+                                <div class="range-filter">
+
+                                    <div class="text-start mb-2">
+
+                                        <span data-range-slider-min-text>
+
+                                            {% if filter.param_name == 'filter.price' %}
+                                                {{ filter.min_value.value | default: filter.min_value | money_with_currency }}
+                                            {% else %}
+                                                {{ filter.min_value.value | default: filter.min_value }}
+                                            {% endif %}
+
+                                        </span>
+
+                                        <span class="mx-1">-</span>
+
+                                        <span data-range-slider-max-text>
+
+                                            {% if filter.param_name == 'filter.price' %}
+                                                {{ filter.max_value.value | default: filter.range_max | money_with_currency }}
+                                            {% else %}
+                                                {{ filter.max_value.value | default: filter.range_max }}
+                                            {% endif %}
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="range-slider-container">
+
+                                        <input type="hidden" class="input-{{ filter.param_name | replace: '.', '-' | handle }}" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" data-is-range-filter>
+                                        <input type="hidden" class="input-{{ filter.param_name | replace: '.', '-' | handle }}" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" data-is-range-filter>
+
+                                        <div class="range-slider"
+                                            data-range-slider-min-name="{{ filter.min_value.param_name }}"
+                                            data-range-slider-min-default="{{ filter.min_value.value | default: filter.range_min }}"
+                                            data-range-slider-min-value="{{ filter.range_min }}"
+                                            data-range-slider-max-name="{{ filter.max_value.param_name }}"
+                                            data-range-slider-max-default="{{ filter.max_value.value | default: filter.range_max }}"
+                                            data-range-slider-max-value="{{ filter.range_max }}"
+                                            data-range-slider-format="{% if filter.param_name == 'filter.price' %}currency{% else %}decimal{% endif %}">
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </form>
+
+        {% endif %}
+
+        <div class="search-dynamic-content" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+            <div class="position-relative z-3 d-flex justify-content-between align-items-center mb-4 gap-g d-lg-none">
+
+                {% if search.filters.size > 0 and itemCount > 0 or search.active_filters.size > 0 %}
+
+                    <button type="button" name="filters-mobile-navigation-show" class="btn btn-text text-title">
+
+                        {%- render 'icon', icon: 'filter', class: 'svg-icon-fw' -%}
+
+                        <span class="fw-bold">
+                            {{- 'filters.title' | t -}}
                         </span>
-
-                        {%- render 'icon', icon: 'angle-down' -%}
 
                     </button>
 
-                    <div class="dropdown-menu dropdown-menu-right">
+                {% endif %}
 
-                        {% for option in search.sort_options %}
+                {% if search.filters.size > 0 and itemCount > 0 %}
 
-                            <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
-                                {{ option | prepend: 'filters.sort-by.' | t }}
-                            </button>
+                    <div class="dropdown">
+
+                        <button type="button" class="btn btn-text text-title" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+
+                            <span class="svg-icon-spacer fw-bold">
+
+                                {% for option in search.sort_options %}
+
+                                    {% if option == activeSortOption %}
+                                        {{ option | prepend: 'filters.sort-by.' | t }}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </span>
+
+                            {%- render 'icon', icon: 'angle-down', class: 'svg-icon-fw' -%}
+
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+
+                            {% for option in search.sort_options %}
+
+                                <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
+                                    {{ option | prepend: 'filters.sort-by.' | t }}
+                                </button>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            {% if search.active_filters.size > 0 %}
+
+                <div class="section-highlight-item mb-g">
+
+                    <div class="search-activated-filters">
+
+                        {% for filter in search.active_filters %}
+
+                            <div class="item">
+
+                                <button type="button" class="search-remove-filter" value="{{ filter.param_name | replace: '.', '-' | handle }}">
+
+                                    <span class="search-activated-filter-text">
+
+                                        {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
+
+                                            <span>{{ filter.label }}</span>
+
+                                        {% else %}
+
+                                            {%- capture paramTranslationKey -%}
+                                                filters.{{- filter.param_name | replace: '-', '_' -}}.title
+                                            {%- endcapture -%}
+
+                                            <span>{{ paramTranslationKey | strip | t: default:filter.label }}</span>
+
+                                        {% endif %}
+
+                                    </span>
+
+                                    <span class="search-activated-filter-icon">
+                                        {%- render 'icon', icon: 'close' -%}
+                                    </span>
+
+                                </button>
+
+                            </div>
 
                         {% endfor %}
+
+                        {% if search.results %}
+
+                            <div class="item">
+
+                                <button type="button" class="search-reset-filters">
+
+                                    <span class="search-reset-filters-text">
+                                        {{- 'filters.clear_filters' | t -}}
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            {% if itemCount < 1 and search.active_filters.size > 0 %}
+
+                <div class="mt-6 text-center">
+
+                    {%- render 'icon', icon: 'filters', class: 'svg-icon-5x mb-3' -%}
+
+                    <span class="h5 d-block mb-3 text-title">
+                        {{- 'filters.title' | t -}}
+                    </span>
+
+                    <p class="mb-6">
+                        {{- 'filters.no_results' | t -}}
+                    </p>
+
+                    <button type="button" class="btn btn-primary search-reset-filters">
+                        {{- 'filters.clear_filters' | t -}}
+                    </button>
+
+                </div>
+
+            {% elsif itemCount > 0 %}
+
+                <div class="row mb-g">
+
+                    <div class="col-auto">
+
+                        <span class="text-muted">
+                            {% if itemCount == 1 %}
+                                {{- 'general.product_count' | t: amount: itemCount -}}
+                            {% else %}
+                                {{- 'general.product_plural_count' | t: amount: itemCount -}}
+                            {% endif %}
+                        </span>
+
+                    </div>
+
+                    <div class="col text-end{% if search.filters.size > 0 %} d-none d-lg-block{% endif %}">
+
+                        <div class="dropdown">
+
+                            <button type="button" class="btn btn-text text-muted" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+
+                                <span class="svg-icon-spacer">
+
+                                    {% for option in search.sort_options %}
+
+                                        {% if option == activeSortOption %}
+                                            {{ option | prepend: 'filters.sort-by.' | t }}
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </span>
+
+                                {%- render 'icon', icon: 'angle-down' -%}
+
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+
+                                {% for option in search.sort_options %}
+
+                                    <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
+                                        {{ option | prepend: 'filters.sort-by.' | t }}
+                                    </button>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="search-items row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ productPerRow }}" data-search-items-count="{{ itemCount }}">
+
+                    {% if search.results.size > 0 %}
+
+                        {% for product in search.results %}
+
+                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/search-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
+
+                                {%- render 'product-card-grid', product: product -%}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% elsif request.design_mode %}
+
+                        {% for num in (1..itemCount) %}
+
+                            <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/search-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
+
+                                {%- render 'product-card-grid' -%}
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                </div>
+
+                {% render 'pagination', paginate: paginate %}
+
+                {%- if rendered_partial != 'sections/search-template' and settings.schemaItemList -%}
+                    {% render 'schemas/itemlist', items: search.results, paginate: paginate %}
+                {%- endif -%}
+
+                <script type="application/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.dispatchEvent(new CustomEvent('theme:search:view', {
+                            detail: {
+                                product_ids: {{ search.results | map: 'id' | json }}
+                            }
+                        }));
+                    });
+                </script>
+
+            {% endif %}
+
+        </div>
+
+    {%- endpaginate -%}
+
+    {% if search.filters.size > 0 and itemCount > 0 or search.active_filters.size > 0 %}
+
+        <nav class="filters-mobile-navigation-container">
+
+            <div class="filters-mobile-navigation">
+
+                <div class="filters-mobile-navigation-header">
+
+                    <div class="filters-mobile-navigation-header-inner">
+
+                        <button type="button" name="filters-mobile-navigation-hide" class="btn btn-text">
+                            {%- render 'icon', icon: 'close', class: 'svg-icon-fw' -%}
+                        </button>
+
+                        <span class="filters-mobile-navigation-header-text">
+                            {{- 'filters.title' | t -}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="filters-mobile-navigation-menu-container">
+
+                    <form id="search-filters-mobile-form" class="search-filters">
+
+                        <ul class="filters-mobile-navigation-menu">
+
+                            {% for filter in search.filters %}
+
+                                {%- assign hasActiveFilters = filter.values | where: 'active' -%}
+
+                                <li class="filters-mobile-navigation-menu-item">
+
+                                    <div class="filters-mobile-navigation-menu-item-header">
+
+                                        <button type="button" class="filters-mobile-navigation-menu-item-collapse-toggle btn btn-text" data-bs-toggle="collapse" data-bs-target="#filters-mobile-navigation-menu-item-collapse-{{ filter.param_name | replace: '.', '-' | handle }}" aria-expanded="{% if hasActiveFilters %}true{% else %}false{% endif %}" aria-controls="filters-mobile-navigation-menu-item-collapse-{{ filter.param_name | replace: '.', '-' | handle }}">
+
+                                            <span class="filters-mobile-navigation-menu-item-header-text">
+
+                                                {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.taxonomy.' %}
+
+                                                    <span>{{ filter.label }}</span>
+
+                                                {% else %}
+
+                                                    {%- capture paramTranslationKey -%}
+                                                        filters.{{- filter.param_name | replace: '-', '_' -}}.title
+                                                    {%- endcapture -%}
+
+                                                    <span>{{ paramTranslationKey | strip | t: default:filter.label }}</span>
+
+                                                {% endif %}
+
+                                            </span>
+
+                                            {%- render 'icon', icon: 'angle-down' -%}
+                                            
+                                        </button>
+
+                                    </div>
+
+                                    <div id="filters-mobile-navigation-menu-item-collapse-{{ filter.param_name | replace: '.', '-' | handle }}" class="filters-mobile-navigation-menu-item-content collapse{% if hasActiveFilters %} show{% endif %}">
+
+                                        {% if filter.type == 'list' %}
+
+                                            {% if filter.param_name contains 'filter.taxonomy.' %}
+
+                                                {% if filter.taxonomy_attribute.type == 'color' %}
+                                                    <div class="form-check-color-swatches-container form-check-color-swatches-gap-lg">
+                                                {% endif %}
+
+                                                {% for value in filter.values %}
+
+                                                    {% if filter.taxonomy_attribute.type == 'color' %}
+
+                                                        {%- capture swatchColor -%}
+                                                            {%- if value.taxonomy_value.colors.size == 1 -%}
+                                                                {{- value.taxonomy_value.colors[0] -}}
+                                                            {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                                            {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                                            {%- endif -%}
+                                                        {%- endcapture -%}
+
+                                                        <div class="{% if swatchColor or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor %}form-check-color-swatch form-check-color-swatch-sm{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}{% else %}form-check-badge{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                                            <input type="checkbox" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label"></label>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                                <span>{{ value.label }}</span>
+
+                                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                        </div>
+
+                                                    {% else %}
+
+                                                        <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                            <input type="checkbox" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                            <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                                <span>{{ value.label }}</span>
+
+                                                                <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                            </label>
+
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                {% endfor %}
+
+                                                {% if filter.taxonomy_attribute.type == 'color' %}
+                                                    </div>
+                                                {% endif %}
+
+                                            {% elsif filter.param_name == 'filter.availability' %}
+
+                                                {% for value in filter.values %}
+
+                                                    <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                        <input type="radio" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                        <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                            {%- capture paramTranslationKey -%}
+                                                                filters.{{- value.param_name -}}.values.{%- if value.value > 0 -%}in_stock{%- else -%}out_of_stock{%- endif -%}
+                                                            {%- endcapture -%}
+
+                                                            <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
+
+                                                            <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                        </label>
+
+                                                    </div>
+
+                                                {% endfor %}
+                                                
+                                            {% else %}
+
+                                                {% for value in filter.values %}
+
+                                                    <div class="form-check{% unless forloop.last == true %} mb-4{% endunless %}">
+
+                                                        <input type="checkbox" id="input-mobile-{{ value.param_name }}-{{ value.value }}" class="input-mobile-{{ value.param_name | replace: '.', '-' | handle }} form-check-input" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked="true"{% endif %}>
+
+                                                        <label for="input-mobile-{{ value.param_name }}-{{ value.value }}" class="form-check-label">
+
+                                                            {% if filter.param_name contains 'filter.attribute.' or filter.param_name contains 'filter.search' %}
+
+                                                                <span>{{ value.label }}</span>
+
+                                                            {% else %}
+
+                                                                {%- capture paramTranslationKey -%}
+                                                                    filters.{{- value.param_name -}}.values.{{- value.value | handle | replace: '-', '_' -}}
+                                                                {%- endcapture -%}
+
+                                                                <span>{{ paramTranslationKey | strip | t: default:value.label }}</span>
+
+                                                            {% endif %}
+
+                                                            <span data-facet-result-count="{{ value.param_name }}-{{ value.value }}">({{ value.count }})</span>
+
+                                                        </label>
+
+                                                    </div>
+
+                                                {% endfor %}
+
+                                            {% endif %}
+
+                                        {% elsif filter.type == 'range' %}
+
+                                            <div class="range-filter">
+
+                                                <div class="text-start mb-2">
+
+                                                    <span data-range-slider-min-text>
+
+                                                        {% if filter.param_name == 'filter.price' %}
+                                                            {{ filter.min_value.value | default: filter.min_value | money_with_currency }}
+                                                        {% else %}
+                                                            {{ filter.min_value.value | default: filter.min_value }}
+                                                        {% endif %}
+
+                                                    </span>
+
+                                                    <span class="mx-1">-</span>
+
+                                                    <span data-range-slider-max-text>
+
+                                                        {% if filter.param_name == 'filter.price' %}
+                                                            {{ filter.max_value.value | default: filter.range_max | money_with_currency }}
+                                                        {% else %}
+                                                            {{ filter.max_value.value | default: filter.range_max }}
+                                                        {% endif %}
+
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="range-slider-container">
+
+                                                    <input type="hidden" class="input-mobile-{{ filter.param_name | replace: '.', '-' | handle }}" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" data-is-range-filter>
+                                                    <input type="hidden" class="input-mobile-{{ filter.param_name | replace: '.', '-' | handle }}" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" data-is-range-filter>
+
+                                                    <div class="range-slider"
+                                                        data-range-slider-min-name="{{ filter.min_value.param_name }}"
+                                                        data-range-slider-min-default="{{ filter.min_value.value | default: filter.range_min }}"
+                                                        data-range-slider-min-value="{{ filter.range_min }}"
+                                                        data-range-slider-max-name="{{ filter.max_value.param_name }}"
+                                                        data-range-slider-max-default="{{ filter.max_value.value | default: filter.range_max }}"
+                                                        data-range-slider-max-value="{{ filter.range_max }}"
+                                                        data-range-slider-format="{% if filter.param_name == 'filter.price' %}currency{% else %}decimal{% endif %}">
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    </form>
+
+                </div>
+
+                <div class="filters-mobile-navigation-footer">
+
+                    <div class="filters-mobile-navigation-footer-inner">
+
+                        <button type="button" name="filters-mobile-navigation-hide" class="filters-mobile-navigation-footer-inner-cta btn btn-primary d-block w-100">
+
+                            {% if itemCount == 1 %}
+                                {{- 'filters.show_result' | t: amount: itemCount -}}
+                            {% else %}
+                                {{- 'filters.show_result_plural' | t: amount: itemCount -}}
+                            {% endif %}
+
+                        </button>
 
                     </div>
 
@@ -64,53 +739,9 @@
 
             </div>
 
-        </div>
+        </nav>
 
-	    <div class="row gy-g row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-{{ settings.productPerRow }}">
-
-            {% if search.results.size > 0 %}
-
-                {% for product in search.results %}
-
-                    <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
-
-                        {%- render 'product-card-grid', product: product -%}
-
-                    </div>
-
-                {% endfor %}
-
-            {% elsif request.design_mode %}
-
-                {% for num in (1..itemCount) %}
-
-                    <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
-
-                        {%- render 'product-card-grid' -%}
-
-                    </div>
-
-                {% endfor %}
-
-            {% endif %}
-
-        </div>
-
-	    <div class="row" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
-
-	        <div class="col">
-
-	            {% render 'pagination', paginate: paginate %}
-
-	        </div>
-
-	    </div>
-
-        {%- if settings.schemaItemList -%}
-            {% render 'schemas/itemlist', items: search.results, paginate: paginate %}
-        {%- endif -%}
-
-	{%- endpaginate -%}
+    {% endif %}
 
 {%- endcapture -%}
 

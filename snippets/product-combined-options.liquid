@@ -1,0 +1,210 @@
+{% comment %}
+	Renders a product combined options
+
+	Accepts:
+    - highlightLabel: {Boolean}
+	- showAsDropdown: {Boolean}
+    - showRelatedProductsAsOptions: {Boolean} (Legacy option for old merchants)
+
+	Usage:
+	Render this snippet inside of "product-info" class in the product-template.liquid file.
+
+	{% render 'product-combined-options', highlightLabel: true %}
+{% endcomment %}
+
+{% if showRelatedProductsAsOptions %}
+
+    <div class="mb-4">
+
+        {% if product.related.size > 9 or showAsDropdown %}
+
+            <select class="product-combined-option-value form-select" name="{{ option.handle }}">
+
+                {% for product in product.related %}
+
+                    <option value="{{ product | link }}"{% if value.selected %} selected{% endif %}>
+                        {{- product.title -}}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        {% else %}
+
+            <div class="form-check-imgs-container">
+
+                {% for product in product.related %}
+                    
+                    <div class="form-check-img">
+
+                        <input class="product-combined-option-value form-check-input"
+                            type="radio"
+                            id="product-combined-option-value-{{ forloop.index0 }}"
+                            name="product-combined-option-value"
+                            value="{{ product | link }}">
+
+                        <label for="product-combined-option-value-{{ forloop.index0 }}" class="form-check-label w-px-70" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ product.title }}">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="aspect-ratio-container">
+
+                                    {% if product.featured_image %}
+
+                                        {% if settings.productImageAspectRatio == '9:13' %}
+                                            {%- assign imgSize = '80,115' -%}
+                                        {% elsif settings.productImageAspectRatio == '4:3' %}
+                                            {%- assign imgSize = '80,60' -%}
+                                        {% elsif settings.productImageAspectRatio == '3:4' %}
+                                            {%- assign imgSize = '80,107' -%}
+                                        {% elsif settings.productImageAspectRatio == '1:1' %}
+                                            {%- assign imgSize = '80,80' -%}
+                                        {% endif %}
+
+                                        <picture>
+                                            <img
+                                                alt="{{ product.title }}"
+                                                src="{{ product.featured_image | thumb: imgSize }}"
+                                                srcset="{{ product.featured_image | thumb: imgSize }} 1x, {{ product.featured_image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                loading="lazy"
+                                                class="d-block mx-auto img-fluid aspect-ratio-item">
+                                        </picture>
+
+                                    {% else %}
+
+                                        {%- capture imgSrc -%}
+                                            {% render 'placeholder-svg', type: 'image', base64: true %}
+                                        {%- endcapture -%}
+
+                                        <img
+                                            alt="{{ product.title }}"
+                                            src="{{ imgSrc }}"
+                                            style="width: 80px;"
+                                            class="d-block mx-auto img-fluid aspect-ratio-item svg-placeholder">
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    {% for option in product.combined_listing.options_with_values %}
+
+        <div class="mb-4">
+
+            {% if option.title %}
+
+                <label class="form-label text-title{% if highlightLabel %} fw-bold{% endif %}">
+                    {{ option.title }}: {{ option.selected_value.title }}
+                </label>
+
+            {% endif %}
+
+            {% if option.values.size > 9 or showAsDropdown %}
+
+                <select class="product-combined-option-value form-select" name="{{ option.handle }}">
+
+                    {% for value in option.values %}
+
+                        {%- assign variantProduct = value.variant.product -%}
+
+                        <option value="{{ value.variant.url }}"{% if value.selected %} selected{% endif %}>
+                            {{- value.title -}}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            {% else %}
+
+                <div class="form-check-imgs-container">
+
+                    {% for value in option.values %}
+                        
+                        {%- assign variantProduct = value.variant.product -%}
+
+                        <div class="form-check-img">
+
+                            <input class="product-combined-option-value form-check-input"
+                                type="radio"
+                                id="product-combined-option-value-{{ forloop.index0 }}"
+                                name="product-combined-option-value"
+                                value="{{ value.variant.url }}"
+                                {% if value.selected %} checked{% endif %}>
+
+                            <label for="product-combined-option-value-{{ forloop.index0 }}" class="form-check-label w-px-70" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}">
+
+                                <div class="aspect-ratio-product">
+
+                                    <div class="aspect-ratio-container">
+
+                                        {% if variantProduct.featured_image %}
+
+                                            {% if settings.productImageAspectRatio == '9:13' %}
+                                                {%- assign imgSize = '80,115' -%}
+                                            {% elsif settings.productImageAspectRatio == '4:3' %}
+                                                {%- assign imgSize = '80,60' -%}
+                                            {% elsif settings.productImageAspectRatio == '3:4' %}
+                                                {%- assign imgSize = '80,107' -%}
+                                            {% elsif settings.productImageAspectRatio == '1:1' %}
+                                                {%- assign imgSize = '80,80' -%}
+                                            {% endif %}
+
+                                            <picture>
+                                                <img
+                                                    alt="{{ variantProduct.title }}"
+                                                    src="{{ variantProduct.featured_image | thumb: imgSize }}"
+                                                    srcset="{{ variantProduct.featured_image | thumb: imgSize }} 1x, {{ variantProduct.featured_image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                    loading="lazy"
+                                                    class="d-block mx-auto img-fluid aspect-ratio-item">
+                                            </picture>
+
+                                        {% else %}
+
+                                            {%- capture imgSrc -%}
+                                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                                            {%- endcapture -%}
+
+                                            <img
+                                                alt="{{ variantProduct.title }}"
+                                                src="{{ imgSrc }}"
+                                                style="width: 80px;"
+                                                class="d-block mx-auto img-fluid aspect-ratio-item svg-placeholder">
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}

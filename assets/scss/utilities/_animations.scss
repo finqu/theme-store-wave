@@ -7,37 +7,37 @@
 	--animate-repeat: 1;
 }
 
-.animate__animated {
+.animation-animated {
 	animation-duration: 1s;
 	animation-duration: var(--animate-duration);
 	animation-fill-mode: both;
 	animation-delay: var(--animate-delay);
 
-	&.animate__infinite {
+	&.animation-infinite {
 		animation-iteration-count: infinite;
 	}
 
-	&.animate__repeat {
+	&.animation-repeat {
 		animation-iteration-count: var(--animate-repeat);
 	}
 
-	&.animate__delay {
+	&.animation-delay {
 		animation-delay: var(--animate-delay);
 	}
 
-	&.animate__fast {
+	&.animation-fast {
 		animation-duration: calc(var(--animate-duration) * 0.8);
 	}
 
-	&.animate__faster {
+	&.animation-faster {
 		animation-duration: calc(var(--animate-duration) / 2);
 	}
 
-	&.animate__slow {
+	&.animation-slow {
 		animation-duration: calc(var(--animate-duration) * 2);
 	}
 
-	&.animate__slower {
+	&.animation-slower {
 		animation-duration: calc(var(--animate-duration) * 3);
 	}
 	
@@ -45,13 +45,13 @@
 
 @media print, (prefers-reduced-motion: reduce) {
 	
-	.animate__animated {
+	.animation-animated {
 		animation-duration: 1ms !important;
 		transition-duration: 1ms !important;
 		animation-iteration-count: 1 !important;
 	}
 
-	.animate__animated[class*='Out'] {
+	.animation-animated[class*='Out'] {
 		opacity: 0;
 	}
 }
@@ -78,7 +78,7 @@
 	}
 }
 
-.animate__fadeIn {
+.animation-fadeIn {
 	animation-name: fadeIn;
 }
 
@@ -93,7 +93,7 @@
 	}
 }
 
-.animate__fadeInLeft {
+.animation-fadeInLeft {
 	animation-name: fadeInLeft;
 }
 
@@ -108,7 +108,7 @@
 	}
 }
 
-.animate__fadeInRight {
+.animation-fadeInRight {
 	animation-name: fadeInRight;
 }
 
@@ -123,7 +123,7 @@
 	}
 }
 
-.animate__fadeInUp {
+.animation-fadeInUp {
 	animation-name: fadeInUp;
 }
 
@@ -138,7 +138,7 @@
 	}
 }
 
-.animate__fadeInDown {
+.animation-fadeInDown {
 
 	animation-name: fadeInDown;
 }
@@ -151,7 +151,7 @@
 		opacity: 0;
 	}
 }
-.animate__fadeOut {
+.animation-fadeOut {
 
 	animation-name: fadeOut;
 }
@@ -182,7 +182,7 @@
 	}
 }
 
-.animate__bounce {
+.animation-bounce {
 	animation-name: bounce;
 	transform-origin: center bottom;
 }
@@ -199,7 +199,26 @@
 	}
 }
 
-.animate__pulse {
+.animation-pulse {
 	animation-name: pulse;
 	animation-timing-function: ease-in-out;
+}
+
+@keyframes zoomFade {
+	from {
+		opacity: 0;
+		transform: scale(1.2)
+	}
+	50% {
+		opacity: 1;
+	}
+	to {
+		opacity: 1;
+		transform: scale(1)
+	}
+}
+
+.animation-zoomFade {
+	animation-name: zoomFade;
+	animation-timing-function: ease;
 }

@@ -31,7 +31,7 @@ export default class Notify {
         `;
     }
 
-    createNotification(type, title, message, onclick, opts) {
+    createNotification(type, title, message, onClick, opts) {
         const settings = {
             labels: {
                 [type]: ''
@@ -43,31 +43,31 @@ export default class Notify {
         const template = this.createTemplate(title, message);
         const el = this.awn[type](template, settings);
 
-        if (typeof onclick === 'function') {
-            el.addEventListener('click', onclick);
+        if (typeof onClick === 'function') {
+            el.addEventListener('click', onClick);
         }
 
         return el;
     }
 
-    tip(title = null, message = null, onclick = null, opts = {}) {
-        return this.createNotification('tip', title, message, onclick, opts);
+    tip(title = null, message = null, onClick = null, opts = {}) {
+        return this.createNotification('tip', title, message, onClick, opts);
     }
 
-    info(title = null, message = null, onclick = null, opts = {}) {
-        return this.createNotification('info', title, message, onclick, opts);
+    info(title = null, message = null, onClick = null, opts = {}) {
+        return this.createNotification('info', title, message, onClick, opts);
     }
 
-    warning(title = null, message = null, onclick = null, opts = {}) {
-        return this.createNotification('warning', title, message, onclick, opts);
+    warning(title = null, message = null, onClick = null, opts = {}) {
+        return this.createNotification('warning', title, message, onClick, opts);
     }
 
-    success(title = null, message = null, onclick = null, opts = {}) {
-        return this.createNotification('success', title, message, onclick, opts);
+    success(title = null, message = null, onClick = null, opts = {}) {
+        return this.createNotification('success', title, message, onClick, opts);
     }
 
-    alert(title = null, message = null, onclick = null, opts = {}) {
-        return this.createNotification('alert', title, message, onclick, opts);
+    alert(title = null, message = null, onClick = null, opts = {}) {
+        return this.createNotification('alert', title, message, onClick, opts);
     }
 
     async(promise, contentResolve = '', contentReject = '', contentLoading = '') {

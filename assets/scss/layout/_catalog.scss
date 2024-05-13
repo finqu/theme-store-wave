@@ -1,14 +1,89 @@
 // Catalog
 // -----------------------------------------------------------------------------------------
 
-$filters-mobile-navigation-header-height: 64px;
-$filters-mobile-navigation-footer-height: 56px;
-
 .section-catalog {
     
     .catalog-filters .form-check-label {
         display: flex;
         justify-content: space-between;
+    }
+
+    .catalog-filters {
+
+        .catalog-filter-dropdown {
+            display: inline-flex;
+
+            .catalog-filter-btn {
+                @include font-size($font-size-base);
+                border: 1px solid var(--style-border-color);
+                border-radius: var(--style-btn-border-radius);
+                margin-bottom: spacer(3);
+                margin-right: spacer(2);
+                transition: none;
+                background-color: var(--style-bg-color);
+                color: var(--style-text-color);
+                padding: .6rem .8rem;
+
+                &[aria-expanded="true"] {
+
+                    .svg-icon {
+                        transform: rotate(180deg);
+                    }
+                }
+
+                .catalog-filter-btn-text {
+                    font-weight: $font-weight-normal;
+                    margin-right: spacer(2);
+                }
+            }
+
+            .catalog-filter-dropdown-menu {
+                min-width: 250px;
+                overflow-y: auto;
+                max-height: 300px;
+            }
+        }
+    }
+
+    .catalog-activated-filters {
+        margin-top: calc(spacer(3) * -1);
+
+        .item {
+            display: inline-flex;
+            margin-top: spacer(3);
+
+            button {
+                border: 0;
+                border-radius: 0;
+                margin: 0;
+                padding: spacer(1) spacer(2);
+                @include font-size($font-size-base * 0.95);
+
+                &.catalog-remove-filter {
+                    margin-right: spacer(2);
+                    color: var(--style-text-color);
+                    background-color: var(--style-bg-accent-color);
+
+                    .catalog-activated-filter-icon {
+                        margin-left: spacer(1);
+                    }
+                }
+
+                &.catalog-reset-filters {
+                    margin-left: -#{spacer(2)};
+                    color: var(--style-text-color);
+                    background-color: var(--style-bg-color);
+                }
+            }
+        }
+    }
+
+    .catalog-dynamic-content {
+
+        &.catalog-dynamic-content-loading {
+            opacity: 0.6 !important;
+            pointer-events: none !important;
+        }
     }
 
     .filters-mobile-navigation-container {
@@ -163,130 +238,6 @@ $filters-mobile-navigation-footer-height: 56px;
         }
     }
 
-    .category-subcategories {
-
-        &.category-tags {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            box-sizing: content-box;
-
-            .category-tag {
-                border: 1px solid var(--style-border-color);
-
-                .category-tag-content {
-                    display: block;
-                    @include font-size($font-size-base);
-                    padding: .6rem .8rem;
-                    text-align: center;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
-                }
-            }
-
-            .swiper-horizontal {
-                width: 100%;
-
-                .swiper-slide {
-                    width: auto;
-                }
-
-                .swiper-button-prev,
-                .swiper-button-next {
-                    width: 30px;
-                    height: 30px;
-                    margin-top: calc(0px - (30px / 2));
-                    z-index: 10;
-                }
-
-                .swiper-button-prev,
-                .swiper-rtl .swiper-button-next {
-                    font-size: 1.5rem;
-                    left: 4px;
-                    right: auto;
-                }
-
-                .swiper-button-next,
-                .swiper-rtl .swiper-button-prev {
-                    font-size: 1.5rem;
-                    right: 4px;
-                    left: auto;
-                }
-            }
-        }
-    }
-
-    .catalog-filters {
-
-        .catalog-filter-dropdown {
-            display: inline-flex;
-
-            .catalog-filter-btn {
-                @include font-size($font-size-base);
-                border: 1px solid var(--style-border-color);
-                border-radius: var(--style-btn-border-radius);
-                margin-bottom: spacer(3);
-                margin-right: spacer(2);
-                transition: none;
-                background-color: var(--style-bg-color);
-                color: var(--style-text-color);
-                padding: .6rem .8rem;
-
-                &[aria-expanded="true"] {
-
-                    .svg-icon {
-                        transform: rotate(180deg);
-                    }
-                }
-
-                .catalog-filter-btn-text {
-                    font-weight: $font-weight-normal;
-                    margin-right: spacer(2);
-                }
-            }
-
-            .catalog-filter-dropdown-menu {
-                min-width: 250px;
-                overflow-y: auto;
-                max-height: 300px;
-            }
-        }
-    }
-
-    .catalog-activated-filters {
-        margin-top: calc(spacer(3) * -1);
-
-        .item {
-            display: inline-flex;
-            margin-top: spacer(3);
-
-            button {
-                border: 0;
-                border-radius: 0;
-                margin: 0;
-                padding: spacer(1) spacer(2);
-                @include font-size($font-size-base * 0.95);
-
-                &.catalog-remove-filter {
-                    margin-right: spacer(2);
-                    color: var(--style-text-color);
-                    background-color: var(--style-bg-accent-color);
-
-                    .catalog-activated-filter-icon {
-                        margin-left: spacer(1);
-                    }
-                }
-
-                &.catalog-reset-filters {
-                    margin-left: -#{spacer(2)};
-                    color: var(--style-text-color);
-                    background-color: var(--style-bg-color);
-                }
-            }
-        }
-    }
-
     .sidebar-menu {
         line-height: 20px;
         padding-left: 0;
@@ -352,14 +303,6 @@ $filters-mobile-navigation-footer-height: 56px;
         .sidebar-menu-child-links-container {
             padding-left: spacer(3);
             list-style: none;
-        }
-    }
-
-    .catalog-dynamic-content {
-
-        &.catalog-dynamic-content-loading {
-            opacity: 0.6 !important;
-            pointer-events: none !important;
         }
     }
 }

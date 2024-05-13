@@ -6,7 +6,7 @@ export default function() {
     
     checkInputEls.forEach(el => { el.addEventListener('change', () => {
 
-        if (Array.from(checkInputEls).every(el => el.checked)) {
+        if ([...checkInputEls].every(el => el.checked)) {
             registerCtaEl.disabled = false;
         } else {
             registerCtaEl.disabled = true;

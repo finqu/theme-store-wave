@@ -33,6 +33,8 @@
     - sectionContent: {String}
     - sectionContentTextAlign: {String} 'nil', 'start', 'center', 'end'
     - sectionCustomContent: {String}
+    - sectionOverflow: {String}
+    - sectionContentOverflow: {String}
     - sectionBgImg: {String}
     - sectionBgImgPos: {String}
     - sectionBgImgDimming: {String}
@@ -230,6 +232,10 @@
             {%- if sectionMinHeight -%}
                 --section-min-height: {{ sectionMinHeight }};
                 --section-min-height-mobile: {{ sectionMinHeight | replace: 'vh', '' | times: 0.5 | append: 'vh' }};
+            {%- endif -%}
+
+            {%- if sectionOverflow -%}
+                --section-overflow: {{ sectionOverflow }};
             {%- endif -%}
 
             {%- if sectionContentOverflow -%}
@@ -749,6 +755,8 @@
 
 <div class="section-inner{% if sectionClasses %} {{ sectionClasses | strip }}{% endif %}">
 
+    {%- render 'section-bg' sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur -%}
+
     {%- if sectionHeader -%}
 
         {%- if sectionTitle or sectionSubtitle or sectionOverline or sectionDescription or sectionBreadcrumbs or sectionAction -%}
@@ -770,7 +778,5 @@
         {{- sectionCustomContent -}}
 
     {%- endif -%}
-
-    {%- render 'section-bg' sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur -%}
 
 </div>

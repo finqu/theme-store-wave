@@ -3,14 +3,14 @@
     {% if group.name %}
 
         {% if highlightLabel %}
-            <label class="form-label text-titlefw-bold{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}:</label>
+            <label class="form-label text-title fw-bold{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}:</label>
         {% else %}
             <label class="form-label text-title{% if inline %} me-2 d-inline-block min-w-px-100{% endif %}">{{ group.name }}</label>
         {% endif %}
 
     {% endif %}
 
-    <div class="form-check-badge-container">
+    <div class="form-check-badges-container">
 
         {% for option in group.options %}
 
@@ -55,7 +55,7 @@
 
                     {% if option.in_stock == false and inventoryPolicy == 'deny' %}
 
-                        ({{ 'product.default_or_selected_variant.is_out_of_stock' | t }})
+                        ({{ 'product.out_of_stock' | t }})
 
                     {% elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice == false %}
 

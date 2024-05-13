@@ -507,6 +507,8 @@
 
                 {% for num in (1..visibleOptionsCount) %}
 
+                    {%- assign option = nil -%}
+
                     {%- case forloop.index -%}
                         {% when 1 %}
                             {%- for item in variantsWithTaxonomyArr -%}
@@ -673,6 +675,8 @@
 
                     {% for num in (1..visibleOptionsCount) %}
 
+                        {%- assign option = nil -%}
+
                         {%- case forloop.index -%}
                             {% when 1 %}
                                 {%- for item in variantsWithTaxonomyArr -%}
@@ -715,7 +719,7 @@
 
                                     {%- for option1 in variantsOption1Arr -%}
 
-                                        {%- case optionPosition -%}
+                                        {%- case sizeOptionPosition -%}
                                             {%- when 1 -%}
                                                 {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
                                                     {%- assign optionDisabled = false -%}

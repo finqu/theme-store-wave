@@ -1,11 +1,9 @@
-import editor from './editor';
-import Slider from './slider';
-import Gallery from './gallery';
-import Masonry from 'masonry-layout';
 import accountLayout from '../layout/account';
 import articleLayout from '../layout/article';
-import catalogLayout from '../layout/catalog';
 import categoryLayout from '../layout/category';
+import catalogLayout from '../layout/catalog';
+import manufacturerLayout from '../layout/manufacturer';
+import searchLayout from '../layout/search';
 import headerLayout from '../layout/header';
 import passwordLayout from '../layout/password';
 import productLayout from '../layout/product';
@@ -15,47 +13,6 @@ export default {
 	init() {
 
         this.initSection();
-
-        if (theme.store.designMode === 'edit') {
-
-        	editor.init();
-
-        } else {
-
-            for (const el of document.querySelectorAll('.swiper.swiper-standalone')) { 
-                new Slider(el);
-            }
-
-            document.addEventListener('theme:slider:init', e => {
-                new Slider(e.detail.el);
-            });
-
-            for (const el of document.querySelectorAll('.gallery')) { 
-                new Gallery(el);
-            }
-
-            document.addEventListener('theme:gallery:init', e => {
-                new Gallery(e.detail.el);
-            });
-
-            for (const el of document.querySelectorAll('.masonry')) {
-
-                const settings = Object.assign({
-                    percentPosition: true
-                }, el.dataset || {});
-
-                new Masonry(el, settings);
-            }
-
-            document.addEventListener('theme:masonry:init', e => {
-
-                const settings = Object.assign({
-                    percentPosition: true
-                }, e.detail.el.dataset || {});
-
-                new Masonry(e.detail.el, settings);
-            });
-        }
 
         if (theme.store.template !== 'password') {
             theme.cart.init();
@@ -79,6 +36,12 @@ export default {
                 break;
             case 'catalog':
                 catalogLayout();
+                break;
+            case 'manufacturer':
+                manufacturerLayout();
+                break;
+            case 'search':
+                searchLayout();
                 break;
             case 'customers-register':
                 registerLayout();
@@ -571,15 +534,15 @@ export default {
 
             document.addEventListener('click', (e) => {
 
-                if (e.target.hasAttribute('data-wishlist-add')) {
+                if (e.target.matches('[data-wishlist-add]')) {
                     return add(e.target);
                 }
     
-                if (e.target.hasAttribute('data-wishlist-remove')) {
+                if (e.target.matches('[data-wishlist-remove]')) {
                     return remove(e.target);
                 }
     
-                if (e.target.hasAttribute('data-wishlist-toggle')) {
+                if (e.target.matches('[data-wishlist-toggle]')) {
                     return toggle(e.target);
                 }
             });
@@ -617,6 +580,35 @@ export default {
         });
     },
     initSection() {
+
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[name="section-tab-action"]')) {
+                const sectionTabActionEl = e.target;
+                const sectionTabEl = sectionTabActionEl.closest('.section-tab');
+                const sectionTabsEl = sectionTabEl.closest('.section-tabs');
+                const sectionTabEls = sectionTabsEl.querySelectorAll('.section-tab');
+                const sectionTabIndex = [...sectionTabEl.parentNode.children].indexOf(sectionTabEl);
+                const sectionInnerEl = sectionTabsEl.closest('.section-inner');
+                const sectionContentEl = sectionTabsEl.nextElementSibling;
+                const sectionTabContentEls = sectionContentEl.querySelectorAll('.section-tab-content');
+                const sectionTabContentEl = sectionTabContentEls[sectionTabIndex];
+
+                sectionTabEls.forEach(el => {
+                    el.classList.remove('section-tab-active');
+                });
+
+                sectionTabContentEls.forEach(el => {
+                    el.classList.remove('section-tab-content-active');
+                });
+
+                if (!sectionInnerEl.classList.contains('section-tabs-has-active-tab')) {
+                    sectionInnerEl.classList.add('section-tabs-has-active-tab');
+                }
+
+                sectionTabEl.classList.add('section-tab-active');
+                sectionTabContentEl.classList.add('section-tab-content-active');
+            }
+        });
 
         document.querySelectorAll('[class*="row-scroll-cols"]').forEach(el => {
 
@@ -704,36 +696,6 @@ export default {
             });
         });
 
-        document.querySelectorAll('[name="section-tab-action"]').forEach(sectionTabActionEl => {
-            
-            sectionTabActionEl.addEventListener('click', e => {
-
-                const sectionTabEl = sectionTabActionEl.closest('.section-tab');
-                const sectionTabsEl = sectionTabEl.closest('.section-tabs');
-                const sectionTabEls = sectionTabsEl.querySelectorAll('.section-tab');
-                const sectionTabIndex = [...sectionTabEl.parentNode.children].indexOf(sectionTabEl);
-                const sectionInnerEl = sectionTabsEl.closest('.section-inner');
-                const sectionContentEl = sectionTabsEl.nextElementSibling;
-                const sectionTabContentEls = sectionContentEl.querySelectorAll('.section-tab-content');
-                const sectionTabContentEl = sectionTabContentEls[sectionTabIndex];
-
-                sectionTabEls.forEach(el => {
-                    el.classList.remove('section-tab-active');
-                });
-
-                sectionTabContentEls.forEach(el => {
-                    el.classList.remove('section-tab-content-active');
-                });
-                
-                if (!sectionInnerEl.classList.contains('section-tabs-has-active-tab')) {
-                    sectionInnerEl.classList.add('section-tabs-has-active-tab');
-                }
-
-                sectionTabEl.classList.add('section-tab-active');
-                sectionTabContentEl.classList.add('section-tab-content-active');
-            });
-        });
-
         document.querySelectorAll('.section-header .description-collapse').forEach(descriptionCollapseEl => {
             
             const collapseToggleEl = descriptionCollapseEl.parentElement.querySelector('[data-bs-toggle="collapse"]');
@@ -752,6 +714,23 @@ export default {
         });
 
         document.querySelectorAll('.product-card-grid-item input[name="product-variant-img"]').forEach(productVariantImgEl => theme.utils.productGridItemVariantImgSwapper(productVariantImgEl));
+
+        document.querySelectorAll('.section-header .description-collapse').forEach(el => {
+            el.style.setProperty('--collapse-height', el.clientHeight+'px');
+        });
+
+        window.addEventListener('resize', theme.utils.debounce(() => {
+
+            document.querySelectorAll('.section-header .description-collapse').forEach(el => {
+
+                el.style.removeProperty('--collapse-height');
+
+                setTimeout(() => {
+                    el.style.setProperty('--collapse-height', el.clientHeight+'px');
+                }, 150);
+            });
+
+        }, 150));
     },
     initMarketing() {
 
@@ -765,16 +744,30 @@ export default {
 
                     document.body.insertAdjacentHTML('beforeend', theme.renderer.render('newsletter-popup'));
 
-                    theme.bs.Modal.getOrCreateInstance('#newsletter-popup-modal')?.show();
+                    const showModal = () => {
 
-                    document.getElementById('newsletter-popup-modal').addEventListener('hide.bs.modal', () => {
+                        theme.bs.Modal.getOrCreateInstance('#newsletter-popup-modal')?.show();
 
-                        theme.utils.cookies.set(
-                            'themeNewsletterPopup',
-                            true,
-                            Math.floor(theme.store.marketing.newsletterPopup.cookieDuration / 86400)
-                        );
-                    });
+                        document.getElementById('newsletter-popup-modal').addEventListener('hide.bs.modal', () => {
+
+                            theme.utils.cookies.set(
+                                'themeNewsletterPopup',
+                                true,
+                                Math.floor(theme.store.marketing.newsletterPopup.cookieDuration / 86400)
+                            );
+                        });
+                    };
+
+                    const newsletterImgContainerEl = document.querySelector('#newsletter-popup-modal-img-container');
+
+                    if (newsletterImgContainerEl) {
+
+                        theme.lazyLoad.load(newsletterImgContainerEl.querySelector('.lazy', {
+                            callback_finish: () => {
+                                showModal();
+                            }
+                        }));
+                    }
 
                 }, theme.store.marketing.newsletterPopup.delay * 1000);
             }

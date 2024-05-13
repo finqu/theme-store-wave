@@ -175,7 +175,7 @@ const formatNumber = function (opts = {}) {
 const animate = function (el, animation, delay, duration) {
 	return new Promise((resolve, reject) => {
 
-		const prefix = 'animate__';
+		const prefix = 'animation-';
 		const node = el && el.nodeType ? el : document.querySelector(el);
 
 		let classes = [
@@ -478,6 +478,18 @@ const checkVisibility = function (el) {
 	return false;
 }
 
+const initComponent = function (name, selector) {
+	if (!name || !selector) {
+		return;
+	}
+
+	document.dispatchEvent(new CustomEvent(`theme:${name}:init`, {
+		detail: {
+			el: selector
+		}
+	}));
+}
+
 export {
 	debounce,
 	extend,
@@ -495,5 +507,6 @@ export {
 	productGridItemVariantImgSwapper,
 	cookies,
 	countdown,
-	checkVisibility
+	checkVisibility,
+	initComponent
 };

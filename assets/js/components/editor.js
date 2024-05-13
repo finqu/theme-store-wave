@@ -1,24 +1,38 @@
-import Slider from './slider';
-import Masonry from 'masonry-layout';
-
 export default {
     init() {
         document.addEventListener('finqu:section:load', (e) => {
 
             // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe
-            theme.lazyLoad('loadAll');
+            theme.lazyLoad.call('loadAll');
 
-            for (const el of e.target.querySelectorAll('.swiper.swiper-standalone')) {
-                new Slider(el);
-            }
+            const componentsToInit = [
+				{
+					name: 'tooltip',
+					selector: e.target.querySelectorAll('[data-bs-toggle="tooltip"]')
+				},
+				{
+					name: 'popover',
+					selector: e.target.querySelectorAll('[data-bs-toggle="popover"]')
+				},
+				{
+					name: 'slider',
+					selector: e.target.querySelectorAll('.swiper.swiper-standalone')
+				},
+				{ 
+					name: 'gallery',
+					selector: e.target.querySelectorAll('.gallery')
+				},
+				{
+					name: 'masonry',
+					selector: e.target.querySelectorAll('.masonry') 
+				}
+			];
 
-            for (const el of e.target.querySelectorAll('.masonry')) {
-                const settings = {
-                    percentPosition: true,
-                    ...(el.dataset || {})
-                };
-                new Masonry(el, settings);
-            }
+			componentsToInit.forEach((component) => {
+				if (component.selector.length) {
+					theme.utils.initComponent(component.name, component.selector);
+				}
+			});
         });
 
         document.addEventListener('finqu:section:unload', (e) => {
@@ -31,7 +45,7 @@ export default {
 
             for (const el of e.target.querySelectorAll('.masonry')) {
 
-                const masonry = Masonry.data(el);
+                const masonry = theme.masonry.data(el);
 
                 if (masonry) {
                     masonry.destroy();
@@ -41,7 +55,7 @@ export default {
 
         document.addEventListener('finqu:block:load', () => {
             // Force load all remaining images because vanilla-lazyload's observer doesn't work in iframe
-            theme.lazyLoad('loadAll');
+            theme.lazyLoad.call('loadAll');
         });
 
         document.addEventListener('finqu:block:edit', (e) => {

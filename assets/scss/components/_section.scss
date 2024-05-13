@@ -13,6 +13,7 @@
 		min-height: var(--section-min-height, auto);
 		padding-top: calc(var(--section-padding-top) / 2);
 		padding-bottom: calc(var(--section-padding-bottom) / 2);
+		overflow: var(--section-overflow, visible);
 
 		@include media-breakpoint-down(lg) {
 			--section-min-height: --section-min-height-mobile;
@@ -69,6 +70,7 @@
 
 				& > .container,
 				& > .container-fluid,
+				& > .container-fair,
 				& > .container-tiny,
 				& > .container-compact,
 				& > .container-none {
@@ -85,6 +87,7 @@
 
 					& > .container,
 					& > .container-fluid,
+					& > .container-fair,
 					& > .container-tiny,
 					& > .container-compact,
 					& > .container-none {
@@ -97,6 +100,7 @@
 
 			& > .container,
 			& > .container-fluid,
+			& > .container-fair,
 			& > .container-tiny,
 			& > .container-compact,
 			& > .container-none {
@@ -177,6 +181,7 @@
 
 			& > .container,
 			& > .container-fluid,
+			& > .container-fair,
 			& > .container-tiny,
 			& > .container-compact,
 			& > .container-none {
@@ -354,7 +359,8 @@
 		.subtitle-container {
 
 			.subtitle {
-				@include font-size($h4-font-size);
+				display: inline-flex;
+				max-width: 650px;
 				font-family: $subheadings-font-family;
 				font-weight: $subheadings-font-weight;
 				font-style: $subheadings-font-style;
@@ -364,6 +370,8 @@
 			    hyphens: auto;
 				margin-bottom: 0;
 				color: var(--style-subheading-color);
+				@include font-size($h4-font-size);
+				
 				@if $subheadings-letter-spacing != '0' {
 					letter-spacing: $subheadings-letter-spacing;
 				}
@@ -417,10 +425,7 @@
 
 				&.collapse:not(.show),
 				&.collapsing {
-					height: rfs-fluid-value(10.7rem);
-					@include media-breakpoint-up(md) {
-						height: rfs-fluid-value(7.4rem);
-					}
+					height: var(--collapse-height, auto);
 				}
 
 				&.collapse {
@@ -531,6 +536,7 @@
 
 			& > .container,
 			& > .container-fluid,
+			& > .container-fair,
 			& > .container-tiny,
 			& > .container-compact,
 			& > .container-none {

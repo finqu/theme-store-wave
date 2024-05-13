@@ -349,6 +349,12 @@
 }
 
 // Inputs
+.form-select,
+.form-control,
+.form-control-text {
+	--#{$prefix}border-color: var(--style-form-border-color);
+}
+
 .form-check-input {
 
 	&:not(:disabled):not(.disabled) {
@@ -402,8 +408,11 @@ textarea {
 		}
 	}
 }
+
 @if $enable-input-borders == 'false' {
-	.form-control {
+	.form-select,
+	.form-control,
+	.form-control-text {
 		--#{$prefix}border-color: var(--style-form-bg-color);
         --style-form-border-color: var(--style-form-bg-color);
     }

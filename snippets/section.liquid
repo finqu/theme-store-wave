@@ -50,6 +50,7 @@
     - sectionAction {String}
     - sectionHighlightItems {Boolean}
     - sectionAdditionalTitles {Boolean}
+    - sectionAdditionalText {Boolean}
 
     Usage:
     {% render 'section', section: section %}
@@ -87,9 +88,9 @@
 {%- assign sectionHeaderGapScale = sectionHeaderGapScale | default: settings.sectionHeaderGapScale -%}
 {%- assign sectionOverlay = sectionOverlay | default: section.settings.sectionOverlay | default: false -%}
 {%- assign sectionOverlayPadding = sectionOverlayPadding | default: section.settings.sectionOverlayPadding | default: settings.sectionOverlayPadding -%}
-{%- assign sectionDescription = sectionDescription | default: section.settings.sectionDescription -%}
 {%- assign sectionPaddingMode = sectionPaddingMode | default: section.settings.sectionPaddingMode -%}
 {%- assign sectionAdditionalTitles = sectionAdditionalTitles | default: section.settings.sectionAdditionalTitles | default: false -%}
+{%- assign sectionAdditionalText = sectionAdditionalText | default: section.settings.sectionAdditionalText -%}
 
 {%- if sectionContainer == 'nil' -%}
     {%- assign sectionContainer = 'fixed' -%}
@@ -98,6 +99,10 @@
 {%- unless sectionAdditionalTitles -%}
     {%- assign sectionOverline = false -%}
 {%- endunless -%}
+
+{%- if sectionAdditionalText == false -%}
+    {%- assign sectionDescription = false -%}
+{%- endif -%}
 
 {%- if sectionHandle == nil and section.id -%}
     {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}

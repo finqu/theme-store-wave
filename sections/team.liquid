@@ -280,6 +280,15 @@
                         }
                     },
                     {
+                        "id": "sectionDescription",
+                        "type": "richtext",
+                        "label": {
+                            "en": "Description",
+                            "fi": "Kuvaus"
+                        },
+                        "conditions": ["sectionAdditionalText eq true"]
+                    },
+                    {
                         "id": "memberPerRow",
                         "label": {
                             "en": "Member per row",
@@ -726,6 +735,25 @@
                                     "label": {
                                         "en": "Show additional titles",
                                         "fi": "Näytä lisäotsikot"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "Off"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "On"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionAdditionalText",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Show description",
+                                        "fi": "Näytä kuvaus"
                                     },
                                     "default": false,
                                     "options": [

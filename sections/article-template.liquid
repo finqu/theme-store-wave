@@ -35,7 +35,7 @@
 
     	<div class="article-media">
 
-    		<div class="article-img-container aspect-ratio-container">
+    		<div class="article-img-container">
 
                 {%- assign imgSizeSm = '747,456' -%}
                 {%- assign imgSizeLg = '1320,520' -%}
@@ -49,7 +49,7 @@
                         alt="{{ blogpost.title }}"
                         data-src="{{ blogpost.header_image | thumb: imgSizeSm }}"
                         data-srcset="{{ blogpost.header_image | thumb: imgSizeSm }} 1x, {{ blogpost.header_image | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                        class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                        class="lazy img-fluid">
                 </picture>
 
     	    </div>

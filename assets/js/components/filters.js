@@ -48,7 +48,7 @@ class Filters {
     }
 
     initSelectors() {
-        this.filtersFormSelector = this.isMobileView() ? `#${this.prefix}-filters-form-mobile` : `#${this.prefix}-filters-form`;
+        this.filtersFormSelector = this.isMobileView() ? `#${this.prefix}-filters-mobile-form` : `#${this.prefix}-filters-form`;
         this.filtersFormEl = this.containerEl.querySelector(this.filtersFormSelector);
         this.filterInputEls = this.filtersFormEl ? this.filtersFormEl.querySelectorAll('input') : [];
         this.facetResultCountEls = this.filtersFormEl ? this.filtersFormEl.querySelectorAll('[data-facet-result-count]') : [];

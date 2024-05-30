@@ -188,8 +188,12 @@ export default function() {
             let delayTimer = null;
 
             document.addEventListener('theme:cart:show', () => {
-                siteHeaderItemCartEl.classList.add('cart-mini-expanded');
-                siteHeaderCartEl.classList.add('cart-mini-expanded');
+                if (window.matchMedia(`(min-width: ${theme.utils.getCssVariable('--style-grid-breakpoint-lg')})`).matches) {
+                    siteHeaderItemCartEl.classList.add('cart-mini-expanded');
+                    siteHeaderCartEl.classList.add('cart-mini-expanded');
+                } else {
+                    window.location.href = theme.store.routes.cartUrl;
+                }
             });
 
             document.addEventListener('theme:cart:hide', () => {

@@ -44,6 +44,10 @@
 
             <div class="col d-flex align-items-center justify-content-center">
 
+                {% if item.settings.imgLink.url %}
+                    <a href="{{- item.settings.imgLink.url -}}" target="{{- item.settings.imgLink.target -}}">
+                {% endif %}
+
                 <div class="aspect-ratio-auto" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% if item.settings.imgScaleRatio < 1 %} style="--img-scale-ratio: {{ item.settings.imgScaleRatio }}"{% endif %}>
 
                     <div class="aspect-ratio-container">
@@ -85,6 +89,10 @@
                     </div>
 
                 </div>
+
+                {% if item.settings.imgLink.url %}
+                    </a>
+                {% endif %}
 
             </div>
 
@@ -249,6 +257,15 @@
                                 "max": 1,
                                 "step": 0.1,
                                 "default": 1
+                            },
+                            {
+                                "id": "imgLink",
+                                "type": "url",
+                                "label": {
+                                    "en": "Link",
+                                    "fi": "Linkki"
+                                },
+                                "include_target": true
                             }
                         ]
                     }

@@ -454,6 +454,12 @@ export default function() {
         const siteHeaderScrollTransitionClass = 'site-header-container-transition';
         let lastScroll = 0;
 
+        siteHeaderContainerEl.addEventListener('transitionend', () => {
+            if (siteHeaderContainerEl.classList.contains(siteHeaderScrollDownClass)) {
+                containerEl.style.zIndex = 'auto';
+            }
+        });
+
         window.addEventListener('scroll', () => {
 
             const currentScroll = window.scrollY;
@@ -479,6 +485,7 @@ export default function() {
 
             } else if (currentScroll < lastScroll && siteHeaderContainerEl.classList.contains(siteHeaderScrollDownClass)) {
 
+                containerEl.style.zIndex = null;
                 siteHeaderContainerEl.classList.remove(siteHeaderScrollDownClass);
                 siteHeaderContainerEl.classList.add(siteHeaderScrollVisibleClass);
             }

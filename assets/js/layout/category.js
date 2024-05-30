@@ -75,7 +75,5 @@ export default function() {
         new Swiper(categorySubcategoriesEl.querySelector('.swiper'), swiperOpts);
     }
 
-    const test = new Filters('category');
-
-    console.log(test);
+    new Filters('category');
 }

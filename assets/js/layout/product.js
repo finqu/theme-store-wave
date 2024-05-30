@@ -823,6 +823,7 @@ export default function() {
 
                             if (partialName === 'media') {
                                 initProductMedia();
+                                theme.utils.initComponent('gallery', containerEl.querySelector('.gallery'));
                             }
 
                         } else {

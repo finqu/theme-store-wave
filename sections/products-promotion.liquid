@@ -23,14 +23,17 @@
 {% endif %}
 
 {%- capture sectionStyle -%}
-    #finqu-section-{{ section.id }} {
-        --style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
-    }
+    
     #finqu-section-{{ section.id }} .swiper-slide {
         --swiper-slide-width: 45;
         --swiper-slide-width-sm: 40;
         --swiper-slide-width-md: 35;
         --swiper-slide-width-lg: 20;
+    }
+    @media screen and (min-width: {{ settings.styleGridBreakpointLg }}) {
+        #finqu-section-{{ section.id }} {
+            --style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
+        }
     }
 {%- endcapture -%}
 

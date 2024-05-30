@@ -176,11 +176,11 @@
                     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
                     {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
 
-                    {%- if product.first_available_variant.image -%}
+                    {%- if product.default_or_selected_variant.image and product.has_only_default_variant == false -%}
 
-                        {%- assign img1 = product.first_available_variant.image -%}
+                        {%- assign img1 = product.default_or_selected_variant.image -%}
                         {%- assign img2 = generalImages[0] -%}
-
+                        
                     {%- else -%}
 
                         {%- assign img1 = generalImages[0] -%}

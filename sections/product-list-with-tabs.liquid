@@ -28,11 +28,11 @@
                 {% when 'recent' %}
                     {%- assign items = products.recent -%}
                 {% when 'tag' %}
-                    {%- assign items = products.tags[section.settings.tagId] -%}
+                    {%- assign items = products.tags[tab.settings.tagId] -%}
                 {% when 'category' %}
-                    {%- assign items = categories[section.settings.category.id].products -%}
+                    {%- assign items = categories[tab.settings.category.id].products -%}
                 {% when 'manufacturer' %}
-                    {%- assign items = manufacturers[section.settings.manufacturer.id].products -%}
+                    {%- assign items = manufacturers[tab.settings.manufacturer.id].products -%}
             {%- endcase -%}
 
             {%- assign items = items | slice: 0, section.settings.productAmount -%}

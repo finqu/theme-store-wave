@@ -619,10 +619,15 @@ class Filters {
             return;
         }
 
+        const query = this.pageUrl.searchParams.get('q');
         const pageId = this.pageUrl.searchParams.get('page');
         const sortBy = this.pageUrl.searchParams.get('sort-by');
         const formData = new FormData(this.filtersFormEl);
         const searchParams = new URLSearchParams(formData);
+
+        if (query) {
+            searchParams.append('q', query);
+        }
 
         if (pageId) {
             searchParams.append('page', pageId);

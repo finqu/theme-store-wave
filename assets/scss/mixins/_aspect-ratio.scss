@@ -69,6 +69,10 @@
         .aspect-ratio-item {
             object-fit: var(--object-fit, #{$fit});
 
+            @if $key == product {
+                background-color: var(--style-bg-color);
+            }
+
             @if $border-radius {
                 border-radius: $border-radius;
             }

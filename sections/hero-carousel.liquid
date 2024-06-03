@@ -1,4 +1,5 @@
 {%- assign sectionMinHeight = section.settings.sectionMinHeight | append: 'vh' -%}
+{%- assign sectionMinHeightMobile = section.settings.sectionMinHeightMobile | append: 'vh' -%}
 {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
 {%- if section.settings.textHorizontalAlign == 'nil' -%}
@@ -53,7 +54,7 @@
 
                 <div class="swiper-slide">
 
-                   <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+                   <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
                         <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if item.settings.img %} bg-size-cover{% endif %}" data-bg-set="{{- imgSrc | strip -}}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--bg-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}></div>
 
@@ -103,7 +104,7 @@
 
                 <div class="swiper-slide">
 
-                    <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh">
+                    <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh">
 
                         <div class="lazy position-absolute top-0 start-0 w-100 h-100 bg-position-center" data-bg-set="{{- imgSrc | strip -}}"></div>
 
@@ -121,7 +122,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
+{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
 
 {% schema %}
 {
@@ -681,6 +682,20 @@
                                     "label": {
                                         "en": "Minimum height",
                                         "fi": "Minimi korkeus"
+                                    },
+                                    "type": "range",
+                                    "min": 40,
+                                    "max": 100,
+                                    "step": 5,
+                                    "default": "60",
+                                    "unit": "vh"
+                                },
+                                {
+                                    "id": "sectionMinHeightMobile",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Minimum height on mobile",
+                                        "fi": "Minimi korkeus mobiilissa"
                                     },
                                     "type": "range",
                                     "min": 40,

@@ -1,4 +1,5 @@
 {%- assign sectionMinHeight = section.settings.sectionMinHeight | append: 'vh' -%}
+{%- assign sectionMinHeightMobile = section.settings.sectionMinHeightMobile | append: 'vh' -%}
 {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
 {%- if section.settings.sectionOverline -%}
@@ -347,7 +348,7 @@
 
         <div class="d-flex flex-column flex-md-row">
 
-            <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+            <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
                 <div class="d-flex align-items-center position-md-absolute top-0 start-0 w-100 h-100">
 
@@ -383,7 +384,7 @@
 
             </div>
 
-            <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+            <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
                 {{- imgContent -}}
 
@@ -395,7 +396,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textAlign, sectionMinHeight: sectionMinHeight, sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur, sectionMinHeight: sectionMinHeight, sectionContainer: sectionContainer, sectionPaddingMode: sectionPaddingMode, sectionPaddingTop: sectionPaddingTop, sectionPaddingBottom: sectionPaddingBottom %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textAlign, sectionMinHeight: sectionMinHeight, sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: sectionContainer, sectionPaddingMode: sectionPaddingMode, sectionPaddingTop: sectionPaddingTop, sectionPaddingBottom: sectionPaddingBottom %}
 
 {% schema %}
 {
@@ -889,6 +890,20 @@
                                     "label": {
                                         "en": "Minimum height",
                                         "fi": "Minimi korkeus"
+                                    },
+                                    "type": "range",
+                                    "min": 40,
+                                    "max": 100,
+                                    "step": 5,
+                                    "default": "60",
+                                    "unit": "vh"
+                                },
+                                {
+                                    "id": "sectionMinHeightMobile",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Minimum height on mobile",
+                                        "fi": "Minimi korkeus mobiilissa"
                                     },
                                     "type": "range",
                                     "min": 40,

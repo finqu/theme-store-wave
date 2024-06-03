@@ -12,7 +12,9 @@
     - sectionOverline: {String}
     - sectionOverlineTag {String}
     - sectionHeight {String}
-    - sectionMinHeight {String
+    - sectionHeightMobile {String}
+    - sectionMinHeight {String}
+    - sectionMinHeightMobile {String}
     - sectionPaddingMode {String}
     - sectionPaddingTop {String}
     - sectionPaddingBottom {String}
@@ -201,6 +203,14 @@
     {%- assign sectionClasses = sectionClasses | append: ' section-highlight-items' -%}
 {%- endif -%}
 
+{%- if sectionHeight and sectionHeightMobile == false -%}
+    {%- assign sectionHeightMobile = sectionHeight -%}
+{%- endif -%}
+
+{%- if sectionMinHeight and sectionMinHeightMobile == false -%}
+    {%- assign sectionMinHeightMobile = sectionMinHeight | replace: 'vh', '' | times: 0.5 | append: 'vh' -%}
+{%- endif -%}
+
 {%- if sectionHandle -%}
 
     {%- capture sectionStyle -%}
@@ -232,11 +242,12 @@
 
             {%- if sectionHeight -%}
                 --section-height: {{ sectionHeight }};
+                --section-height-mobile: {{ sectionHeightMobile }};
             {%- endif -%}
 
             {%- if sectionMinHeight -%}
                 --section-min-height: {{ sectionMinHeight }};
-                --section-min-height-mobile: {{ sectionMinHeight | replace: 'vh', '' | times: 0.5 | append: 'vh' }};
+                --section-min-height-mobile: {{ sectionMinHeightMobile }};
             {%- endif -%}
 
             {%- if sectionOverflow -%}

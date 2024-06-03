@@ -1,4 +1,5 @@
 {%- assign sectionHeight = section.settings.sectionHeight | append: 'vh' -%}
+{%- assign sectionHeightMobile = section.settings.sectionHeightMobile | append: 'vh' -%}
 
 {%- if section.settings.sectionOverline -%}
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
@@ -67,7 +68,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: sectionHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingY: '4rem' %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: sectionHeight, sectionHeightMobile: sectionHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingY: '4rem' %}
 
 {% schema %}
 {
@@ -515,6 +516,20 @@
                                     "label": {
                                         "en": "Height",
                                         "fi": "Korkeus"
+                                    },
+                                    "type": "range",
+                                    "min": 40,
+                                    "max": 100,
+                                    "step": 5,
+                                    "default": "60",
+                                    "unit": "vh"
+                                },
+                                {
+                                    "id": "sectionHeightMobile",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Height on mobile",
+                                        "fi": "Korkeus mobiilissa"
                                     },
                                     "type": "range",
                                     "min": 40,

@@ -1,4 +1,5 @@
 {%- assign sectionMinHeight = section.settings.sectionMinHeight | append: 'vh' -%}
+{%- assign sectionMinHeightMobile = section.settings.sectionMinHeightMobile | append: 'vh' -%}
 {%- assign cols = section.settings.cols | split: ',' -%}
 {%- assign leftColSize = cols[0] -%}
 {%- assign rightColSize = cols[1] -%}
@@ -222,7 +223,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile %}
 
 {% schema %}
 {
@@ -793,6 +794,20 @@
                                     "label": {
                                         "en": "Minimum height",
                                         "fi": "Minimi korkeus"
+                                    },
+                                    "type": "range",
+                                    "min": 40,
+                                    "max": 100,
+                                    "step": 5,
+                                    "default": "60",
+                                    "unit": "vh"
+                                },
+                                {
+                                    "id": "sectionMinHeightMobile",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Minimum height on mobile",
+                                        "fi": "Minimi korkeus mobiilissa"
                                     },
                                     "type": "range",
                                     "min": 40,

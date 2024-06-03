@@ -1,6 +1,6 @@
 {%- capture sectionContent -%}
 
-    {%- render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale -%}
+    {%- render 'section-header', sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionDescription: section.settings.sectionDescription, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale -%}
 
 {%- endcapture -%}
 
@@ -9,14 +9,15 @@
 {% schema %}
 {
     "name": {
-        "en": "Heading",
-        "fi": "Otsikko"
+        "en": "Intro",
+        "fi": "Johdanto"
     },
     "tag": "section",
-    "class": "section section-heading",
+    "class": "section section-intro",
     "category": "theme-featured",
     "keywords": {
         "en": [
+            "Intro",
             "Heading",
             "Title",
             "Subtitle",
@@ -24,6 +25,7 @@
             "Text"
         ],
         "fi": [
+            "Johdanto",
             "Otsikko",
             "Teksti"
         ]
@@ -59,6 +61,14 @@
                         "label": {
                             "en": "Subtitle",
                             "fi": "Alaotsikko"
+                        }
+                    },
+                    {
+                        "id": "sectionDescription",
+                        "type": "richtext",
+                        "label": {
+                            "en": "Description",
+                            "fi": "Kuvaus"
                         }
                     }
                 ]

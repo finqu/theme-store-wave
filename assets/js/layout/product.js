@@ -555,7 +555,7 @@ export default function() {
 
                                 if (partialName === 'media') {
                                     initProductMedia();
-                                    theme.utils.initComponent('gallery', containerEl.querySelector('.gallery'));
+                                    theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
                                 }
 
                             } else {
@@ -823,7 +823,7 @@ export default function() {
 
                             if (partialName === 'media') {
                                 initProductMedia();
-                                theme.utils.initComponent('gallery', containerEl.querySelector('.gallery'));
+                                theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
                             }
 
                         } else {
@@ -858,7 +858,7 @@ export default function() {
 
                     history.replaceState({}, dom.title, url);
 
-                    theme.utils.initComponent('gallery', containerEl.querySelector('.gallery'));
+                    theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
 
                     if (containerEl.querySelector('.product-reviews')) {
                         initProductReviews();

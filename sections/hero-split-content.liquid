@@ -1,4 +1,5 @@
 {%- assign sectionMinHeight = section.settings.sectionMinHeight | append: 'vh' -%}
+{%- assign sectionMinHeightMobile = section.settings.sectionMinHeightMobile | append: 'vh' -%}
 
 {%- if section.settings.sectionOverline -%}
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
@@ -92,13 +93,13 @@
 
     <div class="d-flex flex-column flex-md-row">
 
-        <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+        <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
             {{- textContent -}}
 
         </div>
 
-        <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeight | divided_by: 2 }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+        <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
             {{- imgContent -}}
 
@@ -108,7 +109,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
 
 {% schema %}
 {
@@ -506,6 +507,20 @@
                                     "label": {
                                         "en": "Minimum height",
                                         "fi": "Minimi korkeus"
+                                    },
+                                    "type": "range",
+                                    "min": 40,
+                                    "max": 100,
+                                    "step": 5,
+                                    "default": "60",
+                                    "unit": "vh"
+                                },
+                                {
+                                    "id": "sectionMinHeightMobile",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Minimum height on mobile",
+                                        "fi": "Minimi korkeus mobiilissa"
                                     },
                                     "type": "range",
                                     "min": 40,

@@ -719,17 +719,23 @@ export default {
             el.style.setProperty('--collapse-height', el.clientHeight+'px');
         });
 
+        let windowWidth = window.innerWidth;
+
         window.addEventListener('resize', theme.utils.debounce(() => {
 
-            document.querySelectorAll('.section-header .description-collapse').forEach(el => {
+            if (window.innerWidth != windowWidth) {
 
-                el.style.removeProperty('--collapse-height');
+                document.querySelectorAll('.section-header .description-collapse').forEach(el => {
 
-                setTimeout(() => {
-                    el.style.setProperty('--collapse-height', el.clientHeight+'px');
-                }, 150);
-            });
+                    el.style.removeProperty('--collapse-height');
 
+                    setTimeout(() => {
+                        el.style.setProperty('--collapse-height', el.clientHeight+'px');
+                    }, 150);
+
+                    windowWidth = window.innerWidth;
+                });
+            }
         }, 150));
     },
     initMarketing() {

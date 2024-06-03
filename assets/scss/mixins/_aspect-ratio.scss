@@ -70,7 +70,9 @@
             object-fit: var(--object-fit, #{$fit});
 
             @if $key == product {
-                background-color: var(--style-bg-color);
+                &:not(.svg-placeholder) {
+                    background-color: var(--style-bg-color);
+                }
             }
 
             @if $border-radius {

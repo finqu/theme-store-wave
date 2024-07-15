@@ -17,7 +17,7 @@ class CookiePolicy {
 
             if (!this.containerEl) {
 
-                this.setConsent('default');
+                this.setConsent('required');
                 
             } else {
 
@@ -35,16 +35,15 @@ class CookiePolicy {
         }
 
         let isDefaultConsent = false;
+        let updateConsent = false;
         
-        if (value === 'default') {
+        if (value === 'required' && theme.store.cookiePolicy.status === null) {
             isDefaultConsent = true;
-            value = 'required';
         }
 
         const formData = this.formEl ? new FormData(this.formEl) : null;
         const consentParamEl = this.formEl ? this.formEl.querySelector('.cookie-policy-consents input') : null;
         const consentParam = consentParamEl ? consentParamEl.name : null;
-        let updateConsents = false;
 
         if (consentParam) {
             formData.append(consentParam, 'required');
@@ -53,15 +52,15 @@ class CookiePolicy {
         if (formData) {
 
             if (value === 'custom' && formData.values() !== theme.store.cookiePolicy.consents) {
-                updateConsents = true;
-            } else if (value !== 'custom' && theme.store.cookiePolicy.status !== null && theme.store.cookiePolicy.status !== value) {
-                updateConsents = true;
+                updateConsent = true;
+            } else if (value !== 'custom' && theme.store.cookiePolicy.status !== value) {
+                updateConsent = true;
             } else if (isDefaultConsent) {
-                updateConsents = true;
+                updateConsent = true;
             }
         }
 
-        if (updateConsents) {
+        if (updateConsent) {
 
             formData.set('cookie_policy', value);
 
@@ -108,14 +107,20 @@ class CookiePolicy {
                 clearInterval(this.consentCheckInterval);
             }
 
-            await this.setConsent('default');
+            await this.setConsent('required');
+
+            return;
+
+        } else if (this.consentCheckInterval && theme.utils.checkVisibility(this.containerEl)) {
+
+            clearInterval(this.consentCheckInterval);
 
             return;
         }
 
         if (this.consentCheckInterval === null) {
             this.consentCheckInterval = setInterval(this.check.bind(this), 1000);
-        };
+        }
     }
 
     show() {

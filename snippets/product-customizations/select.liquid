@@ -27,21 +27,15 @@
                 {% assign itemPrice = option.price %}
             {%- endif -%}
 
-            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock %}
-
-                {% assign arg1 = true %}
-
+            {%- if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock -%}
+                {%- assign hasPriceCondition = true -%}
+            {%- elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' -%}
+                {%- assign hasPriceCondition = true -%}
             {% endif %}
 
-            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
-
-                {% assign arg2 = true %}
-
-            {% endif %}
-
-            <option
-                {% if arg1 or arg2 %}class="has-price" {% endif %}
-                value="{{ option.id }}"{% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% endif %}>
+            <option value="{{ option.id }}"
+                {% if hasPriceCondition %}class="has-price"{% endif %}
+                {% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% endif %}>
 
                 {{ option.title }}
 

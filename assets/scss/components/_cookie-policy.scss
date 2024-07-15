@@ -40,6 +40,13 @@ body.cookie-policy-visible {
             transition: opacity .25s ease-in-out,visibility .25s ease-in-out;
         }
 
+        &.cookie-policy-mode-advanced {
+
+            #cookie-policy-form {
+                max-width: 865px;
+            }
+        }
+
         #cookie-policy-form {
             position: relative;
             z-index: 11;
@@ -64,30 +71,70 @@ body.cookie-policy-visible {
                 @include font-size($font-size-base * 1.5);
                 margin-bottom: spacer(g);
             }
+            
+            .cookie-policy-consents {
+                display: flex;
+                gap: spacer(3);
+                justify-content: start;
+                flex-wrap: wrap;
+                margin-top: spacer(4);
+
+                .form-switch {
+
+                    .form-check-label {
+                        font-weight: $font-weight-medium;
+                    }
+                }
+            }
 
             .cookie-policy-actions {
-                flex-direction: column;
+                display: flex;
+                gap: spacer(2);
                 width: 100%;
                 margin-top: spacer(4);
 
-                #cookie-policy-all-cta {
-                    order: 1;
-                }
-
-                #cookie-policy-required-cta {
-                    margin-top: spacer(2);
-                    order: 2;
-                }
-
                 .btn {
-                    display: block;
+                    flex: 1;
+                }
+            }
+
+            @include media-breakpoint-down(lg) {
+
+                .cookie-policy-actions {
                     width: 100%;
+                    flex-direction: column;
+
+                    #cookie-policy-required-cta {
+                        order: 2;
+                    }
+                }
+
+                .cookie-policy-consents {
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
+                    max-height: 300px;
+
+                    .form-switch {
+                        display: flex;
+                        padding-left: 0;
+
+                        .form-check-input {
+                            order: 2;
+                        }
+
+                        .form-check-label {
+                            flex: 1;
+                            font-weight: $font-weight-bold;
+                        }
+                    }
                 }
             }
         }
     }
 
-    &.cookie-policy-position-down {
+    &.cookie-policy-position-bottom {
         left: 0;
         right: 0;
         bottom: 0;
@@ -98,6 +145,7 @@ body.cookie-policy-visible {
             justify-content: space-between;
             padding: spacer(3) spacer(4);
             box-shadow: 0 -1px 10px 0 #acabab4d;
+            gap: spacer(g);
             @include media-breakpoint-down(lg) {
                 padding: spacer(5) spacer(4);
             }
@@ -108,35 +156,64 @@ body.cookie-policy-visible {
             }
 
             .cookie-policy-actions {
-                margin-left: spacer(g);
-                    
-                #cookie-policy-all-cta {
-                    margin-left: spacer(2);
+                display: flex;
+                gap: spacer(2);
+            }
+
+            .cookie-policy-consents {
+                display: flex;
+                gap: spacer(3);
+                justify-content: start;
+                flex-wrap: wrap;
+                margin-top: spacer(3);
+
+                .form-switch {
+
+                    .form-check-label {
+                        font-weight: $font-weight-medium;
+                    }
                 }
+            }
+
+            .btn {
+                flex: 0 auto;
             }
 
             @include media-breakpoint-down(lg) {
                 flex-direction: column;
 
+                .btn {
+                    flex: 1;
+                }
+
                 .cookie-policy-actions {
                     width: 100%;
                     flex-direction: column;
-                    margin-left: 0;
-                    margin-top: spacer(4);
 
-                    #cookie-policy-all-cta {
-                        order: 1;
-                        margin-left: 0;
-                    }
-    
                     #cookie-policy-required-cta {
-                        margin-top: spacer(2);
                         order: 2;
                     }
-    
-                    .btn {
-                        display: block;
-                        width: 100%;
+                }
+
+                .cookie-policy-consents {
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
+                    max-height: 300px;
+
+                    .form-switch {
+                        display: flex;
+                        padding-left: 0;
+
+                        .form-check-input {
+                            order: 2;
+                        }
+
+                        .form-check-label {
+                            flex: 1;
+                            font-weight: $font-weight-bold;
+                        }
                     }
                 }
             }

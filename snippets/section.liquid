@@ -283,8 +283,8 @@
 
                 {%- if style -%}
 
-                    {%- assign styleformBgColorBrightness = style.form_bg_color | color_brightness -%}
-                    {%- assign styleformBorderColorBrightness = style.form_border_color | color_brightness -%}
+                    {%- assign styleFormBgColorBrightness = style.form_bg_color | color_brightness -%}
+                    {%- assign styleFormBorderColorBrightness = style.form_border_color | color_brightness -%}
                     {%- assign styleTextColorBrightness = style.text_color | color_brightness -%}
                     {%- assign styleTableBgColorBrightness = style.table_bg_color | color_brightness -%}
                     {%- assign styleBgColorBrightness = style.bg_color | color_brightness -%}
@@ -347,7 +347,7 @@
                     {%- endif -%}
 
                     {%- if style.secondary_bg_color -%}
-                        --style-secondary-bg-color: {{ style.secondary_bg_color }};
+                        --style-secondary-bg-color: {{ style.secondary_bg_color | color_min_contrast: styleBgColorBrightness }};
                     {%- endif -%}
 
                     {%- if style.product_title_color -%}
@@ -422,7 +422,7 @@
                         --style-form-border-color: {{ style.form_border_color }};
                     {%- endif -%}
 
-                    {%- if styleformBgColorBrightness > 190 -%}
+                    {%- if styleFormBgColorBrightness > 190 -%}
                         --style-form-bg-hover-color: {{ style.form_bg_color | color_darken: 5 }};
                         --style-form-bg-disabled-color: {{ style.form_bg_color | color_darken: 10 }};
                     {%- else -%}
@@ -430,7 +430,7 @@
                         --style-form-bg-disabled-color: {{ style.form_bg_color | color_lighten: 10 }};
                     {%- endif -%}
 
-                    {%- if styleformBorderColorBrightness > 190 -%}
+                    {%- if styleFormBorderColorBrightness > 190 -%}
                         --style-form-border-focus-color: {{ style.form_border_color | color_dacolor_lightenrken: 10 }};
                         --style-form-border-disabled-color: {{ style.form_border_color | color_darken: 10 }};
                     {%- else -%}
@@ -589,8 +589,8 @@
 
                     {%- endif -%}
 
-                    {%- assign styleformBgColorBrightness = bgColor | color_brightness -%}
-                    {%- assign styleformBorderColorBrightness = contentColor | color_brightness -%}
+                    {%- assign styleFormBgColorBrightness = bgColor | color_brightness -%}
+                    {%- assign styleFormBorderColorBrightness = contentColor | color_brightness -%}
                     {%- assign styleTextColorBrightness = contentColor | color_brightness -%}
                     {%- assign styleTableBgColorBrightness = bgColor | color_brightness -%}
                     {%- assign styleBgColorBrightness = bgColor | color_brightness -%}
@@ -642,7 +642,7 @@
                         --style-secondary-bg-color: {{ bgColor | color_lighten: 5 }};
                     {%- endif -%}
 
-                    {%- if styleformBgColorBrightness > 190 -%}
+                    {%- if styleFormBgColorBrightness > 190 -%}
                         --style-form-bg-hover-color: {{ bgColor | color_darken: 5 }};
                         --style-form-bg-disabled-color: {{ bgColor | color_darken: 10 }};
                     {%- else -%}
@@ -653,7 +653,7 @@
                     --style-form-placeholder-color: {{ bgColor | color_lighten: 15 | color_min_contrast: contentColor }};
                     --style-form-bg-readonly-color: {{ contentColor | color_lighten: 15 | color_min_contrast: bgColor }};
 
-                    {%- if styleformBorderColorBrightness > 190 -%}
+                    {%- if styleFormBorderColorBrightness > 190 -%}
                         --style-form-border-color: {{ contentColor | color_darken: 5 }};
                         --style-form-border-focus-color: {{ contentColor | color_darken: 10 }};
                         --style-form-border-disabled-color: {{ contentColor | color_darken: 10 }};

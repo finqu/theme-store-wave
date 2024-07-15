@@ -67,10 +67,6 @@
                 "en": "Blog",
                 "fi": "Blogi"
             }
-        },
-        {
-            "id": "theme-klarna",
-            "name": "Klarna"
         }
     ],
     "settings": [
@@ -2094,13 +2090,50 @@
                                 "fi": "Näytä hinnat verottomina"
                             },
                             "default": false
+                        }
+                    ]
+                },
+                {
+                    "type": "setting-group",
+                    "settings": [
+                        {
+                            "type": "title",
+                            "label": {
+                                "en": "Cookie policy",
+                                "fi": "Evästeilmoitus"
+                            }
+                        },
+                        {
+                            "id": "cookiesPolicyMode",
+                            "type": "radio-pill",
+                            "label": {
+                                "en": "Mode",
+                                "fi": "Tila"
+                            },
+                            "default": "simple",
+                            "options": [
+                                {
+                                    "value": "simple",
+                                    "label": {
+                                        "en": "Simple",
+                                        "fi": "Yksinkertainen"
+                                    }
+                                },
+                                {
+                                    "value": "advanced",
+                                    "label": {
+                                        "en": "Advanced",
+                                        "fi": "Edistynyt"
+                                    }
+                                }
+                            ]
                         },
                         {
                             "id": "cookiesPolicyPosition",
                             "type": "radio-pill",
                             "label": {
-                                "en": "Cookie policy position",
-                                "fi": "Evästeilmoituksen sijainti"
+                                "en": "Position",
+                                "fi": "Sijainti"
                             },
                             "default": "middle",
                             "options": [
@@ -2112,9 +2145,9 @@
                                     }
                                 },
                                 {
-                                    "value": "down",
+                                    "value": "bottom",
                                     "label": {
-                                        "en": "Down",
+                                        "en": "Bottom",
                                         "fi": "Alhaalla"
                                     }
                                 }
@@ -2732,24 +2765,6 @@
                                 "fi": "Näytä ehtojen hyväksyminen tekstinä"
                             },
                             "default": false
-                        }
-                    ]
-                },
-                {
-                    "type": "setting-group",
-                    "settings": [
-                        {
-                            "type": "title",
-                            "label": "Klarna"
-                        },
-                        {
-                            "type": "text",
-                            "id": "klarnaClientId",
-                            "label": {
-                                "en": "Client id",
-                                "fi": "Asiakastunnus"
-                            },
-                            "placeholder": "11111111-2222-3333-4444-555555555555"
                         }
                     ]
                 }

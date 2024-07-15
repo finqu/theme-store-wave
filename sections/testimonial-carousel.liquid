@@ -143,7 +143,7 @@
 
     <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-        {%- render 'swiper', slides: slides, pagination: section.settings.carouselPagination, navigation: section.settings.carouselNavigation, slidesPerView: section.settings.carouselItemsPerView, style: section.settings.carouselStyle, standalone: true, paginationPosition: 'relative', autoplaySpeed: section.settings.carouselAutoplaySpeed, loop: true, evenHeightSlides: true -%}
+        {%- render 'swiper', slides: slides, pagination: section.settings.carouselPagination, navigation: section.settings.carouselNavigation, slidesPerView: section.settings.carouselItemsPerView, slidesPerViewMobile: section.settings.carouselItemsPerViewMobile, style: section.settings.carouselStyle, standalone: true, paginationPosition: 'relative', autoplaySpeed: section.settings.carouselAutoplaySpeed, loop: true, evenHeightSlides: true -%}
 
     </div>
 
@@ -252,6 +252,29 @@
                             {
                                 "value": 5,
                                 "label": "5"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "carouselItemsPerViewMobile",
+                        "label": {
+                            "en": "Reviews visible at once on mobile device",
+                            "fi": "Arvosteluja näkyvissä kerralla mobiililaitteella"
+                        },
+                        "type": "radio-pill",
+                        "default": 1,
+                        "options": [
+                            {
+                                "value": 1,
+                                "label": "1"
+                            },
+                            {
+                                "value": 2,
+                                "label": "2"
+                            },
+                            {
+                                "value": 3,
+                                "label": "3"
                             }
                         ]
                     }

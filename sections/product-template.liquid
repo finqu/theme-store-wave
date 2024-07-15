@@ -174,6 +174,10 @@
             {%- assign showStockBalance = true -%}
         {%- endif -%}
 
+        {%- if settings.accessibilityShowWishlist and section.settings.showBuyNowButton and product.default_or_selected_variant.notifications_supported == false -%}
+            {%- assign showWishlistCondition = true -%}
+        {%- endif -%}
+
         {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
         
         <div class="product-container section-highlight-item section-highlight-item-md mb-md-8">
@@ -769,21 +773,21 @@
 
                                     <div class="d-flex justify-content-between">
 
-                                        <div class="d-flex product-price-container">
+                                        <div class="d-flex product-price-container flex-wrap column-gap-3 row-gap-2">
 
                                             {% if product.default_or_selected_variant.price != product.default_or_selected_variant.original_price %}
 
-                                                <span class="product-sale-price-text text-sale-price me-3" data-product-price-dynamic>
+                                                <span class="product-sale-price-text text-sale-price" data-product-price-dynamic>
                                                     {{- settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price | money_with_currency -}}
                                                 </span>
 
-                                                <span class="product-price text-decoration-line-through text-muted me-3" data-product-original-price-dynamic>
+                                                <span class="product-price text-decoration-line-through text-muted" data-product-original-price-dynamic>
                                                     {{- settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.original_net_price, product.default_or_selected_variant.original_price | money_with_currency -}}
                                                 </span>
 
                                             {% else %}
 
-                                                <span class="product-price text-price me-3" data-product-price-dynamic>
+                                                <span class="product-price text-price" data-product-price-dynamic>
                                                     {{- settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price | money_with_currency -}}
                                                 </span>
 
@@ -908,6 +912,7 @@
                                                     {% assign showCustomizationPrice = section.settings.showProductCustomizationPrice %}
                                                     {% assign showCustomizationTotalPrice = section.settings.showProductCustomizationTotalPrice %}
                                                     {% assign showCustomizationStockBalance = section.settings.showProductCustomizationStockBalance %}
+                                                    {% assign showSimpleInputs = section.settings.showSimpleProductCustomizationInputElements %}
                                                     {% assign inventoryPolicy = product.default_or_selected_variant.inventory_policy %}
                                                     {% assign isPreviewProduct = product.in_preview %}
                                                     {% assign unit = product.default_or_selected_variant.unit %}
@@ -920,11 +925,11 @@
 
                                                         {%- elsif group.input_type == 'radio' -%}
 
-                                                            {% render 'product-customizations/radio', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, style: 'badge' %}
+                                                            {% render 'product-customizations/radio', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, simpleInputs: showSimpleInputs %}
 
                                                         {%- elsif group.input_type == 'checkbox' -%}
 
-                                                            {% render 'product-customizations/checkbox', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit %}
+                                                            {% render 'product-customizations/checkbox', group: group, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, simpleInputs: showSimpleInputs %}
 
                                                         {%- elsif group.input_type == 'text' -%}
 
@@ -1065,19 +1070,7 @@
 
                                             {% endif %}
 
-                                            {% if settings.klarnaClientId %}
-
-                                                <div class="mt-3">
-
-                                                    {% assign itemPrice = settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price %}
-
-                                                    {% render 'klarna-placement', type: 'credit-promotion-auto-size', purchaseAmount: itemPrice %}
-
-                                                </div>
-
-                                            {% endif %}
-
-                                            {% if section.settings.showProductQuestionForm or product.size_chart or settings.accessibilityShowWishlist and section.settings.showBuyNowButton %}
+                                            {% if section.settings.showProductQuestionForm or product.size_chart or showWishlistCondition %}
 
                                                 <div class="d-flex justify-content-between justify-content-md-start gap-g mt-3">
 
@@ -1192,7 +1185,7 @@
 
                                         {% endif %}
 
-                                        {% if section.settings.showProductQuestionForm or product.size_chart or settings.accessibilityShowWishlist and product.default_or_selected_variant.notifications_supported == false %}
+                                        {% if section.settings.showProductQuestionForm or product.size_chart or showWishlistCondition %}
 
                                             <div class="d-flex justify-content-between justify-content-md-start gap-g mt-3">
 
@@ -1521,7 +1514,7 @@
 
                                             </a>
 
-                                            <div class="flex-grow-1">
+                                            <div class="text-break">
 
                                                 <a href="{{ relatedItem | link }}" class="fw-bold d-block mt-3">
                                                     {{ relatedItem.title }}
@@ -1559,7 +1552,7 @@
 
                                                 <button
                                                     type="button"
-                                                    class="btn btn-secondary btn-sm"
+                                                    class="btn btn-secondary btn-sm flex-shrink-0"
                                                     data-cart-add="{{ relatedItem.id }}"
                                                     data-cart-quantity="{{ relatedItem.min_quantity }}">
                                                     {{- 'cart.quick_add' | t -}}
@@ -1567,7 +1560,7 @@
 
                                             {% else %}
 
-                                                <a href="{{ relatedItem | link }}" class="btn btn-secondary btn-sm">
+                                                <a href="{{ relatedItem | link }}" class="btn btn-secondary btn-sm flex-shrink-0">
                                                     {{- 'general.product_view' | t -}}
                                                 </a>
 
@@ -1676,7 +1669,7 @@
 
                             <div data-aos="{{ settings.sectionAnimation }}">
 
-                                {% if product.default_or_selected_variant.customer_can_review %}
+                                {% if product.customer_can_review %}
 
                                     <button id="product-review-create" class="btn btn-sm btn-secondary{% if submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endif %}">
                                         {{- 'product.write_review' | t -}}
@@ -2652,6 +2645,15 @@
                             "fi": "Näytä mukautuksessa varastosaldo"
                         },
                         "default": false
+                    },
+                    {
+                        "id": "showSimpleProductCustomizationInputElements",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Use simple input elements on customization",
+                            "fi": "Käytä mukautuksessa yksinkertaisia syöttöelementtejä"
+                        },
+                        "default": true
                     },
                     {
                         "type": "spacer"

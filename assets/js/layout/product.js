@@ -143,7 +143,7 @@ export default function() {
                         el.textContent += '('+theme.utils.formatCurrency({ value: price })+')';
                     });
 
-            } else if (['CHECKBOX', 'RADIO'].includes(el.nodeName)) {
+            } else if (el.nodeName === 'INPUT' && ['checkbox', 'radio'].includes(el.type)) {
 
                 fetch('/api/products/'+productId+'/price?customizations['+el.value+']=true')
                     .then(res => res.json())
@@ -217,7 +217,7 @@ export default function() {
                     }
                 }
 
-                if (productCustomizationEl.nodeName === 'CHECKBOX') {
+                if (productCustomizationEl.nodeName === 'INPUT' && productCustomizationEl.type === 'checkbox') {
 
                     const productCustomizationContainerEl = productCustomizationEl.closest('.product-customization-container');
                     const productCustomizationContainerParentEl = productCustomizationContainerEl.parentElement;
@@ -261,11 +261,11 @@ export default function() {
                 // Reset customization child group if hidden
                 containerEl.querySelectorAll('.product-customization-child-group-container').forEach(productCustomizationChildGroupContainerEl => {
 
-                    if (productCustomizationChildGroupContainerEl.offsetParent !== null) {
-
+                    if (productCustomizationChildGroupContainerEl.offsetParent === null) {
+                        
                         productCustomizationChildGroupContainerEl.querySelectorAll('.product-customization').forEach(productCustomizationEl => {
 
-                            if (['CHECKBOX', 'RADIO'].includes(productCustomizationEl.nodeName)) {
+                            if (productCustomizationEl.nodeName === 'INPUT' && ['checkbox', 'radio'].includes(productCustomizationEl.type)) {
 
                                 productCustomizationEl.checked = false;
 
@@ -287,9 +287,8 @@ export default function() {
                 }
 
                 // Show customizations if active
-                if (productCustomizationEl.nodeName === 'SELECT' &&
-                    productCustomizationEl.value ||
-                    (['CHECKBOX', 'RADIO'].includes(productCustomizationEl.nodeName) && productCustomizationEl.checked) ||
+                if (productCustomizationEl.nodeName === 'SELECT' && productCustomizationEl.value ||
+                    (productCustomizationEl.nodeName === 'INPUT' && ['checkbox', 'radio'].includes(productCustomizationEl.type) && productCustomizationEl.checked) ||
                     (productCustomizationEl.nodeName === 'TEXTAREA' && productCustomizationEl.value)) {
 
                         containerEl.querySelectorAll('[data-option="'+productCustomizationEl.value+'"]').forEach(productCustomizationChildGroupContainerEl => {
@@ -309,7 +308,7 @@ export default function() {
 
                         productCustomizations.push('customizations['+productCustomizationEl.value+']');
 
-                    } else if (['CHECKBOX', 'RADIO'].includes(productCustomizationEl.nodeName) && productCustomizationEl.checked) {
+                    } else if (productCustomizationEl.nodeName === 'INPUT' && ['checkbox', 'radio'].includes(productCustomizationEl.type) && productCustomizationEl.checked) {
 
                         productCustomizations.push('customizations['+productCustomizationEl.value+']');
 
@@ -572,7 +571,7 @@ export default function() {
                         const newMediaPartialEl = dom.querySelector('[data-dynamic-partial="media"]');
 
                         if (newInfoPartialEl) {
-                            containerEl?.querySelector('[data-dynamic-partial="info"]').replaceWith(newInfoPartialEl);
+                            containerEl.querySelector('[data-dynamic-partial="info"]').replaceWith(newInfoPartialEl);
                         }
 
                         if (newMediaPartialEl) {

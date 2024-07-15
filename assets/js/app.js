@@ -2,6 +2,7 @@ import { Collapse, Dropdown, Popover, Tooltip, Modal } from 'bootstrap';
 import * as utils from './components/utils';
 import Renderer from './components/renderer';
 import Cart from './components/cart';
+import CookiePolicy from './components/cookie-policy';
 import common from './components/common';
 import editor from './components/editor';
 import Slider from './components/slider';
@@ -22,6 +23,7 @@ export default class App {
 		this.utils = utils;
 		this.renderer = new Renderer();
 		this.cart = new Cart(this.store.cart?.data || {});
+		this.cookiePolicy = new CookiePolicy();
 		this.bs = {
 			Collapse: Collapse,
 			Dropdown: Dropdown,

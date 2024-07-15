@@ -1,5 +1,5 @@
-{%- assign styleformBgColorBrightness = settings.style_form_bg_color | color_brightness -%}
-{%- assign styleformBorderColorBrightness = settings.style_form_border_color | color_brightness -%}
+{%- assign styleFormBgColorBrightness = settings.style_form_bg_color | color_brightness -%}
+{%- assign styleFormBorderColorBrightness = settings.style_form_border_color | color_brightness -%}
 {%- assign styleTextColorBrightness = settings.style_text_color | color_brightness -%}
 {%- assign styleTableBgColorBrightness = settings.style_table_bg_color | color_brightness -%}
 {%- assign styleBgColorBrightness = settings.style_bg_color | color_brightness -%}
@@ -163,6 +163,28 @@ $body-emphasis-color: {{ settings.style_accent_color }};
 $link-color: {{ settings.style_link_color }};
 $link-hover-color: {{ settings.style_link_color }};
 
+$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='{{ settings.style_form_text_color }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
+
+{%- if styleAccentColorBrightness > 190 -%}
+	{%- assign formInputActiveColor = settings.style_form_text_color | color_min_contrast: settings.style_accent_color -%}
+{%- else -%}
+	{%- assign formInputActiveColor = '#ffffff' | color_min_contrast: settings.style_accent_color -%}
+{%- endif -%}
+
+{%- if styleFormBgColorBrightness > 190 -%}
+	{%- assign formInputColor = settings.style_form_text_color | color_min_contrast: settings.styleFormBgColorBrightness -%}
+{%- else -%}
+	{%- assign formInputColor = '#ffffff' | color_min_contrast: settings.styleFormBgColorBrightness -%}
+{%- endif -%}
+
+$form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='{{ formInputActiveColor }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>");
+$form-check-radio-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='{{ formInputActiveColor }}'/></svg>");
+$form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='{{ formInputActiveColor }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>");
+
+$form-switch-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='{{ formInputColor }}'/></svg>");
+$form-switch-focus-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='{{ formInputColor }}'/></svg>");
+$form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='{{ formInputActiveColor }}'/></svg>");
+
 :root {
 	--style-accent-color: {{ settings.style_accent_color }};
     --style-heading-color: {{ settings.style_heading_color }};
@@ -175,7 +197,7 @@ $link-hover-color: {{ settings.style_link_color }};
     --style-btn-bg-color: {{ settings.style_btn_bg_color }};
     --style-btn-text-color: {{ settings.style_btn_text_color }};
     --style-bg-color: {{ settings.style_bg_color }};
-    --style-secondary-bg-color: {{ settings.style_secondary_bg_color }};
+    --style-secondary-bg-color: {{ settings.style_secondary_bg_color | color_min_contrast: settings.styleBgColorBrightness }};
     --style-product-title-color: {{ settings.style_product_title_color }};
     --style-price-color: {{ settings.style_price_color }};
     --style-sale-price-color: {{ settings.style_sale_price_color }};
@@ -205,7 +227,7 @@ $link-hover-color: {{ settings.style_link_color }};
 	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
 	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
 
-	{%- if styleformBgColorBrightness > 190 -%}
+	{%- if styleFormBgColorBrightness > 190 -%}
 		--style-form-bg-hover-color: {{ settings.style_form_bg_color | color_darken: 5 }};
 		--style-form-bg-disabled-color: {{ settings.style_form_bg_color | color_darken: 10 }};
 	{%- else -%}
@@ -213,7 +235,7 @@ $link-hover-color: {{ settings.style_link_color }};
 		--style-form-bg-disabled-color: {{ settings.style_form_bg_color | color_lighten: 10 }};
 	{%- endif -%}
 
-	{%- if styleformBorderColorBrightness > 190 -%}
+	{%- if styleFormBorderColorBrightness > 190 -%}
 		--style-form-border-focus-color: {{ settings.style_form_border_color | color_darken: 10 }};
 		--style-form-border-disabled-color: {{ settings.style_form_border_color | color_darken: 10 }};
 	{%- else -%}

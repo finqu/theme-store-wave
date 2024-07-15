@@ -189,9 +189,21 @@
 
                     <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5 z-1" style="--bs-gap: 0">
 
-                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
 
-                            {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
+
+                            {%- if item.settings.btnLink.text -%}
+
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+
+                                </div>
+
+                            {%- endif -%}
 
                         </div>
                     

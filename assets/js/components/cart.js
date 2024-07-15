@@ -19,7 +19,7 @@ export default class Cart {
 
     bindEvents() {
 
-        const add = (e) => {
+        const addItem = (e) => {
 
             e.preventDefault();
 
@@ -153,14 +153,14 @@ export default class Cart {
             }
         };
 
-        const remove = (e) => {
+        const removeItem = (e) => {
 
             e.preventDefault();
 
             this.removeItem(parseInt(e.target.getAttribute('data-cart-remove'), 10));
         };
 
-        const update = (e) => {
+        const updateItem = (e) => {
 
             e.preventDefault();
 
@@ -226,7 +226,7 @@ export default class Cart {
             }
         };
 
-        const clear = (e) => {
+        const clearItems = (e) => {
 
             e.preventDefault();
 
@@ -488,15 +488,15 @@ export default class Cart {
         document.addEventListener('click', e => {
 
             if (e.target.matches('[data-cart-add]')) {
-                return add(e);
+                return addItem(e);
             }
 
             if (e.target.matches('[data-cart-remove]')) {
-                return remove(e);
+                return removeItem(e);
             }
 
             if (e.target.matches('[data-cart-update]')) {
-                return update(e);
+                return updateItem(e);
             }
 
             if (e.target.matches('[data-cart-quantity-decrease]')) {
@@ -508,7 +508,7 @@ export default class Cart {
             }
 
             if (e.target.matches('[data-cart-clear]')) {
-                return clear(e);
+                return clearItems(e);
             }
 
             if (e.target.matches('[data-cart-checkout]')) {
@@ -516,7 +516,12 @@ export default class Cart {
             }
         });
 
-        document.addEventListener('theme:cart:update', e => {
+        document.addEventListener('theme:cart:update', async e => {
+
+            if (e.details?.refreshData) {
+                this.cart = {};
+                await this.getCart();
+            }
 
             render(e)
 
@@ -589,7 +594,7 @@ export default class Cart {
         });
     }
 
-    getCart() {
+    async getCart() {
 
         if (!theme.store.customer.hasPurchaseRight) {
 
@@ -665,7 +670,7 @@ export default class Cart {
 
         } else {
 
-            this.addToQueue('GET', '/api/cart').then(res => {
+            await this.addToQueue('GET', '/api/cart').then(res => {
                 this.updateCart(res);
             });
         }

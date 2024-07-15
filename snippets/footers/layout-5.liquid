@@ -448,9 +448,13 @@
                                                     class="lazy d-block mx-auto img-fluid">
                                             </picture>
 
-                                        {% elsif settings.klarnaClientId %}
+                                        {% elsif footer_payment_options_banners %}
 
-                                            {% render 'klarna-placement', type: 'footer-promotion-auto-size' %}
+                                            <div class="site-footer-payment-method-banners">
+
+                                                {{- content_for_footer_payment_options_banners -}}
+
+                                            </div>
 
                                         {% else %}
 

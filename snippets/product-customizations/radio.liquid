@@ -10,7 +10,7 @@
 
     {% endif %}
 
-    <div class="form-check-badges-container">
+    <div{% if simpleInputs %} class="form-check-badges-container"{% endif %}>
 
         {% for option in group.options %}
 
@@ -20,28 +20,22 @@
                 {% assign itemPrice = option.price %}
             {%- endif -%}
 
-            <div class="{% if style == 'badge' %}form-check-badge{% else %}mb-4 form-check{% endif %}">
+            {%- if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock -%}
+                {%- assign hasPriceCondition = true -%}
+            {%- elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' -%}
+                {%- assign hasPriceCondition = true -%}
+            {% endif %}
 
-                {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock %}
+            <div class="{% if simpleInputs %}form-check-badge{% else %}form-check {% if forloop.last %}mb-4{% else %}mb-3{% endif %}{% endif %}">
 
-                    {% assign arg1 = true %}
-
-                {% endif %}
-
-                {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
-
-                    {% assign arg2 = true %}
-
-                {% endif %}
-
-                <input class="product-customization form-check-input{% if arg1 or arg2 %} has-price{% endif %}"
-                type="radio"
-                data-customization="{{ group.id }}"
-                id="product-option-{{ option.id }}"
-                name="{{ group.id }}"
-                value="{{ option.id }}"
-                {% if option.image %} data-has-image{% endif %}
-                {% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% else %} data-is-usable{% endif %}>
+                <input class="product-customization form-check-input{% if hasPriceCondition %} has-price{% endif %}"
+                    type="radio"
+                    data-customization="{{ group.id }}"
+                    id="product-option-{{ option.id }}"
+                    name="{{ group.id }}"
+                    value="{{ option.id }}"
+                    {% if option.image %} data-has-image{% endif %}
+                    {% if option.in_stock == false and inventoryPolicy == 'deny' %} disabled{% else %} data-is-usable{% endif %}>
 
                 <label for="product-option-{{ option.id }}" class="form-check-label">
 
@@ -77,7 +71,7 @@
 
     {% if option.child_group %}
 
-        {% render 'product-customizations/child-group', option: option, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, style: style %}
+        {% render 'product-customizations/child-group', option: option, showCustomizationPrice: showCustomizationPrice, showCustomizationTotalPrice: showCustomizationTotalPrice, showCustomizationStockBalance: showCustomizationStockBalance, inventoryPolicy: inventoryPolicy, isPreviewProduct: isPreviewProduct, unit: unit, inline: inline, highlightLabel: highlightLabel, simpleInputs: simpleInputs %}
 
     {% endif %}
 

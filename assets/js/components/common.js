@@ -15,13 +15,30 @@ export default {
         this.initSection();
 
         if (theme.store.template !== 'password') {
+
             theme.cart.init();
+            theme.cookiePolicy.init();
+
             headerLayout();
+
             this.initCartMini();
             this.initLocalization();
-            this.initCookiePolicy();
             this.initAccessibility();
-            this.initMarketing();
+
+            if (theme.store.cookiePolicy.status !== null) {
+
+                this.initMarketing();
+                
+            } else {
+
+                document.addEventListener('theme:cookiePolicy:consentRequested', () => {
+                    this.initMarketing();
+                });
+    
+                document.addEventListener('theme:cookiePolicy:consentRequested', () => {
+                    this.initMarketing();
+                });
+            }
         }
 
         switch (theme.store.template) {
@@ -101,117 +118,6 @@ export default {
                 }
             });
         });
-    },
-    initCookiePolicy() {
-
-        const cookiePolicyEl = document.querySelector('.cookie-policy');
-
-        let cookiePolicyFormEl = null;
-        let cookiePolicyInputEl = null;
-
-        const setDefaultStateForCookiePolicy = () => {
-
-            if (document.body.classList.contains('cookie-policy-visible')) {
-                document.body.classList.remove('cookie-policy-visible');
-            }
-
-            if (theme.store.cookiePolicy.position === 'middle') {
-                document.body.classList.remove('disable-scroll');
-            }
-
-            if (cookiePolicyFormEl && cookiePolicyInputEl) {
-
-                cookiePolicyInputEl.value = 'required';
-   
-                fetch(cookiePolicyFormEl.action, {
-                    method: cookiePolicyFormEl.method,
-                    body: new FormData(cookiePolicyFormEl)
-                });
-            }
-
-            theme.store.cookiePolicy.status = 'required';
-
-            this.initMarketing();
-        };
-
-        if (!cookiePolicyEl) {
-
-            if (theme.store.cookiePolicy.status === null) {
-                setDefaultStateForCookiePolicy();
-            }
-
-            return;
-        }
-
-        const cookiePolicyCloseEl = cookiePolicyEl.querySelector('[data-cookie-policy-close]');
-        const cookiePolicyOpenEls = document.querySelectorAll('[data-cookie-policy-open]');
-        const cookiePolicySubmitEls = cookiePolicyEl.querySelectorAll('[data-cookie-policy-submit]');
-
-        let cookiePolicyStateCheckInterval = null;
-
-        const cookiePolicyStateCheck = () => {
-
-            if ((!cookiePolicyEl || !theme.utils.checkVisibility(cookiePolicyEl)) && theme.store.cookiePolicy.status === null) {
-
-                if (cookiePolicyStateCheckInterval !== null) {
-                    clearInterval(cookiePolicyStateCheckInterval);
-                }
-                
-                setDefaultStateForCookiePolicy();
-
-                return;
-            }
-
-            if (cookiePolicyStateCheckInterval === null) {
-                cookiePolicyStateCheckInterval = setInterval(cookiePolicyStateCheck, 1000);
-            };
-        };
-
-        cookiePolicyFormEl = cookiePolicyEl.querySelector('#cookie-policy-form');
-        cookiePolicyInputEl = cookiePolicyFormEl.querySelector('[name="cookie_policy"]');
-
-        if (theme.store.cookiePolicy.status === null) {
-            cookiePolicyStateCheck();
-        }
-
-        if (cookiePolicyCloseEl) {
-
-            cookiePolicyCloseEl.addEventListener('click', () => {
-
-                document.body.classList.remove('cookie-policy-visible');
-                cookiePolicyEl.classList.add('d-none');
-
-                if (theme.store.cookiePolicy.position === 'middle') {
-                    document.body.classList.remove('disable-scroll');
-                }
-            });
-        }
-
-        if (cookiePolicyOpenEls.length) {
-
-            cookiePolicyOpenEls.forEach(el => { el.addEventListener('click', () => {
-
-                if (document.body.classList.contains('cookie-policy-visible')) {
-                    return;
-                }
-
-                cookiePolicyEl.classList.remove('d-none');
-                document.body.classList.add('cookie-policy-visible');
-
-                if (theme.store.cookiePolicy.position === 'middle') {
-                    document.body.classList.remove('disable-scroll');
-                }
-            })});
-        }
-
-        if (cookiePolicySubmitEls.length) {
-
-            cookiePolicySubmitEls.forEach(el => { el.addEventListener('click', () => {
-
-               cookiePolicyInputEl.setAttribute('value', el.value);
-               cookiePolicyFormEl.submit();
-            })});
-        }
     },
     initAccessibility() {
 

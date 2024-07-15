@@ -10,6 +10,12 @@
                 {% assign itemPrice = option.price %}
             {%- endif -%}
 
+            {%- if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock -%}
+                {%- assign hasPriceCondition = true -%}
+            {%- elsif itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' -%}
+                {%- assign hasPriceCondition = true -%}
+            {% endif %}
+
             {% if option.title or itemPrice > 0 %}
 
                 {% if highlightLabel %}
@@ -32,38 +38,13 @@
 
             {% endif %}
 
-            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and option.in_stock %}
-
-                {% assign arg1 = true %}
-
-            {% endif %}
-
-            {% if itemPrice > 0 and showCustomizationPrice and showCustomizationTotalPrice and inventoryPolicy == 'continue' %}
-
-                {% assign arg2 = true %}
-
-            {% endif %}
-
-            <textarea
-
-                class="product-customization form-control{% if arg1 or arg2 %} has-price{% endif %}"
+            <textarea class="product-customization form-control{% if hasPriceCondition %} has-price{% endif %}"
                 id="product-option-{{ option.id }}"
                 name="{{ option.id }}"
                 data-is-usable
-
-                {% if option.min_length > 0 %}
-                    minlength="{{ option.min_length }}"
-                {% endif %}
-
-                {% if option.max_length > 0 %}
-                    maxlength="{{ option.max_length }}"
-                {% endif %}
-
-                {% if option.rows > 0 %}
-                    rows="{{ option.rows }}"
-                {% endif %}
-
-                ></textarea>
+                {% if option.min_length > 0 %}minlength="{{ option.min_length }}"{% endif %}
+                {% if option.max_length > 0 %}maxlength="{{ option.max_length }}"{% endif %}
+                {% if option.rows > 0 %}rows="{{ option.rows }}"{% endif %}></textarea>
 
         </div>
 

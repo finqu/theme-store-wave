@@ -15,6 +15,7 @@ export default class Slider {
 
         const sectionEl = this.el.closest('.section');
         const slidesPerView = this.opts.swiperSlidesPerView !== 'auto' ? parseInt(this.opts.swiperSlidesPerView || 4, 10) : 'auto';
+        const slidesPerViewMobile = this.opts.swiperSlidesPerViewMobile !== 'auto' ? parseInt(this.opts.swiperSlidesPerViewMobile || slidesPerView, 10) : 'auto';
         let windowWidth = window.innerWidth;
         let baseSize = parseFloat(theme.utils.getCssVariable('font-size'), 10);
         let gutterWidth = parseFloat(theme.utils.getCssVariable('--style-grid-gutter-width'), 10);
@@ -41,8 +42,8 @@ export default class Slider {
                 FreeMode
             ],
             spaceBetween: slidesGap,
-            slidesPerView: slidesPerView !== 'auto' && slidesPerView > 1 && this.opts.swiperCenteredSlides !== 'true'  ? 2 : 'auto',
-            slidesPerGroup: slidesPerView !== 'auto' && slidesPerView > 1 && this.opts.swiperCenteredSlides !== 'true' ? 2 : 1,
+            slidesPerView: slidesPerView !== 'auto' && slidesPerViewMobile > 1 && this.opts.swiperCenteredSlides !== 'true'  ? slidesPerViewMobile : 'auto',
+            slidesPerGroup: slidesPerView !== 'auto' && slidesPerViewMobile > 1 && this.opts.swiperCenteredSlides !== 'true' ? slidesPerViewMobile : 1,
             grabCursor: this.opts.swiperNoSwiping !== 'true' ? true : false,
             allowTouchMove: this.opts.swiperNoSwiping !== 'true' ? true : false,
             autoplay: false,

@@ -7,7 +7,7 @@
     - paginationPosition: {String} relative | fixed
 	- navigation: {String} Show navigation '' | hover | on
     - freemode: {Boolean} Freemode
-    - autoplay: {Boolean} Autoplay 
+    - autoplay: {Boolean} Autoplay
     - autoplaySpeed: {Int} Autoplay speed
     - speed: {Int} Speed of swiper
     - loop: {Boolean} Loop the swiper
@@ -16,6 +16,7 @@
     - class: {String} Classes to add to the swiper
     - attrs: {String} Attributes to add to the swiper
 	- slidesPerView: {Int} Slides per view
+    - slidesPerViewMobile: {Int} Slides per view on mobile
     - slidesGap: {Int} Slides gap
     - standalone: {Boolean} Render the swiper as a standalone component
     - centeredSlides: {Boolean} Centered slides
@@ -29,7 +30,7 @@
 	{% render 'swiper', slides: slides %}
 {% endcomment %}
 
-<div class="swiper{% if style %} swiper-style-{{ style }}{% endif %}{% if class %} {{ class }}{% endif %}{% if pagination == 'hover' %} swiper-pagination-hover{% endif %}{% if navigation == 'hover' %} swiper-navigation-hover{% endif %}{% if standalone %} swiper-standalone{% endif %}{% if evenHeightSlides %} swiper-even-height-slides{% endif %}{% if highlightActiveSlide %} swiper-highlight-active-slide{% endif %}"{% if freemode %} data-swiper-freemode="true"{% endif %}{% if centeredSlides %} data-swiper-centered-slides="true"{% if centeredSlidesBounds %} data-swiper-centered-slides-bounds="true"{% endif %}{% endif %}{% if centerInsufficientSlides %} data-swiper-center-insufficient-slides="true"{% endif %}{% if autoplaySpeed and autoplaySpeed != '0' %} data-swiper-autoplay="true" data-swiper-autoplay-speed="{{- autoplaySpeed -}}"{% endif %}{% if speed %} data-swiper-speed="{{- speed -}}"{% endif %}{% if loop %} data-swiper-loop="true"{% endif %}{% if effect %} data-swiper-effect="{{- effect -}}"{% endif %}{% if pagination %} data-swiper-pagination="{{- pagination -}}"{% endif %}{% if slidesPerView %} data-swiper-slides-per-view="{{- slidesPerView -}}"{% endif %}{% if slidesGap %} data-swiper-slides-gap="{{- slidesGap -}}"{% endif %}{% if noSwiping %} data-swiper-no-swiping="true"{% endif %}{% if attrs %} {{ attrs }}{% endif %}>
+<div class="swiper{% if style %} swiper-style-{{ style }}{% endif %}{% if class %} {{ class }}{% endif %}{% if pagination == 'hover' %} swiper-pagination-hover{% endif %}{% if navigation == 'hover' %} swiper-navigation-hover{% endif %}{% if standalone %} swiper-standalone{% endif %}{% if evenHeightSlides %} swiper-even-height-slides{% endif %}{% if highlightActiveSlide %} swiper-highlight-active-slide{% endif %}"{% if freemode %} data-swiper-freemode="true"{% endif %}{% if centeredSlides %} data-swiper-centered-slides="true"{% if centeredSlidesBounds %} data-swiper-centered-slides-bounds="true"{% endif %}{% endif %}{% if centerInsufficientSlides %} data-swiper-center-insufficient-slides="true"{% endif %}{% if autoplaySpeed and autoplaySpeed != '0' %} data-swiper-autoplay="true" data-swiper-autoplay-speed="{{- autoplaySpeed -}}"{% endif %}{% if speed %} data-swiper-speed="{{- speed -}}"{% endif %}{% if loop %} data-swiper-loop="true"{% endif %}{% if effect %} data-swiper-effect="{{- effect -}}"{% endif %}{% if pagination %} data-swiper-pagination="{{- pagination -}}"{% endif %}{% if slidesPerView %} data-swiper-slides-per-view="{{- slidesPerView -}}"{% endif %}{% if slidesPerViewMobile %} data-swiper-slides-per-view-mobile="{{- slidesPerViewMobile -}}"{% endif %}{% if slidesGap %} data-swiper-slides-gap="{{- slidesGap -}}"{% endif %}{% if noSwiping %} data-swiper-no-swiping="true"{% endif %}{% if attrs %} {{ attrs }}{% endif %}>
 
     <div class="swiper-wrapper">
 

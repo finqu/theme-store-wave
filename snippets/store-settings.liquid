@@ -46,8 +46,10 @@
 			}
 		},
 		cookiePolicy: {
-			status: {{ session.cookie_policy | json }},
-			position: {{ settings.cookiesPolicyPosition | json }}
+			status: {{ session.cookie_policy.value | json }},
+			mode: {{ settings.cookiesPolicyMode | json }},
+			position: {{ settings.cookiesPolicyPosition | json }},
+			consents: {{ session.cookie_policy.consents | json }}
 		},
 		cart: {
 			showAddNotification: {{ settings.cartShowAddNotification | json }},

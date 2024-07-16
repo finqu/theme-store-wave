@@ -353,8 +353,38 @@
 
 .product-badges {
     display: flex;
+    flex-direction: column;
     gap: spacer(2);
     z-index: 2;
+
+    &.product-badge-position-inline {
+        display: inline-flex;
+        flex-direction: row;
+    }
+
+    &.product-badge-position-top-start {
+        position: absolute;
+        top: .7em;
+        left: .7em;
+    }
+
+    &.product-badge-position-top-end {
+        position: absolute;
+        top: .7em;
+        right: .7em;
+    }
+
+    &.product-badge-position-bottom-start {
+        position: absolute;
+        left: .7em;
+        bottom: .7em;
+    }
+
+    &.product-badge-position-bottom-end {
+        position: absolute;
+        right: .7em;
+        bottom: .7em;
+    }
 
     .product-badge {
         display: inline-flex;
@@ -384,6 +414,8 @@
         }
 
         .product-badge-content {
+            display: flex;
+            align-items: center;
             font-size: 0.8rem;
             padding: .5em 1em;
             line-height: 1;
@@ -391,35 +423,6 @@
             color: var(--style-badge-text-color);
             border-radius: var(--style-border-radius);
         }
-    }
-
-    &.product-badge-position-top-start {
-        position: absolute;
-        top: .7em;
-        left: .7em;
-    }
-
-    &.product-badge-position-top-end {
-        position: absolute;
-        top: .7em;
-        right: .7em;
-    }
-
-    &.product-badge-position-bottom-start {
-        position: absolute;
-        left: .7em;
-        bottom: .7em;
-    }
-
-    &.product-badge-position-bottom-end {
-        position: absolute;
-        right: .7em;
-        bottom: .7em;
-    }
-
-    &.product-badge-position-inline {
-        display: inline-flex;
-        position: relative;
     }
 }
 

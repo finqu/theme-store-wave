@@ -161,6 +161,15 @@
         position: relative;
         overflow: hidden;
         z-index: 1;
+        @include button-size(calc($btn-padding-y + $btn-border-width), calc($btn-padding-x + $btn-border-width), $btn-font-size, $btn-border-radius);
+
+        &.btn-lg {
+            @include button-size(calc($btn-padding-y-lg + $btn-border-width), calc($btn-padding-x-lg + $btn-border-width), $btn-font-size-lg, $btn-border-radius-lg);
+        }
+        
+        &.btn-sm {
+            @include button-size(calc($btn-padding-y-sm + $btn-border-width), calc($btn-padding-x-sm + $btn-border-width), $btn-font-size-sm, $btn-border-radius-sm);
+        }
 
         .svg-icon {
             color: var(--style-btn-text-color);

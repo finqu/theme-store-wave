@@ -88,7 +88,7 @@
 		{%- if store.customer_accounts_enabled -%}customer-accounts-enabled,{%- endif -%}
 		{%- if settings.accessibilityShowAnimations and request.design_mode != 'edit' -%}animations-enabled,{%- endif -%}
 		{%- if request.design_mode == false and session.cookie_policy.value == nil -%}cookie-policy-visible,{%- endif -%}
-		{%- if request.design_mode == false and session.cookie_policy.value == nil and settings.cookiesPolicyPosition == 'middle' -%}disable-scroll,{%- endif -%}
+		{%- if request.design_mode == false and session.cookie_policy.value == nil and settings.cookiePolicyPosition == 'middle' -%}disable-scroll,{%- endif -%}
 		{{- 'template-' | append: request.page_type | handle | append: ',' -}}
 	{%- endcapture -%}
 

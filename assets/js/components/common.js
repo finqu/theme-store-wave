@@ -25,17 +25,13 @@ export default {
             this.initLocalization();
             this.initAccessibility();
 
-            if (theme.store.cookiePolicy.status !== null) {
+            if (theme.store.cookiePolicy.mode !== null) {
 
                 this.initMarketing();
                 
             } else {
 
-                document.addEventListener('theme:cookiePolicy:consentRequested', () => {
-                    this.initMarketing();
-                });
-    
-                document.addEventListener('theme:cookiePolicy:consentRequested', () => {
+                document.addEventListener('theme:cookiePolicy:consentGranted', () => {
                     this.initMarketing();
                 });
             }
@@ -648,7 +644,7 @@ export default {
 
         const initNewsletterPopup = () => {
 
-            if (theme.store.cookiePolicy.status !== null
+            if (theme.store.cookiePolicy.mode !== null
                 && !theme.utils.cookies.get('themeNewsletterPopup')
                 && !(theme.store.customer.loggedIn && theme.store.customer.acceptsMarketing)) {
 
@@ -670,16 +666,7 @@ export default {
                         });
                     };
 
-                    const newsletterImgContainerEl = document.querySelector('#newsletter-popup-modal-img-container');
-
-                    if (newsletterImgContainerEl) {
-
-                        theme.lazyLoad.load(newsletterImgContainerEl.querySelector('.lazy', {
-                            callback_finish: () => {
-                                showModal();
-                            }
-                        }));
-                    }
+                    showModal();
 
                 }, theme.store.marketing.newsletterPopup.delay * 1000);
             }

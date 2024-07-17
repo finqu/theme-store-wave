@@ -1,7 +1,10 @@
 class CookiePolicy {
 
-    constructor() {
-        this.consent = null;
+    constructor(data = {}) {
+        this.mode = data.mode || null;
+        this.layout = data.layout || null;
+        this.consents = data.consents || null;
+        this.availableConsents = data.availableConsents || null;
         this.containerEl = null;
         this.formEl = null;
         this.consentCheckInterval = null;
@@ -9,11 +12,14 @@ class CookiePolicy {
 
     init() {
 
-        this.consent = theme.store.cookiePolicy.status;
+        this.mode = theme.store.cookiePolicy.mode;
+        this.layout = theme.store.cookiePolicy.layout;
+        this.consents = theme.store.cookiePolicy.consents;
+        this.availableConsents = theme.store.cookiePolicy.availableConsents;
         this.containerEl = document.querySelector('.cookie-policy');
         this.formEl = this.containerEl ? this.containerEl.querySelector('#cookie-policy-form') : null;
 
-        if (this.consent === null) {
+        if (this.mode === null) {
 
             if (!this.containerEl) {
 
@@ -28,44 +34,52 @@ class CookiePolicy {
         this.bindEvents();
     }
 
-    async setConsent(value) {
+    async setConsent(mode) {
 
-        if (!value) {
+        if (!mode) {
             return;
         }
 
+        const formData = new FormData(this.formEl ? this.formEl : null);
         let isDefaultConsent = false;
         let updateConsent = false;
         
-        if (value === 'required' && theme.store.cookiePolicy.status === null) {
+        if (mode === 'required' && theme.store.cookiePolicy.mode === null) {
             isDefaultConsent = true;
         }
 
-        const formData = this.formEl ? new FormData(this.formEl) : null;
-        const consentParamEl = this.formEl ? this.formEl.querySelector('.cookie-policy-consents input') : null;
-        const consentParam = consentParamEl ? consentParamEl.name : null;
-
-        if (consentParam) {
-            formData.append(consentParam, 'required');
-        }
-
-        if (formData) {
-
-            if (value === 'custom' && formData.values() !== theme.store.cookiePolicy.consents) {
-                updateConsent = true;
-            } else if (value !== 'custom' && theme.store.cookiePolicy.status !== value) {
-                updateConsent = true;
-            } else if (isDefaultConsent) {
-                updateConsent = true;
-            }
+        if (mode === 'custom' && formData.values() !== theme.store.cookiePolicy.consents) {
+            updateConsent = true;
+        } else if (mode !== 'custom' && theme.store.cookiePolicy.mode !== mode) {
+            updateConsent = true;
+        } else if (isDefaultConsent) {
+            updateConsent = true;
         }
 
         if (updateConsent) {
 
-            formData.set('cookie_policy', value);
+            const consentParamEl = this.formEl ? this.formEl.querySelector('.cookie-policy-consents input') : null;
+            const consentParam = consentParamEl ? consentParamEl.name : 'cookie_policy_consents[]';
 
-            if (consentParam && value === 'required') {
+            formData.set('cookie_policy', mode);
+
+            if (mode === 'custom') {
+
+                if (formData.getAll(consentParam).length === 0) {
+                    formData.set(consentParam, 'required');
+                } else {
+                    formData.append(consentParam, 'required');
+                }
+
+            } else if (mode === 'required') {
+
                 formData.set(consentParam, 'required');
+
+            } else if (mode === 'all') {
+
+                this.availableConsents.forEach(value => {
+                    formData.append(consentParam, value);
+                });
             }
 
             await fetch(this.formEl.action, {
@@ -73,16 +87,16 @@ class CookiePolicy {
                 body: formData
             });
 
-            theme.store.cookiePolicy.status = value;
+            theme.store.cookiePolicy.mode = mode;
+            theme.store.cookiePolicy.consents = formData.getAll(consentParam)
 
-            if (consentParam) {
-                theme.store.cookiePolicy.consents = formData.getAll(consentParam);
-            }
-
-            this.consent = value;
+            this.mode = mode;
+            this.consents = formData.getAll(consentParam);
 
             document.dispatchEvent(new CustomEvent('theme:cookiePolicy:consentGranted', {
-                detail: this.consent
+                detail: {
+                    consents: this.consents
+                }
             }));
 
             if (!isDefaultConsent) {
@@ -101,7 +115,7 @@ class CookiePolicy {
 
     async check() {
 
-        if ((!this.containerEl || !theme.utils.checkVisibility(this.containerEl)) && theme.store.cookiePolicy.status === null) {
+        if ((!this.containerEl || !theme.utils.checkVisibility(this.containerEl)) && theme.store.cookiePolicy.mode === null) {
 
             if (this.consentCheckInterval !== null) {
                 clearInterval(this.consentCheckInterval);
@@ -121,6 +135,22 @@ class CookiePolicy {
         if (this.consentCheckInterval === null) {
             this.consentCheckInterval = setInterval(this.check.bind(this), 1000);
         }
+    }
+
+    getMode() {
+        return this.mode;
+    }
+
+    getLayout() {
+        return this.layout;
+    }
+
+    getConsents() {
+        return this.consents;
+    }
+
+    getAvailableConsents() {
+        return this.availableConsents;
     }
 
     show() {

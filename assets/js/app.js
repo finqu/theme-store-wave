@@ -23,7 +23,7 @@ export default class App {
 		this.utils = utils;
 		this.renderer = new Renderer();
 		this.cart = new Cart(this.store.cart?.data || {});
-		this.cookiePolicy = new CookiePolicy();
+		this.cookiePolicy = new CookiePolicy(this.store.cookiePolicy || {});
 		this.bs = {
 			Collapse: Collapse,
 			Dropdown: Dropdown,

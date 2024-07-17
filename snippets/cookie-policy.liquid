@@ -7,7 +7,7 @@
 
 {%- unless request.design_mode -%}
 
-    <div class="cookie-policy cookie-policy-mode-{{ settings.cookiesPolicyMode }} cookie-policy-position-{{ settings.cookiesPolicyPosition }}{% if session.cookie_policy %} d-none{% endif %}">
+    <div class="cookie-policy cookie-policy-layout-{{ settings.cookiePolicyLayout }} cookie-policy-position-{{ settings.cookiePolicyPosition }}{% if session.cookie_policy %} d-none{% endif %}">
 
         {%- form 'cookie_policy', id: 'cookie-policy-form' -%}
         
@@ -21,7 +21,7 @@
 
                     <span class="cookie-policy-description">
 
-                        {{ settings.cookiesPolicyMode | prepend: 'cookie_policy.description.' | t }}
+                        {{ settings.cookiePolicyLayout | prepend: 'cookie_policy.description.' | t }}
 
                         {%- if store.privacy_policy -%}
                             <a href="{{ store.privacy_policy.url }}" target="_blank" class="fw-bold text-reset text-underline-indicator">{{ 'cookie_policy.privacy_policy' | t }}</a>.
@@ -29,7 +29,7 @@
 
                     </span>
 
-                    {%- if settings.cookiesPolicyMode == 'advanced' -%}
+                    {%- if settings.cookiePolicyLayout == 'advanced' -%}
 
                         <div class="cookie-policy-consents">
 
@@ -67,7 +67,7 @@
                         {{- 'cookie_policy.required_cta' | t -}}
                     </button>
 
-                    {%- if settings.cookiesPolicyMode == 'advanced' -%}
+                    {%- if settings.cookiePolicyLayout == 'advanced' -%}
 
                         <button type="button"
                             id="cookie-policy-custom-cta"

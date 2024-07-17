@@ -40,16 +40,17 @@
 		},
 		marketing: {
 			newsletterPopup: {
-				status: {{ settings.newsletterPopup | json }},
-				delay: {{ settings.newsletterPopupDelay }},
-				cookieDuration: {{ settings.newsletterPopupCookieDuration }}
+				status: {{ settings.newsletterPopup | yepnope: 'true', 'false' }},
+				delay: {{ settings.newsletterPopupDelay | json }},
+				cookieDuration: {{ settings.newsletterPopupCookieDuration | json }}
 			}
 		},
 		cookiePolicy: {
-			status: {{ session.cookie_policy.value | json }},
-			mode: {{ settings.cookiesPolicyMode | json }},
-			position: {{ settings.cookiesPolicyPosition | json }},
-			consents: {{ session.cookie_policy.consents | json }}
+			mode: {{ session.cookie_policy.value | json }},
+			consents: {{ session.cookie_policy.consents | json }},
+			availableConsents: {{ store.default_consent_options | json }},
+			layout: {{ settings.cookiePolicyLayout | json }},
+			position: {{ settings.cookiePolicyPosition | json }}
 		},
 		cart: {
 			showAddNotification: {{ settings.cartShowAddNotification | json }},

@@ -1370,7 +1370,11 @@
 
                                 <div id="newsletter-popup-modal-img-container" class="col-4 col-md-5 position-relative">
 
-                                    <div class="lazy position-absolute top-0 end-0 bottom-0 w-100 h-100{% if settings.newsletterPopupImg %} bg-size-cover{% endif %}" data-bg-set="url('{{- settings.newsletterPopupImg | thumb: '400,400' -}}') 1x, url('{{- settings.newsletterPopupImg | thumb: '400,400' | thumb: '@2x' -}}') 2x"{% if settings.newsletterPopupImg.offset_left or item.settings.img.offset_top %} style="--bg-position: {{ settings.newsletterPopupImg.offset_left }}% {{ settings.newsletterPopupImg.offset_top }}%"{% endif %}></div>
+                                    <div class="position-absolute top-0 end-0 bottom-0 w-100 h-100{% if settings.newsletterPopupImg %} bg-size-cover{% endif %}"
+                                        style="background-image: image-set(
+                                            url('{{- settings.newsletterPopupImg | thumb: '400,400' -}}') 1x,
+                                            url('{{- settings.newsletterPopupImg | thumb: '400,400' | thumb: '@2x' -}}') 2x
+                                        ){% if settings.newsletterPopupImg.offset_left or item.settings.img.offset_top %}; --bg-position: {{ settings.newsletterPopupImg.offset_left }}% {{ settings.newsletterPopupImg.offset_top }}%{% endif %}"></div>
 
                                 </div>
 
@@ -1477,6 +1481,23 @@
         </div>
 
     </script>
+
+    {%- if settings.newsletterPopupImg -%}
+        <script type="application/javascript">
+            document.addEventListener('theme:ready', function() {
+                if (theme.store.cookiePolicy.mode !== null
+                    && !theme.utils.cookies.get('themeNewsletterPopup')
+                    && !(theme.store.customer.loggedIn && theme.store.customer.acceptsMarketing)) {
+                    const img = new Image();
+                    if (window.devicePixelRatio > 1) {
+                        img.src = '{{- settings.newsletterPopupImg | thumb: '400,400' | thumb: '@2x' -}}';
+                    } else {
+                        img.src = '{{- settings.newsletterPopupImg | thumb: '400,400' -}}';
+                    }
+                }
+            });
+        </script>
+    {%- endif -%}
 
     {%- if newsletterPopupScript -%}
         {{- newsletterPopupScript -}}

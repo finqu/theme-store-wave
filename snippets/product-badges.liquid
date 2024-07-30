@@ -54,7 +54,19 @@
 
 <div class="product-badges {{ positionClass }}">
 
-     {%- if showNew and productIsNew and productOutOfStock == false -%}
+    {%- if product.default_or_selected_variant.stock < 1 and product.default_or_selected_variant.inventory_policy == 'continue' -%}
+
+        <span class="product-badge">
+
+            <span class="product-badge-content">
+                {{- 'product.backorder' | t -}}
+            </span>
+
+        </span>
+
+    {%- endif -%}
+
+    {%- if showNew and productIsNew and productOutOfStock == false -%}
 
         <div class="product-badge product-badge-new">
 

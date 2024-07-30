@@ -142,7 +142,7 @@
                 "name": {{ variant.title | json }},
             {%- endif -%}
             "image": "{{- variant.image | default: product.image -}}",
-            {%- if variant.sku -%}
+            {%- if variant.sku and settings.productShowSku -%}
                 "sku": {{ variant.sku | json }},
             {%- endif -%}
             {%- if variant.gtin -%}
@@ -195,7 +195,7 @@
     {%- if product.seo_description or product.short_description or product.description -%}
         "description": {{ product.seo_description | default: product.short_description | default: product.description | strip_html | truncate: 4997, '...' | json }},
     {%- endif -%}
-    {%- if product.default_or_selected_variant.sku -%}
+    {%- if product.default_or_selected_variant.sku and settings.productShowSku -%}
         "sku": {{ product.default_or_selected_variant.sku | json }},
     {%- endif -%}
     {%- if product.default_or_selected_variant.gtin -%}

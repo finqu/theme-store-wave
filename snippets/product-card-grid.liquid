@@ -960,6 +960,12 @@
                         {{- 'product.low_on_stock_dynamic' | t: amount: product.default_or_selected_variant.stock -}}
                     </span>
 
+                {%- elsif product.default_or_selected_variant.stock < 1 and product.default_or_selected_variant.inventory_policy == 'continue' -%}
+
+                    <span class="product-stock-balance-backorder">
+                        {{- 'product.backorder' | t -}}
+                    </span>
+
                 {%- else -%}
 
                     <span class="product-stock-balance-in-stock">

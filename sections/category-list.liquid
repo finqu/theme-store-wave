@@ -212,6 +212,10 @@
 
             {% for item in items %}
 
+                {%- unless item.is_visible -%}
+                    {%- continue -%}
+                {%- endunless -%}
+
                 {%- if section.settings.setting_blocks.items.size > 0 -%}
                     {%- assign itemCategory = item.settings.category -%}
                 {%- else -%}

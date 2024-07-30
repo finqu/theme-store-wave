@@ -262,6 +262,10 @@
 
         {% for item in carouselCategories %}
 
+            {%- unless item.is_visible -%}
+                {%- continue -%}
+            {%- endunless -%}
+
         	{%- if item.settings -%}
 
         		{%- assign itemCategory = item.settings.category -%}

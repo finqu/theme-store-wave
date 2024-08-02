@@ -2600,7 +2600,19 @@
                                 "en": "Show discount as percentage",
                                 "fi": "Näytä alennus prosenttina"
                             },
-                            "default": false
+                            "default": true
+                        },
+                        {
+                            "id": "productFloorDiscountPercentage",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Round discount percentage down to nearest integer",
+                                "fi": "Pyöristä alennusprosentti alaspäin lähimpään kokonaislukuun"
+                            },
+                            "default": true,
+                            "conditions": [
+                                "!productShowDiscountPercentage eq false"
+                            ]
                         },
                         {
                             "id": "productWrapName",

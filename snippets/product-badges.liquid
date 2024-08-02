@@ -98,7 +98,11 @@
 
                 <span class="product-badge-content">
                     {%- if showDiscountPercentage -%}
-                        -{{ productDiscountPercent }}%
+                        {%- if settings.productFloorDiscountPercentage -%}
+                           -{{ productDiscountPercent | floor }}%
+                        {%- else -%}
+                            -{{ productDiscountPercent }}%
+                        {%- endif -%}
                     {%- else -%}
                         {{- 'product.sale' | t -}}
                     {%- endif -%}

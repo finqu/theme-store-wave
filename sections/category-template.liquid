@@ -44,28 +44,24 @@
 
                         {% for subCategory in category.categories %}
 
-                            {% if subCategory.is_visible %}
+                            <div class="swiper-slide">
 
-                                <div class="swiper-slide">
+                                <div class="swiper-slide-inner" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-                                    <div class="swiper-slide-inner" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
+                                    <div class="category-tag section-highlight-item section-highlight-item-padding-auto">
 
-                                        <div class="category-tag section-highlight-item section-highlight-item-padding-auto">
+                                        <a href="{{ subCategory | link }}">
 
-                                            <a href="{{ subCategory | link }}">
-
-                                                <span class="category-tag-content">
-                                                    {{ subCategory.title }}
-                                                </span>
-                                            </a>
-
-                                        </div>
+                                            <span class="category-tag-content">
+                                                {{ subCategory.title }}
+                                            </span>
+                                        </a>
 
                                     </div>
 
                                 </div>
 
-                            {% endif %}
+                            </div>
 
                         {% endfor %}
 

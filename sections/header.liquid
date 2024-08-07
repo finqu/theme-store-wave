@@ -1271,7 +1271,12 @@
 
                             {%- capture itemStyle -%}
                                 #finqu-section-{{ section.id }} .site-header-submenus-container [data-header-submenu-id="{{ mainMenuIndex }}"] .grid {
+                                    --site-header-submenu-ui-scale: {{ megamenu.settings.uiScale }};
+                                    --site-header-submenu-item-menu-item-text-transform: {{ megamenu.settings.menuItemTextTransform }};
                                     --bs-columns: 3;
+                                    {%- if megamenu.settings.uiScale == 0.875 -%}
+                                        --style-underline-indicator-height: 1px;
+                                    {%- endif -%}
                                 }
                                 {%- if megamenu.settings.colPerRow > 3 -%}
                                     @media screen and (min-width: {{ settings.styleGridBreakpointXl }}) {
@@ -1835,6 +1840,95 @@
 
                                         {% endif %}
 
+                                        {% if megamenu.settings.promotion6Img %}
+
+                                            <div class="site-header-submenu-item">
+
+                                                {% if megamenu.settings.promotion6Link.url %}
+                                                    <a
+                                                        href="{{- megamenu.settings.promotion6Link.url -}}"
+                                                        class="img-indicator-zoom"
+                                                        target="{{ megamenu.settings.promotion6Link.target }}">
+                                                {% endif %}
+                                                                    
+                                                {% if megamenu.settings.promotion6ImgAspectRatio == '16:9' %}
+                                            
+                                                    {%- assign imgSizeSm = '420,236' -%}
+                                                    {%- assign imgSizeMd = '680,382' -%}
+                                                    {%- assign imgSizeLg = '1300,726' -%}
+                                            
+                                                {% elsif megamenu.settings.promotion6ImgAspectRatio == '9:13' %}
+                                            
+                                                    {%- assign imgSizeSm = '420,606' -%}
+                                                    {%- assign imgSizeMd = '680,982' -%}
+                                                    {%- assign imgSizeLg = '1300,1882' -%}
+                                            
+                                                {% elsif megamenu.settings.promotion6ImgAspectRatio == '4:3' %}
+                                            
+                                                    {%- assign imgSizeSm = '420,315' -%}
+                                                    {%- assign imgSizeMd = '680,510' -%}
+                                                    {%- assign imgSizeLg = '1300,965' -%}
+                                            
+                                                {% elsif megamenu.settings.promotion6ImgAspectRatio == '1:1' %}
+                                            
+                                                    {%- assign imgSizeSm = '420,420' -%}
+                                                    {%- assign imgSizeMd = '680,680' -%}
+                                                    {%- assign imgSizeLg = '1300,1300' -%}
+                                            
+                                                {% endif %}
+                                            
+                                                <div class="site-header-submenu-item-img aspect-ratio-{{ megamenu.settings.promotion6ImgAspectRatio | replace: ':', '-' }}">
+                                            
+                                                    {% if megamenu.settings.promotion6Img %}
+                                            
+                                                        <div class="aspect-ratio-container">
+                                            
+                                                            <picture>
+                                                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeLg }} 1x,
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+                                            
+                                                                <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeMd }} 1x,
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+                                            
+                                                                <source data-srcset="
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeSm }} 1x,
+                                                                    {{- megamenu.settings.promotion6Img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+                                            
+                                                                <img
+                                                                    alt="{{ megamenu.settings.promotion6Img.alt }}"
+                                                                    data-src="{{ megamenu.settings.promotion6Img | thumb: imgSizeSm }}"
+                                                                    data-srcset="{{ megamenu.settings.promotion6Img | thumb: imgSizeSm }} 1x,{{ megamenu.settings.promotion6Img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                                                    class="lazy aspect-ratio-item aspect-ratio-item-cover site-header-submenu-item-promotion-img"{% if megamenu.settings.promotion6Img.offset_left or megamenu.settings.promotion6Img.offset_top %} style="--object-position: {{ megamenu.settings.promotion6Img.offset_left }}% {{ megamenu.settings.promotion6Img.offset_top }}%"{% endif %}>
+                                                            </picture>
+                                            
+                                                        </div>
+        
+                                                    {% endif %}
+                                            
+                                                </div>
+        
+                                                {% if megamenu.settings.promotion6Link.text %}
+                                                
+                                                    <div class="site-header-submenu-item-title text-center">
+        
+                                                        <span class="site-header-submenu-item-title-text">
+                                                            {{ megamenu.settings.promotion6Link.text }}
+                                                        </span>
+        
+                                                    </div>
+        
+                                                {% endif %}
+        
+                                                {% if megamenu.settings.promotion6Link.url %}
+                                                    </a>
+                                                {% endif %}
+        
+                                            </div>
+
+                                        {% endif %}
+
                                     </div>
 
                                 </div>
@@ -2296,9 +2390,61 @@
                                     {
                                         "value": "5",
                                         "label": "5"
+                                    },
+                                    {
+                                        "value": "6",
+                                        "label": "6"
                                     }
                                 ],
                                 "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "uiScale",
+                                "type": "radio-pill",
+                                "label": {
+                                    "en": "UI scale",
+                                    "fi": "Elementtien koko"
+                                },
+                                "default": "0.875",
+                                "options": [
+                                    {
+                                        "value": "0.875",
+                                        "label": "S"
+                                    },
+                                    {
+                                        "value": "1",
+                                        "label": "M"
+                                    },
+                                    {
+                                        "value": "1.125",
+                                        "label": "L"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "menuItemTextTransform",
+                                "type": "radio-pill",
+                                "label": {
+                                    "en": "Font design",
+                                    "fi": "Fontin muotoilu"
+                                },
+                                "default": "none",
+                                "options": [
+                                    {
+                                        "value": "none",
+                                        "label": {
+                                            "en": "Normal",
+                                            "fi": "Normaali"
+                                        }
+                                    },
+                                    {
+                                        "value": "uppercase",
+                                        "label": {
+                                            "en": "Uppercase",
+                                            "fi": "Isot kirjaimet"
+                                        }
+                                    }
+                                ]
                             },
                             {
                                 "id": "menu",
@@ -2624,6 +2770,69 @@
                                 "conditions": [
                                     "!index eq blank",
                                     "!promotion5Img eq false"
+                                ]
+                            },
+                            {
+                                "type": "title",
+                                "label": {
+                                    "en": "Promotion 6",
+                                    "fi": "Mainos 6"
+                                },
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion6Img",
+                                "type": "image-picker",
+                                "label": {
+                                    "en": "Image",
+                                    "fi": "Kuva"
+                                },
+                                "adjustments": true,
+                                "conditions": ["!index eq blank"]
+                            },
+                            {
+                                "id": "promotion6ImgAspectRatio",
+                                "type": "select",
+                                "label": {
+                                    "en": "Aspect ratio",
+                                    "fi": "Kuvasuhde"
+                                },
+                                "default": "4:3",
+                                "options": [
+                                    {
+                                        "value": "16:9",
+                                        "label": "16:9"
+                                    },
+                                    {
+                                        "value": "9:13",
+                                        "label": "9:13"
+                                    },
+                                    {
+                                        "value": "4:3",
+                                        "label": "4:3"
+                                    },
+                                    {
+                                        "value": "1:1",
+                                        "label": "1:1"
+                                    }
+                                ],
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion6Img eq false"
+                                ]
+                            },
+                            {
+                                "id": "promotion6Link",
+                                "type": "url",
+                                "label": {
+                                    "en": "Text",
+                                    "fi": "Teksti"
+                                },
+                                "include_target": true,
+                                "include_text": true,
+                                "conditions": [
+                                    "!index eq blank",
+                                    "!promotion6Img eq false"
                                 ]
                             }
                         ]

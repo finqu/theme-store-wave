@@ -396,6 +396,8 @@
                     }
 
                     &.is-megamenu {
+                        max-height: 70vh;
+                        overflow-y: auto;
 
                         .container {
                             padding-top: spacer(4);
@@ -407,12 +409,33 @@
                             flex-direction: column;
                             padding-top: 0;
                             padding-bottom: 0;
+
+                            .site-header-submenu-item-title {
+                                padding-top: calc(spacer(2) * var(--site-header-submenu-ui-scale, 1));
+                                padding-bottom: calc(spacer(2) * var(--site-header-submenu-ui-scale, 1));
+
+                                .site-header-submenu-item-title-text {
+                                    font-size: calc(var(--bs-body-font-size) * var(--site-header-submenu-ui-scale, 1));
+                                    line-height: calc(var(--bs-body-line-height) * var(--site-header-submenu-ui-scale, 1));
+                                    @if $navigation-letter-spacing != '0' {
+                                        letter-spacing: calc($navigation-letter-spacing * var(--site-header-submenu-ui-scale, 1));
+                                    }
+                                }
+                            }
     
                             .site-header-submenu-item-menu {
 
                                 .site-header-submenu-item-menu-item {
-                                    padding-left: 0;
-                                    padding-right: 0;
+                                    padding: calc(spacer(2) * var(--site-header-submenu-ui-scale, 1)) 0;
+
+                                    .site-header-submenu-item-menu-item-text {
+                                        font-size: calc(var(--bs-body-font-size) * 0.85 * var(--site-header-submenu-ui-scale, 1));
+                                        line-height: calc(var(--bs-body-line-height) * var(--site-header-submenu-ui-scale, 1));
+                                        text-transform: var(--site-header-submenu-item-menu-item-text-transform, none);
+                                        @if $navigation-letter-spacing != '0' {
+                                            letter-spacing: calc($navigation-letter-spacing * var(--site-header-submenu-ui-scale, 1));
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -421,7 +444,6 @@
                     &.site-header-submenu-active {
                         visibility: visible;
                         opacity: 1;
-                        overflow: visible;
 
                         .site-header-submenu-item {
                             

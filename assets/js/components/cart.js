@@ -93,9 +93,8 @@ export default class Cart {
                         };
 
                         checkboxEls.forEach((el) => {
-
-                            if (el.checked && (el.offsetWidth || el.offsetHeight || el.getClientRects().length)) {
-                                customization.value.push(el.value)
+                            if (el.checked && (el.parentElement.offsetWidth || el.parentElement.offsetHeight || el.parentElement.getClientRects().length)) {
+                                customization.value.push(el.value);
                             }
                         });
 

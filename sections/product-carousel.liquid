@@ -131,7 +131,7 @@
 
                         {% if section.settings.customDisplayInformation %}
 
-                            {%- render 'product-card-grid', product: product, productPerRow: productPerRow, showDiscountBadge: section.settings.showDiscountBadge, showOutOfStockBadge: section.settings.showOutOfStockBadge, showNewBadge: section.settings.showNewBadge, showPromotionBadge: section.settings.showPromotionBadge, showManufacturer: section.settings.showManufacturer, showName: section.settings.showProductName, showPricing: section.settings.showPricing, showAddToCart: section.settings.showAddToCart, showStockBalance: section.settings.showStockBalance, showVariants: section.settings.showVariants -%}
+                            {%- render 'product-card-grid', product: product, productPerRow: productPerRow, showDiscountBadge: section.settings.showDiscountBadge, showOutOfStockBadge: section.settings.showOutOfStockBadge, showBackorderBadge: section.settings.showBackorderBadge, showNewBadge: section.settings.showNewBadge, showPromotionBadge: section.settings.showPromotionBadge, showManufacturer: section.settings.showManufacturer, showName: section.settings.showProductName, showPricing: section.settings.showPricing, showAddToCart: section.settings.showAddToCart, showStockBalance: section.settings.showStockBalance, showStockBalanceAsNumber: section.settings.showStockBalanceAsNumber, showVariants: section.settings.showVariants -%}
 
                         {% else %}
 
@@ -155,7 +155,7 @@
 
                         {% if section.settings.customDisplayInformation %}
 
-                            {%- render 'product-card-grid', productPerRow: productPerRow, productPerRow: productPerRow, showDiscountBadge: section.settings.showDiscountBadge, showOutOfStockBadge: section.settings.showOutOfStockBadge, showNewBadge: section.settings.showNewBadge, showPromotionBadge: section.settings.showPromotionBadge, showManufacturer: section.settings.showManufacturer, showName: section.settings.showProductName, showPricing: section.settings.showPricing, showAddToCart: section.settings.showAddToCart, showStockBalance: section.settings.showStockBalance, showVariants: section.settings.showVariants -%}
+                            {%- render 'product-card-grid', productPerRow: productPerRow, productPerRow: productPerRow, showDiscountBadge: section.settings.showDiscountBadge, showOutOfStockBadge: section.settings.showOutOfStockBadge, showBackorderBadge: section.settings.showBackorderBadge, showNewBadge: section.settings.showNewBadge, showPromotionBadge: section.settings.showPromotionBadge, showManufacturer: section.settings.showManufacturer, showName: section.settings.showProductName, showPricing: section.settings.showPricing, showAddToCart: section.settings.showAddToCart, showStockBalance: section.settings.showStockBalance, showStockBalanceAsNumber: section.settings.showStockBalanceAsNumber, showVariants: section.settings.showVariants -%}
 
                         {% else %}
 
@@ -479,6 +479,16 @@
                         "conditions": ["customDisplayInformation eq true"]
                     },
                     {
+                        "id": "showBackorderBadge",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Backorder badge",
+                            "fi": "Tilattavissa-merkki"
+                        },
+                        "default": true,
+                        "conditions": ["customDisplayInformation eq true"]
+                    },
+                    {
                         "id": "showAddToCart",
                         "type": "checkbox",
                         "label": {
@@ -497,6 +507,19 @@
                         },
                         "default": true,
                         "conditions": ["customDisplayInformation eq true"]
+                    },
+                    {
+                        "id": "showStockBalanceAsNumber",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show stock balance as number",
+                            "fi": "Näytä saatavuus numerona"
+                        },
+                        "default": false,
+                        "conditions": [
+                            "!showStockBalance eq false",
+                            "customDisplayInformation eq true"
+                        ]
                     },
                     {
                         "id": "showVariants",

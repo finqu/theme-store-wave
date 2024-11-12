@@ -14,8 +14,27 @@ export default function() {
         const siteMobileHeaderScrollDownClass = 'site-mobile-header-container-hide';
         const siteMobileHeaderScrollVisibleClass = 'site-mobile-header-container-show';
         const siteMobileHeaderScrollTransitionClass = 'site-mobile-header-container-transition';
+        const activeLayerId = localStorage.getItem('activeNavigationLayer');
+
         let siteMobileHeaderPositionStyle = theme.utils.getCssVariable('position', containerEl);
         let lastScroll = 0;
+        
+        if (activeLayerId) {
+
+            let currentLayerId = activeLayerId;
+
+            while (currentLayerId) {
+
+                const currentLayer = containerEl.querySelector(`.site-mobile-navigation-layer[data-mobile-navigation-layer-id="${currentLayerId}"]`);
+
+                if (currentLayer) {
+                    currentLayer.classList.add('site-mobile-navigation-layer-visible');
+                    currentLayer.classList.add('site-mobile-navigation-layer-active');
+                }
+
+                currentLayerId = currentLayerId.includes('-') ? currentLayerId.substring(0, currentLayerId.lastIndexOf('-')) : '';
+            }
+        }
 
         const openMobileNavigation = () => {
 
@@ -133,14 +152,23 @@ export default function() {
 
             navigationLayerEl.classList.add('site-mobile-navigation-layer-visible');
             navigationLayerEl.classList.add('site-mobile-navigation-layer-active');
+
+            localStorage.setItem('activeNavigationLayer', id);
         })});
 
         siteMobileNavigationHideLayerEls.forEach(el => { el.addEventListener('click', e => {
 
             const id = e.target.value;
             const navigationLayerEl = containerEl.querySelector('.site-mobile-navigation-layer[data-mobile-navigation-layer-id="'+id+'"]');
+            const previousLayerId = id.includes('-') ? id.substring(0, id.lastIndexOf('-')) : '';
 
             navigationLayerEl.classList.remove('site-mobile-navigation-layer-active');
+
+            if (previousLayerId) {
+                localStorage.setItem('activeNavigationLayer', previousLayerId);
+            } else {
+                localStorage.removeItem('activeNavigationLayer');
+            }
         })});
 
         siteMobileNavigationToggleEl.addEventListener('click', () => {

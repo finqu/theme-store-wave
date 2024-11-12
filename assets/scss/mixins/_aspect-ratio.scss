@@ -15,9 +15,7 @@
     position: relative;
     overflow: hidden;
     justify-content: center;
-    @if $border-radius {
-        border-radius: calc($border-radius + 2px);
-    }
+    border-radius: $border-radius;
 
     &.justify-content-start > .aspect-ratio-container {
         justify-content: start;
@@ -51,9 +49,7 @@
                 width: 100%;
                 height: 100%;
                 background-color: var(--style-bg-accent-color);
-                @if $border-radius {
-                    border-radius: $border-radius;
-                }
+                border-radius: var(--border-radius);
             }
         }
 
@@ -68,15 +64,12 @@
 
         .aspect-ratio-item {
             object-fit: var(--object-fit, #{$fit});
+            border-radius: var(--border-radius);
 
             @if $key == product {
                 &:not(.svg-placeholder) {
                     background-color: var(--style-bg-color);
                 }
-            }
-
-            @if $border-radius {
-                border-radius: $border-radius;
             }
 
             @if $position {

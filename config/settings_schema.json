@@ -2083,6 +2083,15 @@
                             "default": true
                         },
                         {
+                            "id": "taxInformation",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show tax information",
+                                "fi": "Näytä verotiedot"
+                            },
+                            "default": true
+                        },
+                        {
                             "id": "taxFreeShopping",
                             "type": "checkbox",
                             "label": {
@@ -2594,6 +2603,15 @@
                             "default": true
                         },
                         {
+                            "id": "productShowBackorderBadge",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Backorder badge",
+                                "fi": "Tilattavissa-merkki"
+                            },
+                            "default": true
+                        },
+                        {
                             "id": "productShowDiscountPercentage",
                             "type": "checkbox",
                             "label": {
@@ -2640,6 +2658,18 @@
                                 "fi": "Saatavuus"
                             },
                             "default": false
+                        },
+                        {
+                            "id": "productShowStockBalanceAsNumber",
+                            "type": "checkbox",
+                            "label": {
+                                "en": "Show stock balance as number",
+                                "fi": "Näytä saatavuus numerona"
+                            },
+                            "default": false,
+                            "conditions": [
+                                "!productShowStockBalance eq false"
+                            ]
                         },
                         {
                             "id": "productShowSku",

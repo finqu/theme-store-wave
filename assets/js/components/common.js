@@ -1,4 +1,5 @@
 import accountLayout from '../layout/account';
+import accountEditLayout from '../layout/account-edit';
 import articleLayout from '../layout/article';
 import categoryLayout from '../layout/category';
 import catalogLayout from '../layout/catalog';
@@ -43,6 +44,9 @@ export default {
                 break;
             case 'customers-account':
                 accountLayout();
+                break;
+            case 'customers-edit-account':
+                accountEditLayout();
                 break;
             case 'category':
                 categoryLayout();

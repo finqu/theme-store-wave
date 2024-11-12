@@ -420,20 +420,15 @@
 
                                             {% for payment_method in store.payment_methods %}
 
-                                                {%- assign img = payment_method.logo -%}
-
-                                                {% if img %}
-
-                                                    {%- assign imgSize = '45,70' -%}
+                                                {% if payment_method.logo %}
 
                                                     <div class="site-footer-payment-method">
 
                                                         <picture>
                                                             <img
                                                                 alt="{{ payment_method.title }}"
-                                                                data-src="{{ img | thumb: imgSize }}"
-                                                                data-srcset="{{ img | thumb: imgSize }} 1x, {{ img | thumb: imgSize | thumb:'@2x' }} 2x"
-                                                                class="lazy d-block mx-auto img-fluid">
+                                                                src="{{ payment_method.logo }}"
+                                                                class="d-block mx-auto img-fluid">
                                                         </picture>
 
                                                     </div>

@@ -19,6 +19,7 @@
 		template: {{ request.page_type | handle | json }},
 		locale: {{ locale | json }},
 		designMode: {{ request.design_mode | json }},
+		taxInformation: {{ settings.taxInformation | json }},
 		taxFreeShopping: {{ settings.taxFreeShopping | json }},
 		accessibility: {
 			showAnimations: {{ settings.accessibilityShowAnimations | json }},
@@ -161,6 +162,7 @@
             showNewBadge: {{ settings.productShowNewBadge | json }},
             showDiscountBadge: {{ settings.productShowDiscountBadge | json }},
             showOutOfStockBadge: {{ settings.productShowOutOfStockBadge | json }},
+			showBackorderBadge: {{ settings.productShowBackorderBadge | json }},
 			showAddToCart: {{ settings.productShowAddToCart | json }},
             wrapName: {{ settings.productWrapName | json }},
 			imageAspectRatio: {{ settings.productImageAspectRatio | json }},
@@ -219,6 +221,7 @@
 			'cart.empty_description': {{ 'cart.empty_description' | t | json }},
 			'cart.continue_shopping': {{ 'cart.continue_shopping' | t | json }},
 			'cart.summary_info': {{ 'cart.summary_info' | t | json }},
+			'cart.summary_info_with_tax': {{ 'cart.summary_info_with_tax' | t | json }},
 			'cart.view_cart': {{ 'cart.view_cart' | t | json }},
 			'cart.free_shipping_achieved': {{ 'cart.free_shipping_achieved' | t | json }},
 			'cart.amount_to_free_shipping_dynamic': {{ 'cart.amount_to_free_shipping_dynamic' | t | json }},

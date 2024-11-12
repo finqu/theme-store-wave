@@ -62,38 +62,8 @@
                 }
             {%- endif -%}
             {%- for item in section.settings.setting_blocks.items -%}
-                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
-                {%- if colorShemeBrightness > 190 -%}
-                    {%- assign accentTextColor = '#000' -%}
-                {%- else -%}
-                    {%- assign accentTextColor = '#fff' -%}
-                {%- endif -%}
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
-                    --style-heading-color: {{ item.settings.colorScheme }};
-                    --style-subheading-color: {{ item.settings.colorScheme }};
-                    --style-overline-color: {{ item.settings.colorScheme }};
-                    --style-text-color: {{ item.settings.colorScheme }};
-                    --style-link-color: {{ item.settings.colorScheme }};
-                    --style-icon-color: {{ item.settings.colorScheme }};
-                    --style-btn-bg-color: {{ item.settings.colorScheme }};
-                    --style-btn-text-color: {{ accentTextColor }};
-                    --style-btn-border-color: {{ item.settings.colorScheme }};
-                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
-                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
-                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
-                    --style-accent-color: {{ item.settings.colorScheme }};
-                    --style-accent-text-color: {{ accentTextColor }};
-                    {%- if colorShemeBrightness > 190 -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
-                    {%- else -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
-                    {%- endif -%}
+                    {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
                 }
             {%- endfor -%}
             {%- if section.settings.imgDimming != '0' -%}
@@ -123,9 +93,8 @@
             {% for item in section.settings.setting_blocks.items %}
 
                 {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-                {% assign everyFive = forloop.index | modulo: 5 %}
-
-                {% if everyFive == 0 %}
+   
+                {% if forloop.index == 5 %}
 
                     {%- assign imgSizeSm = '414,414' -%}
                     {%- assign imgSizeMd = '560,560' -%}
@@ -261,38 +230,8 @@
                 }
             {%- endif -%}
             {%- for item in section.settings.setting_blocks.items -%}
-                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
-                {%- if colorShemeBrightness > 190 -%}
-                    {%- assign accentTextColor = '#000' -%}
-                {%- else -%}
-                    {%- assign accentTextColor = '#fff' -%}
-                {%- endif -%}
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
-                    --style-heading-color: {{ item.settings.colorScheme }};
-                    --style-subheading-color: {{ item.settings.colorScheme }};
-                    --style-overline-color: {{ item.settings.colorScheme }};
-                    --style-text-color: {{ item.settings.colorScheme }};
-                    --style-link-color: {{ item.settings.colorScheme }};
-                    --style-icon-color: {{ item.settings.colorScheme }};
-                    --style-btn-bg-color: {{ item.settings.colorScheme }};
-                    --style-btn-text-color: {{ accentTextColor }};
-                    --style-btn-border-color: {{ item.settings.colorScheme }};
-                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
-                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
-                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
-                    --style-accent-color: {{ item.settings.colorScheme }};
-                    --style-accent-text-color: {{ accentTextColor }};
-                    {%- if colorShemeBrightness > 190 -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
-                    {%- else -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
-                    {%- endif -%}
+                    {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
                 }
             {%- endfor -%}
             {%- if section.settings.imgDimming != '0' -%}
@@ -322,9 +261,8 @@
             {% for item in section.settings.setting_blocks.items %}
 
                 {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-                {% assign everyThird = forloop.index | modulo: 3 %}
 
-                {% if everyThird == 0 %}
+                {% if forloop.index == 3 %}
 
                     {%- assign aspectRatioClass = 'aspect-ratio-1-1 aspect-ratio-md-1-1' -%}
                     {%- assign imgSizeSm = '400,400' -%}
@@ -610,38 +548,8 @@
                 }
             {%- endif -%}
             {%- for item in section.settings.setting_blocks.items -%}
-                {%- assign colorShemeBrightness = item.settings.colorScheme | color_brightness -%}
-                {%- if colorShemeBrightness > 190 -%}
-                    {%- assign accentTextColor = '#000' -%}
-                {%- else -%}
-                    {%- assign accentTextColor = '#fff' -%}
-                {%- endif -%}
                 #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
-                    --style-heading-color: {{ item.settings.colorScheme }};
-                    --style-subheading-color: {{ item.settings.colorScheme }};
-                    --style-overline-color: {{ item.settings.colorScheme }};
-                    --style-text-color: {{ item.settings.colorScheme }};
-                    --style-link-color: {{ item.settings.colorScheme }};
-                    --style-icon-color: {{ item.settings.colorScheme }};
-                    --style-btn-bg-color: {{ item.settings.colorScheme }};
-                    --style-btn-text-color: {{ accentTextColor }};
-                    --style-btn-border-color: {{ item.settings.colorScheme }};
-                    --style-border-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 15 }};
-                    --style-border-focus-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 20 }};
-                    --style-border-accent-color: {{ accentTextColor | color_mix: item.settings.colorScheme, 50 }};
-                    --style-accent-color: {{ item.settings.colorScheme }};
-                    --style-accent-text-color: {{ accentTextColor }};
-                    {%- if colorShemeBrightness > 190 -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_darken: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_darken: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_darken: 13 }};
-                    {%- else -%}
-                        --style-btn-bg-active-color: {{ item.settings.colorScheme | color_lighten: 10 }};
-                        --style-btn-bg-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-hover-color: {{ item.settings.colorScheme | color_lighten: 8 }};
-                        --style-btn-border-active-color: {{ item.settings.colorScheme | color_lighten: 13 }};
-                    {%- endif -%}
+                    {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
                 }
             {%- endfor -%}
             {%- if section.settings.imgDimming != '0' -%}
@@ -679,6 +587,374 @@
                     {%- endif %}
 
                     <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}">
+
+                        <div class="aspect-ratio-container" data-aos="animation-zoomFade" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                            {%- if item.settings.img -%}
+
+                                <picture>
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeSm }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        alt="{{ item.settings.img.alt }}"
+                                        data-src="{{ item.settings.img | thumb: imgSizeSm }}"
+                                        data-srcset="{{ item.settings.img | thumb: imgSizeSm }} 1x, {{ item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                        class="lazy aspect-ratio-item aspect-ratio-item-cover"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+
+                                </picture>
+
+                            {%- elsif request.design_mode -%}
+
+                                {%- capture class -%}
+                                    aspect-ratio-item aspect-ratio-item-cover
+                                {%- endcapture -%}
+
+                                {% render 'placeholder-svg', type: 'image', class: class %}
+                    
+                            {%- endif -%}
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5 z-1" style="--bs-gap: 0">
+
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
+
+                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
+
+                            {%- if item.settings.btnLink.text -%}
+
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+
+                                </div>
+
+                            {%- endif -%}
+
+                        </div>
+                    
+                    </div>
+
+                    {%- if item.settings.btnLink.url %}
+                        </a>
+                    {%- endif %}
+                
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {%- elsif section.settings.collageLayout == 5 -%}
+
+        {%- capture sectionStyle -%}
+            #finqu-section-{{ section.id }} .section-content .collage-grid {
+                display: grid;
+                grid-gap: var(--style-grid-gutter-width);
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(1) {
+                grid-column: 1 / span 2;
+                grid-row: 1 / span 2;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                grid-column: 1 / span 1;
+                grid-row: 3 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(3) {
+                grid-column: 2 / span 1;
+                grid-row: 3 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(4) {
+                grid-column: 1 / span 2;
+                grid-row: 4 / span 1;
+            }
+            @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+                #finqu-section-{{ section.id }} .section-content .collage-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(1) {
+                    grid-column: 1 / span 2;
+                    grid-row: 1 / span 2;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                    grid-column: 3 / span 1;
+                    grid-row: 1 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(3) {
+                    grid-column: 4 / span 1;
+                    grid-row: 1 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(4) {
+                    grid-column: 3 / span 2;
+                    grid-row: 2 / span 1;
+                }
+            }
+            {% if section.settings.sectionPaddingBottom == 0 %}
+                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                    --section-padding-top: var(--style-grid-gutter-width);
+                }
+            {%- endif -%}
+            {%- for item in section.settings.setting_blocks.items -%}
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
+                    {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
+                }
+            {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
+        {%- endcapture -%}
+
+        <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+        <div class="collage-grid">
+
+            {% for item in section.settings.setting_blocks.items %}
+
+                {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
+
+                {% if forloop.index == 1 %}
+                    {%- assign aspectRatioClass = 'aspect-ratio-1-1 aspect-ratio-md-stretch' -%}
+                    {%- assign imgSizeSm = '414,414' -%}
+                    {%- assign imgSizeMd = '560,560' -%}
+                    {%- assign imgSizeLg = '650,650' -%}
+                {% elsif forloop.index == 4 %}
+                    {%- assign aspectRatioClass = 'aspect-ratio-2-1' -%}
+                    {%- assign imgSizeSm = '420,215' -%}
+                    {%- assign imgSizeMd = '560,285' -%}
+                    {%- assign imgSizeLg = '650,330' -%}
+                {% else %}
+                    {%- assign aspectRatioClass = 'aspect-ratio-1-1' -%}
+                    {%- assign imgSizeSm = '414,414' -%}
+                    {%- assign imgSizeMd = '275,275' -%}
+                    {%- assign imgSizeLg = '320,320' -%}
+                {% endif %}
+
+                <div class="position-relative img-indicator-zoom text-inherit">
+
+                    {%- if item.settings.btnLink.url %}
+                        <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
+                    {%- endif %}
+
+                    <div class="{{ aspectRatioClass }}">
+
+                        <div class="aspect-ratio-container" data-aos="animation-zoomFade" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                            {%- if item.settings.img -%}
+
+                                <picture>
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeLg }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                    <source data-srcset="
+                                        {{- item.settings.img | thumb: imgSizeSm }} 1x,
+                                        {{- item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        alt="{{ item.settings.img.alt }}"
+                                        data-src="{{ item.settings.img | thumb: imgSizeSm }}"
+                                        data-srcset="{{ item.settings.img | thumb: imgSizeSm }} 1x, {{ item.settings.img | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                        class="lazy aspect-ratio-item aspect-ratio-item-cover"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+
+                                </picture>
+
+                            {%- elsif request.design_mode -%}
+
+                                {%- capture class -%}
+                                    aspect-ratio-item aspect-ratio-item-cover
+                                {%- endcapture -%}
+
+                                {% render 'placeholder-svg', type: 'image', class: class %}
+                    
+                            {%- endif -%}
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid g-0 position-absolute top-0 start-0 w-100 h-100 p-g p-md-5 z-1" style="--bs-gap: 0">
+
+                        <div class="g-col-12 place-content-{{ section.settings.textVerticalAlign }}">
+
+                            {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                            {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: 'span', sectionDescription: item.settings.subtitle, sectionSubtitleTag: 'span', sectionOverline: item.settings.overline, sectionOverlineTag: 'span', sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5, sectionHeaderTextAlign: textHorizontalAlign %}
+
+                            {%- if item.settings.btnLink.text -%}
+
+                                <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+
+                                </div>
+
+                            {%- endif -%}
+
+                        </div>
+                    
+                    </div>
+
+                    {%- if item.settings.btnLink.url %}
+                        </a>
+                    {%- endif %}
+                
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {%- elsif section.settings.collageLayout == 6 -%}
+
+        {%- capture sectionStyle -%}
+            #finqu-section-{{ section.id }} .section-content .collage-grid {
+                display: grid;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(1) {
+                grid-column: 1 / span 1;
+                grid-row: 1 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                grid-column: 2 / span 1;
+                grid-row: 1 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(3) {
+                grid-column: 1 / span 2;
+                grid-row: 2 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(4) {
+                grid-column: 1 / span 2;
+                grid-row: 3 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(5) {
+                grid-column: 1 / span 1;
+                grid-row: 4 / span 1;
+            }
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(6) {
+                grid-column: 2 / span 1;
+                grid-row: 4 / span 1;
+            }
+            @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+                #finqu-section-{{ section.id }} .section-content .collage-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(1) {
+                    grid-column: 1 / span 1;
+                    grid-row: 1 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                    grid-column: 2 / span 1;
+                    grid-row: 1 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(3) {
+                    grid-column: 3 / span 2;
+                    grid-row: 1 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(4) {
+                    grid-column: 1 / span 2;
+                    grid-row: 2 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(5) {
+                    grid-column: 3 / span 1;
+                    grid-row: 2 / span 1;
+                }
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(6) {
+                    grid-column: 4 / span 1;
+                    grid-row: 2 / span 1;
+                }
+            }
+            {% if section.settings.sectionPaddingBottom == 0 %}
+                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                    --section-padding-top: var(--style-grid-gutter-width);
+                }
+            {%- endif -%}
+            {%- for item in section.settings.setting_blocks.items -%}
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child({{ forloop.index}}) {
+                    {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
+                }
+            {%- endfor -%}
+            {%- if section.settings.imgDimming != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .aspect-ratio-container::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    background: linear-gradient(0deg, rgb(0,0,0, {{ section.settings.imgDimming }}%), rgb(0,0,0, {{ section.settings.imgDimming }}%))
+                }
+            {%- endif -%}
+            {%- if section.settings.imgBlur != '0' -%}
+                #finqu-section-{{ section.id }} .collage-grid .lazy {
+                    transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
+                    filter: blur({{ section.settings.imgBlur }}px);
+                }
+            {%- endif -%}
+        {%- endcapture -%}
+
+        <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+        <div class="collage-grid rounded-image">
+
+            {% for item in section.settings.setting_blocks.items %}
+
+                {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
+
+                {% if forloop.index == 3 or forloop.index == 4 %}
+                    {%- assign aspectRatioClass = 'aspect-ratio-2-1' -%}
+                    {%- assign imgSizeSm = '420,215' -%}
+                    {%- assign imgSizeMd = '560,285' -%}
+                    {%- assign imgSizeLg = '650,330' -%}
+                {% else %}
+                    {%- assign aspectRatioClass = 'aspect-ratio-1-1' -%}
+                    {%- assign imgSizeSm = '414,414' -%}
+                    {%- assign imgSizeMd = '275,275' -%}
+                    {%- assign imgSizeLg = '320,320' -%}
+                {% endif %}
+
+                <div class="position-relative img-indicator-zoom text-inherit">
+
+                    {%- if item.settings.btnLink.url %}
+                        <a href="{{ item.settings.btnLink.url | link }}" target="{{ item.settings.btnLink.target }}">
+                    {%- endif %}
+
+                    <div class="{{ aspectRatioClass }}" style="--style-image-border-radius: 0">
 
                         <div class="aspect-ratio-container" data-aos="animation-zoomFade" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
@@ -923,12 +1199,66 @@
                             },
                             {
                                 "id": "colorScheme",
-                                "type": "color",
+                                "type": "select",
                                 "label": {
                                     "en": "Color scheme",
-                                    "fi": "Väriskeema"
+                                    "fi": "Värityyli"
                                 },
-                                "default": "#ffffff"
+                                "default": false,
+                                "options": [
+                                    {
+                                        "value": false,
+                                        "label": {
+                                            "en": "Disabled",
+                                            "fi": "Pois käytöstä"
+                                        }
+                                    },
+                                    {
+                                        "value": "secondary",
+                                        "label": {
+                                            "en": "Secondary",
+                                            "fi": "Toissijainen"
+                                        }
+                                    },
+                                    {
+                                        "value": "light",
+                                        "label": {
+                                            "en": "Light background / Dark content",
+                                            "fi": "Vaalea tausta / Tumma sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "dark",
+                                        "label": {
+                                            "en": "Dark background / Light content",
+                                            "fi": "Tumma tausta / Vaalea sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "accent",
+                                        "label": {
+                                            "en": "Accent background / Adaptive content",
+                                            "fi": "Korostus tausta / Mukautuva sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "custom",
+                                        "label": {
+                                            "en": "Custom",
+                                            "fi": "Mukautettu"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "colorSchemeCustomColor",
+                                "type": "color",
+                                "label": {
+                                    "en": "Color",
+                                    "fi": "Väri"
+                                },
+                                "default": "#ffffff",
+                                "conditions": ["colorScheme eq custom"]
                             }
                         ]
                     }
@@ -1391,7 +1721,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1408,7 +1738,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1425,7 +1755,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1442,7 +1772,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1459,7 +1789,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1477,7 +1807,7 @@
                 }
             }
         },
-                {
+        {
             "settings": {
                 "collageLayout": 2,
                 "textHorizontalAlign": "center",
@@ -1487,7 +1817,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1504,7 +1834,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1521,7 +1851,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1538,7 +1868,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1555,7 +1885,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -1584,7 +1914,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "title": "Mainoksen otsikko",
                                 "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
                                 "img": {
@@ -1600,7 +1930,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "title": "Mainoksen otsikko",
                                 "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi",
                                 "img": {
@@ -1628,7 +1958,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "title": "Mainoksen otsikko",
                                 "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
@@ -1647,7 +1977,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "title": "Mainoksen otsikko",
                                 "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
@@ -1666,7 +1996,7 @@
                         {
                             "type": "image",
                             "settings": {
-                                "colorScheme": "#ffffff",
+                                "colorSchemeCustomColor": "#ffffff",
                                 "title": "Mainoksen otsikko",
                                 "subtitle": "Kerro lyhyesti mainoksesta asiakkaillesi.",
                                 "btnLink": {
@@ -1675,6 +2005,198 @@
                                 "img": {
                                     "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
                                     "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "settings": {
+                "collageLayout": 5,
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "end",
+                "setting_blocks": {
+                    "items": [
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "settings": {
+                "collageLayout": 6,
+                "textHorizontalAlign": "center",
+                "textVerticalAlign": "end",
+                "setting_blocks": {
+                    "items": [
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
+                                    "offset_top": "50",
+                                    "offset_left": "50",
+                                    "width": "1080",
+                                    "height": "1080"
+                                }
+                            }
+                        },
+                        {
+                            "type": "image",
+                            "settings": {
+                                "colorSchemeCustomColor": "#ffffff",
+                                "btnLink": {
+                                    "text": "Shoppaile nyt"
+                                },
+                                "img": {
+                                    "string_value": "https:\/\/images.unsplash.com\/photo-1506619216599-9d16d0903dfd",
+                                    "src": "https:\/\/images.unsplash.com\/photo-1506619216599-9d16d0903dfd",
                                     "offset_top": "50",
                                     "offset_left": "50",
                                     "width": "1080",

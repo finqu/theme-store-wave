@@ -34,12 +34,12 @@
 
 			&.section-has-color-scheme:not(:has(.section-highlight-item))  {
 
-				.section-bg {
+				.section-bg-container {
 					background-color: var(--style-bg-color);
 				}
 			}
 
-			.section-bg {
+			.section-bg-container {
 				background-color: var(--style-secondary-bg-color);
 			}
 
@@ -114,7 +114,7 @@
 				}
 			}
 
-			.section-bg {
+			.section-bg-container {
 				background-color: var(--style-bg-color);
 				@include media-breakpoint-up(md) {
 					background-color: var(--style-secondary-bg-color);
@@ -678,6 +678,7 @@
 	    left: 0;
 	    overflow: hidden;
 	    pointer-events: none;
+		background-color: var(--style-bg-color);
 
 		.section-bg {
 			position: absolute;
@@ -688,7 +689,6 @@
 		    background-size: cover;
 			background-repeat: no-repeat;
 	    	pointer-events: none;
-			background-color: var(--style-bg-color);
 			background-position: var(--section-bg-img-pos, 50% 50%);
 		}
 	}

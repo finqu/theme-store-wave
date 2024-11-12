@@ -1,21 +1,9 @@
 export default function() {
     
-    const containerEl = document.querySelector('.section-register');
-    const registerCtaEl = containerEl.querySelector('#register-cta');
-    const checkInputEls = containerEl.querySelectorAll('.form-check-input');
-    
-    checkInputEls.forEach(el => { el.addEventListener('change', () => {
-
-        if ([...checkInputEls].every(el => el.checked)) {
-            registerCtaEl.disabled = false;
-        } else {
-            registerCtaEl.disabled = true;
-        }
-    })});
-
-    const countrySelectEl = containerEl.querySelector('#register-country');
-    const regionSelectEl = containerEl.querySelector('#register-region');
-    const regionContainerEl = containerEl.querySelector('#register-region-container');
+    const containerEl = document.querySelector('.section-account-edit');
+    const countrySelectEl = containerEl.querySelector('#edit-account-country');
+    const regionSelectEl = containerEl.querySelector('#edit-account-region');
+    const regionContainerEl = containerEl.querySelector('#edit-account-region-container');
 
     if (countrySelectEl && regionSelectEl && regionContainerEl) {
 
@@ -23,7 +11,7 @@ export default function() {
 
             const selectedOption = countrySelectEl.options[countrySelectEl.selectedIndex];
             const regions = JSON.parse(selectedOption.getAttribute('data-regions') || '[]');
-            const submittedValue = regionSelectEl.getAttribute('data-value');
+            const defaultValue = regionSelectEl.getAttribute('data-value');
 
             regionSelectEl.innerHTML = '';
 
@@ -36,7 +24,7 @@ export default function() {
                     option.value = region[0];
                     option.textContent = region[1];
 
-                    if (submittedValue && submittedValue === region[0]) {
+                    if (defaultValue && defaultValue === region[0]) {
                         option.selected = true;
                     }
 
@@ -54,10 +42,10 @@ export default function() {
 
     if (countrySelectEl) {
 
-        const submittedValue = countrySelectEl.getAttribute('data-value');
+        const defaultValue = countrySelectEl.getAttribute('data-value');
 
-        if (submittedValue) {
-            countrySelectEl.value = submittedValue;
+        if (defaultValue) {
+            countrySelectEl.value = defaultValue;
         }
 
         countrySelectEl.dispatchEvent(new Event('change'));

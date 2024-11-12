@@ -59,5 +59,25 @@
 				}
 			}
 		}
+
+		.aspect-ratio#{$infix}-stretch {
+			display: grid;
+			grid-template-columns: minmax(auto, calc(100% * var(--img-scale-ratio, 1)));
+			height: 100%;
+		
+			> .aspect-ratio-container {
+				display: flex;
+				justify-content: center;
+				aspect-ratio: auto;
+		
+				.aspect-ratio-item {
+					max-width: 100%;
+					height: -moz-available;
+    				height: -webkit-fill-available;
+    				height: stretch;
+					border-radius: var(--style-image-border-radius);
+				}
+			}
+		}
 	}
 }

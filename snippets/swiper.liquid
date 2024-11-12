@@ -25,12 +25,119 @@
     - evenHeightSlides: {Boolean} Same height slides
     - highlightActiveSlide: {Boolean} Highlight active slide
     - noSwiping: {Boolean} Disable swiping
+    - colorScheme: {String} Color scheme of the swiper
+    - customColor: {String} Custom color of the swiper
+    - containerHandle: {String} Handle of the swiper
 
 	Usage:
 	{% render 'swiper', slides: slides %}
 {% endcomment %}
 
 <div class="swiper{% if style %} swiper-style-{{ style }}{% endif %}{% if class %} {{ class }}{% endif %}{% if pagination == 'hover' %} swiper-pagination-hover{% endif %}{% if navigation == 'hover' %} swiper-navigation-hover{% endif %}{% if standalone %} swiper-standalone{% endif %}{% if evenHeightSlides %} swiper-even-height-slides{% endif %}{% if highlightActiveSlide %} swiper-highlight-active-slide{% endif %}"{% if freemode %} data-swiper-freemode="true"{% endif %}{% if centeredSlides %} data-swiper-centered-slides="true"{% if centeredSlidesBounds %} data-swiper-centered-slides-bounds="true"{% endif %}{% endif %}{% if centerInsufficientSlides %} data-swiper-center-insufficient-slides="true"{% endif %}{% if autoplaySpeed and autoplaySpeed != '0' %} data-swiper-autoplay="true" data-swiper-autoplay-speed="{{- autoplaySpeed -}}"{% endif %}{% if speed %} data-swiper-speed="{{- speed -}}"{% endif %}{% if loop %} data-swiper-loop="true"{% endif %}{% if effect %} data-swiper-effect="{{- effect -}}"{% endif %}{% if pagination %} data-swiper-pagination="{{- pagination -}}"{% endif %}{% if slidesPerView %} data-swiper-slides-per-view="{{- slidesPerView -}}"{% endif %}{% if slidesPerViewMobile %} data-swiper-slides-per-view-mobile="{{- slidesPerViewMobile -}}"{% endif %}{% if slidesGap %} data-swiper-slides-gap="{{- slidesGap -}}"{% endif %}{% if noSwiping %} data-swiper-no-swiping="true"{% endif %}{% if attrs %} {{ attrs }}{% endif %}>
+
+    {%- if containerHandle and colorScheme -%}
+
+        {%- assign style = settings.styles[colorScheme] -%}
+
+        {%- capture swiperSchemeStyle -%}
+            {{ containerHandle }} .swiper {
+                {%- if style -%}
+
+                    {%- assign styleBgColorBrightness = style.bg_color | color_brightness -%}
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --swiper-btn-bg-color: {{ style.bg_color }};
+                        --swiper-btn-color: {{ style.icon_color }};
+                        --swiper-btn-border-color: {{ style.bg_color | color_darken: 30 }};
+                        --swiper-pagination-bullet-color: {{ style.bg_color | color_darken: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ style.accent_color }};
+                        --swiper-pagination-bullet-border-color: {{ style.bg_color | color_darken: 70 }};
+                    {%- else -%}
+                        --swiper-btn-bg-color: {{ style.bg_color }};
+                        --swiper-btn-color: {{ style.icon_color }};
+                        --swiper-btn-border-color: {{ style.bg_color | color_lighten: 30 }};
+                        --swiper-pagination-bullet-color: {{ style.bg_color | color_lighten: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ style.accent_color }};
+                        --swiper-pagination-bullet-border-color: {{ style.bg_color | color_lighten: 70 }};
+                    {%- endif -%}
+
+                {%- else -%}
+
+                    {%- if colorScheme == 'secondary' -%}
+
+                        {%- assign bgColor = settings.style_secondary_bg_color  -%}
+                        {%- assign bgColorBrightness = bgColor | color_brightness -%}
+
+                        {%- if bgColorBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
+                        {%- endif -%}
+
+                    {%- elsif colorScheme == 'light' -%}
+
+                        {%- assign bgColor = '#ffffff' -%}
+                        {%- assign contentColor = '#000000' -%}
+                        
+                    {%- elsif colorScheme == 'dark' -%}
+
+                        {%- assign bgColor = '#000000'-%}
+                        {%- assign contentColor = '#ffffff' -%}
+
+                    {%- elsif colorScheme == 'accent' -%}
+
+                        {%- assign bgColor = settings.style_accent_color -%}
+                        {%- assign bgColorBrightness = bgColor | color_brightness -%}
+
+                        {%- if bgColorBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
+                        {%- endif -%}
+
+                    {%- elsif colorScheme == 'custom' and customColor -%}
+
+                        {%- assign contentColor = customColor -%}
+                        {%- assign contentColorBrightness = contentColor | color_brightness -%}
+
+                        {%- if contentColorBrightness > 190 -%}
+                            {%- assign bgColor = '#000000' -%}
+                        {%- else -%}
+                            {%- assign bgColor = '#ffffff' -%}
+                        {%- endif -%}
+
+                    {%- else -%}
+
+                        {%- assign bgColor = '#ffffff' -%}
+                        {%- assign contentColor = '#000000' -%}
+
+                    {%- endif -%}
+
+                    {%- assign styleBgColorBrightness = bgColor | color_brightness -%}
+
+                    {%- if styleBgColorBrightness > 190 -%}
+                        --swiper-btn-bg-color: {{ bgColor }};
+                        --swiper-btn-color: {{ contentColor }};
+                        --swiper-btn-border-color: {{ bgColor | color_darken: 30 }};
+                        --swiper-pagination-bullet-color: {{ bgColor | color_darken: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ contentColor }};
+                        --swiper-pagination-bullet-border-color: {{ bgColor | color_darken: 70 }};
+                    {%- else -%}
+                        --swiper-btn-bg-color: {{ contentColor }};
+                        --swiper-btn-color: {{ bgColor }};
+                        --swiper-btn-border-color: {{ bgColor | color_lighten: 30 }};
+                        --swiper-pagination-bullet-color: {{ bgColor | color_lighten: 70 }};
+                        --swiper-pagination-bullet-active-color: {{ contentColor }};
+                        --swiper-pagination-bullet-border-color: {{ bgColor | color_lighten: 70 }};
+                    {%- endif -%}
+
+                {%- endif -%}
+            }
+        {%- endcapture -%}
+
+        <style>{{ swiperSchemeStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+    {%- endif -%}
 
     <div class="swiper-wrapper">
 

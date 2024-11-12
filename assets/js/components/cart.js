@@ -309,9 +309,10 @@ export default class Cart {
 
             if (cartContainerEl) {
 
-                const data =  {
+                const data = {
                     cart: this.cart,
                     itemCount: this.cart.items.length,
+                    taxInformation: theme.store.taxInformation,
                     taxFreeShopping: theme.store.taxFreeShopping,
                     isInitialRender: this.isInitialRender,
                     productShowManufacturer: theme.store.product.showManufacturer,
@@ -321,6 +322,7 @@ export default class Cart {
                     productShowNewBadge: theme.store.product.showNewBadge,
                     productShowDiscountBadge: theme.store.product.showDiscountBadge,
                     productShowOutOfStockBadge: theme.store.product.showOutOfStockBadge,
+                    productShowBackorderBadge: theme.store.product.showBackorderBadge,
                     productWrapName: theme.store.product.showWrapName,
                     productImageAspectRatio: theme.store.product.ImageAspectRatio,
                     productImageAspectRatioFit:theme.store.product.ImageAspectRatioFit,
@@ -359,6 +361,7 @@ export default class Cart {
                 const data = {
                     cart: this.cart,
                     itemCount: this.cart.items.length,
+                    taxInformation: theme.store.taxInformation,
                     taxFreeShopping: theme.store.taxFreeShopping,
                     isInitialRender: this.isInitialRender,
                     productShowManufacturer: theme.store.product.showManufacturer,
@@ -368,6 +371,7 @@ export default class Cart {
                     productShowNewBadge: theme.store.product.showNewBadge,
                     productShowDiscountBadge: theme.store.product.showDiscountBadge,
                     productShowOutOfStockBadge: theme.store.product.showOutOfStockBadge,
+                    productShowBackorderBadge: theme.store.product.showBackorderBadge,
                     productWrapName: theme.store.product.showWrapName,
                     productImageAspectRatio: theme.store.product.ImageAspectRatio,
                     productImageAspectRatioFit:theme.store.product.ImageAspectRatioFit,
@@ -422,6 +426,7 @@ export default class Cart {
                 const data = {
                     cart: this.cart,
                     itemCount: this.cart.items.length,
+                    taxInformation: theme.store.taxInformation,
                     taxFreeShopping: theme.store.taxFreeShopping,
                     isInitialRender: this.isInitialRender,
                     productShowManufacturer: theme.store.product.showManufacturer,
@@ -431,6 +436,7 @@ export default class Cart {
                     productShowNewBadge: theme.store.product.showNewBadge,
                     productShowDiscountBadge: theme.store.product.showDiscountBadge,
                     productShowOutOfStockBadge: theme.store.product.showOutOfStockBadge,
+                    productShowBackorderBadge: theme.store.product.showBackorderBadge,
                     productWrapName: theme.store.product.showWrapName,
                     productImageAspectRatio: theme.store.product.ImageAspectRatio,
                     productImageAspectRatioFit:theme.store.product.ImageAspectRatioFit,

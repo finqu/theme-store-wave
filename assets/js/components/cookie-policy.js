@@ -27,7 +27,7 @@ class CookiePolicy {
             }
         }
 
-        if (this.mode === null) {
+        if (this.mode === null && theme.store.designMode !== 'edit') {
 
             if (!this.containerEl) {
 

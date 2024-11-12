@@ -9,17 +9,22 @@
 {%- endif -%}
 
 {%- capture sectionStyle -%}
-    #finqu-section-{{ section.id }} {
+    #finqu-section-{{ section.id }} .swiper {
         --style-grid-container-padding-y: var(--style-grid-container-padding-x);
     }
     @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
-        #finqu-section-{{ section.id }} {
+        #finqu-section-{{ section.id }} .swiper {
             --style-grid-container-padding-x: 4rem;
         }
     }
-    #finqu-section-{{ section.id }} {
+    #finqu-section-{{ section.id }} .swiper {
         --style-grid-gutter-width: 0;
     }
+    {%- for item in section.settings.setting_blocks.items -%}
+        #finqu-section-{{ section.id }} .section-content .swiper-wrapper > div:nth-child({{ forloop.index}}) {
+            {%- render 'section-color-scheme' colorScheme: item.settings.colorScheme, customColor: item.settings.colorSchemeCustomColor -%}
+        }
+    {%- endfor -%}
     {%- if section.settings.imgBlur != '0' -%}
         #finqu-section-{{ section.id }} .lazy {
             transform: scale(1.0{{ section.settings.imgBlur | divided_by: 2 | plus: 2 }});
@@ -52,12 +57,6 @@
 
                 {%- endcapture -%}
 
-                {% assign sectionTitleTag = section.settings.sectionTitleTag %}
-
-                {% if section.settings.sectionTitleTag == 'h1' and forloop.index > 1 %}
-                    {% assign sectionTitleTag = 'h2' %}
-                {% endif %}
-
                 <div class="swiper-slide">
 
                    <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
@@ -70,7 +69,7 @@
 
                                 <div class="text-{{ textHorizontalAlign }}{% if section.settings.carouselEffect == 'slide' %} animation-animated animation-fadeInUp animation-delay animation-slow{% endif %}">
 
-                                    {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: sectionTitleTag, sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: item.settings.overline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: false, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale %}
+                                    {% render 'section-header', sectionTitle: item.settings.title, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: item.settings.subtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: item.settings.overline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: false, sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale %}
 
                                     {% if item.settings.btnLink.text %}
 
@@ -124,31 +123,29 @@
 
     {%- endcapture -%}
 
-    {%- render 'swiper', slides: carouselSlides, pagination: section.settings.carouselPagination, navigation: section.settings.carouselNavigation, slidesPerView: 1, style: 2, paginationPosition: 'fixed', loop: section.settings.carouselLoop, evenHeightSlides: true, standalone: true, autoplaySpeed: section.settings.carouselAutoplaySpeed, effect: section.settings.carouselEffect -%}
+    {%- render 'swiper', slides: carouselSlides, pagination: section.settings.carouselPagination, navigation: section.settings.carouselNavigation, slidesPerView: 1, style: 2, paginationPosition: 'fixed', loop: section.settings.carouselLoop, evenHeightSlides: true, standalone: true, autoplaySpeed: section.settings.carouselAutoplaySpeed, effect: section.settings.carouselEffect, colorScheme: section.settings.carouselColorScheme, customColor: section.settings.carouselColorSchemeCustomColor, containerHandle: sectionHandle -%}
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0 %}
+{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile %}
 
 {% schema %}
 {
     "name": {
-        "en": "Hero carousel",
-        "fi": "Hero-karuselli"
+        "en": "Image carousel",
+        "fi": "Kuvakaruselli"
     },
     "tag": "section",
-    "class": "section section-hero-carousel",
-    "category": "theme-hero",
+    "class": "section section-image-carousel",
+    "category": "theme-featured",
     "keywords": {
         "en": [
             "Carousel",
-            "Slider",
-            "Lander"
+            "Slider"
         ],
         "fi": [
             "Karuselli",
-            "Slideri",
-            "Laskeutumissivu"
+            "Slideri"
         ]
     },
     "settings": {
@@ -217,6 +214,69 @@
                                     "fi": "Kuva"
                                 },
                                 "adjustments": true
+                            },
+                            {
+                                "id": "colorScheme",
+                                "type": "select",
+                                "label": {
+                                    "en": "Color scheme",
+                                    "fi": "Värityyli"
+                                },
+                                "default": false,
+                                "options": [
+                                    {
+                                        "value": false,
+                                        "label": {
+                                            "en": "Disabled",
+                                            "fi": "Pois käytöstä"
+                                        }
+                                    },
+                                    {
+                                        "value": "secondary",
+                                        "label": {
+                                            "en": "Secondary",
+                                            "fi": "Toissijainen"
+                                        }
+                                    },
+                                    {
+                                        "value": "light",
+                                        "label": {
+                                            "en": "Light background / Dark content",
+                                            "fi": "Vaalea tausta / Tumma sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "dark",
+                                        "label": {
+                                            "en": "Dark background / Light content",
+                                            "fi": "Tumma tausta / Vaalea sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "accent",
+                                        "label": {
+                                            "en": "Accent background / Adaptive content",
+                                            "fi": "Korostus tausta / Mukautuva sisältö"
+                                        }
+                                    },
+                                    {
+                                        "value": "custom",
+                                        "label": {
+                                            "en": "Custom",
+                                            "fi": "Mukautettu"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "colorSchemeCustomColor",
+                                "type": "color",
+                                "label": {
+                                    "en": "Color",
+                                    "fi": "Väri"
+                                },
+                                "default": "#ffffff",
+                                "conditions": ["colorScheme eq custom"]
                             }
                         ]
                     }
@@ -508,6 +568,69 @@
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "id": "carouselColorScheme",
+                                    "type": "select",
+                                    "label": {
+                                        "en": "Color scheme",
+                                        "fi": "Värityyli"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": {
+                                                "en": "Disabled",
+                                                "fi": "Pois käytöstä"
+                                            }
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": {
+                                                "en": "Secondary",
+                                                "fi": "Toissijainen"
+                                            }
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": {
+                                                "en": "Dark",
+                                                "fi": "Tumma"
+                                            }
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": {
+                                                "en": "Light",
+                                                "fi": "Vaalea"
+                                            }
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": {
+                                                "en": "Adaptive",
+                                                "fi": "Mukautuva"
+                                            }
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": {
+                                                "en": "Custom",
+                                                "fi": "Mukautettu"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselColorSchemeCustomColor",
+                                    "type": "color",
+                                    "label": {
+                                        "en": "Color",
+                                        "fi": "Väri"
+                                    },
+                                    "default": "#ffffff",
+                                    "conditions": ["carouselColorScheme eq custom"]
                                 }
                             ]
                         },
@@ -549,10 +672,6 @@
                                     },
                                     "default": "h2",
                                     "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
                                         {
                                             "value": "h2",
                                             "label": "H2"
@@ -683,6 +802,93 @@
                                     ]
                                 },
                                 {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Padding",
+                                        "fi": "Välit"
+                                    },
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "Auto"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": {
+                                                "en": "Custom",
+                                                "fi": "Mukautettu"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingTop",
+                                    "label": {
+                                        "en": "Padding top",
+                                        "fi": "Väli ylhäällä"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                },
+                                {
+                                    "id": "sectionPaddingBottom",
+                                    "label": {
+                                        "en": "Padding bottom",
+                                        "fi": "Väli alhaalla"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "rem",
+                                    "conditions": ["sectionPaddingMode eq custom"]
+                                },
+                                {
+                                    "id": "sectionBgImg",
+                                    "type": "image-picker",
+                                    "label": {
+                                        "en": "Background image",
+                                        "fi": "Taustakuva"
+                                    },
+                                    "adjustments": true
+                                },
+                                {
+                                    "id": "sectionBgImgDimming",
+                                    "label": {
+                                        "en": "Image dimming",
+                                        "fi": "Kuvan tummennus"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%",
+                                    "conditions": ["!sectionBgImg eq false"]
+                                },
+                                {
+                                    "id": "sectionBgImgBlur",
+                                    "label": {
+                                        "en": "Image blur",
+                                        "fi": "Kuvan sumentaminen"
+                                    },
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " ",
+                                    "conditions": ["!sectionBgImg eq false"]
+                                },
+                                {
                                     "id": "sectionMinHeight",
                                     "type": "select",
                                     "label": {
@@ -720,15 +926,17 @@
     "presets": [
         {
             "settings": {
-                "carouselEffect": "fade",
-                "sectionColorScheme": "dark",
+                "carouselPagination": "on",
+                "carouselEffect": "slide",
+                "carouselColorSchemeCustomColor": "#ffffff",
                 "setting_blocks": {
                     "items": [
                         {
                             "type": "image",
                             "settings": {
-                                "title": "Uusi mahtava Hero-otsikko!",
-                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
+                                "colorSchemeCustomColor": "#ffffff",
+                                "title": "Uusi mahtava otsikko!",
+                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä osiossa.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },
@@ -745,8 +953,9 @@
                         {
                             "type": "image",
                             "settings": {
-                                "title": "Uusi mahtava Hero-otsikko!",
-                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä Hero-osiossa.",
+                                "colorSchemeCustomColor": "#ffffff",
+                                "title": "Uusi mahtava otsikko!",
+                                "subtitle": "Markkinoi tuotetta tai sisältöä tässä osiossa.",
                                 "btnLink": {
                                     "text": "Shoppaile nyt"
                                 },

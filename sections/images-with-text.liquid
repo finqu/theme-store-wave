@@ -14,49 +14,369 @@
     {%- assign sectionHighlightItems = true -%}
 {%- endif -%}
 
-{% if section.settings.imgAspectRatio == '16:9' %}
-
-    {%- assign imgSizeSm = '414,251' -%}
-    {%- assign imgSizeMd = '360,220' -%}
-    {%- assign imgSizeLg = '670,395' -%}
-
-{% elsif section.settings.imgAspectRatio == '9:13' %}
-
-    {%- assign imgSizeSm = '414,581' -%}
-    {%- assign imgSizeMd = '360,503' -%}
-    {%- assign imgSizeLg = '670,950' -%}
-
-{% elsif section.settings.imgAspectRatio == '4:3' %}
-
-    {%- assign imgSizeSm = '414,321' -%}
-    {%- assign imgSizeMd = '360,280' -%}
-    {%- assign imgSizeLg = '670,513' -%}
-
-{% elsif section.settings.imgAspectRatio == '1:1' %}
-
-    {%- assign imgSizeSm = '414,414' -%}
-    {%- assign imgSizeMd = '360,360' -%}
-    {%- assign imgSizeLg = '670,670' -%}
-
-{% elsif section.settings.imgAspectRatio == 'auto' %}
-
-    {%- assign imgSizeSm = '414,414' -%}
-    {%- assign imgSizeMd = '360,360' -%}
-    {%- assign imgSizeLg = '670,670' -%}
-
-{% endif %}
+{%- assign imagesLayout = section.settings.imagesLayout | default: 1 -%}
 
 {%- capture sectionContent -%}
 
-    <div class="row gy-g gy-sm-5 gx-lg-10">
+    {%- if imagesLayout == 1 -%}
 
-        <div class="col-12 col-md-6 d-flex flex-column">
+        {% if section.settings.imgAspectRatio == '16:9' %}
 
-            <div class="section-highlight-item p-md-8 d-flex flex-column my-auto">
+            {%- assign imgSizeSm = '414,251' -%}
+            {%- assign imgSizeMd = '360,220' -%}
+            {%- assign imgSizeLg = '670,395' -%}
+
+        {% elsif section.settings.imgAspectRatio == '9:13' %}
+
+            {%- assign imgSizeSm = '414,581' -%}
+            {%- assign imgSizeMd = '360,503' -%}
+            {%- assign imgSizeLg = '670,950' -%}
+
+        {% elsif section.settings.imgAspectRatio == '4:3' %}
+
+            {%- assign imgSizeSm = '414,321' -%}
+            {%- assign imgSizeMd = '360,280' -%}
+            {%- assign imgSizeLg = '670,513' -%}
+
+        {% elsif section.settings.imgAspectRatio == '1:1' %}
+
+            {%- assign imgSizeSm = '414,414' -%}
+            {%- assign imgSizeMd = '360,360' -%}
+            {%- assign imgSizeLg = '670,670' -%}
+
+        {% elsif section.settings.imgAspectRatio == 'auto' %}
+
+            {%- assign imgSizeSm = '414,414' -%}
+            {%- assign imgSizeMd = '360,360' -%}
+            {%- assign imgSizeLg = '670,670' -%}
+
+        {% endif %}
+
+        {%- capture col1Content -%}
+
+            <div class="col-12 col-md-6 d-flex flex-column">
+
+                <div class="section-highlight-item p-md-8 d-flex flex-column my-auto">
+
+                    {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+
+                    {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5 %}
+
+                    {% if section.settings.btnLink.text %}
+
+                        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                        <div class="mt-4 mt-lg-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                            {%- render 'section-quick-link', style: section.settings.btnStyle, text: section.settings.btnLink.text, url: section.settings.btnLink.url, target: section.settings.btnLink.target -%}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }} {% if sectionHighlightItems %}mt-10{% else %}mt-6{% endif %}" data-aos="{%- if section.settings.swapColPositions -%}animation-fadeInRight{%- else -%}animation-fadeInLeft{%- endif -%}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    <div class="aspect-ratio-container">
+
+                        {%- if section.settings.img1 -%}
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- section.settings.img1 | thumb: imgSizeLg }} 1x,
+                                    {{- section.settings.img1 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                    {{- section.settings.img1 | thumb: imgSizeMd }} 1x,
+                                    {{- section.settings.img1 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- section.settings.img1 | thumb: imgSizeSm }} 1x,
+                                    {{- section.settings.img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ section.settings.img1.alt }}"
+                                    data-src="{{ section.settings.img1 | thumb: imgSizeSm }}"
+                                    data-srcset="{{ section.settings.img1 | thumb: imgSizeSm }} 1x,{{ section.settings.img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img1.offset_left or section.settings.img1.offset_top %} style="--object-position: {{ section.settings.img1.offset_left }}% {{ section.settings.img1.offset_top }}%"{% endif %}>
+
+                            </picture>
+
+                        {%- elsif request.design_mode -%}
+
+                            {%- capture class -%}
+                                aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                            {%- endcapture -%}
+
+                            {% render 'placeholder-svg', type: 'image', class: class %}
+                
+                        {%- endif -%}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {%- endcapture -%}
+
+        {%- capture col2Content -%}
+
+            <div class="col-12 col-md-6 d-flex flex-column gap-6">
+
+                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}" data-aos="{%- if section.settings.swapColPositions -%}animation-fadeInLeft{%- else -%}animation-fadeInRight{%- endif -%}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                    <div class="aspect-ratio-container">
+
+                        {%- if section.settings.img2 -%}
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- section.settings.img2 | thumb: imgSizeLg }} 1x,
+                                    {{- section.settings.img2 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                    {{- section.settings.img2 | thumb: imgSizeMd }} 1x,
+                                    {{- section.settings.img2 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- section.settings.img2 | thumb: imgSizeSm }} 1x,
+                                    {{- section.settings.img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ section.settings.img2.alt }}"
+                                    data-src="{{ section.settings.img2 | thumb: imgSizeSm }}"
+                                    data-srcset="{{ section.settings.img2 | thumb: imgSizeSm }} 1x,{{ section.settings.img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img2.offset_left or section.settings.img2.offset_top %} style="--object-position: {{ section.settings.img2.offset_left }}% {{ section.settings.img2.offset_top }}%"{% endif %}>
+
+                            </picture>
+
+                        {%- elsif request.design_mode -%}
+
+                            {%- capture class -%}
+                                aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                            {%- endcapture -%}
+
+                            {% render 'placeholder-svg', type: 'image', class: class %}
+                
+                        {%- endif -%}
+
+                    </div>
+
+                </div>
+
+                {%- if section.settings.richtext -%}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="text-richtext text-muted section-highlight-item p-md-8 d-flex flex-column my-auto" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                        {{- section.settings.richtext -}}
+
+                    </div>
+
+                {%- endif -%}
+
+            </div>
+
+        {%- endcapture -%}
+
+        <div class="row gy-g gy-sm-5 gx-lg-10">
+
+            {%- if section.settings.swapColPositions -%}
+
+                {{- col2Content -}}
+                {{- col1Content -}}
+
+            {%- else -%}
+
+                {{- col1Content -}}
+                {{- col2Content -}}
+
+            {%- endif -%}
+
+        </div>
+
+    {%- elsif imagesLayout == 2 -%}
+
+        {%- capture imgColContent -%}
+
+            {% if section.settings.imgAspectRatio == '16:9' %}
+
+                {%- assign img1SizeSm = '249,144' -%}
+                {%- assign img1SizeMd = '229,133' -%}
+                {%- assign img1SizeLg = '364,209' -%}
+
+                {%- assign img2SizeSm = '176,103' -%}
+                {%- assign img2SizeMd = '158,93' -%}
+                {%- assign img2SizeLg = '248,144' -%}
+
+            {% elsif section.settings.imgAspectRatio == '9:13' %}
+
+                {%- assign img1SizeSm = '249,355' -%}
+                {%- assign img1SizeMd = '229,327' -%}
+                {%- assign img1SizeLg = '364,521' -%}
+
+                {%- assign img2SizeSm = '176,250' -%}
+                {%- assign img2SizeMd = '158,225' -%}
+                {%- assign img2SizeLg = '248,354' -%}
+
+            {% elsif section.settings.imgAspectRatio == '4:3' %}
+
+                {%- assign img1SizeSm = '249,189' -%}
+                {%- assign img1SizeMd = '229,174' -%}
+                {%- assign img1SizeLg = '364,275' -%}
+
+                {%- assign img2SizeSm = '176,135' -%}
+                {%- assign img2SizeMd = '158,121' -%}
+                {%- assign img2SizeLg = '248,189' -%}
+
+            {% elsif section.settings.imgAspectRatio == '1:1' %}
+
+                {%- assign img1SizeSm = '249,249' -%}
+                {%- assign img1SizeMd = '229,229' -%}
+                {%- assign img1SizeLg = '364,364' -%}
+
+                {%- assign img2SizeSm = '176,176' -%}
+                {%- assign img2SizeMd = '158,158' -%}
+                {%- assign img2SizeLg = '248,248' -%}
+
+            {% elsif section.settings.imgAspectRatio == 'auto' %}
+
+                {%- assign img1SizeSm = '249,249' -%}
+                {%- assign img1SizeMd = '229,229' -%}
+                {%- assign img1SizeLg = '364,364' -%}
+
+                {%- assign img2SizeSm = '176,176' -%}
+                {%- assign img2SizeMd = '158,158' -%}
+                {%- assign img2SizeLg = '248,248' -%}
+
+            {% endif %}
+
+            <div class="grid gap-3 gap-md-5 gap-lg-7 align-items-center">
+
+                <div class="g-col-5{% if section.settings.imgPosition == 'end' %} order-2{% endif %}">
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}" data-aos="{%- if section.settings.imgPosition == 'start' -%}animation-fadeInLeft{%- else -%}animation-fadeInRight{%- endif -%}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- if section.settings.img2 -%}
+
+                                <picture>
+                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                        {{- section.settings.img2 | thumb: img2SizeLg }} 1x,
+                                        {{- section.settings.img2 | thumb: img2SizeLg | thumb:'@2x' }} 2x">
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                        {{- section.settings.img2 | thumb: img2SizeMd }} 1x,
+                                        {{- section.settings.img2 | thumb: img2SizeMd | thumb:'@2x' }} 2x">
+
+                                    <source data-srcset="
+                                        {{- section.settings.img2 | thumb: img2SizeSm }} 1x,
+                                        {{- section.settings.img2 | thumb: img2SizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        alt="{{ section.settings.img2.alt }}"
+                                        data-src="{{ section.settings.img2 | thumb: img2SizeSm }}"
+                                        data-srcset="{{ section.settings.img2 | thumb: img2SizeSm }} 1x,{{ section.settings.img2 | thumb: img2SizeSm | thumb:'@2x' }} 2x"
+                                        class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img2.offset_left or section.settings.img2.offset_top %} style="--object-position: {{ section.settings.img2.offset_left }}% {{ section.settings.img2.offset_top }}%"{% endif %}>
+
+                                </picture>
+
+                            {%- elsif request.design_mode -%}
+
+                                {%- capture class -%}
+                                    aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                                {%- endcapture -%}
+
+                                {% render 'placeholder-svg', type: 'image', class: class %}
+                    
+                            {%- endif -%}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="g-col-7{% if section.settings.imgPosition == 'end' %} order-1{% endif %}">
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}" data-aos="{%- if section.settings.imgPosition == 'start' -%}animation-fadeInLeft{%- else -%}animation-fadeInRight{%- endif -%}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- if section.settings.img1 -%}
+
+                                <picture>
+                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                        {{- section.settings.img1 | thumb: img1SizeLg }} 1x,
+                                        {{- section.settings.img1 | thumb: img1SizeLg | thumb:'@2x' }} 2x">
+
+                                    <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
+                                        {{- section.settings.img1 | thumb: img1SizeMd }} 1x,
+                                        {{- section.settings.img1 | thumb: img1SizeMd | thumb:'@2x' }} 2x">
+
+                                    <source data-srcset="
+                                        {{- section.settings.img1 | thumb: img1SizeSm }} 1x,
+                                        {{- section.settings.img1 | thumb: img1SizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        alt="{{ section.settings.img1.alt }}"
+                                        data-src="{{ section.settings.img1 | thumb: img1SizeSm }}"
+                                        data-srcset="{{ section.settings.img1 | thumb: img1SizeSm }} 1x,{{ section.settings.img1 | thumb: img1SizeSm | thumb:'@2x' }} 2x"
+                                        class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img1.offset_left or section.settings.img1.offset_top %} style="--object-position: {{ section.settings.img1.offset_left }}% {{ section.settings.img1.offset_top }}%"{% endif %}>
+
+                                </picture>
+
+                            {%- elsif request.design_mode -%}
+
+                                {%- capture class -%}
+                                    aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
+                                {%- endcapture -%}
+
+                                {% render 'placeholder-svg', type: 'image', class: class %}
+                    
+                            {%- endif -%}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {%- endcapture -%}
+
+        {%- capture textColContent -%}
+
+            <div class="section-highlight-item p-md-5 p-lg-8 d-flex flex-column my-auto">
 
                 {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
 
                 {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle, sectionHeaderGapScale: 0.5 %}
+
+                {%- if section.settings.richtext -%}
+
+                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+
+                    <div class="text-richtext text-muted mt-4 mt-lg-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+
+                        {{- section.settings.richtext -}}
+
+                    </div>
+
+                {%- endif -%}
 
                 {% if section.settings.btnLink.text %}
 
@@ -72,111 +392,35 @@
 
             </div>
 
-            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+        {%- endcapture -%}
 
-            <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }} {% if sectionHighlightItems %}mt-10{% else %}mt-6{% endif %}" data-aos="animation-fadeInLeft" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+        <div class="row gy-g gy-sm-5 gx-md-5 gx-lg-5">
 
-                <div class="aspect-ratio-container">
+            {%- if section.settings.imgPosition == 'start' -%}
 
-                    {%- if section.settings.img1 -%}
-
-                        <picture>
-                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                {{- section.settings.img1 | thumb: imgSizeLg }} 1x,
-                                {{- section.settings.img1 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                            <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
-                                {{- section.settings.img1 | thumb: imgSizeMd }} 1x,
-                                {{- section.settings.img1 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
-
-                            <source data-srcset="
-                                {{- section.settings.img1 | thumb: imgSizeSm }} 1x,
-                                {{- section.settings.img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                            <img
-                                alt="{{ section.settings.img1.alt }}"
-                                data-src="{{ section.settings.img1 | thumb: imgSizeSm }}"
-                                data-srcset="{{ section.settings.img1 | thumb: imgSizeSm }} 1x,{{ section.settings.img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img1.offset_left or section.settings.img1.offset_top %} style="--object-position: {{ section.settings.img1.offset_left }}% {{ section.settings.img1.offset_top }}%"{% endif %}>
-
-                        </picture>
-
-                    {%- elsif request.design_mode -%}
-
-                        {%- capture class -%}
-                            aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
-                        {%- endcapture -%}
-
-                        {% render 'placeholder-svg', type: 'image', class: class %}
-            
-                    {%- endif -%}
-
+                <div class="col-12 col-md-7 d-flex flex-column justify-content-center">
+                    {{- imgColContent -}}
                 </div>
 
-            </div>
-
-        </div>
-
-        <div class="col-12 col-md-6 d-flex flex-column gap-6">
-
-            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-            <div class="aspect-ratio-{{ section.settings.imgAspectRatio | replace: ':', '-' }}" data-aos="animation-fadeInRight" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                <div class="aspect-ratio-container">
-
-                    {%- if section.settings.img2 -%}
-
-                        <picture>
-                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
-                                {{- section.settings.img2 | thumb: imgSizeLg }} 1x,
-                                {{- section.settings.img2 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
-
-                            <source media="(min-width: {{ settings.styleGridBreakpointMd }})" data-srcset="
-                                {{- section.settings.img2 | thumb: imgSizeMd }} 1x,
-                                {{- section.settings.img2 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
-
-                            <source data-srcset="
-                                {{- section.settings.img2 | thumb: imgSizeSm }} 1x,
-                                {{- section.settings.img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
-
-                            <img
-                                alt="{{ section.settings.img2.alt }}"
-                                data-src="{{ section.settings.img2 | thumb: imgSizeSm }}"
-                                data-srcset="{{ section.settings.img2 | thumb: imgSizeSm }} 1x,{{ section.settings.img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
-                                class="lazy aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}"{% if section.settings.img2.offset_left or section.settings.img2.offset_top %} style="--object-position: {{ section.settings.img2.offset_left }}% {{ section.settings.img2.offset_top }}%"{% endif %}>
-
-                        </picture>
-
-                    {%- elsif request.design_mode -%}
-
-                        {%- capture class -%}
-                            aspect-ratio-item{% if section.settings.imgFit %} aspect-ratio-item-cover{% endif %}
-                        {%- endcapture -%}
-
-                        {% render 'placeholder-svg', type: 'image', class: class %}
-            
-                    {%- endif -%}
-
+                <div class="col-12 col-md-5 d-flex flex-column mt-6 mt-md-0">
+                    {{- textColContent -}}
                 </div>
 
-            </div>
+            {%- elsif section.settings.imgPosition == 'end' -%}
 
-            {%- if section.settings.richtext -%}
+                <div class="col-12 col-md-5 d-flex flex-column">
+                    {{- textColContent -}}
+                </div>
 
-                {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-                <div class="text-richtext text-muted section-highlight-item p-md-8 d-flex flex-column my-auto" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                    {{- section.settings.richtext -}}
-
+                <div class="col-12 col-md-7 d-flex flex-column justify-content-center mt-6 mt-md-0">
+                    {{- imgColContent -}}
                 </div>
 
             {%- endif -%}
 
         </div>
 
-    </div>
+    {%- endif -%}
 
 {%- endcapture -%}
 
@@ -210,6 +454,10 @@
                     "fi": "Sisältö"
                 },
                 "settings": [
+                    {
+                        "type": "hidden",
+                        "id": "imagesLayout"
+                    },
                     {
                         "id": "sectionOverline",
                         "type": "text",
@@ -382,6 +630,26 @@
                                     ]
                                 },
                                 {
+                                    "id": "imgPosition",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Images position",
+                                        "fi": "Kuvien sijainti"
+                                    },
+                                    "default": "start",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "{# icon.align-start #}"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "{# icon.align-end #}"
+                                        }
+                                    ],
+                                    "conditions": ["imagesLayout eq 2"]
+                                },
+                                {
                                     "id": "imgAspectRatio",
                                     "type": "select",
                                     "label": {
@@ -424,6 +692,16 @@
                                     },
                                     "default": true,
                                     "conditions": ["!imgAspectRatio eq auto"]
+                                },
+                                {
+                                    "id": "swapColPositions",
+                                    "type": "checkbox",
+                                    "label": {
+                                        "en": "Swap column positions",
+                                        "fi": "Vaihda sarakkeiden sijainnit"
+                                    },
+                                    "default": false,
+                                    "conditions": ["imagesLayout eq 1"]
                                 }
                             ]
                         },
@@ -695,6 +973,38 @@
     "presets": [
         {
             "settings": {
+                "imagesLayout": 1,
+                "sectionTitle": "Uusi mahtava otsikko",
+                "richtext": "<p>Lisää kuvat ja kerro niistä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>",
+                "btnStyle": "primary",
+                "btnLink": {
+                    "type": "url",
+                    "record_id": "",
+                    "text": "Shoppaile nyt",
+                    "url": "",
+                    "target": "_self"
+                },
+                "img1": {
+                    "string_value": "https:\/\/images.unsplash.com\/photo-1546177461-668e7784915e",
+                    "src": "https:\/\/images.unsplash.com\/photo-1546177461-668e7784915e",
+                    "offset_top": "50",
+                    "offset_left": "50",
+                    "width": "720",
+                    "height": "1080"
+                },
+                "img2": {
+                    "string_value": "https:\/\/images.unsplash.com\/photo-1546177461-3283e4aa3b0c",
+                    "src": "https:\/\/images.unsplash.com\/photo-1546177461-3283e4aa3b0c",
+                    "offset_top": "50",
+                    "offset_left": "50",
+                    "width": "720",
+                    "height": "1080"
+                }
+            }
+        },
+        {
+            "settings": {
+                "imagesLayout": 2,
                 "sectionTitle": "Uusi mahtava otsikko",
                 "richtext": "<p>Lisää kuvat ja kerro niistä asiakkaillesi tai käytä sitä tuotteesi, artikkelisi tai brändisi esittelyyn.<\/p>",
                 "btnStyle": "primary",

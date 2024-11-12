@@ -323,34 +323,6 @@
 
             {{/ifCond}}
 
-            {{#ifCond @root.taxFreeShopping '==' true}}
-
-                <div class="cart-tax">
-
-                    <div class="row">
-
-                        <div class="col">
-
-                            <span>
-                                {{#if @root.taxFreeShopping}}+{{/if}} {{ t 'general.tax' }}
-                            </span>
-
-                        </div>
-
-                        <div class="col text-end">
-
-                            <span>
-                                {{ formatCurrency cart.tax }}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            {{/ifCond}}
-
             {{#if cart.discounts}}
 
                 <div class="cart-discounts">
@@ -412,7 +384,11 @@
             </div>
 
             <small class="d-block mt-1">
-                {{ t 'cart.summary_info' }}
+                {{#if @root.taxInformation}}
+                    {{ t 'cart.summary_info_with_tax' }}
+                {{else}}
+                    {{ t 'cart.summary_info' }}
+                {{/if}}
             </small>
 
         </div>
@@ -777,7 +753,11 @@
             </div>
 
             <small class="d-block mt-1">
-                {{ t 'cart.summary_info' }}
+                {{#if @root.taxInformation}}
+                    {{ t 'cart.summary_info_with_tax' }}
+                {{else}}
+                    {{ t 'cart.summary_info' }}
+                {{/if}}
             </small>
 
         </div>
@@ -1128,7 +1108,11 @@
             </div>
 
             <small class="d-block mt-1">
-                {{ t 'cart.summary_info' }}
+                {{#if @root.taxInformation}}
+                    {{ t 'cart.summary_info_with_tax' }}
+                {{else}}
+                    {{ t 'cart.summary_info' }}
+                {{/if}}
             </small>
 
         </div>

@@ -168,10 +168,22 @@
             {%- assign showOutOfStockBadge = true -%}
         {%- endif -%}
 
+        {%- if section.settings.customDisplayInformation == true and section.settings.showBackorderBadge -%}
+            {%- assign showBackorderBadge = true -%}
+        {%- elsif settings.productShowBackorderBadge == true -%}
+            {%- assign showBackorderBadge = true -%}
+        {%- endif -%}
+
         {%- if section.settings.customDisplayInformation == true and section.settings.showStockBalance -%}
             {%- assign showStockBalance = true -%}
         {%- elsif settings.productShowStockBalance == true -%}
             {%- assign showStockBalance = true -%}
+        {%- endif -%}
+
+        {%- if section.settings.customDisplayInformation == true and section.settings.showStockBalanceAsNumber -%}
+            {%- assign showStockBalanceAsNumber = true -%}
+        {%- elsif settings.productShowStockBalanceAsNumber == true -%}
+            {%- assign showStockBalanceAsNumber = true -%}
         {%- endif -%}
 
         {%- if settings.accessibilityShowWishlist and section.settings.showBuyNowButton and product.default_or_selected_variant.notifications_supported == false -%}
@@ -407,7 +419,7 @@
 
                             <div id="product-main-media-swiper" class="swiper swiper-navigation-hide-on-desktop gallery col">
 
-                                {% render 'product-badges', product: product, showNew: showNewBadge, showPromotion: showPromotionBadge, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge %}
+                                {% render 'product-badges', product: product, showNew: showNewBadge, showPromotion: showPromotionBadge, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showBackorder: showBackorderBadge %}
 
                                 <div class="swiper-wrapper">
 
@@ -779,7 +791,7 @@
 
                                         <div class="d-flex product-price-container flex-wrap column-gap-3 row-gap-2">
 
-                                            {% if product.default_or_selected_variant.price != product.default_or_selected_variant.original_price %}
+                                            {% if product.default_or_selected_variant.discount_information != nil %}
 
                                                 <span class="product-sale-price-text text-sale-price" data-product-price-dynamic>
                                                     {{- settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price | money_with_currency -}}
@@ -822,7 +834,7 @@
 
                                     </div>
 
-                                    {% if section.settings.showLowestPrice and product.default_or_selected_variant.previous_lower_price and product.default_or_selected_variant.price != product.default_or_selected_variant.original_price %}
+                                    {% if section.settings.showLowestPrice and product.default_or_selected_variant.previous_lower_price and product.default_or_selected_variant.discount_information != nil %}
 
                                         {% assign itemLowestPrice = settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.previous_lower_price.net_price, product.default_or_selected_variant.previous_lower_price.price | money_with_currency %}
 
@@ -832,15 +844,19 @@
 
                                     {% endif %}
 
-                                    <div class="product-vat mt-1">
+                                    {% if settings.taxInformation %}
 
-                                        {% assign itemTaxPercent = settings.taxFreeShopping == true | yepnope: 0, product.default_or_selected_variant.rate %}
+                                        <div class="product-vat mt-1">
 
-                                        <span class="product-vat-text text-muted">
-                                            {{- 'product.vat_included_dynamic' | t, amount: itemTaxPercent -}}
-                                        </span>
+                                            {% assign itemTaxPercent = settings.taxFreeShopping == true | yepnope: 0, product.default_or_selected_variant.rate %}
 
-                                    </div>
+                                            <span class="product-vat-text text-muted">
+                                                {{- 'product.vat_included_dynamic' | t, amount: itemTaxPercent -}}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
 
                                 </div>
 
@@ -871,7 +887,13 @@
                                     {%- else -%}
 
                                         <span class="product-stock-balance-in-stock">
-                                            {{- 'product.in_stock' | t -}}
+
+                                            {%- if showStockBalanceAsNumber and product.default_or_selected_variant.stock -%}
+                                                {{- 'product.in_stock_dynamic' | t: amount: product.default_or_selected_variant.stock -}}
+                                            {%- else -%}
+                                                {{- 'product.in_stock' | t -}}
+                                            {%- endif -%}
+                                            
                                         </span>
 
                                     {%- endif -%}
@@ -2765,6 +2787,16 @@
                         "conditions": ["customDisplayInformation eq true"]
                     },
                     {
+                        "id": "showBackorderBadge",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show backorder badge",
+                            "fi": "Näytä tilattavissa-merkki"
+                        },
+                        "default": true,
+                        "conditions": ["customDisplayInformation eq true"]
+                    },
+                    {
                         "id": "showStockBalance",
                         "type": "checkbox",
                         "label": {
@@ -2773,6 +2805,19 @@
                         },
                         "default": true,
                         "conditions": ["customDisplayInformation eq true"]
+                    },
+                    {
+                        "id": "showStockBalanceAsNumber",
+                        "type": "checkbox",
+                        "label": {
+                            "en": "Show stock balance as number",
+                            "fi": "Näytä saatavuus numerona"
+                        },
+                        "default": false,
+                        "conditions": [
+                            "!showStockBalance eq false",
+                            "customDisplayInformation eq true"
+                        ]
                     },
                     {
                         "type": "title",

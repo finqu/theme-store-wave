@@ -115,6 +115,7 @@ $aspect-ratios: (
 	'4-3': '4:3',
 	'3-5': '3:5',
 	'3-4': '3:4',
+	'2-1': '2:1',
 	'1-1': '1:1',
 	'product': '{{- settings.productImageAspectRatio -}}',
 	'article': '{{- settings.articleImageAspectRatio -}}'
@@ -146,6 +147,9 @@ $spacers: (
 	'g': var(--style-grid-gutter-width),
 	'c': var(--style-grid-container-padding-x)
 );
+
+$image-border-radius: {{ settings.styleImageBorderRadius }};
+$product-image-border-radius: {{ settings.styleProductImageBorderRadius }};
 
 $enable-input-borders: {%- if settings.styleInputBorder -%}'true'{%- else -%}'false'{%- endif -%};
 

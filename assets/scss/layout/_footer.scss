@@ -80,14 +80,14 @@
                 display: flex;
             }
 
-            .site-footer-top {
+            &:not(:has(.site-footer-middle))  {
 
                 .site-footer-payment-methods-container {
                     display: flex;
+                    gap: spacer(2);
 
                     .site-footer-payment-method {
                         display: inline-flex;
-                        margin: spacer(2);
 
                         img {
                             max-width: 100%;
@@ -107,6 +107,7 @@
                 .site-footer-payment-methods-container {
                     display: flex;
                     justify-content: flex-end;
+                    gap: spacer(2);
                     height: 100%;
                     align-items: center;
                     @include media-breakpoint-down(lg) {
@@ -115,8 +116,7 @@
     
                     .site-footer-payment-method {
                         display: inline-flex;
-                        margin: spacer(2);
-    
+
                         img {
                             max-width: 100%;
                             max-height: 50px;

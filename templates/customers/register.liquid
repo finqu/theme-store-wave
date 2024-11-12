@@ -22,10 +22,10 @@
 
                     <div class="form-floating">
 
-                        <input type="text" class="form-control" name="company_id" id="register-company-id" value="{{ form.submitted.company_id }}" placeholder="{{ 'account.information.company_id' | t }}">
+                        <input type="text" class="form-control" name="company_id" id="register-company-id" value="{{ form.submitted.company_id }}" placeholder="{{ 'account.information.business_id' | t }}">
 
                         <label for="register-company-id">
-                            {{- 'account.information.company_id' | t -}}
+                            {{- 'account.information.business_id' | t -}}
                         </label>
 
                     </div>
@@ -36,10 +36,10 @@
 
                     <div class="form-floating">
 
-                        <input type="text" class="form-control" name="vat_number" id="register-vat-number" value="{{ form.submitted.vat_number }}" placeholder="{{ 'account.information.vat_number' | t }}">
+                        <input type="text" class="form-control" name="vat_number" id="register-vat-number" value="{{ form.submitted.vat_number }}" placeholder="{{ 'account.information.tax_id' | t }}">
 
                         <label for="register-vat-number">
-                            {{- 'account.information.vat_number' | t -}}
+                            {{- 'account.information.tax_id' | t -}}
                         </label>
 
                     </div>
@@ -132,7 +132,7 @@
 
                     <div class="form-floating">
 
-                        <select name="country" class="form-select" id="register-country">
+                        <select name="country" class="form-select" id="register-country"{% if form.submitted.country %} data-value="{{ form.submitted.country }}"{% endif %}>
 
                             {{ country_option_tags }}
 
@@ -145,6 +145,24 @@
                     </div>
 
                 </div>
+
+                <div id="register-region-container" class="mb-4 col-12 col-md{% unless form.submitted.region %} d-none{% endunless %}">
+
+                    <div class="form-floating">
+
+                        <select name="region" class="form-select" id="register-region"{% if form.submitted.region %} data-value="{{ form.submitted.region }}"{% endif %}></select>
+
+                        <label for="register-region">
+                            {{- 'account.information.state' | t -}}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
 
                 <div class="mb-4 col-12 col-md">
 

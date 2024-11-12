@@ -9,6 +9,7 @@
     - showDiscount: {Boolean} Show discount badge
     - showDiscountPercentage: {Boolean} Show discount percentage
     - showOutOfStock: {Boolean} Show out of stock badge
+    - showBackorder: {Boolean} Show backorder badge
 
     Usage:
     Render this snippet inside of element with "product-media-container" or "product-main-media-swiper" class.
@@ -37,6 +38,10 @@
     {%- assign showOutOfStock = settings.productShowOutOfStockBadge -%}
 {%- endif -%}
 
+{%- if showBackorder != false -%}
+    {%- assign showBackorder = settings.productShowBackorderBadge -%}
+{%- endif -%}
+
 {%- assign position = position | default: settings.styleProductBadgePosition -%}
 {%- assign positionClass = 'product-badge-position-' | append: position -%}
 {%- assign productHasDiscount = productHasDiscount | default: false -%}
@@ -44,17 +49,13 @@
 {%- assign productIsNew = productIsNew | default: product.default_or_selected_variant.is_new | default: false -%}
 {%- assign productDiscountPercent = productDiscountPercent | default: product.default_or_selected_variant.discount_information.amount | default: 0 -%}
 
-{%- if productHasDiscount == false and product.default_or_selected_variant.price != product.default_or_selected_variant.original_price -%}
+{%- if productHasDiscount == false and product.default_or_selected_variant.discount_information != nil -%}
     {%- assign productHasDiscount = true -%}
-{%- endif -%}
-
-{%- if showOutOfStock != false -%}
-    {%- assign showOutOfStock = settings.productShowOutOfStockBadge -%}
 {%- endif -%}
 
 <div class="product-badges {{ positionClass }}">
 
-    {%- if product.default_or_selected_variant.stock < 1 and product.default_or_selected_variant.inventory_policy == 'continue' -%}
+    {%- if showBackorder and product.default_or_selected_variant.stock < 1 and product.default_or_selected_variant.inventory_policy == 'continue' -%}
 
         <span class="product-badge">
 

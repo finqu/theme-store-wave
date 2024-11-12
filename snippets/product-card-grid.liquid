@@ -15,6 +15,9 @@
     - showPromotionBadge: {Boolean} true | false
     - showDiscountBadge: {Boolean} true | false
     - showOutOfStockBadge: {Boolean} true | false
+    - showBackorderBadge: {Boolean} true | false
+    - showStockBalance: {Boolean} true | false
+    - showStockBalanceAsNumber: {Boolean} true | false
     - showAddToCart: {Boolean} true | false
     - showVariants: {Boolean} true | false
 
@@ -62,12 +65,20 @@
     {%- assign showOutOfStockBadge = showOutOfStockBadge | default: settings.productShowOutOfStockBadge -%}
 {%- endif -%}
 
+{%- if showBackorderBadge != false -%}
+    {%- assign showBackorderBadge = showBackorderBadge | default: settings.productShowBackorderBadge -%}
+{%- endif -%}
+
 {%- if showAddToCart != false -%}
     {%- assign showAddToCart = showAddToCart | default: settings.productShowAddToCart -%}
 {%- endif -%}
 
 {%- if showStockBalance != false -%}
     {%- assign showStockBalance = showStockBalance | default: settings.productShowStockBalance -%}
+{%- endif -%}
+
+{%- if showStockBalanceAsNumber != false -%}
+    {%- assign showStockBalanceAsNumber = showStockBalanceAsNumber | default: settings.showStockBalanceAsNumber -%}
 {%- endif -%}
 
 {%- if showVariants != false -%}
@@ -94,7 +105,7 @@
 {%- assign productMaxRating = product.max_rating -%}
 {%- assign productUrl = product | link | default: '' -%}
 
-{%- if productPrice != productOriginalPrice -%}
+{%- if product.default_or_selected_variant.discount_information != nil -%}
     {%- assign productHasDiscount = true -%}
 {%- endif -%}
 
@@ -142,15 +153,15 @@
 
     <div class="product-media-container">
     
-        {%- if showDiscountBadge or showOutOfStockBadge or showNewBadge or showPromotionBadge -%}
+        {%- if showDiscountBadge or showOutOfStockBadge or showNewBadge or showPromotionBadge or showBackorderBadge -%}
 
             {%- if product -%}
 
-                {%- render 'product-badges', product: product, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge -%}
+                {%- render 'product-badges', product: product, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge, showBackorder: showBackorderBadge -%}
 
             {%- else -%}
 
-                {%- render 'product-badges', productHasDiscount: productHasDiscount, productDiscountPercent: productDiscountPercent, productIsNew: productIsNew, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge -%}
+                {%- render 'product-badges', productHasDiscount: productHasDiscount, productDiscountPercent: productDiscountPercent, productIsNew: productIsNew, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge, showBackorder: showBackorderBadge -%}
 
             {%- endif -%}
 
@@ -969,7 +980,13 @@
                 {%- else -%}
 
                     <span class="product-stock-balance-in-stock">
-                        {{- 'product.in_stock' | t -}}
+
+                        {%- if showStockBalanceAsNumber and product.default_or_selected_variant.stock -%}
+                            {{- 'product.in_stock_dynamic' | t: amount: product.default_or_selected_variant.stock -}}
+                        {%- else -%}
+                            {{- 'product.in_stock' | t -}}
+                        {%- endif -%}
+                        
                     </span>
 
                 {%- endif -%}

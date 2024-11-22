@@ -19,6 +19,14 @@
     {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
 {%- endif -%}
 
+{%- if section.settings.textVerticalAlign == 'start' -%}
+    {%- assign textVerticalAlign = 'end' -%}
+{%- elsif section.settings.textVerticalAlign == 'center' -%}
+    {%- assign textVerticalAlign = 'center' -%}
+{%- elsif section.settings.textVerticalAlign == 'end' -%}
+    {%- assign textVerticalAlign = 'start' -%}
+{%- endif -%}
+
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} .section-content {
         --style-grid-container-padding-y: var(--style-grid-container-padding-x);
@@ -35,7 +43,7 @@
 
 {%- capture sectionContent -%}
 
-    <div class="d-flex align-items-{{ section.settings.textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
+    <div class="d-flex align-items-{{ textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
 
         <div class="container d-flex justify-content-{{ section.settings.textHorizontalAlign }}{% unless section.settings.sectionBgImg %} bg-content{% endunless %}">
 
@@ -266,13 +274,6 @@
                                             "label": {
                                                 "en": "Disabled",
                                                 "fi": "Pois käytöstä"
-                                            }
-                                        },
-                                        {
-                                            "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
                                             }
                                         },
                                         {

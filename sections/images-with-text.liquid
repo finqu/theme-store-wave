@@ -537,6 +537,26 @@
                             },
                             "settings": [
                                 {
+                                    "id": "swapColPositions",
+                                    "type": "radio-pill",
+                                    "label": {
+                                        "en": "Layout",
+                                        "fi": "Asettelu"
+                                    },
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "1"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "2"
+                                        }
+                                    ],
+                                    "conditions": ["imagesLayout eq 1"]
+                                },
+                                {
                                     "id": "sectionHighlightItems",
                                     "type": "radio-pill",
                                     "label": {
@@ -692,16 +712,6 @@
                                     },
                                     "default": true,
                                     "conditions": ["!imgAspectRatio eq auto"]
-                                },
-                                {
-                                    "id": "swapColPositions",
-                                    "type": "checkbox",
-                                    "label": {
-                                        "en": "Swap column positions",
-                                        "fi": "Vaihda sarakkeiden sijainnit"
-                                    },
-                                    "default": false,
-                                    "conditions": ["imagesLayout eq 1"]
                                 }
                             ]
                         },

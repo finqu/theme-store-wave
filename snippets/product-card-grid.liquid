@@ -78,7 +78,7 @@
 {%- endif -%}
 
 {%- if showStockBalanceAsNumber != false -%}
-    {%- assign showStockBalanceAsNumber = showStockBalanceAsNumber | default: settings.showStockBalanceAsNumber -%}
+    {%- assign showStockBalanceAsNumber = showStockBalanceAsNumber | default: settings.productShowStockBalanceAsNumber -%}
 {%- endif -%}
 
 {%- if showVariants != false -%}
@@ -982,7 +982,7 @@
                     <span class="product-stock-balance-in-stock">
 
                         {%- if showStockBalanceAsNumber and product.default_or_selected_variant.stock -%}
-                            {{- 'product.in_stock_dynamic' | t: amount: product.default_or_selected_variant.stock -}}
+                            {{- 'product.in_stock_dynamic' | t: amount: product.default_or_selected_variant.stock, unit: product.default_or_selected_variant.unit -}}
                         {%- else -%}
                             {{- 'product.in_stock' | t -}}
                         {%- endif -%}

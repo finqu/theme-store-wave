@@ -186,10 +186,6 @@
             {%- assign showStockBalanceAsNumber = true -%}
         {%- endif -%}
 
-        {%- if settings.accessibilityShowWishlist and section.settings.showBuyNowButton and product.default_or_selected_variant.notifications_supported == false -%}
-            {%- assign showWishlistCondition = true -%}
-        {%- endif -%}
-
         {%- if settings.productShowSku and product.default_or_selected_variant.sku -%}
             {%- assign showSku = true -%}
         {%- endif -%}
@@ -834,9 +830,13 @@
 
                                     </div>
 
-                                    {% if section.settings.showLowestPrice and product.default_or_selected_variant.previous_lower_price and product.default_or_selected_variant.discount_information != nil %}
+                                    {% if section.settings.showLowestPrice and product.default_or_selected_variant.discount_information != nil %}
 
-                                        {% assign itemLowestPrice = settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.previous_lower_price.net_price, product.default_or_selected_variant.previous_lower_price.price | money_with_currency %}
+                                        {%- if product.default_or_selected_variant.previous_lower_price -%}
+                                            {% assign itemLowestPrice = settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.previous_lower_price.net_price, product.default_or_selected_variant.previous_lower_price.price | money_with_currency %}
+                                        {%- else -%}
+                                            {% assign itemLowestPrice = settings.taxFreeShopping == true | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price  | money_with_currency %}
+                                        {%- endif -%}
 
                                         <div class="product-lowest-price mt-2">
                                             {{- 'product.lowest_price_dynamic' | t, amount: itemLowestPrice -}}
@@ -906,7 +906,7 @@
 
                         {% if store.customer_has_purchase_right %}
 
-                            {% if product.is_available %}
+                            {% if product.default_or_selected_variant.is_available %}
 
                                 <div class="product-form mt-4">
 
@@ -1037,6 +1037,10 @@
                                         </div>
 
                                         {% if section.settings.showBuyNowButton %}
+
+                                            {%- if settings.accessibilityShowWishlist -%}
+                                                {%- assign showWishlistCondition = true -%}
+                                            {%- endif -%}
 
                                             <div class="product-action-buy-now d-flex mt-2">
 
@@ -1169,7 +1173,7 @@
 
                                     {% endunless %}
 
-                                    {% if product.default_or_selected_variant.notifications_supported %}
+                                    {% if product.default_or_selected_variant.notifications_supported and product.default_or_selected_variant.is_out_of_stock %}
 
                                         <div class="product-availability-notification d-flex">
 
@@ -1196,7 +1200,11 @@
 
                                         </div>
 
-                                    {% elsif product.default_or_selected_variant.in_preview == false %}
+                                    {% elsif product.default_or_selected_variant.is_out_of_stock and product.default_or_selected_variant.in_preview == false %}
+
+                                        {%- if settings.accessibilityShowWishlist -%}
+                                            {%- assign showWishlistCondition = true -%}
+                                        {%- endif -%}
 
                                         <div class="product-info-out-of-stock">
 
@@ -1496,8 +1504,6 @@
 
                                     {% for relatedItem in product.related %}
 
-                                        {%- assign relatedItemImg = relatedItem.first_available_variant.image | default: relatedItem.image -%}
-
                                         <div class="d-flex align-items-center gap-g border-top pt-g">
 
                                             <a href="{{ relatedItem | link }}">
@@ -1506,13 +1512,13 @@
 
                                                     <div class="aspect-ratio-container">
 
-                                                        {% if relatedItemImg %}
+                                                        {% if relatedItem.image %}
 
                                                             <picture>
                                                                 <img
                                                                     alt="{{ relatedItem.title }}"
-                                                                    data-src="{{ relatedItemImg | thumb: imgSize }}"
-                                                                    data-srcset="{{ relatedItemImg | thumb: imgSize }} 1x, {{ relatedItemImg | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                                    data-src="{{ relatedItem.image | thumb: imgSize }}"
+                                                                    data-srcset="{{ relatedItem.image | thumb: imgSize }} 1x, {{ relatedItem.image | thumb: imgSize | thumb: '@2x' }} 2x"
                                                                     class="lazy d-block mx-auto img-fluid aspect-ratio-item">
                                                             </picture>
 

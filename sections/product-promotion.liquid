@@ -176,17 +176,25 @@
                     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
                     {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
 
-                    {%- if product.default_or_selected_variant.image and product.has_only_default_variant == false -%}
-
-                        {%- assign img1 = product.default_or_selected_variant.image -%}
-                        {%- assign img2 = generalImages[0] -%}
-                        
-                    {%- else -%}
+                    {% if generalImages.size > 1 %}
 
                         {%- assign img1 = generalImages[0] -%}
                         {%- assign img2 = generalImages[1] -%}
-                        
-                    {%- endif -%}
+
+                    {% elsif generalImages.size == 1 and product.default_or_selected_variant.image %}
+
+                        {%- assign img1 = generalImages[0] -%}
+                        {%- assign img2 = product.default_or_selected_variant.image -%}
+
+                    {% elsif generalImages.size == 1 %}
+
+                        {%- assign img1 = generalImages[0] -%}
+
+                    {%- elsif product.default_or_selected_variant.image -%}
+
+                        {%- assign img1 = product.default_or_selected_variant.image -%}
+
+                    {% endif %}
                     
                     {%- if settings.productImageAspectRatio == '9:13' -%}
 

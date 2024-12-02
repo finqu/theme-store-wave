@@ -711,7 +711,7 @@ export default function() {
                         initProductQuantity();
                     }
             
-                    if (containerEl.querySelector('.product-variants')) {
+                    if (containerEl.querySelector('.product-variants:not(.product-card-grid-item .product-variants)')) {
                         initProductVariants();
                     }
 
@@ -871,7 +871,7 @@ export default function() {
                         initProductQuantity();
                     }
             
-                    if (containerEl.querySelector('.product-variants')) {
+                    if (containerEl.querySelector('.product-variants:not(.product-card-grid-item .product-variants)')) {
                         initProductVariants();
                     }
 
@@ -916,7 +916,7 @@ export default function() {
         initProductQuantity();
     }
 
-    if (containerEl.querySelector('.product-variants')) {
+    if (containerEl.querySelector('.product-variants:not(.product-card-grid-item .product-variants)')) {
         initProductVariants();
     }
 

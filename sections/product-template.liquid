@@ -844,7 +844,7 @@
 
                                     {% endif %}
 
-                                    {% if settings.taxInformation %}
+                                    {% if settings.taxInformation and product.default_or_selected_variant.bundle_contents == false %}
 
                                         <div class="product-vat mt-1">
 
@@ -902,7 +902,21 @@
 
                             {% endif %}
 
-                        {%-endif %}
+                        {% endif %}
+
+                        {% if product.default_or_selected_variant.bundle_contents %}
+
+                            <div class="product-bundle-contents mt-4">
+
+                                <span class="d-block mb-2">
+                                    {{- 'product.bundle_includes' | t -}}
+                                </span>
+
+                                {% render 'product-bundle-contents', items: product.default_or_selected_variant.bundle_contents, sectionHandle: '#finqu-section-product-template' %}
+
+                            </div>
+
+                        {% endif %}
 
                         {% if store.customer_has_purchase_right %}
 

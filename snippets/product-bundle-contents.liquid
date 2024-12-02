@@ -1,0 +1,118 @@
+{% comment %}
+	Renders a product bundle contents
+
+	Accepts:
+	- items: {Array} Bundle contents to show (Required)
+    - sectionHandle: {String} Section handle
+
+	Usage:
+	{% render 'product-bundle-contents', items: items, sectionHandle: '#finqu-section-product-template' %}
+{% endcomment %}
+
+{%- assign carouselProducts = items -%}
+{%- assign carouselProductPerView = 5 -%}
+{%- assign carouselProductPerViewMobile = 4 -%}
+{%- assign carouselSlidesPerView = carouselProductPerView -%}
+{%- assign carouselFreemode = false -%}
+{%- assign carouselPagination = false -%}
+{%- assign carouselNavigation = 'on' -%}
+{%- assign carouselSlidesGap = 40 -%}
+
+{%- if carouselProducts -%}
+    {%- assign carouselProductAmount = carouselProducts.size -%}
+{%- else -%}
+    {%- assign carouselProductAmount = carouselProductPerView | times: 3 -%}
+{%- endif -%}
+
+{%- if sectionHandle -%}
+
+    {%- assign indicatorSize = 20 -%}
+
+    {%- capture sectionStyle -%}
+        {{ sectionHandle }} .bundle-combo-indicator {
+            display: grid;
+            place-self: center;
+            place-content: center;
+            position: absolute;
+            top: 0;
+            right: -{{ indicatorSize | plus: carouselSlidesGap | divided_by: 2 }}px;
+            bottom: 0;
+            width: {{ indicatorSize }}px;
+            height: {{ indicatorSize }}px;
+            border-radius: 50%;
+            background-color: var(--style-btn-bg-color);
+            --style-icon-color: var(--style-btn-text-color);
+            --style-icon-stroke-width: 2px;
+        }
+    {%- endcapture -%}
+
+     <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- endif -%}
+
+{%- if sectionHandle and carouselFreemode == true -%}
+
+    {%- assign carouselSlidesPerView = 'auto' -%}
+
+    {%- capture sectionStyle -%}
+        {{ sectionHandle }} .swiper-slide {
+            --swiper-slide-width: 50;
+            --swiper-slide-width-sm: 25;
+            --swiper-slide-width-md: 33.333333;
+            --swiper-slide-width-lg: {{ 100 | divided_by: carouselProductPerView }};
+        }
+    {%- endcapture -%}
+
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{%- elsif carouselFreemode == true and sectionHandle == false -%}
+
+    {%- assign carouselFreemode = false -%}
+
+{%- endif -%}
+
+{%- capture carouselSlides -%}
+
+    {%- if carouselProducts.size > 0 -%}
+
+       {%- for item in carouselProducts -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {%- render 'product-card-grid', product: item.product, productPerRow: carouselProductPerView, wishlist: false, productTruncateName: false, showProductName: showProductName, showManufacturer: false, showPricing: false, showRating: false, showNewBadge: false, showDiscountBadge: false, showPromotionBadge: false, showOutOfStockBadge: false, showBackorderBadge: false, showAddToCart: false, showStockBalance: false, showVariants: true, showOnlySelectedOptions: true -%}
+
+                    {% unless forloop.last %}
+                        <span class="bundle-combo-indicator">
+                            {%- render 'icon', icon: 'add' -%}
+                        </span>
+                    {% endunless %} 
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {%- elsif request.design_mode -%}
+
+        {%- for num in (1..carouselProductAmount) -%}
+
+            <div class="swiper-slide">
+
+                <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+                    {%- render 'product-card-grid', productPerRow: carouselProductPerView, wishlist: false,  productTruncateName: false, showProductName: showProductName, showManufacturer: false, showPricing: false, showRating: false, showNewBadge: false, showDiscountBadge: false, showPromotionBadge: false, showOutOfStockBadge: false, showBackorderBadge: false, showAddToCart: false, showStockBalance: false, showVariants: false, showOnlySelectedOptions: true -%}
+
+                </div>
+
+            </div>
+
+        {%- endfor -%}
+
+    {%- endif -%}
+
+{%- endcapture -%}
+
+{%- render 'swiper', slides: carouselSlides, pagination: carouselPagination, navigation: carouselNavigation, slidesPerView: carouselSlidesPerView, slidesPerViewMobile: carouselProductPerViewMobile, style: 2, paginationPosition: 'relative', evenHeightSlides: true, standalone: true, freemode: carouselFreemode, slidesGap: carouselSlidesGap -%}

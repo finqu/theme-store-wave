@@ -83,7 +83,7 @@ body {
 
 	.product-container {
 
-		.product-media-container {
+		.product-media-container:not(.product-card-grid-item .product-media-container) {
 			position: sticky;
 			top: var(--style-grid-gutter-width);
 
@@ -172,7 +172,7 @@ body {
 					letter-spacing: 0;
 				}
 
-				.product-name {
+				> .product-name {
 
 					.product-name-text {
 						@include font-size($font-size-base * 2);

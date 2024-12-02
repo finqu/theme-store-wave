@@ -15,8 +15,10 @@
 	- showPricing: {Boolean} Show product pricing
     - showRating: {Boolean} true | false
     - showNewBadge: {Boolean} Show new product badge
+    - showPromotionBadge: {Boolean} Show promotion product badge
     - showDiscountBadge: {Boolean} Show discount product badge
     - showOutOfStockBadge: {Boolean} Show out of stock product badge
+    - showBackorderBadge: {Boolean} Show backorder product badge
     - showAddToCart: {Boolean} Show add to cart
     - showStockBalance: {Boolean} Show stock balance
     - showVariants: {Boolean} Show product variants
@@ -79,7 +81,7 @@
 
                 <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-                    {%- render 'product-card-grid', product: product, productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showAddToCart: showAddToCart, showStockBalance: showStockBalance, showVariants: showVariants -%}
+                    {%- render 'product-card-grid', product: product, productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showPro showAddToCart: showAddToCart, showStockBalance: showStockBalance, showVariants: showVariants -%}
 
                 </div>
 
@@ -95,7 +97,7 @@
 
                 <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-                    {%- render 'product-card-grid', productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showAddToCart: showAddToCart, showStockBalance: showStockBalance, showVariants: showVariants -%}
+                    {%- render 'product-card-grid', productPerRow: carouselProductPerView, showProductName: showProductName, showManufacturer: showManufacturer,  showPricing: showPricing, showRating: showRating, showNewBadge: showNewBadge, showPromotionBadge: showPromotionBadge, showDiscountBadge: showDiscountBadge, showOutOfStockBadge: showOutOfStockBadge, showBackorderBadge: showBackorderBadge, showAddToCart: showAddToCart, showStockBalance: showStockBalance, showVariants: showVariants -%}
 
                 </div>
 

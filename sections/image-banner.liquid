@@ -19,35 +19,30 @@
     {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
 {%- endif -%}
 
-{%- if section.settings.textVerticalAlign == 'start' -%}
-    {%- assign textVerticalAlign = 'end' -%}
-{%- elsif section.settings.textVerticalAlign == 'center' -%}
-    {%- assign textVerticalAlign = 'center' -%}
-{%- elsif section.settings.textVerticalAlign == 'end' -%}
-    {%- assign textVerticalAlign = 'start' -%}
-{%- endif -%}
-
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} .section-content {
+        min-height: inherit;
         --style-grid-container-padding-y: var(--style-grid-container-padding-x);
+        --style-grid-gutter-width: 4rem;
+        --style-grid-gutter-width-mobile: 2rem;
         {%- render 'section-color-scheme' colorScheme: section.settings.colorScheme, customColor: section.settings.colorSchemeCustomColor -%}
     }
-    @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+    @media screen and (max-width: {{ settings.styleGridBreakpointLg }}) {
         #finqu-section-{{ section.id }} .section-content {
-            --style-grid-container-padding-x: 4rem;
+            --style-grid-gutter-width: var(--style-grid-gutter-width-mobile);
         }
     }
 {%- endcapture -%}
 
 <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
-{%- capture sectionContent -%}
+{%- capture sectionCustomContent -%}
 
-    <div class="d-flex align-items-{{ textVerticalAlign }} position-absolute top-0 start-0 w-100 h-100">
+    <div class="section-content justify-content-{{ section.settings.textVerticalAlign }}">
+    
+        <div class="container py-0 d-flex justify-content-{{ textHorizontalAlign }}">
 
-        <div class="container d-flex justify-content-{{ section.settings.textHorizontalAlign }}{% unless section.settings.sectionBgImg %} bg-content{% endunless %}">
-
-            <div class="text-container w-100 max-w-lg-60">
+            <div class="text-container w-100 max-w-lg-60 p-g">
                 
                 <div class="text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
@@ -77,7 +72,7 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionHeight, sectionMinHeightMobile: sectionHeightMobile, sectionBgContainer: 'fixed' %}
+{% render 'section', section: section, sectionCustomContent: sectionCustomContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionHeight, sectionMinHeightMobile: sectionHeightMobile, sectionBgContainer: 'fixed' %}
 
 {% schema %}
 {

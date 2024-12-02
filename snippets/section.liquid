@@ -290,11 +290,17 @@
         {%- endif -%}
          {%- if sectionBgContainer -%}
             {{ sectionHandle }} .section-bg {
-                top: var(--section-padding-top);
+				top: calc(var(--section-padding-top) / 2);
 				right: calc(var(--bs-gutter-x));
-				bottom: var(--section-padding-bottom);
+				bottom: calc(var(--section-padding-bottom) / 2);
 				left: calc(var(--bs-gutter-x));
-            }
+			}
+			@media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+				{{ sectionHandle }} .section-bg {
+					top: var(--section-padding-top);
+					bottom: var(--section-padding-bottom);
+				}
+			}
         {%- endif -%}
     {%- endcapture -%}
 

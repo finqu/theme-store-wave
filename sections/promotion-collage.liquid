@@ -899,7 +899,7 @@
                 }
             }
             {% if section.settings.sectionPaddingBottom == 0 %}
-                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
             {%- endif -%}
@@ -930,7 +930,7 @@
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
-        <div class="collage-grid rounded-image">
+        <div class="collage-grid collage-grid-compact rounded-image">
 
             {% for item in section.settings.setting_blocks.items %}
 
@@ -1072,7 +1072,7 @@
                 }
             }
             {% if section.settings.sectionPaddingBottom == 0 %}
-                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
             {%- endif -%}
@@ -1103,7 +1103,7 @@
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
-        <div class="collage-grid rounded-image">
+        <div class="collage-grid collage-grid-compact rounded-image">
 
             {%- assign aspectRatioClass = 'aspect-ratio-2-1' -%}
             {%- assign imgSizeSm = '430,220' -%}
@@ -1222,7 +1222,7 @@
                 }
             }
             {% if section.settings.sectionPaddingBottom == 0 %}
-                #finqu-section-{{ section.id }} + .section-promotion-collage {
+                #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
             {%- endif -%}
@@ -1253,7 +1253,7 @@
 
         <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
-        <div class="collage-grid rounded-image">
+        <div class="collage-grid collage-grid-compact rounded-image">
 
             {%- assign aspectRatioClass = 'aspect-ratio-1-1' -%}
             {%- assign imgSizeSm = '220,220' -%}

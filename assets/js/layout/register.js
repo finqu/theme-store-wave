@@ -2,16 +2,18 @@ export default function() {
     
     const containerEl = document.querySelector('.section-register');
     const registerCtaEl = containerEl.querySelector('#register-cta');
-    const checkInputEls = containerEl.querySelectorAll('.form-check-input');
+    const checkInputEls = containerEl.querySelectorAll('.form-check-input-required');
     
-    checkInputEls.forEach(el => { el.addEventListener('change', () => {
+    if (registerCtaEl && checkInputEls.length > 0) {
+        checkInputEls.forEach(el => { el.addEventListener('change', () => {
 
-        if ([...checkInputEls].every(el => el.checked)) {
-            registerCtaEl.disabled = false;
-        } else {
-            registerCtaEl.disabled = true;
-        }
-    })});
+            if ([...checkInputEls].every(inputEl => inputEl.checked)) {
+                registerCtaEl.disabled = false;
+            } else {
+                registerCtaEl.disabled = true;
+            }
+        })});
+    }
 
     const countrySelectEl = containerEl.querySelector('#register-country');
     const regionSelectEl = containerEl.querySelector('#register-region');

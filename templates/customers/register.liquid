@@ -254,7 +254,7 @@
 
                 <div class="mb-4 form-check">
 
-                    <input type="checkbox" name="terms_and_conditions" id="register-terms-conditions" class="form-check-input">
+                    <input type="checkbox" name="terms_and_conditions" id="register-terms-conditions" class="form-check-input form-check-input-required">  
 
                     <label for="register-terms-conditions" class="form-check-label">
 
@@ -274,7 +274,7 @@
 
                 <div class="mb-4 form-check">
 
-                    <input type="checkbox" name="privacy_policy" id="register-privacy-policy" class="form-check-input">
+                    <input type="checkbox" name="privacy_policy" id="register-privacy-policy" class="form-check-input form-check-input-required">
 
                     <label for="register-privacy-policy" class="form-check-label">
 
@@ -290,11 +290,41 @@
 
             {% endif %}
 
+            <div class="mb-4 form-check">
+
+                <input type="checkbox" name="accepts_marketing" id="register-accepts-marketing" class="form-check-input">
+
+                <label for="register-accepts-marketing" class="form-check-label">
+
+                    {{- 'account.marketing_agreement' | t -}}
+
+                </label>
+
+            </div>
+
+            {% if store.terms_and_conditions or store.privacy_policy %}
+                {%- assign hasRequiredChecks = true -%}
+            {% endif %}
+
+        {% else %}
+
+            <div class="mb-4 form-check">
+
+                <input type="checkbox" name="accepts_marketing" id="register-accepts-marketing" class="form-check-input">
+
+                <label for="register-accepts-marketing" class="form-check-label">
+
+                    {{- 'account.marketing_agreement' | t -}}
+
+                </label>
+
+            </div>
+
         {% endif %}
 
         {% render 'form-error', error: form.error, class: 'mb-4' %}
 
-        <button type="submit" id="register-cta" class="btn btn-primary d-block w-100"{% if settings.showPolicyAgreementAsText == false %} disabled{% endif %}>
+        <button type="submit" id="register-cta" class="btn btn-primary d-block w-100"{% if hasRequiredChecks %} disabled{% endif %}>
             {{- 'register.cta' | t -}}
         </button>
 

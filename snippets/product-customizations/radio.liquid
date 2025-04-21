@@ -1,3 +1,4 @@
+
 <div class="product-customization-container product-customization-radio mb-4{% if inline %} d-md-flex{% endif %}">
 
     {% if group.name %}
@@ -41,7 +42,7 @@
 
                     {{ option.title }}
 
-                    {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock and option.child_group == false and option.inventory_management %}
+                    {% if showCustomizationStockBalance and inventoryPolicy == 'deny' and isPreviewProduct == false and option.in_stock and option.child_group != true and option.inventory_management %}
 
                         ({{ option.stock }} {{ unit }})
 

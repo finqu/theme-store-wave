@@ -302,6 +302,11 @@ export default function() {
         const search = (siteSearchEl, siteSearchResultsEl, q) => {
 
             if (!q) {
+                const queryEl = siteSearchEl.querySelector('input[name="q"]');
+
+                if (queryEl) {
+                    queryEl.value = '';
+                }
 
                 siteSearchEl.classList.remove('active');
 
@@ -371,7 +376,9 @@ export default function() {
 
             if (siteSearchResetEl) {
 
-                siteSearchResetEl.addEventListener('click', () => {
+                siteSearchResetEl.addEventListener('click', (e) => {
+
+                    e.preventDefault();
 
                     if (!siteSearchQueryEl.value && siteHeaderSearchContainerEl.classList.contains('site-search-active')) {
 

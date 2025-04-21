@@ -631,9 +631,8 @@ export default function() {
                             const newFeaturedImgEls = newMediaPartialEl.querySelectorAll('.featured-img');
 
                             featuredImgEls?.forEach((el, i) => {
-
                                 if (el.parentElement.nodeName === 'PICTURE') {
-
+                                    
                                     const sourceEls = el.parentElement.querySelectorAll('source');
                                     const newSourceEls = newFeaturedImgEls[i]?.parentElement?.querySelectorAll('source') || [];
                                     
@@ -656,14 +655,21 @@ export default function() {
 
                                 } else if (newFeaturedImgEls[i]) {
 
-                                    el.src = newFeaturedImgEls[i].dataset.src;
-                                    el.srcset = newFeaturedImgEls[i].dataset.srcset;
-                                    el.dataset.src = newFeaturedImgEls[i].dataset.src;
-                                    el.dataset.srcset = newFeaturedImgEls[i].dataset.srcset;
+                                    el.src = newFeaturedImgEls[i].dataset.src || newFeaturedImgEls[i].src;
+                                    el.srcset = newFeaturedImgEls[i].dataset.srcset || newFeaturedImgEls[i].srcset;
+                                    el.dataset.src = newFeaturedImgEls[i].dataset.src || newFeaturedImgEls[i].src;
+                                    el.dataset.srcset = newFeaturedImgEls[i].dataset.srcset || newFeaturedImgEls[i].srcset;
                                 }
                             });
 
-                            containerEl.querySelector('.gallery')?.gallery?.update();
+                            productMainMediaSwiper?.update();
+                            productThumbMediaSwiper?.update();
+                            
+                            setTimeout(() => {
+                                productMainMediaSwiper?.updateSlides();
+                                productThumbMediaSwiper?.updateSlides();
+                                containerEl.querySelector('.gallery')?.gallery?.update();
+                            }, 50);
                         }
                     }
 

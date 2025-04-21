@@ -119,6 +119,28 @@
     {%- assign productUrl = url -%}
 {% endif %}
 
+{% if productUrl contains 'section=' %}
+    {% assign urlParts = productUrl | split: '?' %}
+    
+    {% if urlParts[1] %}
+        {% assign basePath = urlParts[0] %}
+        {% assign newUrl = basePath | append: '?' %}
+        {% assign queryParams = productUrl | query_params %}
+
+        {% for param in queryParams %}
+            {% if param[0] != 'section' %}
+                {% if forloop.first %}
+                    {% assign newUrl = newUrl | append: param[0] | append: '=' | append: param[1] %}
+                {% else %}
+                    {% assign newUrl = newUrl | append: '&' | append: param[0] | append: '=' | append: param[1] %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        
+        {% assign productUrl = newUrl %}
+    {% endif %}
+{% endif %}
+
 {%- unless product -%}
 
     {%- assign productName = 'placeholder.product' | t -%}

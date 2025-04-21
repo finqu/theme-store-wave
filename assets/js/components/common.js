@@ -513,6 +513,12 @@ export default {
 
                 sectionTabEl.classList.add('section-tab-active');
                 sectionTabContentEl.classList.add('section-tab-content-active');
+
+                if (window.theme && window.theme.aos) {
+                    setTimeout(() => {
+                        window.theme.aos.refresh();
+                    }, 50);
+                }
             }
         });
 

@@ -36,7 +36,6 @@ class Filters {
     }
     
     isMobileView(update = false) {
-
         if (this.mobileView === null || update === true) {
             this.mobileView = window.matchMedia(`(min-width: ${theme.utils.getCssVariable('--style-grid-breakpoint-lg')})`).matches ? false : true;
         }
@@ -58,9 +57,7 @@ class Filters {
     }
 
     initSliders() {
-
         this.rangeSliderEls.forEach(el => {
-
             const opts = el.dataset;
             const rangeSliderContainerEl = el.parentNode;
             const rangeFilterEl = rangeSliderContainerEl.parentNode;
@@ -87,9 +84,7 @@ class Filters {
             let initialized = false;
 
             rangeSlider.on('update', theme.utils.debounce((values, handle) => {
-
                 if (initialized) {
-
                     const value = parseInt(values[handle], 10);
 
                     if (handle === 0) {
@@ -183,7 +178,6 @@ class Filters {
     }
 
     disableFilters() {
-
         if (this.isProcessing()) {
             return;
         }
@@ -228,7 +222,6 @@ class Filters {
     }
     
     enableFilters() {
-
         if (this.isProcessing()) {
             return;
         }
@@ -273,7 +266,6 @@ class Filters {
     }
 
     render(scrollTop = false) {
-
         this.processing = true;
         this.dynamicContentEl.classList.add(`${this.prefix}-dynamic-content-loading`);
 
@@ -282,10 +274,10 @@ class Filters {
         fetch(this.pageUrl)
             .then((res) => res.text())
             .then((resText) => {
+                const pageUrl = new URL(this.pageUrl);
+                pageUrl.searchParams.delete('section');
 
-                this.pageUrl.searchParams.delete('section');
-
-                history.pushState({}, '', this.pageUrl);
+                history.pushState({}, '', pageUrl);
 
                 const dom = new DOMParser().parseFromString(resText, 'text/html');
                 const newDynamicContent = dom.querySelector(`.${this.prefix}-dynamic-content`);
@@ -298,7 +290,6 @@ class Filters {
                 }
 
                 if (this.mobileNavigationCtaEl) {
-
                     const itemCount = itemCountEl ? itemCountEl.getAttribute(`data-${this.prefix}-items-count`) : '0';
 
                     if (itemCount == 1) {
@@ -330,7 +321,6 @@ class Filters {
     }
 
     sortBy(type) {
-
         if (this.isProcessing()) {
             return;
         }
@@ -340,7 +330,6 @@ class Filters {
     }
 
     navigate(url) {
-        
         if (this.isProcessing() || !url) {
             return;
         }
@@ -350,13 +339,11 @@ class Filters {
     }
 
     remove(id) {
-
         if (this.isProcessing()) {
             return;
         }
 
         this.containerEl.querySelectorAll(`.input-${id}`).forEach(el => {
-
             if (el.type === 'checkbox' || el.type === 'radio') {
 
                 el.checked = false;
@@ -372,7 +359,6 @@ class Filters {
                 el.value = '';
 
                 if (sliderEl && sliderEl.noUiSlider) {
-                    
                     const opts = sliderEl.dataset;
                     const rangeSliderMinTextEl = sliderEl.closest('.range-filter').querySelector('[data-range-slider-min-text]');
                     const rangeSliderMaxTextEl = sliderEl.closest('.range-filter').querySelector('[data-range-slider-max-text]');
@@ -431,7 +417,6 @@ class Filters {
         });
 
         this.containerEl.querySelectorAll(`.input-mobile-${id}`).forEach(el => {
-
             if (el.type === 'checkbox' || el.type === 'radio') {
 
                 el.checked = false;
@@ -518,13 +503,11 @@ class Filters {
     }
 
     reset() {
-        
         if (this.isProcessing()) {
             return;
         }
 
         this.filterInputEls.forEach(el => {
-
             if (el.type === 'checkbox' || el.type === 'radio') {
 
                 el.checked = false;
@@ -540,7 +523,6 @@ class Filters {
                 el.value = '';
 
                 if (sliderEl && sliderEl.noUiSlider) {
-
                     const opts = sliderEl.dataset;
                     const rangeSliderMinTextEl = sliderEl.closest('.range-filter').querySelector('[data-range-slider-min-text]');
                     const rangeSliderMaxTextEl = sliderEl.closest('.range-filter').querySelector('[data-range-slider-max-text]');
@@ -611,7 +593,6 @@ class Filters {
     }
 
     apply() {
-
         if (this.isProcessing()) {
             return;
         }
@@ -619,6 +600,7 @@ class Filters {
         const query = this.pageUrl.searchParams.get('q');
         const pageId = this.pageUrl.searchParams.get('page');
         const sortBy = this.pageUrl.searchParams.get('sort-by');
+        const section = this.pageUrl.searchParams.get('section');
         const formData = this.filtersFormEl ? new FormData(this.filtersFormEl) : null;
         const searchParams = new URLSearchParams(formData);
 
@@ -634,15 +616,17 @@ class Filters {
             searchParams.append('sort-by', sortBy);
         }
 
+        if (section) {
+            searchParams.append('section', section);
+        }
+
         this.pageUrl.search = searchParams.toString();
 
         this.render();
     }
 
     show() {
-
         if (this.isMobileView()) {
-
             this.containerEl.querySelector('.section-inner').style.zIndex = 10;
 
             this.mobileNavigationContainerEl.classList.add('filters-mobile-navigation-visible');
@@ -653,9 +637,7 @@ class Filters {
     }
 
     hide() {
-
         if (this.isMobileView()) {
-
             this.mobileNavigationContainerEl.classList.remove('filters-mobile-navigation-active');
             
             document.body.classList.remove('disable-scroll');
@@ -665,7 +647,6 @@ class Filters {
     }
 
     bindEvents() {
-
         let isMobileViewPreviousValue = this.isMobileView();
 
         const getTargetEl = (selector, e) => {
@@ -673,7 +654,6 @@ class Filters {
         };
 
         const actionHandler = (e) => {
-
             if (getTargetEl(`.${this.prefix}-filter-dropdown`, e)) {
                 e.stopPropagation();
             }
@@ -687,18 +667,14 @@ class Filters {
             const paginateItemPreviousEl = getTargetEl('.paginate-item-previous', e);
 
             if (paginateItemPreviousEl) {
-
                 e.preventDefault();
-                
                 return this.navigate(paginateItemPreviousEl.getAttribute('href'));
             }
 
             const paginateItemNextEl = getTargetEl('.paginate-item-next', e);
 
             if (paginateItemNextEl) {
-
                 e.preventDefault();
-                
                 return this.navigate(paginateItemNextEl.getAttribute('href'));
             }
 
@@ -740,20 +716,15 @@ class Filters {
         document.addEventListener('click', actionHandler);
 
         document.addEventListener('input', e => {
-
             if (this.filterInputEls.length && [...this.filterInputEls].some(el => el === e.target)) {
-
                 e.preventDefault();
-
                 return this.apply();
             }
         });
 
         if (this.mobileNavigationContainerEl) {
             this.mobileNavigationContainerEl.addEventListener('transitionend', e => {
-
                 e.preventDefault();
-
                 if (!this.mobileNavigationContainerEl.classList.contains('filters-mobile-navigation-active')) {
                     this.mobileNavigationContainerEl.classList.remove('filters-mobile-navigation-visible');
                 }
@@ -761,15 +732,11 @@ class Filters {
         }
 
         window.addEventListener('resize', () => {
-
             requestAnimationFrame(theme.utils.debounce(() => {
-
                 if (this.isMobileView(true) !== isMobileViewPreviousValue) {
                     this.initSelectors();
                 }
-
                 isMobileViewPreviousValue = this.isMobileView();
-
             }, 300));
         });
     }

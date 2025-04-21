@@ -3,6 +3,9 @@
 
 	Accepts:
 	- items: {Array} Bundle contents to show (Required)
+    - productPerView: {Number} Number of products to show per view (Optional)
+    - productPerViewMobile: {Number} Number of products to show per view on mobile (Optional)
+    - slidesGap: {Number} Gap between slides (Optional)
     - sectionHandle: {String} Section handle
 
 	Usage:
@@ -10,13 +13,13 @@
 {% endcomment %}
 
 {%- assign carouselProducts = items -%}
-{%- assign carouselProductPerView = 5 -%}
-{%- assign carouselProductPerViewMobile = 4 -%}
+{%- assign carouselProductPerView = productPerView | default: 5 -%}
+{%- assign carouselProductPerViewMobile = productPerViewMobile | default: 4 -%}
 {%- assign carouselSlidesPerView = carouselProductPerView -%}
 {%- assign carouselFreemode = false -%}
 {%- assign carouselPagination = false -%}
 {%- assign carouselNavigation = 'on' -%}
-{%- assign carouselSlidesGap = 40 -%}
+{%- assign carouselSlidesGap = slidesGap | default: 40 -%}
 
 {%- if carouselProducts -%}
     {%- assign carouselProductAmount = carouselProducts.size -%}

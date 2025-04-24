@@ -597,7 +597,9 @@ export default function() {
 
                             productMediaCollageItemsEl?.prepend(newMediaPartialEl.querySelectorAll('.product-media-collage-item')[0]);
 
-                            containerEl.querySelector('.gallery')?.gallery?.update();
+                            containerEl.querySelectorAll('.gallery').forEach(galleryEl => {
+                                galleryEl?.gallery?.update();
+                            });
 
                         } else if (currentVariant.hasImage && !variant.hasImage) {
 
@@ -623,51 +625,48 @@ export default function() {
 
                             productMediaCollageItemsEl?.querySelectorAll('.product-media-collage-item')[0].remove();
 
-                            containerEl.querySelector('.gallery')?.gallery?.update();
+                            containerEl.querySelectorAll('.gallery').forEach(galleryEl => {
+                                galleryEl?.gallery?.update();
+                            });
 
                         } else if (currentVariant.hasImage && variant.hasImage) {
-                            const firstCurrentImg = mediaPartialEl.querySelector('.featured-img');
-                            const firstNewImg = newMediaPartialEl.querySelector('.featured-img');
-                            const currentImgSrc = firstCurrentImg?.src?.split('?')[0];
-                            const newImgSrc = firstNewImg?.src?.split('?')[0];
                             
-                            if (currentImgSrc !== newImgSrc) {
-                                const currentMainIndex = productMainMediaSwiper?.activeIndex || 0;
-                                const mainSlidesContainer = containerEl.querySelector('#product-main-media-swiper .swiper-wrapper');
-                                const thumbSlidesContainer = containerEl.querySelector('#product-thumb-media-swiper .swiper-wrapper');
-                                const newMainSlides = newMediaPartialEl.querySelectorAll('#product-main-media-swiper .swiper-slide');
-                                const newThumbSlides = newMediaPartialEl.querySelectorAll('#product-thumb-media-swiper .swiper-slide');
-                                
-                                if (mainSlidesContainer && newMainSlides.length) {
-                                    mainSlidesContainer.innerHTML = '';
-                                    newMainSlides.forEach(slide => {
-                                        mainSlidesContainer.appendChild(slide.cloneNode(true));
+                            const featuredImgEls = mediaPartialEl.querySelectorAll('.featured-img');
+                            const newFeaturedImgEls = newMediaPartialEl.querySelectorAll('.featured-img');
+
+                            featuredImgEls?.forEach((el, featuredIndex) => {
+                                if (el.parentElement.nodeName === 'PICTURE') {
+
+                                    const sourceEls = el.parentElement.querySelectorAll('source');
+                                    const newSourceEls = newFeaturedImgEls[featuredIndex]?.parentElement?.querySelectorAll('source') || [];
+                                    
+                                    sourceEls?.forEach((el, sourceIndex) => {
+                                        if (newSourceEls[sourceIndex]) {
+                                            el.srcset = newSourceEls[sourceIndex].srcset;
+                                            el.dataset.srcset = newSourceEls[sourceIndex].dataset.srcset;
+                                        }
                                     });
+
+                                    if (newFeaturedImgEls[featuredIndex]) {
+                                        el.src = newFeaturedImgEls[featuredIndex].src;
+
+                                        if (el.dataset.galleryImgSrc) {
+                                            el.dataset.galleryImgSrc = newFeaturedImgEls[featuredIndex].dataset.galleryImgSrc;
+                                        }
+                                    }
+
+                                } else if (newFeaturedImgEls[featuredIndex]) {
+
+                                    el.src = newFeaturedImgEls[featuredIndex].dataset.src;
+                                    el.srcset = newFeaturedImgEls[featuredIndex].dataset.srcset;
+                                    el.dataset.src = newFeaturedImgEls[featuredIndex].dataset.src;
+                                    el.dataset.srcset = newFeaturedImgEls[featuredIndex].dataset.srcset;
                                 }
-                                
-                                if (thumbSlidesContainer && newThumbSlides.length) {
-                                    thumbSlidesContainer.innerHTML = '';
-                                    newThumbSlides.forEach(slide => {
-                                        thumbSlidesContainer.appendChild(slide.cloneNode(true));
-                                    });
-                                }
-                                
-                                setTimeout(() => {
-                                    productMainMediaSwiper?.update();
-                                    productThumbMediaSwiper?.update();
-                                    
-                                    productMainMediaSwiper?.slideTo(currentMainIndex, 0, false);
-                                    
-                                    containerEl.querySelectorAll('#product-thumb-media-swiper .swiper-slide').forEach((el, index) => { 
-                                        el.removeEventListener('mouseover', thumbHoverHandler);
-                                        el.addEventListener('mouseover', thumbHoverHandler.bind(null, index));
-                                    });
-                                    
-                                    setTimeout(() => {
-                                        containerEl.querySelector('.gallery')?.gallery?.update();
-                                    }, 50);
-                                }, 50);
-                            }
+                            });
+
+                            containerEl.querySelectorAll('.gallery').forEach(galleryEl => {
+                                galleryEl?.gallery?.update();
+                            });
                         }
                     }
 

@@ -1,0 +1,28 @@
+{% comment %}
+	Renders one article carousel slide card via article-list-item (product-list parity).
+
+	Accepts:
+	- article: {Object} Article Liquid object (optional; nil in design-mode placeholders)
+	- article_per_row: {Number|String} Image size breakpoint context (default: 3)
+	- aspect_ratio: {String} Optional media aspect ratio override for this slide
+	- article_list_block_id: {String} article-list-item block id (default: section-article-card)
+	- section: {Object} Section Liquid object (required for `{% block %}` config lookup)
+
+	Usage:
+	{% render 'article-carousel-card', article: article, article_per_row: 3, aspect_ratio: aspectRatio, section: section %}
+{% endcomment %}
+
+{%- assign articleListBlockId = article_list_block_id | default: 'section-article-card' -%}
+{%- assign articlePerRow = article_per_row | default: 3 -%}
+
+{%- if aspect_ratio != blank -%}
+	{%- assign article_media_aspect_ratio = aspect_ratio -%}
+{%- else -%}
+	{%- assign article_media_aspect_ratio = nil -%}
+{%- endif -%}
+
+<div class="article-card-grid-item section-highlight-item">
+
+	{% block 'article-list-item' id:articleListBlockId %}
+
+</div>

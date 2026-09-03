@@ -1,0 +1,856 @@
+
+{%- assign maxVisibleSwatches = block.settings.maxVisibleSwatches | default: 5 -%}
+
+{%- if block.settings.displayMode == 'selected' -%}
+    {%- assign showOnlySelectedOptions = true -%}
+{%- else -%}
+    {%- assign showOnlySelectedOptions = showOnlySelectedOptions | default: false -%}
+{%- endif -%}
+
+{%- assign showOverflowCount = block.settings.showOverflowCount | default: true -%}
+
+{%- if block.settings.overrideVariantSettings -%}
+    {%- assign variantOption1TaxonomyType = block.settings.variantOption1TaxonomyType -%}
+    {%- assign variantOption2TaxonomyType = block.settings.variantOption2TaxonomyType -%}
+    {%- assign variantOption3TaxonomyType = block.settings.variantOption3TaxonomyType -%}
+    {%- assign variantOptionAsImage = block.settings.variantOptionAsImage -%}
+    {%- assign showVariantImgsOnHover = block.settings.showHoverImages == 'on' -%}
+    {%- assign imageAspectRatio = block.settings.imageAspectRatio -%}
+{%- else -%}
+    {%- assign variantOption1TaxonomyType = settings.productShowVariantOption1TaxonomyType -%}
+    {%- assign variantOption2TaxonomyType = settings.productShowVariantOption2TaxonomyType -%}
+    {%- assign variantOption3TaxonomyType = settings.productShowVariantOption3TaxonomyType -%}
+    {%- assign variantOptionAsImage = settings.productShowVariantOptionTaxonomyTypeAsImage -%}
+    {%- assign showVariantImgsOnHover = settings.productShowVariantImgsOnHover -%}
+    {%- assign imageAspectRatio = settings.productImageAspectRatio -%}
+{%- endif -%}
+
+{%- if product and product.options_with_values.size -%}
+
+            {% if showOnlySelectedOptions %}
+
+                {% assign variantsWithTaxonomyArr = product.options_with_values | where: 'taxonomy_attribute' %}
+                {% assign visibleOptionsCount = 1 %}
+
+                {% if variantOption2TaxonomyType %}
+                    {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+                {% endif %}
+
+                {% if variantOption3TaxonomyType %}
+                    {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+                {% endif %}
+
+                {% capture variantsTemplate %}
+
+                    {% for num in (1..visibleOptionsCount) %}
+
+                        {%- assign option = nil -%}
+
+                        {%- case forloop.index -%}
+                            {% when 1 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption1TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            {% when 2 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption2TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            {% when 3 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption3TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                        {%- endcase -%}
+
+                        {% unless option %}
+                            {%- continue -%}
+                        {% endunless %}
+
+                        {% if option.taxonomy_attribute.type == 'color' %}
+
+                            <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap justify-content-auto">
+
+                                {%- capture swatchColor -%}
+                                    {%- if option.selected_value.taxonomy_value.colors.size == 1 -%}
+                                        {{- option.selected_value.taxonomy_value.colors[0] -}}
+                                    {%- elsif option.selected_value.taxonomy_value.colors.size == 2 -%}
+                                        linear-gradient(45deg, {{ option.selected_value.taxonomy_value.colors[0] }} 50%, {{ option.selected_value.taxonomy_value.colors[1] }} 50%)
+                                    {%- elsif option.selected_value.taxonomy_value.colors.size == 3 -%}
+                                        linear-gradient(45deg, {{ option.selected_value.taxonomy_value.colors[0] }} 33.33333333%, {{ option.selected_value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ option.selected_value.taxonomy_value.colors[2] }} 66.66666666%)
+                                    {%- endif -%}
+                                {%- endcapture -%}
+
+                                <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs{% if option.selected_value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif option.selected_value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                    <input class="form-check-input" type="hidden">
+
+                                    <label class="form-check-label"></label>
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="d-flex flex-wrap justify-content-auto gap-1">
+
+                                <small>{{ option.selected_value.title }}</small>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endcapture %}
+
+                {% if variantsTemplate %}
+
+                    <div class="product-variants">
+
+                        {{- variantsTemplate -}}
+
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+
+                {% assign variantsAvailableArr = product.variants | map: 'is_available' %}
+                {% assign variantsOption1Arr = product.variants | map: 'option1' %}
+                {% assign variantsOption2Arr = product.variants | map: 'option2' %}
+                {% assign variantsOption3Arr = product.variants | map: 'option3' %}
+                {% assign variantsHasImage = product.variants | where: 'image' | compact %}
+                {% assign variantsWithTaxonomyArr = product.options_with_values | where: 'taxonomy_attribute' %}
+                {% assign visibleOptionsCount = 1 %}
+
+                {% if variantOption2TaxonomyType %}
+                    {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+                {% endif %}
+
+                {% if variantOption3TaxonomyType %}
+                    {% assign visibleOptionsCount = visibleOptionsCount | plus: 1 %}
+                {% endif %}
+
+                {% capture variantsTemplate %}
+
+                    {% for num in (1..visibleOptionsCount) %}
+
+                        {%- assign option = nil -%}
+
+                        {%- case forloop.index -%}
+                            {% when 1 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption1TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            {% when 2 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption2TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            {% when 3 %}
+                                {%- for item in variantsWithTaxonomyArr -%}
+                                    {%- if item.taxonomy_attribute.type == variantOption3TaxonomyType -%}
+                                        {%- assign option = item -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+                                {%- endfor -%}
+                        {%- endcase -%}
+
+                        {% unless option %}
+                            {%- continue -%}
+                        {% endunless %}
+
+                        {% if option.taxonomy_attribute.type == 'color' %}
+
+                            <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap justify-content-auto">
+
+                                {%- assign colorCount = 0 -%}
+
+                                {% for value in option.values %}
+
+                                    {%- assign optionDisabled = true -%}
+
+                                    {%- for option1 in variantsOption1Arr -%}
+
+                                        {%- case colorOptionPosition -%}
+                                            {%- when 1 -%}
+                                                {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {%- assign optionDisabled = false -%}
+                                                {%- endif -%}
+                                            {%- when 2 -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                            {%- when 3 -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                        {%- endcase -%}
+
+                                    {%- endfor -%}
+
+                                    {%- unless value.taxonomy_value.colors or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor or optionDisabled -%}
+                                        {%- continue -%}
+                                    {%- endunless -%}
+
+                                    {%- capture swatchColor -%}
+                                        {%- if value.taxonomy_value.colors.size == 1 -%}
+                                            {{- value.taxonomy_value.colors[0] -}}
+                                        {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                            linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                        {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                            linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                        {%- endif -%}
+                                    {%- endcapture -%}
+
+                                    <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                        <input class="form-check-input"
+                                            type="hidden"
+                                            name="product-variant-img"
+                                            value="{{ value.image }}"
+                                            readonly>
+
+                                        <label class="form-check-label"></label>
+
+                                    </div>
+
+                                    {%- assign colorCount = colorCount | plus: 1 -%}
+
+                                    {%- if colorCount == maxVisibleSwatches and option.values.size > maxVisibleSwatches -%}
+                                        {%- break -%}
+                                    {%- endif -%}
+
+                                {% endfor %}
+
+                                {% if showOverflowCount and colorCount < option.values.size and option.values.size > maxVisibleSwatches %}
+                                    <small class="lh-1">+{{ option.values.size | minus: colorCount }}</small>
+                                {% endif %}
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="d-flex flex-wrap justify-content-auto gap-1">
+
+                                {% for value in option.values %}
+
+                                    {%- assign optionDisabled = true -%}
+
+                                    {%- for option1 in variantsOption1Arr -%}
+
+                                        {%- case sizeOptionPosition -%}
+                                            {%- when 1 -%}
+                                                {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {%- assign optionDisabled = false -%}
+                                                {%- endif -%}
+                                            {%- when 2 -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                            {%- when 3 -%}
+                                                {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                    {% assign optionDisabled = false %}
+                                                {%- endif -%}
+                                        {%- endcase -%}
+
+                                    {%- endfor -%}
+
+                                    {%- unless optionDisabled -%}
+                                        {%- continue -%}
+                                    {%- endunless -%}
+
+                                    <small>{{ value.title }}</small>
+
+                                    {% if forloop.index == maxVisibleSwatches and option.values.size > maxVisibleSwatches %}
+                                        {% break %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if showOverflowCount and option.values.size > maxVisibleSwatches %}
+                                    <small>+{{ option.values.size | minus: maxVisibleSwatches }}</small>
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endcapture %}
+
+                {% if variantsTemplate %}
+
+                    <div class="product-variants">
+
+                        {{- variantsTemplate -}}
+
+                    </div>
+
+                {% endif %}
+
+                {% if variantsHasImage and variantOptionAsImage and showVariantImgsOnHover %} 
+
+                    {% capture variantsHoverTemplate %}
+
+                        {% for num in (1..visibleOptionsCount) %}
+
+                            {%- assign option = nil -%}
+
+                            {%- case forloop.index -%}
+                                {% when 1 %}
+                                    {%- for item in variantsWithTaxonomyArr -%}
+                                        {%- if item.taxonomy_attribute.type == variantOption1TaxonomyType -%}
+                                            {%- assign option = item -%}
+                                            {%- break -%}
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                {% when 2 %}
+                                    {%- for item in variantsWithTaxonomyArr -%}
+                                        {%- if item.taxonomy_attribute.type == variantOption2TaxonomyType -%}
+                                            {%- assign option = item -%}
+                                            {%- break -%}
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                {% when 3 %}
+                                    {%- for item in variantsWithTaxonomyArr -%}
+                                        {%- if item.taxonomy_attribute.type == variantOption3TaxonomyType -%}
+                                            {%- assign option = item -%}
+                                            {%- break -%}
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                            {%- endcase -%}
+
+                            {% unless option %}
+                                {%- continue -%}
+                            {% endunless %}
+
+                            {% if option.taxonomy_attribute.type == variantOptionAsImage %}
+
+                                {% assign optionValuesWithImg = option.values | where: 'image' %}
+
+                                <div class="form-check-imgs-container">
+
+                                    {% for value in optionValuesWithImg %}
+
+                                        {%- assign optionDisabled = true -%}
+
+                                        {%- for option1 in variantsOption1Arr -%}
+
+                                            {%- case sizeOptionPosition -%}
+                                                {%- when 1 -%}
+                                                    {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {%- assign optionDisabled = false -%}
+                                                    {%- endif -%}
+                                                {%- when 2 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                                {%- when 3 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                            {%- endcase -%}
+
+                                        {%- endfor -%}
+
+                                        {%- unless optionDisabled -%}
+                                            {%- continue -%}
+                                        {%- endunless -%}
+
+                                        <div class="form-check-img form-check-img-simple">
+
+                                            <input class="form-check-input"
+                                                type="hidden"
+                                                name="product-variant-img"
+                                                value="{{ value.image }}"
+                                                readonly>
+
+                                            <label class="form-check-label w-px-30" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ value.title }}">
+
+                                                <div class="aspect-ratio-product">
+
+                                                    <div class="aspect-ratio-container">
+
+                                                        {% if value.image %}
+
+                                                            {% if imageAspectRatio == '9:13' %}
+                                                                {%- assign imgSize = '40,58' -%}
+                                                            {% elsif imageAspectRatio == '4:3' %}
+                                                                {%- assign imgSize = '40,30' -%}
+                                                            {% elsif imageAspectRatio == '3:4' %}
+                                                                {%- assign imgSize = '40,53' -%}
+                                                            {% elsif imageAspectRatio == '1:1' %}
+                                                                {%- assign imgSize = '40,40' -%}
+                                                            {% endif %}
+
+                                                            <picture>
+                                                                <img
+                                                                    alt="{{ value.title }}"
+                                                                    src="{{ value.image | thumb: imgSize }}"
+                                                                    srcset="{{ value.image | thumb: imgSize }} 1x, {{ value.image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                                                    loading="lazy"
+                                                                    class="d-block mx-auto img-fluid aspect-ratio-item">
+                                                            </picture>
+
+                                                        {% else %}
+
+                                                            {%- capture imgSrc -%}
+                                                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                            {%- endcapture -%}
+
+                                                            <img
+                                                                alt="{{ value.title }}"
+                                                                src="{{ imgSrc }}"
+                                                                class="d-block mx-auto img-fluid aspect-ratio-item svg-placeholder">
+
+                                                        {% endif %}
+
+                                                    </div>
+
+                                                </div>
+
+                                            </label>
+
+                                        </div>
+
+                                        {% if forloop.index == maxVisibleSwatches and option.values.size > maxVisibleSwatches %}
+                                            {% break %}
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if showOverflowCount and optionValuesWithImg.size < option.values.size and option.values.size > maxVisibleSwatches %}
+                                        <small class="lh-1">+{{ option.values.size | minus: optionValuesWithImg.size }}</small>
+                                    {% endif %}
+
+                                </div>
+
+                            {% elsif option.taxonomy_attribute.type == 'color' %}
+
+                                {%- assign colorCount = 0 -%}
+
+                                <div class="form-check-color-swatches-container form-check-color-swatches-no-wrap">
+
+                                    {% for value in option.values %}
+
+                                        {%- unless value.taxonomy_value.colors or value.taxonomy_value.is_transparent or value.taxonomy_value.is_multicolor -%}
+                                            {%- continue -%}
+                                        {%- endunless -%}
+
+                                        {%- assign optionDisabled = true -%}
+
+                                        {%- for option1 in variantsOption1Arr -%}
+
+                                            {%- case colorOptionPosition -%}
+                                                {%- when 1 -%}
+                                                    {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {%- assign optionDisabled = false -%}
+                                                    {%- endif -%}
+                                                {%- when 2 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                                {%- when 3 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                            {%- endcase -%}
+
+                                        {%- endfor -%}
+
+                                        {%- unless optionDisabled -%}
+                                            {%- continue -%}
+                                        {%- endunless -%}
+
+                                        {%- capture swatchColor -%}
+                                            {%- if value.taxonomy_value.colors.size == 1 -%}
+                                                {{- value.taxonomy_value.colors[0] -}}
+                                            {%- elsif value.taxonomy_value.colors.size == 2 -%}
+                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 50%, {{ value.taxonomy_value.colors[1] }} 50%)
+                                            {%- elsif value.taxonomy_value.colors.size == 3 -%}
+                                                linear-gradient(45deg, {{ value.taxonomy_value.colors[0] }} 33.33333333%, {{ value.taxonomy_value.colors[1] }} 33.33333333% 66.66666666%, {{ value.taxonomy_value.colors[2] }} 66.66666666%)
+                                            {%- endif -%}
+                                        {%- endcapture -%}
+
+                                        <div class="form-check-color-swatch form-check-color-swatch-inline form-check-color-swatch-xs{% if value.taxonomy_value.is_transparent %} form-check-color-swatch-transparent{% elsif value.taxonomy_value.is_multicolor %} form-check-color-swatch-multicolor{% endif %}"{% if swatchColor %} style="--swatch-color: {{ swatchColor | strip }}"{% endif %}>
+
+                                            <input class="form-check-input"
+                                                type="hidden"
+                                                name="product-variant-img"
+                                                value="{{ value.image }}"
+                                                readonly>
+
+                                            <label class="form-check-label"></label>
+
+                                        </div>
+
+                                        {%- assign colorCount = colorCount | plus: 1 -%}
+
+                                        {%- if colorCount == maxVisibleSwatches and option.values.size > maxVisibleSwatches -%}
+                                            {%- break -%}
+                                        {%- endif -%}
+
+                                    {% endfor %}
+
+                                    {% if showOverflowCount and colorCount < option.values.size and option.values.size > maxVisibleSwatches %}
+                                        <small class="lh-1">+{{ option.values.size | minus: colorCount }}</small>
+                                    {% endif %}
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="d-flex flex-wrap justify-content-auto gap-1">
+
+                                    {% for value in option.values %}
+
+                                        {%- assign optionDisabled = true -%}
+
+                                        {%- for option1 in variantsOption1Arr -%}
+
+                                            {%- case sizeOptionPosition -%}
+                                                {%- when 1 -%}
+                                                    {%- if variantsOption1Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {%- assign optionDisabled = false -%}
+                                                    {%- endif -%}
+                                                {%- when 2 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                                {%- when 3 -%}
+                                                    {%- if option1.value == product.default_or_selected_variant.option1.value and variantsOption2Arr[forloop.index0].value == product.default_or_selected_variant.option2.value and variantsOption3Arr[forloop.index0].value == value and variantsAvailableArr[forloop.index0] -%}
+                                                        {% assign optionDisabled = false %}
+                                                    {%- endif -%}
+                                            {%- endcase -%}
+
+                                        {%- endfor -%}
+
+                                        {%- unless optionDisabled -%}
+                                            {%- continue -%}
+                                        {%- endunless -%}
+
+                                        <small>{{ value.title }}</small>
+
+                                        {% if forloop.index == maxVisibleSwatches and option.values.size > maxVisibleSwatches %}
+                                            {% break %}
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if showOverflowCount and option.values.size > maxVisibleSwatches %}
+                                        <small>+{{ option.values.size | minus: maxVisibleSwatches }}</small>
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endcapture %}
+
+                    {% if variantsHoverTemplate %}
+
+                        <div class="product-variants-hover">
+
+                            {{- variantsHoverTemplate -}}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endif %}
+
+            {% endif %}
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-variants.name",
+    "tag": "div",
+    "class": "block block-product-variants",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:blocks.product-variants.groups.options.title",
+                "settings": [
+                    {
+                        "default": false,
+                        "id": "overrideVariantSettings",
+                        "label": "t:blocks.product-variants.settings.overrideVariantSettings.label",
+                        "type": "checkbox"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq false"
+                        ],
+                        "subheading": "t:all.settings.overrideThemeDefaults.info",
+                        "type": "heading"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true"
+                        ],
+                        "default": "color",
+                        "id": "variantOption1TaxonomyType",
+                        "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.color.label",
+                                "value": "color"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.size.label",
+                                "value": "size"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.material.label",
+                                "value": "material"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.style.label",
+                                "value": "style"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.flavor.label",
+                                "value": "flavor"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption1TaxonomyType.options.pattern.label",
+                                "value": "pattern"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true",
+                            "!variantOption1TaxonomyType eq false"
+                        ],
+                        "default": "size",
+                        "id": "variantOption2TaxonomyType",
+                        "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.false.label",
+                                "value": false
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.color.label",
+                                "value": "color"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.size.label",
+                                "value": "size"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.material.label",
+                                "value": "material"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.style.label",
+                                "value": "style"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.flavor.label",
+                                "value": "flavor"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption2TaxonomyType.options.pattern.label",
+                                "value": "pattern"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true",
+                            "!variantOption1TaxonomyType eq false",
+                            "!variantOption2TaxonomyType eq false"
+                        ],
+                        "default": false,
+                        "id": "variantOption3TaxonomyType",
+                        "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.false.label",
+                                "value": false
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.color.label",
+                                "value": "color"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.size.label",
+                                "value": "size"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.material.label",
+                                "value": "material"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.style.label",
+                                "value": "style"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.flavor.label",
+                                "value": "flavor"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOption3TaxonomyType.options.pattern.label",
+                                "value": "pattern"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true"
+                        ],
+                        "default": false,
+                        "id": "variantOptionAsImage",
+                        "label": "t:blocks.product-variants.settings.variantOptionAsImage.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.false.label",
+                                "value": false
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.color.label",
+                                "value": "color"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.size.label",
+                                "value": "size"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.material.label",
+                                "value": "material"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.style.label",
+                                "value": "style"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.flavor.label",
+                                "value": "flavor"
+                            },
+                            {
+                                "label": "t:blocks.product-variants.settings.variantOptionAsImage.options.pattern.label",
+                                "value": "pattern"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true",
+                            "!variantOptionAsImage eq false"
+                        ],
+                        "default": "1:1",
+                        "id": "imageAspectRatio",
+                        "label": "t:all.settings.imageAspectRatio.label",
+                        "options": [
+                            {
+                                "label": "9:13",
+                                "value": "9:13"
+                            },
+                            {
+                                "label": "4:3",
+                                "value": "4:3"
+                            },
+                            {
+                                "label": "3:4",
+                                "value": "3:4"
+                            },
+                            {
+                                "label": "1:1",
+                                "value": "1:1"
+                            }
+                        ],
+                        "type": "select"
+                    }
+                ],
+                "id": "options"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "maxVisibleSwatches",
+                        "type": "range",
+                        "label": "t:blocks.product-variants.settings.maxVisibleSwatches.label",
+                        "min": 3,
+                        "max": 8,
+                        "step": 1,
+                        "default": "5"
+                    },
+                    {
+                        "id": "displayMode",
+                        "type": "radio-pill",
+                        "label": "t:blocks.product-variants.settings.displayMode.label",
+                        "default": "all",
+                        "options": [
+                            {
+                                "value": "all",
+                                "label": "t:blocks.product-variants.settings.displayMode.options.all.label"
+                            },
+                            {
+                                "value": "selected",
+                                "label": "t:blocks.product-variants.settings.displayMode.options.selected.label"
+                            }
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            "overrideVariantSettings eq true",
+                            "!variantOptionAsImage eq false"
+                        ],
+                        "default": "off",
+                        "id": "showHoverImages",
+                        "label": "t:blocks.product-variants.settings.showHoverImages.label",
+                        "type": "select",
+                        "options": [
+                            {
+                                "value": "on",
+                                "label": "t:blocks.product-variants.settings.showHoverImages.options.on.label"
+                            },
+                            {
+                                "value": "off",
+                                "label": "t:blocks.product-variants.settings.showHoverImages.options.off.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "showOverflowCount",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-variants.settings.showOverflowCount.label",
+                        "default": true
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

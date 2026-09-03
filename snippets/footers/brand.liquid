@@ -1,0 +1,34 @@
+{% comment %}
+    Optional footer logo or store name.
+
+    Accepts:
+    - section: {Object}
+{% endcomment %}
+
+{%- if section.settings.footerLogoStatus -%}
+
+    <div class="site-footer-brand">
+
+        {% if section.settings.footerLogoImg %}
+
+            {%- assign imgSize = '140,70' -%}
+
+            <picture>
+                <img
+                    alt=""
+                    data-src="{{ section.settings.footerLogoImg | thumb: imgSize }}"
+                    data-srcset="{{ section.settings.footerLogoImg | thumb: imgSize }} 1x, {{ section.settings.footerLogoImg | thumb: imgSize | thumb:'@2x' }} 2x"
+                    class="lazy d-block img-fluid">
+            </picture>
+
+        {% else %}
+
+            <span class="h2 mb-0 d-block text-title">
+                {{- store.name -}}
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{%- endif -%}

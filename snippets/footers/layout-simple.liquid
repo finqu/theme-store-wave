@@ -1,0 +1,33 @@
+{%- assign footerMenu1 = linklists[section.settings.footerMenu1] -%}
+
+{%- capture sectionContent -%}
+
+    <div class="site-footer-container">
+
+        <div class="site-footer">
+
+            <div class="container d-flex flex-column gap-4 gap-lg-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                {%- if section.settings.footerMenu1 -%}
+
+                    {% render 'footers/menu', menu: footerMenu1, title: section.settings.footerMenu1Title, inline: true %}
+
+                {%- endif -%}
+
+                <div class="site-footer-blocks site-footer-blocks-simple">
+
+                    {% container 'left' %}
+
+                </div>
+
+            </div>
+
+            {% render 'footers/bottom-bar', section: section, centered: true, include_payment: true %}
+
+        </div>
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'footers/render-section', section: section, sectionContent: sectionContent, sectionClasses: sectionClasses %}

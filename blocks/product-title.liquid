@@ -1,0 +1,88 @@
+{%- assign productName = product.title | default: '' -%}
+
+{%- unless product -%}
+    {%- assign productName = 'placeholder.product' | t -%}
+{%- endunless -%}
+
+{%- assign truncateName = productCardTruncateName | default: block.settings.truncateName | default: true -%}
+{%- assign linkToProduct = productCardLinkToProduct | default: block.settings.linkToProduct | default: true -%}
+
+{%- capture productUrl -%}
+    {%- assign resolvedUrl = product | link | default: '' -%}
+    {%- if resolvedUrl contains 'section=' -%}
+        {%- assign urlParts = resolvedUrl | split: '?' -%}
+        {%- if urlParts[1] -%}
+            {%- assign basePath = urlParts[0] -%}
+            {%- assign newUrl = basePath | append: '?' -%}
+            {%- assign queryParams = resolvedUrl | query_params -%}
+            {%- for param in queryParams -%}
+                {%- if param[0] != 'section' -%}
+                    {%- if forloop.first -%}
+                        {%- assign newUrl = newUrl | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- else -%}
+                        {%- assign newUrl = newUrl | append: '&' | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- endif -%}
+                {%- endif -%}
+            {%- endfor -%}
+            {%- assign resolvedUrl = newUrl -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- resolvedUrl -}}
+{%- endcapture -%}
+
+{%- capture titleMarkup -%}
+
+    <div class="product-name">
+
+        <h3 class="product-name-text text-product-title{% if truncateName %} text-truncate{% endif %}">
+            {{- productName -}}
+        </h3>
+
+    </div>
+
+{%- endcapture -%}
+
+{%- if linkToProduct and product and productUrl != blank -%}
+
+    <a href="{{ productUrl | strip }}" aria-label="{{ productName }}">
+        {{- titleMarkup -}}
+    </a>
+
+{%- else -%}
+
+    {{- titleMarkup -}}
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-title.name",
+    "tag": "div",
+    "class": "block block-product-title",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "truncateName",
+                        "type": "checkbox",
+                        "label": "t:all.settings.truncateName.label",
+                        "default": true
+                    },
+                    {
+                        "id": "linkToProduct",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-title.settings.linkToProduct.label",
+                        "default": true
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

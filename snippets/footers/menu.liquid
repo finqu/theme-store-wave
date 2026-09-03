@@ -1,0 +1,80 @@
+{% comment %}
+    Footer navigation column or inline list.
+
+    Accepts:
+    - menu: {Object} linklist
+    - title: {String}
+    - inline: {Boolean}
+{% endcomment %}
+
+{%- if menu -%}
+
+    <div class="site-footer-menu-container">
+
+        {%- if title != blank -%}
+
+            <div class="site-footer-title{% if inline %} text-center{% endif %}">
+
+                <span class="site-footer-menu-title-text">
+                    {{ title }}
+                </span>
+
+            </div>
+
+        {%- endif -%}
+
+        <ul class="site-footer-menu{% if inline %} site-footer-menu-inline justify-content-center{% endif %}">
+
+            {% for item in menu.links %}
+
+                <li class="site-footer-menu-item">
+
+                    {%- if item.url -%}
+
+                        <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                            {{ item.title }}
+                        </a>
+
+                    {%- else -%}
+
+                        <span class="site-footer-menu-item-text">
+                            {{ item.title }}
+                        </span>
+
+                    {%- endif -%}
+
+                </li>
+
+                {% if item.links %}
+
+                    {% for item in item.links %}
+
+                        <li class="site-footer-menu-item">
+
+                            {%- if item.url -%}
+
+                                <a href="{{ item.url }}" target="{{ item.target | default: '_self' }}" class="site-footer-menu-item-text text-underline-indicator">
+                                    {{ item.title }}
+                                </a>
+
+                            {%- else -%}
+
+                                <span class="site-footer-menu-item-text">
+                                    {{ item.title }}
+                                </span>
+
+                            {%- endif -%}
+
+                        </li>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+{%- endif -%}

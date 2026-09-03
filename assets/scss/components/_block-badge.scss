@@ -1,0 +1,100 @@
+.block-badge {
+
+    .badge-group-items {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .content-badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        padding: .5em 1em;
+        line-height: 1;
+        background-color: var(--style-badge-bg-color);
+        color: var(--style-badge-text-color);
+        border-radius: var(--style-border-radius);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+}
+
+.block-button-group {
+
+    .block-inner {
+        display: flex;
+    }
+
+    .button-group-items {
+        width: 100%;
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .block-badge {
+
+        .content-badge {
+            border: $elevation-border-width solid $elevation-rule-color;
+            border-radius: var(--style-component-border-radius);
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+            font-family: $overlines-font-family;
+            font-weight: $font-weight-bold;
+        }
+    }
+}
+
+.section-hero > .section-inner {
+    height: auto;
+    min-height: 60vh;
+    min-height: var(--section-min-height, 60dvh);
+
+    > .hero-content-viewport {
+        display: flex;
+        flex: 1 0 auto;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        align-items: var(--hero-content-align-y, center);
+        align-items: safe var(--hero-content-align-y, center);
+    }
+}
+
+[class*="section-hero"] {
+
+    .hero-content-blocks {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        min-width: 0;
+        gap: 1rem;
+
+        > .block,
+        .finqu-section-blocks-container[data-block-container="hero-title"],
+        .finqu-section-blocks-container[data-block-container="hero-actions"] {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .finqu-section-blocks-container[data-block-container="hero-title"] {
+            gap: 0.375rem;
+        }
+
+        .finqu-section-blocks-container[data-block-container="hero-actions"] {
+            gap: 0.5rem;
+        }
+
+        > .block-button,
+        > .block-button-group,
+        .finqu-section-blocks-container[data-block-container="hero-actions"] {
+            align-self: var(--section-text-align, start);
+            width: auto;
+            max-width: 100%;
+        }
+    }
+}

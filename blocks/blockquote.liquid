@@ -1,0 +1,100 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    <blockquote class="blockquote">
+
+        <div class="d-inline-flex flex-column text-richtext">
+
+            {%- if block.settings.showQuotes -%}
+                <span class="d-block text-start">
+                    {%- render 'icon', icon: 'quote-open', class: 'svg-icon-2x' -%}
+                </span>
+            {%- endif -%}
+
+            {{- block.settings.richtext -}}
+
+            {%- if block.settings.citation -%}
+                <footer class="blockquote-footer mt-4">
+                    {{- block.settings.citation -}}
+                </footer>
+            {%- endif -%}
+
+        </div>
+
+    </blockquote>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.blockquote.name",
+    "tag": "div",
+    "class": "block block-blockquote",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "label": "t:blocks.blockquote.settings.richtext.label"
+                    },
+                    {
+                        "id": "citation",
+                        "type": "text",
+                        "label": "t:blocks.blockquote.settings.citation.label"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showQuotes",
+                        "type": "checkbox",
+                        "label": "t:blocks.blockquote.settings.showQuotes.label",
+                        "default": true
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

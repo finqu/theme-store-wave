@@ -1,13 +1,164 @@
-{%- assign title = block.settings.title | default: 'placeholder.title' | t -%}
+{%- assign title = block.settings.title -%}
+
+{%- assign headingTitleClass = nil -%}
+{%- case block.settings.titleStyle -%}
+    {%- when 'h1' -%}
+        {%- assign headingTitleClass = 'h1' -%}
+    {%- when 'h2' -%}
+        {%- assign headingTitleClass = 'h2' -%}
+    {%- when 'h3' -%}
+        {%- assign headingTitleClass = 'h3' -%}
+    {%- when 'display' -%}
+        {%- assign headingTitleClass = 'display-4' -%}
+    {%- when 'display-1' -%}
+        {%- assign headingTitleClass = 'display-1' -%}
+    {%- when 'display-2' -%}
+        {%- assign headingTitleClass = 'display-2' -%}
+    {%- when 'display-3' -%}
+        {%- assign headingTitleClass = 'display-3' -%}
+    {%- when 'display-4' -%}
+        {%- assign headingTitleClass = 'display-4' -%}
+    {%- when 'display-5' -%}
+        {%- assign headingTitleClass = 'display-5' -%}
+    {%- when 'display-6' -%}
+        {%- assign headingTitleClass = 'display-6' -%}
+    {%- when 'text' -%}
+        {%- assign headingTitleClass = 'fs-reset' -%}
+{%- endcase -%}
+
+{%- assign headingOverlineClass = nil -%}
+{%- case block.settings.overlineStyle -%}
+    {%- when 'h1' -%}
+        {%- assign headingOverlineClass = 'h1' -%}
+    {%- when 'h2' -%}
+        {%- assign headingOverlineClass = 'h2' -%}
+    {%- when 'h3' -%}
+        {%- assign headingOverlineClass = 'h3' -%}
+    {%- when 'display' -%}
+        {%- assign headingOverlineClass = 'display-4' -%}
+    {%- when 'display-1' -%}
+        {%- assign headingOverlineClass = 'display-1' -%}
+    {%- when 'display-2' -%}
+        {%- assign headingOverlineClass = 'display-2' -%}
+    {%- when 'display-3' -%}
+        {%- assign headingOverlineClass = 'display-3' -%}
+    {%- when 'display-4' -%}
+        {%- assign headingOverlineClass = 'display-4' -%}
+    {%- when 'display-5' -%}
+        {%- assign headingOverlineClass = 'display-5' -%}
+    {%- when 'display-6' -%}
+        {%- assign headingOverlineClass = 'display-6' -%}
+    {%- when 'text' -%}
+        {%- assign headingOverlineClass = 'fs-reset' -%}
+{%- endcase -%}
+
+{%- assign headingSubtitleClass = nil -%}
+{%- case block.settings.subtitleStyle -%}
+    {%- when 'h1' -%}
+        {%- assign headingSubtitleClass = 'h1' -%}
+    {%- when 'h2' -%}
+        {%- assign headingSubtitleClass = 'h2' -%}
+    {%- when 'h3' -%}
+        {%- assign headingSubtitleClass = 'h3' -%}
+    {%- when 'display' -%}
+        {%- assign headingSubtitleClass = 'display-4' -%}
+    {%- when 'display-1' -%}
+        {%- assign headingSubtitleClass = 'display-1' -%}
+    {%- when 'display-2' -%}
+        {%- assign headingSubtitleClass = 'display-2' -%}
+    {%- when 'display-3' -%}
+        {%- assign headingSubtitleClass = 'display-3' -%}
+    {%- when 'display-4' -%}
+        {%- assign headingSubtitleClass = 'display-4' -%}
+    {%- when 'display-5' -%}
+        {%- assign headingSubtitleClass = 'display-5' -%}
+    {%- when 'display-6' -%}
+        {%- assign headingSubtitleClass = 'display-6' -%}
+    {%- when 'text' -%}
+        {%- assign headingSubtitleClass = 'fs-reset' -%}
+{%- endcase -%}
+
+{%- assign titleEscaped = title | escape -%}
+{%- assign emphasisText = block.settings.emphasisText | strip -%}
+
+{%- if emphasisText != blank -%}
+    {%- assign emphasisTextEscaped = emphasisText | escape -%}
+    {%- assign emphasisDecoration = block.settings.emphasisStyle -%}
+    {%- if emphasisDecoration == 'accent' or emphasisDecoration == 'underline-thick' or emphasisDecoration == 'underline-wavy' -%}
+        {%- assign emphasisDecoration = 'nil' -%}
+    {%- endif -%}
+    {%- assign emphasisColorSetting = block.settings.emphasisColor -%}
+    {%- assign emphasisIsGradient = false -%}
+    {%- if emphasisColorSetting.mode and emphasisColorSetting.mode != 'solid' -%}
+        {%- assign emphasisIsGradient = true -%}
+    {%- endif -%}
+    {%- capture emphasisClass -%}title-emphasis{%- if block.settings.emphasisLayout == 'new-line' %} title-emphasis--block{% endif -%}{%- endcapture -%}
+    {%- capture emphasisTextClass -%}title-emphasis__text{%- if emphasisDecoration != blank and emphasisDecoration != 'nil' %} title-emphasis--{{ emphasisDecoration }}{% endif -%}{%- endcapture -%}
+    {%- capture emphasisPaintClass -%}title-emphasis__paint{%- unless block.settings.emphasisAccentFont == false %} text-style-accent{% endunless %}{%- if emphasisIsGradient %} title-emphasis--gradient{% endif -%}{%- endcapture -%}
+    {%- capture emphasisMarkup -%}<span class="{{ emphasisClass }}"><span class="{{ emphasisTextClass }}"><span class="{{ emphasisPaintClass }}">{{ emphasisTextEscaped }}</span></span></span>{%- endcapture -%}
+    {%- assign titleEscaped = titleEscaped | replace_first: emphasisTextEscaped, emphasisMarkup -%}
+{%- endif -%}
 
 {%- capture blockStyle -%}
     #finqu-block-{{ block.id }} .block-inner {
         --section-header-text-align: {%- if block.settings.textAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.textAlign }}{%- endif -%};
     }
-    {%- if block.settings.blockPaddingMode == 'custom' -%}
-        #finqu-block-{{ block.id }} {
-            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
-            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
+    {%- if block.settings.overlineColor -%}
+        #finqu-block-{{ block.id }} .overline {
+            --style-overline-color: {{ block.settings.overlineColor }};
+        }
+    {%- endif -%}
+    {%- if block.settings.subtitleColor -%}
+        #finqu-block-{{ block.id }} .subtitle {
+            --style-subheading-color: {{ block.settings.subtitleColor }};
+        }
+    {%- endif -%}
+    {%- if block.settings.emphasisColor -%}
+        {%- assign emphasisColorSetting = block.settings.emphasisColor -%}
+        {%- assign emphasisColorPaint = emphasisColorSetting.string_value | default: emphasisColorSetting -%}
+        #finqu-block-{{ block.id }} .title-emphasis {
+            --style-heading-emphasis-color: {{ emphasisColorPaint }};
+            {%- if emphasisColorSetting.mode and emphasisColorSetting.mode != 'solid' -%}
+                --style-heading-emphasis-paint: {{ emphasisColorPaint }};
+                {%- assign emphasisColorFirstStop = emphasisColorSetting.stops | first -%}
+                {%- if emphasisColorFirstStop.color -%}
+                    {%- assign emphasisColorSolid = emphasisColorFirstStop.color -%}
+                    {%- if emphasisColorFirstStop.alpha -%}
+                        {%- assign emphasisColorSolid = emphasisColorSolid | color_modify: 'alpha', emphasisColorFirstStop.alpha -%}
+                    {%- endif -%}
+                    --style-heading-emphasis-solid: {{ emphasisColorSolid }};
+                {%- endif -%}
+            {%- else -%}
+                --style-heading-emphasis-solid: {{ emphasisColorPaint }};
+            {%- endif -%}
+        }
+    {%- endif -%}
+    {%- if block.settings.emphasisBgColor -%}
+        {%- assign emphasisBgColorSetting = block.settings.emphasisBgColor -%}
+        {%- assign emphasisBgColorPaint = emphasisBgColorSetting.string_value | default: emphasisBgColorSetting -%}
+        #finqu-block-{{ block.id }} .title-emphasis {
+            {%- if emphasisBgColorSetting.mode and emphasisBgColorSetting.mode != 'solid' -%}
+                --style-heading-emphasis-bg-paint: {{ emphasisBgColorPaint }};
+                {%- assign emphasisBgColorFirstStop = emphasisBgColorSetting.stops | first -%}
+                {%- if emphasisBgColorFirstStop.color -%}
+                    {%- assign emphasisBgColorSolid = emphasisBgColorFirstStop.color -%}
+                    {%- if emphasisBgColorFirstStop.alpha -%}
+                        {%- assign emphasisBgColorSolid = emphasisBgColorSolid | color_modify: 'alpha', emphasisBgColorFirstStop.alpha -%}
+                    {%- endif -%}
+                    --style-heading-emphasis-bg: {{ emphasisBgColorSolid }};
+                {%- endif -%}
+            {%- else -%}
+                --style-heading-emphasis-bg: {{ emphasisBgColorPaint }};
+            {%- endif -%}
+        }
+    {%- endif -%}
+    {%- assign headingLineHeight = block.settings.titleLineHeight -%}
+    {%- if headingLineHeight == 'custom' -%}
+        {%- assign headingLineHeight = block.settings.titleLineHeightCustom -%}
+    {%- endif -%}
+    {%- if headingLineHeight and headingLineHeight != 'nil' -%}
+        #finqu-block-{{ block.id }} .title {
+            line-height: {{ headingLineHeight }};
         }
     {%- endif -%}
 {%- endcapture -%}
@@ -16,16 +167,13 @@
 
 <div class="block-inner">
 
-    {%- render 'section-header', sectionOverline: block.settings.overline, sectionOverlineTag: block.settings.overlineTag, sectionTitle: title, sectionTitleTag: block.settings.titleTag, sectionSubtitle: block.settings.subtitle, sectionSubtitleTag: block.settings.subtitleTag, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: section.settings.sectionHeaderFontSizeScale -%}
+    {%- render 'section-header', sectionOverline: block.settings.overline, sectionOverlineTag: block.settings.overlineTag, sectionOverlineClass: headingOverlineClass, sectionTitle: titleEscaped, sectionTitleTag: block.settings.titleTag, sectionTitleClass: headingTitleClass, sectionSubtitle: block.settings.subtitle, sectionSubtitleTag: block.settings.subtitleTag, sectionSubtitleClass: headingSubtitleClass, sectionHeaderContainer: 'none', sectionHeaderFontSizeScale: block.settings.sectionHeaderFontSizeScale -%}
 
 </div>
 
 {% schema %}
 {
-    "name": {
-        "en": "Heading",
-        "fi": "Otsikko"
-    },
+    "name": "t:blocks.heading.name",
     "tag": "div",
     "class": "block block-heading",
     "category": "basic",
@@ -33,207 +181,454 @@
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
+                "title": "t:all.groups.content.title",
                 "settings": [
                     {
                         "id": "overline",
                         "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        }
+                        "label": "t:blocks.heading.settings.overline.label"
                     },
                     {
                         "id": "title",
                         "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
+                        "label": "t:blocks.heading.settings.title.label"
+                    },
+                    {
+                        "id": "emphasisText",
+                        "type": "text",
+                        "label": "t:blocks.heading.settings.emphasisText.label",
+                        "info": "t:blocks.heading.settings.emphasisText.info"
                     },
                     {
                         "id": "subtitle",
                         "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
+                        "label": "t:blocks.heading.settings.subtitle.label"
                     }
-                ]
+                ],
+                "id": "content"
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "settings": [
+                                {
+                                    "id": "textAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.heading.settings.textAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.textAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:blocks.heading.settings.textAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:blocks.heading.settings.textAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:blocks.heading.settings.textAlign.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionHeaderFontSizeScale",
+                                    "label": "t:all.settings.sectionHeaderFontSizeScale.label",
+                                    "type": "range",
+                                    "min": 1,
+                                    "max": 2,
+                                    "step": 0.1,
+                                    "default": "1"
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "t:blocks.heading.groups.overline.title"
+                                },
+                                {
+                                    "id": "overlineStyle",
+                                    "type": "select",
+                                    "label": "t:blocks.heading.settings.overlineStyle.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.nil.label"
+                                        },
+                                        {
+                                            "value": "h1",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.h1.label"
+                                        },
+                                        {
+                                            "value": "h2",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.h2.label"
+                                        },
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.h3.label"
+                                        },
+                                        {
+                                            "value": "display",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display.label"
+                                        },
+                                        {
+                                            "value": "display-1",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-1.label"
+                                        },
+                                        {
+                                            "value": "display-2",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-2.label"
+                                        },
+                                        {
+                                            "value": "display-3",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-3.label"
+                                        },
+                                        {
+                                            "value": "display-4",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-4.label"
+                                        },
+                                        {
+                                            "value": "display-5",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-5.label"
+                                        },
+                                        {
+                                            "value": "display-6",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.display-6.label"
+                                        },
+                                        {
+                                            "value": "text",
+                                            "label": "t:blocks.heading.settings.overlineStyle.options.text.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "overlineColor",
+                                    "type": "color",
+                                    "label": "t:blocks.heading.settings.overlineColor.label",
+                                    "nullable": true
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "t:blocks.heading.groups.heading.title"
+                                },
+                                {
+                                    "id": "titleStyle",
+                                    "type": "select",
+                                    "label": "t:blocks.heading.settings.titleStyle.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.nil.label"
+                                        },
+                                        {
+                                            "value": "h1",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.h1.label"
+                                        },
+                                        {
+                                            "value": "h2",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.h2.label"
+                                        },
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.h3.label"
+                                        },
+                                        {
+                                            "value": "display",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display.label"
+                                        },
+                                        {
+                                            "value": "display-1",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-1.label"
+                                        },
+                                        {
+                                            "value": "display-2",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-2.label"
+                                        },
+                                        {
+                                            "value": "display-3",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-3.label"
+                                        },
+                                        {
+                                            "value": "display-4",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-4.label"
+                                        },
+                                        {
+                                            "value": "display-5",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-5.label"
+                                        },
+                                        {
+                                            "value": "display-6",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.display-6.label"
+                                        },
+                                        {
+                                            "value": "text",
+                                            "label": "t:blocks.heading.settings.titleStyle.options.text.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "titleLineHeight",
+                                    "type": "select",
+                                    "label": "t:blocks.heading.settings.titleLineHeight.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.nil.label"
+                                        },
+                                        {
+                                            "value": "1",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.1.label"
+                                        },
+                                        {
+                                            "value": "1.1",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.1_1.label"
+                                        },
+                                        {
+                                            "value": "1.2",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.1_2.label"
+                                        },
+                                        {
+                                            "value": "1.35",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.1_35.label"
+                                        },
+                                        {
+                                            "value": "1.5",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.1_5.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:blocks.heading.settings.titleLineHeight.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "titleLineHeightCustom",
+                                    "type": "number",
+                                    "label": "t:blocks.heading.settings.titleLineHeightCustom.label",
+                                    "info": "t:blocks.heading.settings.titleLineHeightCustom.info",
+                                    "default": 1.2,
+                                    "min": 0.7,
+                                    "max": 2,
+                                    "step": 0.05,
+                                    "conditions": [
+                                        "titleLineHeight eq custom"
+                                    ]
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "t:blocks.heading.groups.highlight.title"
+                                },
+                                {
+                                    "id": "emphasisAccentFont",
+                                    "type": "checkbox",
+                                    "label": "t:blocks.heading.settings.emphasisAccentFont.label",
+                                    "default": true
+                                },
+                                {
+                                    "id": "emphasisStyle",
+                                    "type": "select",
+                                    "label": "t:blocks.heading.settings.emphasisStyle.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.emphasisStyle.options.nil.label"
+                                        },
+                                        {
+                                            "value": "underline",
+                                            "label": "t:blocks.heading.settings.emphasisStyle.options.underline.label"
+                                        },
+                                        {
+                                            "value": "highlight",
+                                            "label": "t:blocks.heading.settings.emphasisStyle.options.highlight.label"
+                                        },
+                                        {
+                                            "value": "outline",
+                                            "label": "t:blocks.heading.settings.emphasisStyle.options.outline.label"
+                                        },
+                                        {
+                                            "value": "boxed",
+                                            "label": "t:blocks.heading.settings.emphasisStyle.options.boxed.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "emphasisLayout",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.heading.settings.emphasisLayout.label",
+                                    "default": "inline",
+                                    "options": [
+                                        {
+                                            "value": "inline",
+                                            "label": "t:blocks.heading.settings.emphasisLayout.options.inline.label"
+                                        },
+                                        {
+                                            "value": "new-line",
+                                            "label": "t:blocks.heading.settings.emphasisLayout.options.new-line.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "emphasisColor",
+                                    "type": "color",
+                                    "gradient": true,
+                                    "label": "t:blocks.heading.settings.emphasisColor.label",
+                                    "nullable": true
+                                },
+                                {
+                                    "id": "emphasisBgColor",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:blocks.heading.settings.emphasisBgColor.label",
+                                    "nullable": true,
+                                    "conditions": [
+                                        "emphasisStyle eq highlight"
+                                    ]
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "t:blocks.heading.groups.subtitle.title"
+                                },
+                                {
+                                    "id": "subtitleStyle",
+                                    "type": "select",
+                                    "label": "t:blocks.heading.settings.subtitleStyle.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.nil.label"
+                                        },
+                                        {
+                                            "value": "h1",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.h1.label"
+                                        },
+                                        {
+                                            "value": "h2",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.h2.label"
+                                        },
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.h3.label"
+                                        },
+                                        {
+                                            "value": "display",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display.label"
+                                        },
+                                        {
+                                            "value": "display-1",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-1.label"
+                                        },
+                                        {
+                                            "value": "display-2",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-2.label"
+                                        },
+                                        {
+                                            "value": "display-3",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-3.label"
+                                        },
+                                        {
+                                            "value": "display-4",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-4.label"
+                                        },
+                                        {
+                                            "value": "display-5",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-5.label"
+                                        },
+                                        {
+                                            "value": "display-6",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.display-6.label"
+                                        },
+                                        {
+                                            "value": "text",
+                                            "label": "t:blocks.heading.settings.subtitleStyle.options.text.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "subtitleColor",
+                                    "type": "color",
+                                    "label": "t:blocks.heading.settings.subtitleColor.label",
+                                    "nullable": true
+                                }
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.seo.title",
+                            "settings": [
+                                {
+                                    "id": "overlineTag",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.heading.settings.overlineTag.label",
+                                    "default": "h3",
+                                    "options": [
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.overlineTag.options.h3.label"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": "t:blocks.heading.settings.overlineTag.options.span.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "titleTag",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.heading.settings.titleTag.label",
+                                    "default": "h2",
+                                    "options": [
+                                        {
+                                            "value": "h1",
+                                            "label": "t:blocks.heading.settings.titleTag.options.h1.label"
+                                        },
+                                        {
+                                            "value": "h2",
+                                            "label": "t:blocks.heading.settings.titleTag.options.h2.label"
+                                        },
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.titleTag.options.h3.label"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": "t:blocks.heading.settings.titleTag.options.span.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "subtitleTag",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.heading.settings.subtitleTag.label",
+                                    "default": "h3",
+                                    "options": [
+                                        {
+                                            "value": "h3",
+                                            "label": "t:blocks.heading.settings.subtitleTag.options.h3.label"
+                                        },
+                                        {
+                                            "value": "span",
+                                            "label": "t:blocks.heading.settings.subtitleTag.options.span.label"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": "seo"
+                        }
+                    ]
                 },
-                "settings": [
-                    {
-                        "id": "textAlign",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Text align",
-                            "fi": "Tekstin tasaus"
-                        },
-                        "default": "nil",
-                        "options": [
-                            {
-                                "value": "nil",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "start",
-                                "label": "{# icon.align-start #}"
-                            },
-                            {
-                                "value": "center",
-                                "label": "{# icon.align-center #}"
-                            },
-                            {
-                                "value": "end",
-                                "label": "{# icon.align-end #}"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "sectionHeaderFontSizeScale",
-                        "label": {
-                            "en": "Headings scaling",
-                            "fi": "Otsikoiden skaalaus"
-                        },
-                        "type": "range",
-                        "min": 1,
-                        "max": 2,
-                        "step": 0.1,
-                        "default": "1"
-                    },
-                    {
-                        "id": "blockPaddingMode",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Padding",
-                            "fi": "Välit"
-                        },
-                        "default": "auto",
-                        "options": [
-                            {
-                                "value": "auto",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "custom",
-                                "label": {
-                                    "en": "Custom",
-                                    "fi": "Mukautettu"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "blockPaddingTop",
-                        "label": {
-                            "en": "Padding top",
-                            "fi": "Väli ylhäällä"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "blockPaddingBottom",
-                        "label": {
-                            "en": "Padding bottom",
-                            "fi": "Väli alhaalla"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "overlineTag",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Top title SEO priority",
-                            "fi": "Yläotsikon SEO-prioriteetti"
-                        },
-                        "default": "h3",
-                        "options": [
-                            {
-                                "value": "h3",
-                                "label": "H3"
-                            },
-                            {
-                                "value": "span",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "titleTag",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Main title SEO priority",
-                            "fi": "Pääotsikon SEO-prioriteetti"
-                        },
-                        "default": "h2",
-                        "options": [
-                            {
-                                "value": "h1",
-                                "label": "H1"
-                            },
-                            {
-                                "value": "h2",
-                                "label": "H2"
-                            },
-                            {
-                                "value": "h3",
-                                "label": "H3"
-                            },
-                            {
-                                "value": "span",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "subtitleTag",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Subtitle SEO priority",
-                            "fi": "Alaotsikon SEO-prioriteetti"
-                        },
-                        "default": "h3",
-                        "options": [
-                            {
-                                "value": "h3",
-                                "label": "H3"
-                            },
-                            {
-                                "value": "span",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                }
-                            }
-                        ]
-                    }
-                ]
+                "id": "settings"
             }
         ]
     }

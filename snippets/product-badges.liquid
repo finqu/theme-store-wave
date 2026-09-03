@@ -4,12 +4,13 @@
 	Accepts:
 	- product: {Object} Product Liquid object (required)
     - position: {String} Position of badges: ''
-    - showNew: {Boolean} Show new badge
-    - showPromotion: {Boolean} Show promotion badge
-    - showDiscount: {Boolean} Show discount badge
-    - showDiscountPercentage: {Boolean} Show discount percentage
-    - showOutOfStock: {Boolean} Show out of stock badge
-    - showBackorder: {Boolean} Show backorder badge
+    - showNew: {Boolean} Show new badge (default: true)
+    - showPromotion: {Boolean} Show promotion badge (default: true)
+    - showDiscount: {Boolean} Show discount badge (default: true)
+    - showDiscountPercentage: {Boolean} Show discount percentage (default: true)
+    - floorDiscountPercentage: {Boolean} Round discount percentage down (default: true)
+    - showOutOfStock: {Boolean} Show out of stock badge (default: true)
+    - showBackorder: {Boolean} Show backorder badge (default: true)
 
     Usage:
     Render this snippet inside of element with "product-media-container" or "product-main-media-swiper" class.
@@ -18,28 +19,32 @@
 	{% render 'product-badges', product: product %}
 {% endcomment %}
 
-{%- if showNew != false -%}
-    {%- assign showNew = settings.productShowNewBadge -%}
+{%- if showNew == nil -%}
+    {%- assign showNew = true -%}
 {%- endif -%}
 
-{%- if showPromotion != false -%}
-    {%- assign showPromotion = settings.productShowPromotionBadge -%}
+{%- if showPromotion == nil -%}
+    {%- assign showPromotion = true -%}
 {%- endif -%}
 
-{%- if showDiscount != false -%}
-    {%- assign showDiscount = settings.productShowDiscountBadge -%}
+{%- if showDiscount == nil -%}
+    {%- assign showDiscount = true -%}
 {%- endif -%}
 
-{%- if showDiscountPercentage != false -%}
-    {%- assign showDiscountPercentage = settings.productShowDiscountPercentage -%}
+{%- if showDiscountPercentage == nil -%}
+    {%- assign showDiscountPercentage = true -%}
 {%- endif -%}
 
-{%- if showOutOfStock != false -%}
-    {%- assign showOutOfStock = settings.productShowOutOfStockBadge -%}
+{%- if floorDiscountPercentage == nil -%}
+    {%- assign floorDiscountPercentage = true -%}
 {%- endif -%}
 
-{%- if showBackorder != false -%}
-    {%- assign showBackorder = settings.productShowBackorderBadge -%}
+{%- if showOutOfStock == nil -%}
+    {%- assign showOutOfStock = true -%}
+{%- endif -%}
+
+{%- if showBackorder == nil -%}
+    {%- assign showBackorder = true -%}
 {%- endif -%}
 
 {%- assign position = position | default: settings.styleProductBadgePosition -%}
@@ -99,7 +104,7 @@
 
                 <span class="product-badge-content">
                     {%- if showDiscountPercentage -%}
-                        {%- if settings.productFloorDiscountPercentage -%}
+                        {%- if floorDiscountPercentage -%}
                            -{{ productDiscountPercent | floor }}%
                         {%- else -%}
                             -{{ productDiscountPercent }}%

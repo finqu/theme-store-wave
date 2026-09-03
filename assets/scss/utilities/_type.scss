@@ -14,6 +14,33 @@ h1, h2, h3, h4, h5, h6,
 	}
 }
 
+h1, .h1 {
+	@if $h1-font-family != $headings-font-family {
+		font-family: $h1-font-family;
+	}
+	@if $h1-font-weight != 'inherit' {
+		font-weight: $h1-font-weight;
+	}
+}
+
+h2, .h2 {
+	@if $h2-font-family != $headings-font-family {
+		font-family: $h2-font-family;
+	}
+	@if $h2-font-weight != 'inherit' {
+		font-weight: $h2-font-weight;
+	}
+}
+
+h3, .h3 {
+	@if $h3-font-family != $headings-font-family {
+		font-family: $h3-font-family;
+	}
+	@if $h3-font-weight != 'inherit' {
+		font-weight: $h3-font-weight;
+	}
+}
+
 h1, h2, h3, h4, h5, h6 {
 	--bs-heading-color: currentColor;
 }
@@ -27,8 +54,8 @@ p {
 		@if $headings-letter-spacing != '0' {
 			letter-spacing: $headings-letter-spacing;
 		}
-		@if $headings-text-transform != 'none' {
-			text-transform: $headings-text-transform;
+		@if $display-text-transform != 'none' {
+			text-transform: $display-text-transform;
 		}
 	}
 }
@@ -112,20 +139,23 @@ p {
 	}
 }
 
-.text-icon-indicator-container {
+.text-icon-indicator-container,
+.btn-icon-animate-container {
 	margin-left: -26px;
 }
 
 .text-icon-indicator,
 .text-icon-indicator.btn,
 .text-icon-indicator.btn-link,
-.text-icon-indicator.btn-text {
+.text-icon-indicator.btn-text,
+.btn-text.btn-icon-animate {
 	display: inline-flex;
 	align-items: center;
 	transition: transform .35s cubic-bezier(.645,.045,.355,1);
 	transform: translate(22px);
 
-	&.font-weight-bold {
+	&.font-weight-bold,
+	&.fw-bold {
 
 		.svg-icon {
 			stroke-width: 2px;

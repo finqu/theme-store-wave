@@ -1,0 +1,163 @@
+// Hard elevation overlay
+// -----------------------------------------------------------------------------------------
+// Cross-cutting paper field and typography. Component-specific hard styles stay
+// with their owning components so state specificity remains predictable.
+
+@if $style-elevation == 'hard' {
+	html {
+		background-color: var(--style-bg-color);
+	}
+
+	body {
+		background-color: var(--style-bg-color);
+		background-image:
+			linear-gradient(color-mix(in srgb, var(--style-text-color), transparent 96%) 1px, transparent 1px),
+			linear-gradient(90deg, color-mix(in srgb, var(--style-text-color), transparent 96%) 1px, transparent 1px);
+		background-size:
+			var(--style-elevation-grid-size, spacer(5))
+			var(--style-elevation-grid-size, spacer(5));
+	}
+
+	body[data-style-elevation="hard"] {
+		counter-reset: storefront-section;
+	}
+
+	.section-inner:not(.section-has-color-scheme) > .section-bg-container {
+		background: transparent;
+	}
+
+	.section > .section-inner > .section-header:has(.section-sequence) {
+		counter-increment: storefront-section;
+	}
+
+	.section-header {
+
+		.section-sequence {
+			display: block;
+			margin-bottom: spacer(1);
+			color: var(--style-accent-color);
+			font-family: $overlines-font-family;
+			font-size: $font-size-base * .72;
+			font-style: $overlines-font-style;
+			font-weight: $font-weight-bold;
+			letter-spacing: .14em;
+			line-height: 1;
+			text-align: var(--section-header-text-align, var(--section-text-align, inherit));
+
+			&::before {
+				content: counter(storefront-section, decimal-leading-zero);
+			}
+		}
+
+		.title:not([class*="display-"]),
+		.section-title:not([class*="display-"]) {
+			letter-spacing: -0.04em;
+			text-transform: uppercase;
+		}
+	}
+
+	.site-footer {
+
+		.title,
+		h2,
+		h3 {
+			letter-spacing: -0.035em;
+			text-transform: uppercase;
+		}
+	}
+
+	hr {
+		border-top: $elevation-border-width solid $elevation-rule-color;
+		opacity: 1;
+	}
+
+	.modal {
+		--bs-modal-color: var(--style-text-color);
+		--bs-modal-bg: var(--style-bg-color);
+
+		.modal-content {
+			@include elevation-overlay;
+			background-color: var(--style-bg-color);
+		}
+
+		.modal-header {
+			border-bottom: $elevation-border-width solid $elevation-rule-color;
+		}
+
+		.modal-footer {
+			border-top: $elevation-border-width solid $elevation-rule-color;
+		}
+
+		.modal-title,
+		.modal-body .h3 {
+			letter-spacing: -0.035em;
+			text-transform: uppercase;
+		}
+
+		[data-bs-dismiss="modal"] {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 2.5rem;
+			min-height: 2.5rem;
+			border: $elevation-border-width solid $elevation-rule-color;
+			border-radius: var(--style-btn-border-radius);
+			background-color: var(--style-bg-color);
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+			@include elevation-press-in($elevation-accent-shadow-color);
+		}
+	}
+
+	.modal-backdrop {
+		--bs-backdrop-bg: #050505;
+		--bs-backdrop-opacity: .68;
+	}
+
+	.alert {
+		border-width: $elevation-border-width;
+		border-color: currentColor;
+		border-radius: var(--style-component-border-radius);
+		box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 currentColor;
+	}
+
+	.table {
+		--bs-table-border-color: #{$elevation-rule-color};
+		border: $elevation-border-width solid $elevation-rule-color;
+
+		> :not(caption) > * > * {
+			border-width: $elevation-border-width;
+		}
+	}
+
+	.progress {
+		border: $elevation-border-width solid $elevation-rule-color;
+		border-radius: var(--style-component-border-radius);
+		background-color: var(--style-bg-color);
+
+		.progress-bar {
+			background-color: var(--style-btn-bg-color);
+		}
+	}
+
+	#newsletter-popup-modal:has(#newsletter-popup-modal-img-container) {
+
+		.modal-content {
+			border: 0;
+			background-color: transparent;
+			box-shadow: none;
+		}
+
+		#newsletter-popup-modal-img-container {
+			@include elevation-media-frame;
+		}
+
+		#newsletter-popup-modal-content-container {
+			@include elevation-overlay;
+		}
+	}
+
+	::selection {
+		background-color: var(--style-accent-color);
+		color: var(--style-accent-text-color);
+	}
+}

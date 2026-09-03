@@ -1,11 +1,11 @@
 {%- assign activeSortOption = category.sort_by | default: category.default_sort_by -%}
-{%- assign animatedItemsCount = settings.productPerRow | times: 2 -%}
+{%- assign animatedItemsCount = section.settings.productPerRow | times: 2 -%}
 {%- assign sidebarMenu = linklists[section.settings.sidebarMenu] -%}
 
-{%- if sidebarMenu and settings.productPerRow > 3 -%}
-    {%- assign productPerRow = settings.productPerRow | minus: 1 -%}
+{%- if sidebarMenu and section.settings.productPerRow > 3 -%}
+    {%- assign productPerRow = section.settings.productPerRow | minus: 1 -%}
 {%- else -%}
-    {%- assign productPerRow = settings.productPerRow -%}
+    {%- assign productPerRow = section.settings.productPerRow -%}
 {%- endif -%}
 
 {% if category.products.size == 0 and request.design_mode == 'edit' %}
@@ -13,6 +13,15 @@
 {% else %}
     {%- assign itemCount = category.products.size -%}
 {% endif %}
+
+{%- assign usableFiltersCount = 0 -%}
+{%- for filter in category.filters -%}
+    {%- if filter.param_name != blank -%}
+        {%- if filter.type == 'range' or filter.values.size > 0 -%}
+            {%- assign usableFiltersCount = usableFiltersCount | plus: 1 -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
 
 {%- capture categoryContentPlaceholder -%}
 
@@ -36,7 +45,7 @@
 
         {%- if rendered_partial != 'sections/category-template' and category.categories -%}
 
-            <div class="category-subcategories category-tags mb-6{% if section.settings.showCategoryList %} d-lg-none{% endif %}" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
+            <div class="category-subcategories category-tags mb-6{% if sidebarMenu %} d-lg-none{% endif %}" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}">
 
                 <div class="swiper">
 
@@ -81,11 +90,13 @@
 
         {% endif %}
 
-        {% if category.filters.size > 0 and itemCount > 0 or category.active_filters.size > 0 %}
+        {% if usableFiltersCount > 0 and itemCount > 0 or category.active_filters.size > 0 %}
 
             <form id="category-filters-form" class="category-filters mb-2 d-none d-lg-flex flex-wrap">
 
                 {% for filter in category.filters %}
+                {% if filter.param_name != blank %}
+                    {% if filter.type == 'range' or filter.values.size > 0 %}
 
                     <div class="category-filter-dropdown dropdown" data-bs-display="static" data-aos="animation-fadeIn" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}">
 
@@ -290,6 +301,8 @@
 
                     </div>
 
+                    {% endif %}
+                {% endif %}
                 {% endfor %}
 
             </form>
@@ -300,7 +313,7 @@
 
             <div class="position-relative z-3 d-flex justify-content-between align-items-center mb-4 gap-g d-lg-none">
 
-                {% if category.filters.size > 0 and itemCount > 0 or category.active_filters.size > 0 %}
+                {% if usableFiltersCount > 0 and itemCount > 0 or category.active_filters.size > 0 %}
 
                     <button type="button" name="filters-mobile-navigation-show" class="btn btn-text text-title">
 
@@ -314,41 +327,9 @@
 
                 {% endif %}
 
-                {% if category.filters.size > 0 and itemCount > 0 %}
+                {% if usableFiltersCount > 0 and itemCount > 0 %}
 
-                    <div class="dropdown">
-
-                        <button type="button" class="btn btn-text text-title" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-
-                            <span class="svg-icon-spacer fw-bold">
-
-                                {% for option in category.sort_options %}
-
-                                    {% if option == activeSortOption %}
-                                        {{ option | prepend: 'filters.sort-by.' | t }}
-                                    {% endif %}
-
-                                {% endfor %}
-
-                            </span>
-
-                            {%- render 'icon', icon: 'angle-down', class: 'svg-icon-fw' -%}
-
-                        </button>
-
-                        <div class="dropdown-menu dropdown-menu-right">
-
-                            {% for option in category.sort_options %}
-
-                                <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
-                                    {{ option | prepend: 'filters.sort-by.' | t }}
-                                </button>
-
-                            {% endfor %}
-
-                        </div>
-
-                    </div>
+                    {% render 'product-sort-dropdown', sort_options: category.sort_options, active_sort: activeSortOption, button_class: 'btn btn-text text-title', label_class: 'svg-icon-spacer fw-bold', icon_class: 'svg-icon-fw' %}
 
                 {% endif %}
 
@@ -418,7 +399,7 @@
 
             {% if itemCount < 1 and category.active_filters.size > 0 %}
 
-                <div class="mt-6 text-center">
+                <div class="mt-6 text-center listing-empty">
 
                     {%- render 'icon', icon: 'filters', class: 'svg-icon-5x mb-3' -%}
 
@@ -452,41 +433,9 @@
 
                     </div>
 
-                    <div class="col text-end{% if category.filters.size > 0 %} d-none d-lg-block{% endif %}">
+                    <div class="col text-end{% if usableFiltersCount > 0 %} d-none d-lg-block{% endif %}">
 
-                        <div class="dropdown">
-
-                            <button type="button" class="btn btn-text text-muted" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-
-                                <span class="svg-icon-spacer">
-
-                                    {% for option in category.sort_options %}
-
-                                        {% if option == activeSortOption %}
-                                            {{ option | prepend: 'filters.sort-by.' | t }}
-                                        {% endif %}
-
-                                    {% endfor %}
-
-                                </span>
-
-                                {%- render 'icon', icon: 'angle-down' -%}
-
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-right">
-
-                                {% for option in category.sort_options %}
-
-                                    <button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
-                                        {{ option | prepend: 'filters.sort-by.' | t }}
-                                    </button>
-
-                                {% endfor %}
-
-                            </div>
-
-                        </div>
+                        {% render 'product-sort-dropdown', sort_options: category.sort_options, active_sort: activeSortOption, button_class: 'btn btn-text text-muted', label_class: 'svg-icon-spacer' %}
 
                     </div>
 
@@ -502,7 +451,15 @@
 
                             <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/category-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
 
-                                {%- render 'product-card-grid', product: product, url: url -%}
+                                {%- capture productCardShellClass -%}
+                                    {%- render 'product-card-shell-class', product: product -%}
+                                {%- endcapture -%}
+
+                                <div class="product-card-grid-item section-highlight-item {{ productCardShellClass | strip }}">
+
+                        {% block 'product-list-item' id:'section-product-card' %}
+
+                    </div>
 
                             </div>
 
@@ -514,7 +471,17 @@
 
                             <div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay{%- if rendered_partial != 'sections/category-template' -%} style="--aos-order: {{ forloop.index }}"{% endif %}{% endif %}>
 
-                                {%- render 'product-card-grid' -%}
+                                {%- assign product = nil -%}
+
+                                {%- capture productCardShellClass -%}
+                                    {%- render 'product-card-shell-class', product: product -%}
+                                {%- endcapture -%}
+
+                                <div class="product-card-grid-item section-highlight-item {{ productCardShellClass | strip }}">
+
+                        {% block 'product-list-item' id:'section-product-card' %}
+
+                    </div>
 
                             </div>
 
@@ -548,7 +515,7 @@
 
     {%- endpaginate -%}
 
-    {% if category.filters.size > 0 and itemCount > 0 or category.active_filters.size > 0 %}
+    {% if usableFiltersCount > 0 and itemCount > 0 or category.active_filters.size > 0 %}
 
         <nav class="filters-mobile-navigation-container">
 
@@ -577,6 +544,8 @@
                         <ul class="filters-mobile-navigation-menu">
 
                             {% for filter in category.filters %}
+                            {% if filter.param_name != blank %}
+                                {% if filter.type == 'range' or filter.values.size > 0 %}
 
                                 {%- assign hasActiveFilters = filter.values | where: 'active' -%}
 
@@ -787,6 +756,8 @@
 
                                 </li>
 
+                                {% endif %}
+                            {% endif %}
                             {% endfor %}
 
                         </ul>
@@ -891,10 +862,7 @@
 
 {% schema %}
 {
-    "name": {
-        "en": "Product group",
-        "fi": "Tuoteryhmä"
-    },
+    "name": "t:sections.category-template.name",
     "tag": "section",
     "class": "section section-category",
     "is_creatable": false,
@@ -902,31 +870,53 @@
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.layout.title",
                 "settings": [
                     {
                         "id": "sidebarMenu",
                         "type": "menu",
-                        "label": {
-                            "en": "Menu",
-                            "fi": "Valikko"
-                        },
+                        "label": "t:sections.category-template.settings.sidebarMenu.label",
                         "allow_empty": true
                     },
                     {
                         "id": "highlightActiveLink",
                         "type": "checkbox",
-                        "label": {
-                            "en": "Highlight active link",
-                            "fi": "Korosta aktiivinen linkki"
-                        },
+                        "label": "t:sections.category-template.settings.highlightActiveLink.label",
                         "default": true,
-                        "conditions": ["!sidebarMenu eq blank"]
+                        "conditions": [
+                            "!sidebarMenu eq blank"
+                        ]
+                    },
+                    {
+                        "default": 5,
+                        "id": "productPerRow",
+                        "label": "t:all.settings.productPerRow.label",
+                        "options": [
+                            {
+                                "label": "2",
+                                "value": 2
+                            },
+                            {
+                                "label": "3",
+                                "value": 3
+                            },
+                            {
+                                "label": "4",
+                                "value": 4
+                            },
+                            {
+                                "label": "5",
+                                "value": 5
+                            },
+                            {
+                                "label": "6",
+                                "value": 6
+                            }
+                        ],
+                        "type": "radio-pill"
                     }
-                ]
+                ],
+                "id": "layout"
             }
         ]
     }

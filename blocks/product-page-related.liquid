@@ -1,0 +1,146 @@
+{% if product.related.size > 0 %}
+
+    {%- assign imgSize = '90,90' -%}
+    {%- assign product_page_layout = product_page_layout | default: section.settings.productPageLayout | default: 'swiper' -%}
+    {%- assign usePanels = false -%}
+    {%- if product_page_layout == 'sticky' -%}
+        {%- assign usePanels = true -%}
+    {%- endif -%}
+
+    {%- if usePanels -%}
+        <div class="col mt-4 mt-md-g">
+            <div class="section-highlight-item product-related-items" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+    {%- else -%}
+        <div class="product-related-items my-4">
+    {%- endif -%}
+
+        {%- if usePanels -%}
+            {%- assign relatedProductsTitle = 'product.related_products' | t -%}
+            {% render 'section-header', sectionTitle: relatedProductsTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+        {%- else -%}
+            <span class="d-block fw-bold fs-4 my-3 text-title">
+                {{ 'product.related_products' | t }}
+            </span>
+        {%- endif -%}
+
+        <div class="row gx-0 gy-g{% if usePanels %} mt-4{% endif %}">
+
+            {% for relatedItem in product.related %}
+
+                <div class="d-flex align-items-center gap-g border-top pt-g">
+
+                    <a href="{{ relatedItem | link }}">
+
+                        <div class="aspect-ratio-product w-px-80">
+
+                            <div class="aspect-ratio-container">
+
+                                {% if relatedItem.image %}
+
+                                    <picture>
+                                        <img
+                                            alt="{{ relatedItem.title }}"
+                                            data-src="{{ relatedItem.image | thumb: imgSize }}"
+                                            data-srcset="{{ relatedItem.image | thumb: imgSize }} 1x, {{ relatedItem.image | thumb: imgSize | thumb: '@2x' }} 2x"
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                                    </picture>
+
+                                {% else %}
+
+                                    {%- capture imgSrc -%}
+                                        {% render 'placeholder-svg', type: 'image', base64: true %}
+                                    {%- endcapture -%}
+
+                                    <img
+                                        class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder"
+                                        alt="{{ relatedItem.title }}"
+                                        data-src="{{ imgSrc }}">
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                    <div class="text-break flex-grow-1">
+
+                        <a href="{{ relatedItem | link }}" class="fw-bold d-block mt-3">
+                            {{ relatedItem.title }}
+                        </a>
+
+                        {% if store.customer_has_purchase_right and relatedItem.default_or_selected_variant.in_preview == false %}
+
+                            <div>
+
+                                {% if relatedItem.default_or_selected_variant.price != relatedItem.default_or_selected_variant.original_price %}
+
+                                    <span class="text-sale-price me-1">
+                                        {{- settings.taxFreeShopping | yepnope: relatedItem.default_or_selected_variant.net_price, relatedItem.default_or_selected_variant.price | money_with_currency -}}
+                                    </span>
+
+                                    <span class="text-decoration-line-through text-muted" data-product-original-price-dynamic>
+                                        {{- settings.taxFreeShopping | yepnope: relatedItem.default_or_selected_variant.original_net_price, relatedItem.default_or_selected_variant.original_price | money_with_currency -}}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-price">
+                                        {{- settings.taxFreeShopping | yepnope: relatedItem.default_or_selected_variant.net_price, relatedItem.default_or_selected_variant.price | money_with_currency -}}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if store.customer_has_purchase_right and relatedItem.is_directly_buyable %}
+
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-outline btn-sm flex-shrink-0"
+                            data-cart-add="{{ relatedItem.id }}"
+                            data-cart-quantity="{{ relatedItem.min_quantity }}">
+                            {{- 'cart.quick_add' | t -}}
+                        </button>
+
+                    {% else %}
+
+                        <a href="{{ relatedItem | link }}" class="btn btn-primary btn-outline btn-sm flex-shrink-0">
+                            {{- 'general.product_view' | t -}}
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {%- if usePanels -%}
+            </div>
+        </div>
+    {%- else -%}
+        </div>
+    {%- endif -%}
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-related.name",
+    "tag": "div",
+    "class": "block block-product-page-related",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

@@ -153,22 +153,6 @@
 				]
 			}
 		},
-		product: {
-            showName: {{ settings.productShowName | json }},
-            showManufacturer: {{ settings.productShowManufacturer | json }},
-            showPromotion: {{ settings.productShowPromotion | json }},
-            showPricing: {{ settings.productShowPricing | json }},
-            showRating: {{ settings.productShowRating | json }},
-            showNewBadge: {{ settings.productShowNewBadge | json }},
-            showDiscountBadge: {{ settings.productShowDiscountBadge | json }},
-            showOutOfStockBadge: {{ settings.productShowOutOfStockBadge | json }},
-			showBackorderBadge: {{ settings.productShowBackorderBadge | json }},
-			showAddToCart: {{ settings.productShowAddToCart | json }},
-            truncateName: {{ settings.productTruncateName | json }},
-			imageAspectRatio: {{ settings.productImageAspectRatio | json }},
-			imageAspectRatioFit: {{ settings.productImageAspectRatioFit | json }},
-			perRow: {{ settings.productPerRow | json }}
-		},
 		currency: {
 			code: {{ store.currency.code | json }},
 			decimalPlaces: {{ store.currency.decimal_places | json }}
@@ -258,12 +242,13 @@
 			'error.privacy_policy': {{ 'error.privacy_policy' | t | json }},
 			'error.requires_account': {{ 'error.requires_account' | t | json }},
 			'error.attribute_text_min_length': {{ 'error.attribute_text_min_length' | t | json }},
-			'error.attribute_text_max_lengt': {{ 'error.attribute_text_min_length' | t | json }},
+			'error.attribute_text_max_length': {{ 'error.attribute_text_max_length' | t | json }},
 			'placeholder.product': {{ 'placeholder.product' | t | json }},
 			'placeholder.category': {{ 'placeholder.category' | t | json }},
 			'placeholder.article': {{ 'placeholder.article' | t | json }},
 			'placeholder.article_summary': {{ 'placeholder.article_summary' | t | json }},
-			'placeholder.manufacturer': {{ 'placeholder.manufacturer' | t | json }}
+			'placeholder.manufacturer': {{ 'placeholder.manufacturer' | t | json }},
+			'placeholder.unit': {{ 'placeholder.unit' | t | json }}
 		},
 		placeholderSvgs: {
 			'category-1': {{ 'category-1' | placeholder_svg_tag | base64_encode | json }},

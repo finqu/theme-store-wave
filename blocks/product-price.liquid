@@ -1,0 +1,102 @@
+
+{%- if product -%}
+    {%- if store.customer_has_purchase_right == false or product.default_or_selected_variant.in_preview -%}
+        {%- assign showPricing = false -%}
+    {%- else -%}
+        {%- assign showPricing = true -%}
+    {%- endif -%}
+{%- else -%}
+    {%- assign showPricing = true -%}
+{%- endif -%}
+
+{%- if showPricing -%}
+
+    {%- assign productPrice = product.default_or_selected_variant.price | default: '' -%}
+    {%- assign productNetPrice = product.default_or_selected_variant.net_price | default: '' -%}
+    {%- assign productOriginalNetPrice = product.default_or_selected_variant.original_net_price | default: '' -%}
+    {%- assign productOriginalPrice = product.default_or_selected_variant.original_price | default: '' -%}
+    {%- assign productHasDiscount = false -%}
+
+    {%- if product and product.default_or_selected_variant.discount_information != nil -%}
+        {%- assign productHasDiscount = true -%}
+    {%- endif -%}
+
+    {%- unless product -%}
+        {%- assign productHasDiscount = 'true,false' | split: ',' | random -%}
+        {%- assign productPriceValues = '4.90,10.50,24.90,39.90,54.90,74.90,80.90,99.90,124.90' | split: ',' -%}
+
+        {%- if productHasDiscount == 'true' -%}
+            {%- assign productHasDiscount = true -%}
+            {%- assign productOriginalPrice = productPriceValues | random -%}
+            {%- assign productOriginalNetPrice = productOriginalPrice -%}
+            {%- assign productPrice = productOriginalPrice | times: 0.75 -%}
+            {%- assign productNetPrice = productPrice -%}
+        {%- else -%}
+            {%- assign productHasDiscount = false -%}
+            {%- assign productPrice = productPriceValues | random -%}
+            {%- assign productNetPrice = productPrice -%}
+        {%- endif -%}
+    {%- endunless -%}
+
+    <div class="product-price">
+
+        {%- if productHasDiscount -%}
+
+            <span class="text-sale-price me-2">
+                {{- settings.taxFreeShopping | yepnope: productNetPrice, productPrice | money_with_currency -}}
+            </span>
+
+            <span class="text-decoration-line-through text-muted">
+                {{- settings.taxFreeShopping | yepnope: productOriginalNetPrice, productOriginalPrice | money_with_currency -}}
+            </span>
+
+        {%- else -%}
+
+            <span class="text-price">
+                {{- settings.taxFreeShopping | yepnope: productNetPrice, productPrice | money_with_currency -}}
+            </span>
+
+        {%- endif -%}
+
+        {%- if block.settings.showPromotion and product.default_or_selected_variant.promotion -%}
+
+            <div class="product-promotion mt-1">
+
+                <span class="text-sale-price small">
+                    {{- product.default_or_selected_variant.promotion.title | strip -}}{% if product.default_or_selected_variant.promotion.description %}: {{ product.default_or_selected_variant.promotion.description -}}{%- endif -%}
+                </span>
+
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-price.name",
+    "tag": "div",
+    "class": "block block-product-price",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showPromotion",
+                        "type": "checkbox",
+                        "label": "t:all.settings.showPromotion.label",
+                        "default": false
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

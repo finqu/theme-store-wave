@@ -1,0 +1,187 @@
+{%- assign badgeGap = block.settings.badgeGap -%}
+{%- if badgeGap == 'nil' -%}
+    {%- assign badgeGap = '0.5rem' -%}
+{%- endif -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+    #finqu-block-{{ block.id }} .badge-group-items {
+        display: flex;
+        flex-flow: row wrap;
+        gap: {{ badgeGap }};
+        justify-content: inherit;
+        width: 100%;
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    <div class="badge-group-items">
+
+        {%- if block.settings.setting_blocks.badges.size > 0 -%}
+
+            {%- for badge in block.settings.setting_blocks.badges -%}
+
+                {%- assign badgeText = badge.settings.text -%}
+                {%- if badgeText == blank and request.design_mode == 'edit' -%}
+                    {%- assign badgeText = 'placeholder.label' | t -%}
+                {%- endif -%}
+                {%- assign badgeBgForContrast = badge.settings.bgColor | default: settings.style_badge_bg_color -%}
+
+                {%- capture badgeItemStyle -%}
+                    {%- if badge.settings.bgColor or badge.settings.textColor -%}
+                        #finqu-block-{{ block.id }} .content-badge-{{ forloop.index }} {
+                            {%- if badge.settings.bgColor -%}
+                                --style-badge-bg-color: {{ badge.settings.bgColor }};
+                            {%- endif -%}
+                            {%- if badge.settings.textColor -%}
+                                --style-badge-text-color: {{ badge.settings.textColor | color_min_contrast: badgeBgForContrast }};
+                            {%- elsif badge.settings.bgColor -%}
+                                --style-badge-text-color: {{ settings.style_badge_text_color | color_min_contrast: badge.settings.bgColor }};
+                            {%- endif -%}
+                        }
+                    {%- endif -%}
+                {%- endcapture -%}
+
+                {%- if badgeItemStyle != blank -%}
+                    <style>{{ badgeItemStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+                {%- endif -%}
+
+                <span class="content-badge content-badge-{{ forloop.index }}">{{ badgeText }}</span>
+
+            {%- endfor -%}
+
+        {%- endif -%}
+
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.badge.name",
+    "tag": "div",
+    "class": "block block-badge",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "id": "badges",
+                "call_to_action": "t:blocks.badge.groups.badges.call_to_action",
+                "is_sortable": true,
+                "setting_blocks": [
+                    {
+                        "type": "badge",
+                        "title": "t:blocks.badge.setting_blocks.badge.title",
+                        "settings": [
+                            {
+                                "id": "text",
+                                "type": "text",
+                                "label": "t:blocks.badge.setting_blocks.badge.settings.text.label"
+                            },
+                            {
+                                "id": "bgColor",
+                                "type": "color",
+                                "label": "t:blocks.badge.setting_blocks.badge.settings.bgColor.label",
+                                "nullable": true
+                            },
+                            {
+                                "id": "textColor",
+                                "type": "color",
+                                "label": "t:blocks.badge.setting_blocks.badge.settings.textColor.label",
+                                "nullable": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "id": "style",
+                "settings": [
+                    {
+                        "id": "badgeGap",
+                        "type": "radio-pill",
+                        "label": "t:blocks.badge.settings.badgeGap.label",
+                        "default": "0.5rem",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:blocks.badge.settings.badgeGap.options.nil.label"
+                            },
+                            {
+                                "value": "0.25rem",
+                                "label": "t:blocks.badge.settings.badgeGap.options.0_25rem.label"
+                            },
+                            {
+                                "value": "0.5rem",
+                                "label": "t:blocks.badge.settings.badgeGap.options.0_5rem.label"
+                            },
+                            {
+                                "value": "1rem",
+                                "label": "t:blocks.badge.settings.badgeGap.options.1rem.label"
+                            },
+                            {
+                                "value": "1.5rem",
+                                "label": "t:blocks.badge.settings.badgeGap.options.1_5rem.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "presets": [
+        {
+            "settings": {
+                "setting_blocks": {
+                    "badges": [
+                        {
+                            "type": "badge",
+                            "settings": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "product.new",
+                                    "string_value": "New"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "id": "default"
+        }
+    ]
+}
+{% endschema %}

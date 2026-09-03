@@ -1,0 +1,189 @@
+{%- assign showLocalization = false -%}
+{%- if store.published_locales.size > 1 or store.enabled_currencies.size > 1 -%}
+    {%- assign showLocalization = true -%}
+{%- endif -%}
+
+{%- if showLocalization or request.design_mode -%}
+
+    {%- capture sectionContent -%}
+
+        {%- assign localizationFormId = section.id | append: '-localization' -%}
+
+        {% render 'localization-form',
+            form_id: localizationFormId,
+            class: 'footer-bar-localization',
+            preview: request.design_mode %}
+
+    {%- endcapture -%}
+
+    {% render 'footers/bar', section: section, sectionContent: sectionContent %}
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:sections.footer-localization-bar.name",
+    "tag": "section",
+    "is_creatable": true,
+    "is_removable": true,
+    "section_groups": [
+        "footer"
+    ],
+    "class": "section section-footer-bar section-footer-localization-bar",
+    "keywords": [
+        "Footer",
+        "Language",
+        "Currency",
+        "Localization"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.settings.title",
+                "id": "settings",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionColorScheme.label",
+                                    "default": "secondary",
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
+                                    "default": "#f3f5f6",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionPaddingMode.label",
+                                    "default": "custom",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": 0,
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 0.5,
+                                    "apply_to_all_sides": true,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "end",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "presets": [
+        {
+            "id": "language-and-currency",
+            "settings": {
+                "sectionTextAlign": "end",
+                "sectionPaddingMode": "custom",
+                "sectionPadding": {
+                    "apply_to_all_sides": true,
+                    "padding": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0
+                }
+            }
+        }
+    ]
+}
+{% endschema %}

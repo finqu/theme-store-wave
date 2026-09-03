@@ -20,3 +20,107 @@
         }
     }
 }
+
+.section-countdown-bar {
+
+    .site-countdown-bar {
+        display: flex;
+        align-items: center;
+        min-height: var(--style-announcement-height);
+    }
+
+    .site-countdown-bar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: var(--style-announcement-align);
+        flex-wrap: wrap;
+        gap: spacer(3);
+        width: 100%;
+
+        @include media-breakpoint-down(lg) {
+            justify-content: center;
+        }
+
+        &--btn-spaced {
+            justify-content: space-between;
+
+            @include media-breakpoint-down(lg) {
+                justify-content: center;
+            }
+        }
+
+        .site-countdown-bar-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: spacer(3);
+        }
+
+        &--btn-spaced .site-countdown-bar-cta {
+            flex-shrink: 0;
+        }
+    }
+
+    .site-countdown-bar-title {
+        @include font-size($font-size-base * $announcementFontScale);
+        color: var(--style-announcement-text-color);
+        font-weight: $font-weight-medium;
+    }
+
+    .countdown-container {
+        .countdown {
+            padding-top: 0;
+            padding-bottom: 0;
+            gap: spacer(2);
+
+            .countdown-item {
+                row-gap: 0;
+
+                .countdown-item-value {
+                    font-size: $font-size-base;
+                    min-width: 1.75rem;
+                }
+
+                .countdown-item-label {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .site-countdown-bar-cta {
+        @include font-size($font-size-base * $announcementFontScale);
+
+        .btn .svg-icon,
+        .btn-text .svg-icon {
+            color: inherit;
+        }
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .countdown {
+
+        .countdown-item {
+            border: $elevation-border-width solid $elevation-rule-color;
+            background-color: var(--style-bg-color);
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+            padding: spacer(2);
+
+            .countdown-item-value {
+                font-family: $headings-font-family;
+                font-weight: $headings-font-weight;
+            }
+        }
+    }
+
+    .section-countdown-bar {
+        border-top: $elevation-border-width solid $elevation-rule-color;
+        border-bottom: $elevation-border-width solid $elevation-rule-color;
+
+        .countdown .countdown-item {
+            min-width: 2.25rem;
+            padding: spacer(1);
+        }
+    }
+}

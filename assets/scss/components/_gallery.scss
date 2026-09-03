@@ -25,6 +25,7 @@
 			    height: 100%;
 			}
 		}
+
 	}
 
 	.pswp__video-container {
@@ -49,9 +50,42 @@
 			    height: 100%;
 			}
 		}
+
 	}
 
 	.pswp__img {
 		background-color: var(--style-bg-accent-color);
+	}
+}
+
+@if $style-elevation == 'hard' {
+	.pswp {
+
+		.pswp__button {
+			border: $elevation-border-width solid $elevation-rule-color;
+			border-radius: var(--style-btn-border-radius);
+			background-color: var(--style-bg-color) !important;
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+			opacity: 1;
+
+			&:focus-visible {
+				@include elevation-focus;
+			}
+		}
+
+		.pswp__counter {
+			border: $elevation-border-width solid $elevation-rule-color;
+			background-color: var(--style-bg-color);
+			color: var(--style-text-color);
+			opacity: 1;
+			padding: spacer(1) spacer(2);
+		}
+
+		.pswp__img,
+		.pswp__iframe,
+		.pswp__video {
+			border: $elevation-border-width solid $elevation-rule-color;
+			box-shadow: $elevation-offset $elevation-offset 0 $elevation-accent-shadow-color;
+		}
 	}
 }

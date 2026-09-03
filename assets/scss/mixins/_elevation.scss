@@ -1,0 +1,151 @@
+// Hard elevation (neo-brutal offset shadows)
+// -----------------------------------------------------------------------------------------
+// Opt-in via $style-elevation ('soft' | 'hard'), compiled from settings.styleElevation.
+
+$style-elevation: 'soft' !default;
+$elevation-border-width: 2px !default;
+$elevation-offset: var(--style-elevation-offset, 0.3125rem) !default;
+$elevation-offset-hover: var(--style-elevation-offset-hover, 0.375rem) !default;
+$elevation-offset-pressed: var(--style-elevation-offset-pressed, 0.125rem) !default;
+$elevation-press-translate: var(--style-elevation-press-translate, 0.125rem) !default;
+$elevation-lift: var(--style-elevation-lift, -0.0625rem) !default;
+$elevation-motion-duration: var(--style-elevation-motion-duration, 150ms) !default;
+$elevation-focus-width: 3px !default;
+$elevation-rule-color: color-mix(in srgb, var(--style-text-color), transparent 18%) !default;
+$elevation-shadow-color: color-mix(in srgb, var(--style-text-color), transparent 8%) !default;
+$elevation-accent-shadow-color: color-mix(in srgb, var(--style-brand-color, var(--style-accent-color)), transparent 12%) !default;
+$elevation-focus-color: var(--style-text-color) !default;
+$elevation-disabled-pattern: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    color-mix(in srgb, var(--style-text-color), transparent 94%) 5px,
+    color-mix(in srgb, var(--style-text-color), transparent 94%) 10px
+) !default;
+
+@mixin elevation-shadow($color: $elevation-shadow-color, $offset: $elevation-offset) {
+    @if $style-elevation == 'hard' {
+        box-shadow: $offset $offset 0 $color;
+    }
+}
+
+@mixin elevation-shadow-or($soft-shadow, $hard-color: $elevation-shadow-color, $offset: $elevation-offset) {
+    @if $style-elevation == 'hard' {
+        box-shadow: $offset $offset 0 $hard-color;
+    } @else {
+        box-shadow: $soft-shadow;
+    }
+}
+
+@mixin elevation-border($color: $elevation-rule-color, $width: $elevation-border-width) {
+    @if $style-elevation == 'hard' {
+        border: $width solid $color;
+    }
+}
+
+@mixin elevation-chrome-edge($side: bottom, $color: $elevation-rule-color) {
+    @if $style-elevation == 'hard' {
+        border-#{$side}: $elevation-border-width solid $color;
+    }
+}
+
+@mixin elevation-focus {
+    @if $style-elevation == 'hard' {
+        outline: $elevation-focus-width solid $elevation-focus-color;
+        outline-offset: $elevation-border-width;
+    }
+}
+
+@mixin elevation-press-in($shadow-color: $elevation-shadow-color) {
+    @if $style-elevation == 'hard' {
+        transition:
+            transform $elevation-motion-duration ease,
+            box-shadow $elevation-motion-duration ease;
+
+        &:hover {
+            transform: translate($elevation-lift, $elevation-lift);
+            box-shadow: $elevation-offset-hover $elevation-offset-hover 0 $shadow-color;
+        }
+
+        &:focus-visible {
+            @include elevation-focus;
+        }
+
+        &:active {
+            transform: translate($elevation-press-translate, $elevation-press-translate);
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $shadow-color;
+        }
+    }
+}
+
+@mixin elevation-lift($shadow-color: $elevation-shadow-color, $with-shadow: true) {
+    @if $style-elevation == 'hard' {
+        transition:
+            transform $elevation-motion-duration ease,
+            box-shadow $elevation-motion-duration ease;
+
+        &:hover {
+            transform: translate($elevation-lift, $elevation-lift);
+
+            @if $with-shadow {
+                box-shadow: $elevation-offset-hover $elevation-offset-hover 0 $shadow-color;
+            }
+        }
+
+        &:focus-within {
+            @include elevation-focus;
+        }
+
+        &:active {
+            transform: translate($elevation-press-translate, $elevation-press-translate);
+
+            @if $with-shadow {
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $shadow-color;
+            }
+        }
+    }
+}
+
+@mixin elevation-disabled($indicator: null) {
+    @if $style-elevation == 'hard' {
+        @if $indicator {
+            background-image: $indicator, $elevation-disabled-pattern;
+        } @else {
+            background-image: $elevation-disabled-pattern;
+        }
+
+        box-shadow: none;
+        transform: none;
+    }
+}
+
+@mixin elevation-slab(
+    $background: var(--style-bg-color),
+    $shadow-color: $elevation-shadow-color,
+    $offset: $elevation-offset
+) {
+    @if $style-elevation == 'hard' {
+        background-color: $background;
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-component-border-radius, 0);
+        box-shadow: $offset $offset 0 $shadow-color;
+    }
+}
+
+@mixin elevation-media-frame($shadow-color: $elevation-accent-shadow-color) {
+    @if $style-elevation == 'hard' {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-image-border-radius, 0);
+        box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $shadow-color;
+    }
+}
+
+@mixin elevation-overlay {
+    @if $style-elevation == 'hard' {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-component-border-radius, 0);
+        box-shadow:
+            calc(#{$elevation-offset} + #{$elevation-offset-pressed}) calc(#{$elevation-offset} + #{$elevation-offset-pressed}) 0 $elevation-accent-shadow-color,
+            calc(#{$elevation-offset-hover} + #{$elevation-offset-pressed}) calc(#{$elevation-offset-hover} + #{$elevation-offset-pressed}) 0 $elevation-shadow-color;
+    }
+}

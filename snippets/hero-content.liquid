@@ -1,0 +1,28 @@
+{%- capture heroContentStyle -%}
+    #finqu-section-{{ section.id }} .hero-content-blocks {
+        align-items: stretch;
+        min-width: 0;
+        {%- if section.settings.contentBlockSpacing != 'nil' -%}
+            gap: {{ section.settings.contentBlockSpacing }};
+        {%- endif -%}
+    }
+    #finqu-section-{{ section.id }} .hero-content-blocks > .block-heading {
+        width: 100%;
+        min-width: 0;
+        align-self: stretch;
+    }
+{%- endcapture -%}
+
+{%- assign heroContentStyle = heroContentStyle | strip | replace: '  ', '' | strip_newlines -%}
+
+{%- if heroContentStyle != blank -%}
+    <style>{{ heroContentStyle }}</style>
+{%- endif -%}
+
+<div class="text-{{ textHorizontalAlign }} hero-content-blocks" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--section-text-align: {{ textHorizontalAlign }}; --section-header-text-align: {{ textHorizontalAlign }}; --section-content-text-align: {{ textHorizontalAlign }}; --aos-order: {{ sectionAnimationOrder }}">
+
+    {% container 'hero-title' %}
+
+    {% container 'hero-actions' %}
+
+</div>

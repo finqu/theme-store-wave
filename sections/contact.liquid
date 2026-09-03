@@ -1,898 +1,567 @@
-{% assign sectionAnimationOrder = 0 %}
-
-{%- if section.settings.sectionOverline -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionTitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionSubtitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
 {%- capture sectionContent -%}
 
-    {% if section.settings.contactLayout == 1 %}
+    <div class="contact-stack" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: 1">
 
-        {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
+        <div class="contact-intro">
+            {% container 'intro' %}
+        </div>
 
-        {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
+        {% if section.settings.contactLayout == 2 %}
 
-        {% if section.settings.richtext %}
+            <div class="row align-items-center gy-5">
 
-            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+                <div class="col-12 col-md">
+                    <div class="contact-aside">
+                        {% container 'aside' %}
+                    </div>
+                </div>
 
-            <div class="text-{{ section.settings.sectionTextAlign }}{% if section.settings.sectionTitle or section.settings.sectionSubtitle or section.settings.sectionOverline %} mt-4{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+                <div class="col-12 col-md">
+                    <div class="contact-form">
+                        {% block 'contact-form' id:'section-contact-form' %}
+                    </div>
+                </div>
 
-                {{ section.settings.richtext }}
+            </div>
 
+        {% else %}
+
+            <div class="contact-aside">
+                {% container 'aside' %}
+            </div>
+
+            <div class="contact-form">
+                {% block 'contact-form' id:'section-contact-form' %}
             </div>
 
         {% endif %}
 
-        {% if section.settings.showSocialMediaIcons %}
-
-            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-            {%- capture class -%}
-                social-media-buttons-container mt-4 text-{{ section.settings.sectionTextAlign }}
-            {%- endcapture -%}
-
-            {%- capture attrs -%}
-                data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"
-            {%- endcapture -%}
-
-            {% render 'social-media-buttons' class: class, attrs: attrs, preview: request.design_mode %}
-
-        {% endif %}
-
-        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-        <div class="mt-6" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-            {% form 'contact' %}
-
-                {% if form.posted_successfully? %}
-
-                    <script type="application/javascript">
-                        document.addEventListener('DOMContentLoaded', function() {
-                            document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
-                        });
-                    </script>
-
-                {% endif %}
-
-                <div class="row">
-
-                    <div class="col-12 col-md mb-4">
-
-                        <div class="form-floating">
-
-                            <input
-                                type="text"
-                                id="{{ section.id }}-contact-name"
-                                class="form-control"
-                                name="name"
-                                placeholder="{{ 'contact.name' | t }}"
-                                value="{{ form.submitted.name | escape }}"
-                                required>
-
-                            <label for="{{ section.id }}-contact-name">
-                                {{- 'contact.name' | t -}}
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-12 col-md mb-4">
-
-                        <div class="form-floating">
-
-                            <input
-                                type="email"
-                                id="{{ section.id }}-contact-email"
-                                class="form-control"
-                                name="email"
-                                placeholder="{{ 'contact.email' | t }}"
-                                value="{{ form.submitted.email | escape }}"
-                                required>
-
-                            <label for="{{ section.id }}-contact-email">
-                                {{- 'contact.email' | t -}}
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                {% if section.settings.showPhonenumber or section.settings.showSubject %}
-
-                    <div class="row">
-
-                        {% if section.settings.showPhonenumber %}
-
-                            <div class="col-12 col-md mb-4">
-
-                                <div class="form-floating">
-
-                                    <input
-                                        type="text"
-                                        id="{{ section.id }}-contact-phonenumber"
-                                        class="form-control"
-                                        name="phonenumber"
-                                        placeholder="{{ 'contact.phone' | t }}"
-                                        value="{{ form.submitted.phonenumber | escape }}">
-
-                                    <label for="{{ section.id }}-contact-phonenumber">
-                                        {{- 'contact.phone' | t -}}
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                        {% endif %}
-
-                        {% if section.settings.showSubject %}
-
-                            <div class="col-12 col-md mb-4">
-
-                                <div class="form-floating">
-
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="{{ section.id }}-contact-subject"
-                                        name="subject"
-                                        placeholder="{{ 'contact.subject' | t }}"
-                                        value="{{ form.submitted.subject | escape }}">
-
-                                    <label for="{{ section.id }}-contact-subject">
-                                        {{- 'contact.subject' | t -}}
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                        {% endif %}
-
-                    </div>
-
-                {% endif %}
-
-                <div class="form-floating mb-4">
-
-                    <textarea
-                        id="contact-message-{{ section.id }}"
-                        name="message"
-                        class="form-control"
-                        placeholder="{{ 'contact.message' | t }}"
-                        required>{{ form.submitted.message | escape }}</textarea>
-
-                    <label for="contact-message-{{ section.id }}">
-                        {{- 'contact.message' | t -}}
-                    </label>
-
-                </div>
-
-                {% render 'form-error', error: form.error, class: 'mb-4' %}
-
-                <button type="submit" class="btn btn-primary d-block w-100">
-                    {{- 'contact.cta' | t -}}
-                </button>
-
-                {% if form.posted_successfully? %}
-
-                    <span class="d-block fw-bold text-center mt-4">
-
-                        {{- 'contact.success' | t -}}
-
-                    </span>
-
-                {% endif %}
-
-            {% endform %}
-
+        <div class="contact-below">
+            {% container 'below' %}
         </div>
 
-    {% elsif section.settings.contactLayout == 2 %}
-
-        <div class="row align-items-center">
-
-            <div class="col-12 col-md mb-4 mb-md-0">
-
-                {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
-
-                {% render 'section-header', sectionTitle: section.settings.sectionTitle, sectionTitleTag: section.settings.sectionTitleTag, sectionSubtitle: section.settings.sectionSubtitle, sectionSubtitleTag: section.settings.sectionSubtitleTag, sectionOverline: section.settings.sectionOverline, sectionOverlineTag: section.settings.sectionOverlineTag, sectionHeaderContainer: 'none', sectionAnimation: settings.sectionAnimation, sectionHandle: sectionHandle %}
-
-                {% if section.settings.richtext %}
-
-                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-                    <div class="text-{{ section.settings.sectionTextAlign }}{% if section.settings.sectionTitle or section.settings.sectionSubtitle or section.settings.sectionOverline %} mt-4{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                        {{ section.settings.richtext }}
-
-                    </div>
-
-                {% endif %}
-
-                {% if section.settings.showSocialMediaIcons %}
-
-                    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-                    {%- capture class -%}
-                        social-media-buttons-container mt-4 text-{{ section.settings.sectionTextAlign }}
-                    {%- endcapture -%}
-        
-                    {%- capture attrs -%}
-                        data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"
-                    {%- endcapture -%}
-
-                    {% render 'social-media-buttons' class: class, attrs: attrs, preview: request.design_mode %}
-
-                {% endif %}
-
-            </div>
-
-            {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-            <div class="col-12 col-md" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-
-                {% form 'contact' %}
-
-                    {% if form.posted_successfully? %}
-
-                        <script type="application/javascript">
-                            document.addEventListener('DOMContentLoaded', function() {
-                                document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
-                            });
-                        </script>
-
-                    {% endif %}
-
-                    <div class="mb-4">
-
-                        <div class="form-floating">
-
-                            <input
-                                type="text"
-                                id="{{ section.id }}-contact-name"
-                                class="form-control"
-                                name="name"
-                                placeholder="{{ 'contact.name' | t }}"
-                                value="{{ form.submitted.name | escape }}"
-                                required>
-
-                            <label for="{{ section.id }}-contact-name">
-                                {{- 'contact.name' | t -}}
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                    <div class="mb-4">
-
-                        <div class="form-floating">
-
-                            <input
-                                type="email"
-                                id="{{ section.id }}-contact-email"
-                                class="form-control"
-                                name="email"
-                                placeholder="{{ 'contact.email' | t }}"
-                                value="{{ form.submitted.email | escape }}"
-                                required>
-
-                            <label for="{{ section.id }}-contact-email">
-                                {{- 'contact.email' | t -}}
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                    {% if section.settings.showPhonenumber %}
-
-                        <div class="mb-4">
-
-                            <div class="form-floating">
-
-                                <input
-                                    type="text"
-                                    id="{{ section.id }}-contact-phonenumber"
-                                    class="form-control"
-                                    name="phonenumber"
-                                    placeholder="{{ 'contact.phone' | t }}"
-                                    value="{{ form.submitted.phonenumber | escape }}">
-
-                                <label for="{{ section.id }}-contact-phonenumber">
-                                    {{- 'contact.phone' | t -}}
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    {% endif %}
-
-                    {% if section.settings.showSubject %}
-
-                        <div class="mb-4">
-
-                            <div class="form-floating">
-
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="{{ section.id }}-contact-subject"
-                                    name="subject"
-                                    placeholder="{{ 'contact.subject' | t }}"
-                                    value="{{ form.submitted.subject | escape }}">
-
-                                <label for="{{ section.id }}-contact-subject">
-                                    {{- 'contact.subject' | t -}}
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    {% endif %}
-
-                    <div class="form-floating mb-4">
-
-                        <textarea
-                            id="contact-message-{{ section.id }}"
-                            name="message"
-                            class="form-control"
-                            placeholder="{{ 'contact.message' | t }}"
-                            required>{{ form.submitted.message | escape }}</textarea>
-
-                        <label for="contact-message-{{ section.id }}">
-                            {{- 'contact.message' | t -}}
-                        </label>
-
-                    </div>
-
-                    {% render 'form-error', error: form.error, class: 'mb-4' %}
-
-                    <button type="submit" class="btn btn-primary d-block w-100">
-                        {{- 'contact.cta' | t -}}
-                    </button>
-
-                    {% if form.posted_successfully? %}
-
-                        <span class="d-block fw-bold text-center mt-4">
-
-                            {{- 'contact.success' | t -}}
-
-                        </span>
-
-                    {% endif %}
-
-                {% endform %}
-
-            </div>
-
-        </div>
-
-    {% endif %}
+    </div>
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionHeader: false, sectionAnimation: false %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionInnerGap: '2rem' %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Contact",
-        "fi": "Yhteydenotto"
-    },
+    "name": "t:sections.contact.name",
     "tag": "section",
     "class": "section section-contact",
     "category": "theme-contact",
-    "keywords": {
-        "en": [
-            "Contact",
-            "Contact information",
-            "Contact us",
-            "Form",
-            "Message"
-        ],
-        "fi": [
-            "Yhteydenotto",
-            "Yhteystiedot",
-            "Ota yhteyttä",
-            "Lomake",
-            "Viesti"
-        ]
-    },
+    "keywords": [
+        "Contact",
+        "Contact information",
+        "Contact us",
+        "Form",
+        "Message"
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "id": "contactLayout",
-                        "type": "hidden"
-                    },
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "richtext",
-                        "type": "richtext",
-                        "label": {
-                            "en": "Description",
-                            "fi": "Kuvaus"
-                        }
-                    }
-                ]
-            },
-            {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.settings.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionHighlightItems",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content highlight",
-                                        "fi": "Sisällön korostaminen"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionContainer",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Indent",
-                                        "fi": "Sisennys"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "fair",
-                                            "label": "S"
-                                        },
-                                        {
-                                            "value": "compact",
-                                            "label": "M"
-                                        },
-                                        {
-                                            "value": "tiny",
-                                            "label": "L"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionTextAlign",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content align",
-                                        "fi": "Sisällön tasaus"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "start",
-                                            "label": "{# icon.align-start #}"
-                                        },
-                                        {
-                                            "value": "center",
-                                            "label": "{# icon.align-center #}"
-                                        },
-                                        {
-                                            "value": "end",
-                                            "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "showPhonenumber",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show phone number",
-                                        "fi": "Näytä puhelinnumero"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "showSubject",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show subject",
-                                        "fi": "Näytä aihe"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "showSocialMediaIcons",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show social media icons",
-                                        "fi": "Näytä sosiaalisen median kuvakkeet"
-                                    },
-                                    "default": true,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionOverlineTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
-                                        {
-                                            "value": "h2",
-                                            "label": "H2"
-                                        },
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Section",
-                                "fi": "Osio"
-                            },
+                            "title": "t:all.groups.style.title",
                             "settings": [
                                 {
                                     "id": "sectionColorScheme",
                                     "type": "select",
-                                    "label": {
-                                        "en": "Color scheme",
-                                        "fi": "Värityyli"
-                                    },
+                                    "label": "t:all.settings.sectionColorScheme.label",
                                     "default": false,
                                     "options": [
                                         {
                                             "value": false,
-                                            "label": {
-                                                "en": "Disabled",
-                                                "fi": "Pois käytöstä"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
                                         },
                                         {
                                             "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
                                         },
                                         {
                                             "value": "light",
-                                            "label": {
-                                                "en": "Light background / Dark content",
-                                                "fi": "Vaalea tausta / Tumma sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
                                         },
                                         {
                                             "value": "dark",
-                                            "label": {
-                                                "en": "Dark background / Light content",
-                                                "fi": "Tumma tausta / Vaalea sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
                                         },
                                         {
                                             "value": "accent",
-                                            "label": {
-                                                "en": "Accent background / Adaptive content",
-                                                "fi": "Korostus tausta / Mukautuva sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "style_custom_color",
                                     "type": "color",
-                                    "label": {
-                                        "en": "Color",
-                                        "fi": "Väri"
-                                    },
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
                                     "default": "#f3f5f6",
-                                    "conditions": ["sectionColorScheme eq custom"]
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
                                     "id": "sectionPaddingMode",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Padding",
-                                        "fi": "Välit"
-                                    },
+                                    "label": "t:all.settings.sectionPaddingMode.label",
                                     "default": "auto",
                                     "options": [
                                         {
                                             "value": "auto",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
-                                    "id": "sectionPaddingTop",
-                                    "label": {
-                                        "en": "Padding top",
-                                        "fi": "Väli ylhäällä"
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
                                     },
-                                    "type": "range",
                                     "min": 0,
                                     "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionPaddingBottom",
-                                    "label": {
-                                        "en": "Padding bottom",
-                                        "fi": "Väli alhaalla"
-                                    },
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
                                     "type": "range",
                                     "min": 0,
-                                    "max": 15,
+                                    "max": 50,
                                     "step": 1,
                                     "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImg",
                                     "type": "image-picker",
-                                    "label": {
-                                        "en": "Background image",
-                                        "fi": "Taustakuva"
-                                    },
+                                    "label": "t:all.settings.sectionBgImg.label",
                                     "adjustments": true
                                 },
                                 {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
                                     "id": "sectionBgImgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 90,
                                     "step": 5,
                                     "default": "0",
                                     "unit": "%",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 10,
                                     "step": 1,
                                     "default": "0",
                                     "unit": " ",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 }
-                            ]
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "settings": [
+                                {
+                                    "id": "sectionHighlightItems",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionHighlightItems.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionHighlightItems.options.nil.label"
+                                        },
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionHighlightItems.options.false.label"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "t:all.settings.sectionHighlightItems.options.true.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionContainer",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionContainer.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionContainer.options.nil.label"
+                                        },
+                                        {
+                                            "value": "fair",
+                                            "label": "t:all.settings.sectionContainer.options.fair.label"
+                                        },
+                                        {
+                                            "value": "compact",
+                                            "label": "t:all.settings.sectionContainer.options.compact.label"
+                                        },
+                                        {
+                                            "value": "tiny",
+                                            "label": "t:all.settings.sectionContainer.options.tiny.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "contactLayout",
+                                    "type": "hidden"
+                                }
+                            ],
+                            "id": "layout"
                         }
                     ]
-                }
+                },
+                "id": "settings"
             }
         ]
     },
-    "presets": [
+    "containers": [
         {
-            "settings": {
-                "contactLayout": 1,
-                "sectionTitle": "Contact us",
-                "richtext": "<p>Want to get in touch with us? Fill out the form below and we'll contact you as soon as possible.<\/p>"
-            }
+            "id": "intro",
+            "title": "t:sections.contact.containers.intro.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "badge",
+                "spacer",
+                "separator"
+            ]
         },
         {
-            "settings": {
-                "contactLayout": 2,
-                "sectionTitle": "Contact us",
-                "richtext": "<p>Want to get in touch with us? Fill out the form below and we'll contact you as soon as possible.<\/p>"
-            }
+            "id": "aside",
+            "title": "t:sections.contact.containers.aside.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "badge",
+                "social-media-buttons",
+                "button",
+                "button-group",
+                "icon-with-text",
+                "spacer",
+                "separator"
+            ]
+        },
+        {
+            "id": "below",
+            "title": "t:sections.contact.containers.below.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "social-media-buttons",
+                "button",
+                "button-group",
+                "spacer",
+                "separator"
+            ]
         }
-    ]
+    ],
+    "presets": {
+        "default": [
+            {
+                "settings": {
+                    "contactLayout": 1
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "contact.title",
+                                "string_value": "Contact us"
+                            }
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Want to get in touch with us? Fill out the form below and we'll contact you as soon as possible.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-contact-form",
+                        "name": "contact-form"
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "below"
+                    }
+                ],
+                "id": "preset-1",
+                "name": "t:sections.contact.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "contactLayout": 2
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "aside",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "contact.title",
+                                "string_value": "Contact us"
+                            }
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "aside",
+                        "settings": {
+                            "richtext": "<p>Want to get in touch with us? Fill out the form below and we'll contact you as soon as possible.</p>"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "aside"
+                    },
+                    {
+                        "id": "section-contact-form",
+                        "name": "contact-form"
+                    }
+                ],
+                "id": "preset-2",
+                "name": "t:sections.contact.presets.preset-2.name"
+            }
+        ],
+        "fi": [
+            {
+                "settings": {
+                    "contactLayout": 1
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "contact.title",
+                                "string_value": "Contact us"
+                            }
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Haluatko ottaa yhteyttä? Täytä alla oleva lomake, niin otamme sinuun yhteyttä mahdollisimman pian.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-contact-form",
+                        "name": "contact-form"
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "below"
+                    }
+                ],
+                "name": "t:sections.contact.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "contactLayout": 2
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "aside",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "contact.title",
+                                "string_value": "Contact us"
+                            }
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "aside",
+                        "settings": {
+                            "richtext": "<p>Haluatko ottaa yhteyttä? Täytä alla oleva lomake, niin otamme sinuun yhteyttä mahdollisimman pian.</p>"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "aside"
+                    },
+                    {
+                        "id": "section-contact-form",
+                        "name": "contact-form"
+                    }
+                ],
+                "name": "t:sections.contact.presets.preset-2.name"
+            }
+        ]
+    }
 }
 {% endschema %}

@@ -87,6 +87,9 @@
                     {%- elsif colorScheme == 'accent' -%}
 
                         {%- assign bgColor = settings.style_accent_color -%}
+                        {%- if bgColor == blank -%}
+                            {%- assign bgColor = settings.style_brand_color -%}
+                        {%- endif -%}
                         {%- assign bgColorBrightness = bgColor | color_brightness -%}
 
                         {%- if bgColorBrightness > 190 -%}

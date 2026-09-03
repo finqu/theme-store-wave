@@ -1,0 +1,203 @@
+{%- assign videoType = 'video' -%}
+
+{%- if block.settings.videoSrc -%}
+
+    {%- if block.settings.videoSrc contains 'youtu.be' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign videoId = block.settings.videoSrc | split: '/' | last -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://www.youtube-nocookie.com/embed/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ block.settings.videoAutoplay | yepnope: 1, 0 }}&rel=0&modestbranding=1&playsinline=1&controls={{ block.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- elsif block.settings.videoSrc contains 'youtube.com' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign queryParams = block.settings.videoSrc | query_params -%}
+        {%- assign videoId = queryParams.v -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://www.youtube-nocookie.com/embed/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ block.settings.videoAutoplay | yepnope: 1, 0 }}&rel=0&modestbranding=1&playsinline=1&controls={{ block.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- elsif block.settings.videoSrc contains 'vimeo.com' -%}
+
+        {%- assign videoType = 'iframe' -%}
+        {%- assign videoId = block.settings.videoSrc | split: '/' | last -%}
+
+        {%- if videoId -%}
+
+            {%- assign videoSrc = 'https://player.vimeo.com/video/' | append: videoId -%}
+
+            {%- capture params -%}
+                autoplay={{ block.settings.videoAutoplay | yepnope: 1, 0 }}&playsinline=0&controls={{ block.settings.videoControls | yepnope: 1, 0 }}
+            {%- endcapture -%}
+
+            {%- assign params = params | strip -%}
+            {%- assign videoSrc = videoSrc | build_query: params -%}
+
+        {%- endif -%}
+
+    {%- else -%}
+
+        {%- assign videoSrc = block.settings.videoSrc -%}
+
+    {%- endif -%}
+
+{%- endif -%}
+
+<div class="block-inner">
+
+    {% if videoSrc %}
+
+        {% if videoType == 'iframe' %}
+
+            <div class="aspect-ratio-{{ block.settings.videoAspectRatio | replace: ':', '-' }}">
+
+                <div class="aspect-ratio-container">
+
+                    <iframe
+                        class="aspect-ratio-item"
+                        src="{{ videoSrc }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="aspect-ratio-{{ block.settings.videoAspectRatio | replace: ':', '-' }}">
+
+                <div class="aspect-ratio-container">
+
+                    <video
+                        class="aspect-ratio-item aspect-ratio-item-cover"
+                        {% if block.settings.videoAutoplay %}autoplay muted loop{% endif %}
+                        {% if block.settings.videoControls %}controls{% endif %}
+                        playsinline>
+                        <source src="{{ videoSrc }}">
+                    </video>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% else %}
+
+        <div class="aspect-ratio-{{ block.settings.videoAspectRatio | replace: ':', '-' }}">
+
+            <div class="aspect-ratio-container">
+
+                {% render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.video.name",
+    "tag": "div",
+    "class": "block block-video",
+    "category": "media",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "videoSrc",
+                        "type": "text",
+                        "label": "t:blocks.video.settings.videoSrc.label",
+                        "info": "t:blocks.video.settings.videoSrc.info"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "videoAutoplay",
+                                    "type": "checkbox",
+                                    "label": "t:blocks.video.settings.videoAutoplay.label",
+                                    "default": false
+                                },
+                                {
+                                    "id": "videoControls",
+                                    "type": "checkbox",
+                                    "label": "t:blocks.video.settings.videoControls.label",
+                                    "default": true
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "videoAspectRatio",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.video.settings.videoAspectRatio.label",
+                                    "default": "16:9",
+                                    "options": [
+                                        {
+                                            "value": "16:9",
+                                            "label": "16:9"
+                                        },
+                                        {
+                                            "value": "4:3",
+                                            "label": "4:3"
+                                        },
+                                        {
+                                            "value": "1:1",
+                                            "label": "1:1"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    }
+}
+{% endschema %}

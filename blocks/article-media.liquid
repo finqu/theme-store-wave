@@ -1,0 +1,245 @@
+{%- comment -%}
+	Optional per-render override (e.g. article-carousel unevenImageSizes).
+	When set, wins over block/theme aspect ratio for this render only.
+{%- endcomment -%}
+{%- if article_media_aspect_ratio != blank -%}
+	{%- assign imageAspectRatio = article_media_aspect_ratio -%}
+{%- else -%}
+	{%- capture imageAspectRatio -%}
+		{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatio, theme_value: settings.articleImageAspectRatio -%}
+	{%- endcapture -%}
+	{%- assign imageAspectRatio = imageAspectRatio | strip -%}
+{%- endif -%}
+
+{%- capture imageAspectRatioFit -%}
+	{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatioFit, theme_value: settings.articleImageAspectRatioFit -%}
+{%- endcapture -%}
+{%- assign imageAspectRatioFit = imageAspectRatioFit | strip -%}
+
+{%- if articlePerRow == 'nil' or articlePerRow == nil -%}
+	{%- assign articlePerRow = settings.articlePerRow -%}
+{%- endif -%}
+
+{%- assign articleName = article.title | default: '' -%}
+
+{%- unless article -%}
+	{%- assign articleName = 'placeholder.article' | t -%}
+{%- endunless -%}
+
+{%- capture articleUrl -%}
+	{{- article | link | default: '' -}}
+{%- endcapture -%}
+
+<div class="article-media aspect-ratio-{{ imageAspectRatio | replace: ':', '-' }} img-indicator-zoom">
+
+	<div class="article-img-container aspect-ratio-container">
+
+		{%- capture articleMedia -%}
+
+			{%- if article.header_image -%}
+
+				{%- if imageAspectRatio == '9:13' -%}
+
+					{%- assign imgSizeSm = '388,388' -%}
+					{%- assign imgSizeMd = '330,330' -%}
+
+					{%- case articlePerRow -%}
+						{% when '2' %}
+							{%- assign imgSizeLg = '850,850' -%}
+						{% when '3' %}
+							{%- assign imgSizeLg = '560,560' -%}
+						{% when '4' %}
+							{%- assign imgSizeLg = '416,416' -%}
+						{% when '5' %}
+							{%- assign imgSizeLg = '330,330' -%}
+						{% when '6' %}
+							{%- assign imgSizeLg = '272,272' -%}
+					{%- endcase -%}
+
+				{%- elsif imageAspectRatio == '4:3' -%}
+
+					{%- assign imgSizeSm = '280,210' -%}
+					{%- assign imgSizeMd = '240,180' -%}
+
+					{%- case articlePerRow -%}
+						{% when '2' %}
+							{%- assign imgSizeLg = '613,460' -%}
+						{% when '3' %}
+							{%- assign imgSizeLg = '413,310' -%}
+						{% when '4' %}
+							{%- assign imgSizeLg = '313,235' -%}
+						{% when '5' %}
+							{%- assign imgSizeLg = '240,190' -%}
+						{% when '6' %}
+							{%- assign imgSizeLg = '200,160' -%}
+					{%- endcase -%}
+
+				{%- elsif imageAspectRatio == '3:4' -%}
+
+					{%- assign imgSizeSm = '280,373' -%}
+					{%- assign imgSizeMd = '240,320' -%}
+
+					{%- case articlePerRow -%}
+						{% when '2' %}
+							{%- assign imgSizeLg = '600,800' -%}
+						{% when '3' %}
+							{%- assign imgSizeLg = '400,533' -%}
+						{% when '4' %}
+							{%- assign imgSizeLg = '300,400' -%}
+						{% when '5' %}
+							{%- assign imgSizeLg = '240,320' -%}
+						{% when '6' %}
+							{%- assign imgSizeLg = '200,267' -%}
+					{%- endcase -%}
+
+				{%- elsif imageAspectRatio == '1:1' -%}
+
+					{%- assign imgSizeSm = '280,280' -%}
+					{%- assign imgSizeMd = '240,240' -%}
+
+					{%- case articlePerRow -%}
+						{% when '2' %}
+							{%- assign imgSizeLg = '600,600' -%}
+						{% when '3' %}
+							{%- assign imgSizeLg = '400,400' -%}
+						{% when '4' %}
+							{%- assign imgSizeLg = '300,300' -%}
+						{% when '5' %}
+							{%- assign imgSizeLg = '240,240' -%}
+						{% when '6' %}
+							{%- assign imgSizeLg = '200,200' -%}
+					{%- endcase -%}
+
+				{%- endif -%}
+
+				<picture>
+					<source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+						{{- article.header_image | thumb: imgSizeLg }} 1x,
+						{{- article.header_image | thumb: imgSizeLg | thumb: '@2x' }} 2x">
+
+					<source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+						{{- article.header_image | thumb: imgSizeMd }} 1x,
+						{{- article.header_image | thumb: imgSizeMd | thumb: '@2x' }} 2x">
+
+					<source data-srcset="
+						{{- article.header_image | thumb: imgSizeSm }} 1x,
+						{{- article.header_image | thumb: imgSizeSm | thumb: '@2x' }} 2x">
+
+					<img
+						alt="{{ articleName }}"
+						data-src="{{ article.header_image | thumb: imgSizeSm }}"
+						data-srcset="{{ article.header_image | thumb: imgSizeSm }} 1x, {{ article.header_image | thumb: imgSizeSm | thumb: '@2x' }} 2x"
+						class="lazy d-block mx-auto img-fluid aspect-ratio-item{% if imageAspectRatioFit == 'cover' %} aspect-ratio-item-cover{% endif %}">
+				</picture>
+
+			{%- else -%}
+
+				{%- capture placeholderSrc -%}
+					{%- render 'placeholder-svg', type: 'image', base64: true -%}
+				{%- endcapture -%}
+
+				<img
+					class="lazy d-block mx-auto img-fluid aspect-ratio-item svg-placeholder{% if imageAspectRatioFit == 'cover' %} aspect-ratio-item-cover{% endif %}"
+					alt="{{ articleName }}"
+					data-src="{{- placeholderSrc | strip_newlines -}}">
+
+			{%- endif -%}
+
+		{%- endcapture -%}
+
+		{%- if block.settings.linkToArticle and article and articleUrl != blank -%}
+
+			<a href="{{ articleUrl | strip }}" aria-label="{{ articleName }}">
+				{{- articleMedia -}}
+			</a>
+
+		{%- else -%}
+
+			{{- articleMedia -}}
+
+		{%- endif -%}
+
+	</div>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.article-media.name",
+    "tag": "div",
+    "class": "block block-article-media",
+    "category": "basic",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "id": "layout",
+                "settings": [
+                    {
+                        "id": "imageAspectRatio",
+                        "type": "select",
+                        "label": "t:all.settings.imageAspectRatio.label",
+                        "default": "default",
+                        "options": [
+                            {
+                                "value": "default",
+                                "label": "t:all.settings.imageAspectRatio.options.default.label"
+                            },
+                            {
+                                "value": "9:13",
+                                "label": "9:13"
+                            },
+                            {
+                                "value": "4:3",
+                                "label": "4:3"
+                            },
+                            {
+                                "value": "3:4",
+                                "label": "3:4"
+                            },
+                            {
+                                "value": "1:1",
+                                "label": "1:1"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "imageAspectRatioFit",
+                        "type": "select",
+                        "label": "t:blocks.article-media.settings.imageAspectRatioFit.label",
+                        "default": "default",
+                        "options": [
+                            {
+                                "value": "default",
+                                "label": "t:blocks.article-media.settings.imageAspectRatioFit.options.default.label"
+                            },
+                            {
+                                "value": "contain",
+                                "label": "t:blocks.article-media.settings.imageAspectRatioFit.options.contain.label"
+                            },
+                            {
+                                "value": "cover",
+                                "label": "t:blocks.article-media.settings.imageAspectRatioFit.options.cover.label"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "id": "style",
+                "settings": [
+                    {
+                        "id": "linkToArticle",
+                        "type": "checkbox",
+                        "label": "t:blocks.article-media.settings.linkToArticle.label",
+                        "default": true
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

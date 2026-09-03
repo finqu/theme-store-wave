@@ -1,0 +1,36 @@
+// 404
+// -----------------------------------------------------------------------------------------
+
+.section-404 {
+
+    // Theme-owned stack: live store has no .finqu-section-blocks-container.
+    .section-404-blocks,
+    .section-404-blocks .finqu-section-blocks-container {
+        display: flex;
+        flex-direction: column;
+        gap: spacer(4);
+        width: 100%;
+    }
+
+    .block-heading {
+        .section-header,
+        .title {
+            margin-bottom: 0;
+        }
+    }
+
+    .block-separator .block-inner hr {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .section-404 {
+
+        .section-inner:not(.section-overlay) .section-404-blocks {
+            @include elevation-slab;
+            padding: clamp(1.5rem, 6vw, 4rem);
+        }
+    }
+}

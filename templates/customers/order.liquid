@@ -1,7 +1,7 @@
 {%- assign dateFormat = 'general.date_format' | t -%}
 
 {%- capture sectionTitle -%}
-	{{ 'account.order_title_dynamic' | t, id: order.order_number }}
+	{{ 'account.order_title_dynamic' | t:id: order.order_number }}
 {%- endcapture -%}
 
 {%- capture sectionSubtitle -%}
@@ -34,7 +34,7 @@
 
 				<div class="d-flex justify-content-md-end">
 
-                    <a href="{{ order.receipt_url }}" class="btn btn-secondary">
+                    <a href="{{ order.receipt_url }}" class="btn btn-primary btn-outline">
                     	{{ 'account.order.download_receipt' | t }}
                    	</a>
 
@@ -394,7 +394,7 @@
 
 				                            		<div class="order-shipment-package-tracking">
 
-				                                        <a href="{{ package.tracking_url }}" class="btn btn-secondary order-shipment-package-tracking-btn">
+				                                        <a href="{{ package.tracking_url }}" class="btn btn-primary btn-outline order-shipment-package-tracking-btn">
 				                                            {{ 'account.order.track_shipment' | t }}
 				                                        </a>
 
@@ -587,7 +587,7 @@
 
 												{% if item.product.reviews_are_enabled and item.product.default_or_selected_variant.customer_has_reviewed == false %}
 
-													<a href="{{ item.product_url }}?create_review=true" class="btn btn-sm btn-secondary mt-3">
+													<a href="{{ item.product_url }}?create_review=true" class="btn btn-sm btn-primary btn-outline mt-3">
 														{{ 'account.order.write_review' | t }}
 													</a>
 

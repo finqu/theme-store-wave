@@ -24,12 +24,12 @@
     border-width: $btn-border-width;
     border-style: solid;
     border-color: var(--style-btn-border-color);
-    border-radius: var(--#{$prefix}btn-border-radius);
+    border-radius: var(--style-btn-border-radius);
     padding: var(--#{$prefix}btn-padding-y) var(--#{$prefix}btn-padding-x);
     @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
 
     &:hover {
-        color: inherit;
+        color: var(--#{$prefix}btn-color);
     }
 
     &:focus,
@@ -49,42 +49,114 @@
     }
 }
 
-// Btn primary
-@if $btn-primary-variant == 1 {
-    .btn.btn-primary {
-        color: var(--style-btn-text-color);
-        background-color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-border-color);
+// Role color tokens (filled + outline share these)
+.btn.btn-primary {
+    --btn-fill-bg: var(--style-btn-bg-color);
+    --btn-fill-text: var(--style-btn-text-color);
+    --btn-fill-border: var(--style-btn-border-color);
+    --btn-fill-bg-hover: var(--style-btn-bg-hover-color);
+    --btn-fill-border-hover: var(--style-btn-border-hover-color);
+    --btn-fill-bg-active: var(--style-btn-bg-active-color);
+    --btn-fill-border-active: var(--style-btn-border-active-color);
+}
+
+.btn.btn-secondary {
+    --btn-fill-bg: var(--style-btn-secondary-bg-color);
+    --btn-fill-text: var(--style-btn-secondary-text-color);
+    --btn-fill-border: var(--style-btn-secondary-border-color);
+    --btn-fill-bg-hover: var(--style-btn-secondary-bg-hover-color);
+    --btn-fill-border-hover: var(--style-btn-secondary-border-hover-color);
+    --btn-fill-bg-active: var(--style-btn-secondary-bg-active-color);
+    --btn-fill-border-active: var(--style-btn-secondary-border-active-color);
+}
+
+.btn.btn-contrast {
+    --btn-fill-bg: var(--style-text-color);
+    --btn-fill-text: var(--style-bg-color);
+    --btn-fill-border: var(--style-text-color);
+    --btn-fill-bg-hover: color-mix(in srgb, var(--style-text-color) 88%, var(--style-bg-color));
+    --btn-fill-border-hover: color-mix(in srgb, var(--style-text-color) 88%, var(--style-bg-color));
+    --btn-fill-bg-active: color-mix(in srgb, var(--style-text-color) 78%, var(--style-bg-color));
+    --btn-fill-border-active: color-mix(in srgb, var(--style-text-color) 78%, var(--style-bg-color));
+}
+
+// Filled primary / secondary / contrast (exclude outline)
+@if $btn-primary-variant == 'off' or $btn-primary-variant == '0' {
+    .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+        color: var(--btn-fill-text);
+        background-color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-border);
+
+        .svg-icon {
+            color: var(--btn-fill-text);
+        }
+
+        &:hover,
+        &:focus,
+        &.focus,
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-border);
+
+            .svg-icon {
+                color: var(--btn-fill-text);
+            }
+        }
+
+        &:focus-visible {
+            outline: $btn-border-width solid var(--btn-fill-border);
+            outline-offset: $btn-border-width;
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-border);
+        }
+    }
+} @else if $btn-primary-variant == '1' {
+    .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+        color: var(--btn-fill-text);
+        background-color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-border);
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
         .svg-icon {
-            color: var(--style-btn-text-color);
+            color: var(--btn-fill-text);
         }
 
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-hover-color);
-            border-color: var(--style-btn-border-hover-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg-hover);
+            border-color: var(--btn-fill-border-hover);
         }
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-color);
-            border-color: var(--style-btn-border-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-border);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-active-color);
-            border-color: var(--style-btn-border-active-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg-active);
+            border-color: var(--btn-fill-border-active);
         }
     }
-} @else if $btn-primary-variant == 2 {
+} @else if $btn-primary-variant == '2' {
     $anim-duration: 5;
     $anim-speed: 0.65;
 
@@ -100,10 +172,12 @@
         }
     }
 
-    .btn.btn-primary {
-        color: var(--style-btn-text-color);
-        background: var(--style-btn-bg-color);
-        border-color: var(--style-btn-border-color);
+    .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+        color: var(--btn-fill-text);
+        background: var(--btn-fill-bg);
+        border-color: var(--btn-fill-border);
         overflow: hidden;
         position: relative;
         transition-property: background, border-color;
@@ -111,7 +185,7 @@
         transition-timing-function: ease-in-out;
 
         .svg-icon {
-            color: var(--style-btn-text-color);
+            color: var(--btn-fill-text);
         }
 
         &:after {
@@ -129,9 +203,9 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            background: var(--style-btn-bg-hover-color);
-            border-color: var(--style-btn-border-hover-color);
+            color: var(--btn-fill-text);
+            background: var(--btn-fill-bg-hover);
+            border-color: var(--btn-fill-border-hover);
 
             &:after {
                 animation: shine #{$anim-duration}s ease-in-out;
@@ -140,22 +214,24 @@
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-color);
-            border-color: var(--style-btn-border-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-border);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-active-color);
-            border-color: var(--style-btn-border-active-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg-active);
+            border-color: var(--btn-fill-border-active);
         }
     }
-} @else if $btn-primary-variant == 3 {
-    .btn.btn-primary {
-        color: var(--style-btn-text-color);
+} @else if $btn-primary-variant == '3' {
+    .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+        color: var(--btn-fill-text);
         border: 0;
         transition: all .3s;
         position: relative;
@@ -166,13 +242,17 @@
         &.btn-lg {
             @include button-size(calc($btn-padding-y-lg + $btn-border-width), calc($btn-padding-x-lg + $btn-border-width), $btn-font-size-lg, $btn-border-radius-lg);
         }
-        
+
         &.btn-sm {
             @include button-size(calc($btn-padding-y-sm + $btn-border-width), calc($btn-padding-x-sm + $btn-border-width), $btn-font-size-sm, $btn-border-radius-sm);
         }
 
+        &.btn-xs {
+            @include button-size(calc($btn-padding-y-xs + $btn-border-width), calc($btn-padding-x-xs + $btn-border-width), $btn-font-size-xs, $btn-border-radius-sm);
+        }
+
         .svg-icon {
-            color: var(--style-btn-text-color);
+            color: var(--btn-fill-text);
         }
 
         &:after {
@@ -182,7 +262,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--style-btn-bg-color);
+            background-color: var(--btn-fill-bg);
             z-index: -2;
         }
 
@@ -193,7 +273,7 @@
             left: 0;
             width: 0%;
             height: 100%;
-            background-color: var(--style-btn-bg-hover-color);
+            background-color: var(--btn-fill-bg-hover);
             transition: all .3s;
             z-index: -1;
         }
@@ -208,37 +288,39 @@
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-color);
-            border-color: var(--style-btn-border-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-border);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color: var(--style-btn-text-color);
-            background-color: var(--style-btn-bg-active-color);
-            border-color: var(--style-btn-border-active-color);
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg-active);
+            border-color: var(--btn-fill-border-active);
         }
     }
-} @else if $btn-primary-variant == 4 {
-    .btn.btn-primary {
+} @else if $btn-primary-variant == '4' {
+    .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+    .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
         position: relative;
         overflow: hidden;
         transition: color 0.3s ease, background 0s 0.3s ease;
-        color: var(--style-btn-text-color);
-        border-color: var(--style-btn-border-color);
+        color: var(--btn-fill-text);
+        border-color: var(--btn-fill-border);
         z-index: 0;
         background: transparent;
 
         .svg-icon {
-            color: var(--style-btn-text-color);
+            color: var(--btn-fill-text);
         }
 
         &:before {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -253,7 +335,7 @@
         &:after {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -268,12 +350,12 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
             transition: color 0.3s ease, background 0s ease;
 
             .svg-icon {
-                color: var(--style-btn-bg-color);
+                color: var(--btn-fill-bg);
             }
 
             &:before {
@@ -287,18 +369,18 @@
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-text-color);
+            color: var(--btn-fill-text);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color: var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
             transition: color 0.3s ease, background 0s ease;
 
             .svg-icon {
-                color: var(--style-btn-bg-color);
+                color: var(--btn-fill-bg);
             }
 
             &:before {
@@ -307,68 +389,208 @@
 
             &:after {
                 width: 0;
+            }
+        }
+    }
+} @else if $btn-primary-variant == '5' {
+    @if $style-elevation == 'hard' {
+        .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+        .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+        .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: $elevation-rule-color;
+            border-width: $elevation-border-width;
+            box-shadow: $elevation-offset $elevation-offset 0 $elevation-shadow-color;
+            transition:
+                transform $elevation-motion-duration ease,
+                box-shadow $elevation-motion-duration ease,
+                color $elevation-motion-duration ease-in-out,
+                background-color $elevation-motion-duration ease-in-out,
+                border-color $elevation-motion-duration ease-in-out;
+
+            .svg-icon {
+                color: var(--btn-fill-text);
+            }
+
+            &:hover {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg-hover);
+                border-color: $elevation-rule-color;
+                transform: translate($elevation-lift, $elevation-lift);
+                box-shadow: $elevation-offset-hover $elevation-offset-hover 0 $elevation-shadow-color;
+            }
+
+            &:focus,
+            &.focus {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg-hover);
+                border-color: $elevation-rule-color;
+            }
+
+            &:focus-visible {
+                @include elevation-focus;
+            }
+
+            &.disabled,
+            &:disabled {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg);
+                border-color: $elevation-rule-color;
+                @include elevation-disabled;
+            }
+
+            &:not(:disabled):not(.disabled):active,
+            &:not(:disabled):not(.disabled).active,
+            .show > &.dropdown-toggle {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg-active);
+                border-color: $elevation-rule-color;
+                transform: translate($elevation-press-translate, $elevation-press-translate);
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+            }
+        }
+    } @else {
+        .btn.btn-primary:not(.btn-outline):not(.btn-ghost),
+        .btn.btn-secondary:not(.btn-outline):not(.btn-ghost),
+        .btn.btn-contrast:not(.btn-outline):not(.btn-ghost) {
+            color: var(--btn-fill-text);
+            background-color: var(--btn-fill-bg);
+            border-color: var(--style-text-color);
+            border-width: $elevation-border-width;
+            box-shadow: $elevation-offset $elevation-offset 0 var(--style-text-color);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+            .svg-icon {
+                color: var(--btn-fill-text);
+            }
+
+            &:hover,
+            &:focus,
+            &.focus {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg-hover);
+                border-color: var(--style-text-color);
+                transform: translate($elevation-offset-pressed, $elevation-offset-pressed);
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 var(--style-text-color);
+            }
+
+            &.disabled,
+            &:disabled {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg);
+                border-color: var(--style-text-color);
+                box-shadow: $elevation-offset $elevation-offset 0 var(--style-text-color);
+                transform: none;
+            }
+
+            &:not(:disabled):not(.disabled):active,
+            &:not(:disabled):not(.disabled).active,
+            .show > &.dropdown-toggle {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg-active);
+                border-color: var(--style-text-color);
+                transform: translate($elevation-offset, $elevation-offset);
+                box-shadow: 0 0 0 var(--style-text-color);
             }
         }
     }
 }
 
-// Btn secondary
-@if $btn-secondary-variant == 1 {
-    .btn.btn-secondary {
-        color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-bg-color);
+// Outline (uses role tokens; hover animations from former secondary variants)
+@if $btn-secondary-variant == 'off' or $btn-secondary-variant == '0' {
+    .btn.btn-outline {
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
+        background-color: transparent;
+
+        .svg-icon {
+            color: var(--btn-fill-bg);
+        }
+
+        &:hover,
+        &:focus,
+        &.focus,
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active,
+        .show > &.dropdown-toggle {
+            color: var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
+            background-color: transparent;
+
+            .svg-icon {
+                color: var(--btn-fill-bg);
+            }
+        }
+
+        &:focus-visible {
+            outline: $btn-border-width solid var(--btn-fill-bg);
+            outline-offset: $btn-border-width;
+        }
+
+        &.disabled,
+        &:disabled {
+            color: var(--btn-fill-bg);
+        }
+    }
+} @else if $btn-secondary-variant == '1' {
+    .btn.btn-outline {
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
+        background-color: transparent;
         transition: 0.25s;
 
         .svg-icon {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            box-shadow: inset 0 0 0 2em var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            box-shadow: inset 0 0 0 2em var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color:  var(--style-btn-text-color);
-            box-shadow: inset 0 0 0 2em var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            box-shadow: inset 0 0 0 2em var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
     }
-} @else if $btn-secondary-variant == 2 {
-    .btn.btn-secondary {
-        color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-bg-color);
+} @else if $btn-secondary-variant == '2' {
+    .btn.btn-outline {
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
+        background-color: transparent;
         transition: color 0.3s ease, background 0s 0.3s ease;
         position: relative;
         overflow: hidden;
         z-index: 0;
 
         .svg-icon {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:before {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -383,8 +605,8 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
             transition: color 0.3s ease, background 0s 0.3s ease;
 
             &:before {
@@ -394,20 +616,20 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color:  var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
 
             &:before {
                 width: 100%;
@@ -416,27 +638,28 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
     }
-} @else if $btn-secondary-variant == 3 {
-    .btn.btn-secondary {
-        color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-bg-color);
+} @else if $btn-secondary-variant == '3' {
+    .btn.btn-outline {
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
+        background-color: transparent;
         transition: color 0.3s ease, background 0s ease;
         position: relative;
         overflow: hidden;
         z-index: 0;
 
         .svg-icon {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:before {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: auto;
@@ -451,8 +674,8 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
             transition: color 0.3s ease, background 0s 0.3s ease;
 
             &:before {
@@ -462,20 +685,20 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color:  var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
 
             &:before {
                 width: 100%;
@@ -484,28 +707,28 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
     }
-} @else if $btn-secondary-variant == 4 {
-    .btn.btn-secondary {
+} @else if $btn-secondary-variant == '4' {
+    .btn.btn-outline {
         position: relative;
         overflow: hidden;
         transition: color 0.3s ease, background 0s ease;
-        color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-bg-color);
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
         z-index: 0;
         background: transparent;
 
         .svg-icon {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:before {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -520,7 +743,7 @@
         &:after {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -534,12 +757,12 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            background: var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            background: var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
 
             &:before {
@@ -553,18 +776,18 @@
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color:  var(--style-btn-text-color);
-            background: var(--style-btn-bg-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            background: var(--btn-fill-bg);
+            border-color: var(--btn-fill-bg);
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
 
             &:before {
@@ -576,23 +799,24 @@
             }
         }
     }
-} @else if $btn-secondary-variant == 5 {
-    .btn.btn-secondary {
-        color: var(--style-btn-bg-color);
-        border-color: var(--style-btn-bg-color);
+} @else if $btn-secondary-variant == '5' {
+    .btn.btn-outline {
+        color: var(--btn-fill-bg);
+        border-color: var(--btn-fill-bg);
+        background-color: transparent;
         transition: color 0.3s ease, background 0s 0.3s ease;
         position: relative;
         overflow: hidden;
         z-index: 0;
 
         .svg-icon {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:before {
             position: absolute;
             content: '';
-            background: var(--style-btn-bg-color);
+            background: var(--btn-fill-bg);
             transition-duration: .3s;
             z-index: -1;
             top: 0;
@@ -607,8 +831,8 @@
         &:hover,
         &:focus,
         &.focus {
-            color: var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
             transition: color 0.3s ease, background 0s 0.3s ease;
 
             &:before {
@@ -617,20 +841,20 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
         }
 
         &.disabled,
         &:disabled {
-            color: var(--style-btn-bg-color);
+            color: var(--btn-fill-bg);
         }
 
         &:not(:disabled):not(.disabled):active,
         &:not(:disabled):not(.disabled).active,
         .show > &.dropdown-toggle {
-            color:  var(--style-btn-text-color);
-            border-color: var(--style-btn-bg-color);
+            color: var(--btn-fill-text);
+            border-color: var(--btn-fill-bg);
 
             &:before {
                 width: 100%;
@@ -639,8 +863,160 @@
             }
 
             .svg-icon {
-                color: var(--style-btn-text-color);
+                color: var(--btn-fill-text);
             }
+        }
+    }
+} @else if $btn-secondary-variant == '6' {
+    @if $style-elevation == 'hard' {
+        .btn.btn-outline {
+            color: var(--style-text-color);
+            background-color: var(--style-bg-color);
+            border-color: $elevation-rule-color;
+            border-width: $elevation-border-width;
+            box-shadow: $elevation-offset $elevation-offset 0 $elevation-accent-shadow-color;
+            transition:
+                transform $elevation-motion-duration ease,
+                box-shadow $elevation-motion-duration ease,
+                color $elevation-motion-duration ease-in-out,
+                background-color $elevation-motion-duration ease-in-out,
+                border-color $elevation-motion-duration ease-in-out;
+
+            .svg-icon {
+                color: var(--style-text-color);
+            }
+
+            &:hover {
+                color: var(--style-text-color);
+                background-color: color-mix(in srgb, var(--btn-fill-bg), var(--style-bg-color) 88%);
+                border-color: $elevation-rule-color;
+                transform: translate($elevation-lift, $elevation-lift);
+                box-shadow: $elevation-offset-hover $elevation-offset-hover 0 $elevation-accent-shadow-color;
+
+                .svg-icon {
+                    color: var(--style-text-color);
+                }
+            }
+
+            &:focus,
+            &.focus {
+                color: var(--style-text-color);
+                background-color: var(--style-bg-color);
+                border-color: $elevation-rule-color;
+
+                .svg-icon {
+                    color: var(--style-text-color);
+                }
+            }
+
+            &:focus-visible {
+                @include elevation-focus;
+            }
+
+            &.disabled,
+            &:disabled {
+                color: var(--style-text-color);
+                background-color: var(--style-bg-color);
+                border-color: $elevation-rule-color;
+                @include elevation-disabled;
+            }
+
+            &:not(:disabled):not(.disabled):active,
+            &:not(:disabled):not(.disabled).active,
+            .show > &.dropdown-toggle {
+                color: var(--style-text-color);
+                background-color: color-mix(in srgb, var(--btn-fill-bg), var(--style-bg-color) 82%);
+                border-color: $elevation-rule-color;
+                transform: translate($elevation-press-translate, $elevation-press-translate);
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+
+                .svg-icon {
+                    color: var(--style-text-color);
+                }
+            }
+        }
+    } @else {
+        .btn.btn-outline {
+            color: var(--btn-fill-bg);
+            background-color: transparent;
+            border-color: var(--btn-fill-bg);
+
+            .svg-icon {
+                color: var(--btn-fill-bg);
+            }
+
+            &:hover,
+            &:focus,
+            &.focus,
+            &:not(:disabled):not(.disabled):active,
+            &:not(:disabled):not(.disabled).active,
+            .show > &.dropdown-toggle {
+                color: var(--btn-fill-text);
+                background-color: var(--btn-fill-bg);
+                border-color: var(--btn-fill-bg);
+
+                .svg-icon {
+                    color: var(--btn-fill-text);
+                }
+            }
+
+            &:focus-visible {
+                outline: $btn-border-width solid var(--btn-fill-bg);
+                outline-offset: $btn-border-width;
+            }
+
+            &.disabled,
+            &:disabled {
+                color: var(--btn-fill-bg);
+                background-color: transparent;
+
+                .svg-icon {
+                    color: var(--btn-fill-bg);
+                }
+            }
+        }
+    }
+}
+
+// Ghost — subtle padded button; text color follows theme role (--btn-fill-bg)
+.btn.btn-ghost {
+    color: var(--btn-fill-bg, var(--style-text-color));
+    background-color: transparent;
+    border-color: transparent;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+
+    .svg-icon {
+        color: var(--btn-fill-bg, var(--style-text-color));
+    }
+
+    &:hover,
+    &:focus,
+    &.focus {
+        color: var(--btn-fill-bg, var(--style-text-color));
+        background-color: color-mix(in srgb, var(--btn-fill-bg, var(--style-text-color)) 12%, transparent);
+        border-color: transparent;
+
+        .svg-icon {
+            color: var(--btn-fill-bg, var(--style-text-color));
+        }
+    }
+
+    &.disabled,
+    &:disabled {
+        color: var(--btn-fill-bg, var(--style-text-color));
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    .show > &.dropdown-toggle {
+        color: var(--btn-fill-bg, var(--style-text-color));
+        background-color: color-mix(in srgb, var(--btn-fill-bg, var(--style-text-color)) 18%, transparent);
+        border-color: transparent;
+
+        .svg-icon {
+            color: var(--btn-fill-bg, var(--style-text-color));
         }
     }
 }
@@ -651,6 +1027,10 @@
 
 .btn-sm {
     @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+
+.btn-xs {
+    @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $btn-font-size-xs, $btn-border-radius-sm);
 }
 
 .btn-text {
@@ -669,6 +1049,30 @@
 
     &:hover {
         color: inherit;
+    }
+
+    &.btn-text-primary {
+        color: var(--style-btn-bg-color);
+
+        &:hover {
+            color: var(--style-btn-bg-hover-color);
+        }
+    }
+
+    &.btn-text-secondary {
+        color: var(--style-btn-secondary-bg-color);
+
+        &:hover {
+            color: var(--style-btn-secondary-bg-hover-color);
+        }
+    }
+
+    &.btn-text-contrast {
+        color: var(--style-text-color);
+
+        &:hover {
+            color: var(--style-text-color);
+        }
     }
 }
 
@@ -693,6 +1097,28 @@
 .btn-icon {
     display: flex;
     align-items: center;
+}
+
+// Icon animate on padded buttons (filled / outline / ghost) — icon only, no text shift
+.btn.btn-icon-animate {
+    display: inline-flex;
+    align-items: center;
+
+    .svg-icon {
+        width: 14px;
+        height: 14px;
+        margin-left: 8px;
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: opacity .35s cubic-bezier(.645,.045,.355,1), transform .35s cubic-bezier(.645,.045,.355,1);
+    }
+
+    &:hover .svg-icon,
+    &:focus .svg-icon,
+    &.focus .svg-icon {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .btn:not(.btn-link):not(.btn-text):not(.btn-icon) {

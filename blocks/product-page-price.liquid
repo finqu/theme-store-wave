@@ -1,0 +1,147 @@
+{%- assign showPromotion = block.settings.showPromotion -%}
+{%- assign showLowestPrice = block.settings.showLowestPrice -%}
+
+{%- comment -%}
+    Label rows pair the price with a "Price:" column and push the tax note to
+    the row end — used when this block sits in the product form's details
+    container rather than on its own in the info column.
+{%- endcomment -%}
+{%- assign useLabel = block.settings.showLabel -%}
+
+{% if store.customer_has_purchase_right %}
+
+    <div class="product-pricing mb-4{% if useLabel %} d-md-flex{% else %} mt-2{% endif %}">
+
+        {% if useLabel %}
+
+            <label class="form-label fw-bold me-2 d-inline-block min-w-px-100">
+                {{- 'general.price' | t -}}:
+            </label>
+
+        {% endif %}
+
+        <div{% if useLabel %} class="w-100"{% endif %}>
+
+            {% if showPromotion %}
+
+                <div class="product-promotion mb-2">
+
+                    <span class="text-sale-price">
+                        {{ product.default_or_selected_variant.promotion.title | strip }}{% if product.default_or_selected_variant.promotion.description %}: {{ product.default_or_selected_variant.promotion.description }}{% endif %}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+            <div class="product-price-container flex-wrap column-gap-3 row-gap-2{% if useLabel %} d-flex{% endif %}">
+
+                {% if product.default_or_selected_variant.discount_information != nil %}
+
+                    <span class="product-sale-price-text text-sale-price" data-product-price-dynamic>
+                        {{- settings.taxFreeShopping | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price | money_with_currency -}}
+                    </span>
+
+                    <span class="product-price text-decoration-line-through text-muted" data-product-original-price-dynamic>
+                        {{- settings.taxFreeShopping | yepnope: product.default_or_selected_variant.original_net_price, product.default_or_selected_variant.original_price | money_with_currency -}}
+                    </span>
+
+                {% else %}
+
+                    <span class="product-price text-price" data-product-price-dynamic>
+                        {{- settings.taxFreeShopping | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price | money_with_currency -}}
+                    </span>
+
+                {% endif %}
+
+                {% if useLabel and settings.taxInformation and product.default_or_selected_variant.bundle_contents == false %}
+
+                    {% assign itemTaxPercent = settings.taxFreeShopping | yepnope: 0, product.default_or_selected_variant.rate %}
+
+                    <span class="product-vat-text text-muted ms-auto">
+                        {{- 'product.vat_included_dynamic' | t, amount: itemTaxPercent -}}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            {% if showLowestPrice and product.default_or_selected_variant.discount_information != nil %}
+
+                {%- if product.default_or_selected_variant.previous_lower_price -%}
+                    {% assign itemLowestPrice = settings.taxFreeShopping | yepnope: product.default_or_selected_variant.previous_lower_price.net_price, product.default_or_selected_variant.previous_lower_price.price | money_with_currency %}
+                {%- else -%}
+                    {% assign itemLowestPrice = settings.taxFreeShopping | yepnope: product.default_or_selected_variant.net_price, product.default_or_selected_variant.price  | money_with_currency %}
+                {%- endif -%}
+
+                <div class="product-lowest-price mt-2">
+                    {{- 'product.lowest_price_dynamic' | t, amount: itemLowestPrice -}}
+                </div>
+
+            {% endif %}
+
+            {% unless useLabel %}
+
+                {% if settings.taxInformation and product.default_or_selected_variant.bundle_contents == false %}
+
+                    <div class="product-vat mt-1">
+
+                        {% assign itemTaxPercent = settings.taxFreeShopping | yepnope: 0, product.default_or_selected_variant.rate %}
+
+                        <span class="product-vat-text text-muted">
+                            {{- 'product.vat_included_dynamic' | t, amount: itemTaxPercent -}}
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+            {% endunless %}
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-price.name",
+    "tag": "div",
+    "class": "block block-product-page-price",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showPromotion",
+                        "type": "checkbox",
+                        "label": "t:all.settings.showPromotion.label",
+                        "default": true
+                    },
+                    {
+                        "id": "showLowestPrice",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-price.settings.showLowestPrice.label",
+                        "default": true
+                    },
+                    {
+                        "id": "showLabel",
+                        "type": "checkbox",
+                        "label": "t:all.settings.showLabel.label",
+                        "default": false
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

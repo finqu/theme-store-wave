@@ -1,0 +1,71 @@
+{% if product.default_or_selected_variant.bulk_rates %}
+
+    <div class="product-bulk-discounts mt-4">
+
+        <div class="product-bulk-discount-header row g-0 border-bottom py-2">
+
+            <div class="col-6">
+
+                <span class="product-bulk-discount-info-text">
+                    {{- 'product.bulk_discount' | t -}}
+                </span>
+
+            </div>
+
+            <div class="col-6">
+
+                <span class="product-bulk-discount-info-text">
+                    {{- 'product.discount_rate' | t -}}
+                </span>
+
+            </div>
+
+        </div>
+
+        {% for rate in product.default_or_selected_variant.bulk_rates %}
+
+            {% if rate.is_percentage %}
+
+                <div class="product-bulk-discount-item row g-0 border-bottom py-2">
+
+                    <div class="col-6">
+
+                        <span class="product-bulk-discount-rate-quantity-text">
+                            {% if rate.quantity > 1 %}+
+                            {% endif %}
+                            {{ rate.quantity }} {{ product.default_or_selected_variant.unit }}
+                        </span>
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <span class="product-bulk-discount-rate-amount-text">
+                            {{ rate.amount }} %
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-bulk-discounts.name",
+    "tag": "div",
+    "class": "block block-product-page-bulk-discounts",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

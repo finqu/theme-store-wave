@@ -1,6 +1,6 @@
-{%- if section.settings.announcementVisibility == 'frontpage' and request.page_type == 'frontpage' and section.settings.announcementStatus -%}
+{%- if section.settings.announcementVisibility == 'frontpage' and request.page_type == 'frontpage' -%}
     {%- assign announcementIsVisible = true -%}
-{% elsif section.settings.announcementVisibility == 'all' and section.settings.announcementStatus %}
+{% elsif section.settings.announcementVisibility == 'all' %}
     {%- assign announcementIsVisible = true -%}
 {%- else -%}
     {%- assign announcementIsVisible = false -%}
@@ -9,6 +9,7 @@
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} {
         --style-announcement-align: {%- if section.settings.announcementTextAlign == 'nil' -%}{{ settings.sectionTextAlign }}{%- else -%}{{ section.settings.announcementTextAlign }}{%- endif -%};
+        {%- render 'header-bar-bg', barBgColor: section.settings.barBgColor -%}
     }
 {%- endcapture -%}
 
@@ -20,9 +21,29 @@
 
         {%- for item in section.settings.setting_blocks.items -%}
 
+            {%- assign announcement_link_text = item.settings.announcementLink.text -%}
+            {%- assign announcement_text = '' -%}
+
+            {%- if announcement_link_text.key != blank -%}
+                {%- assign announcement_text = announcement_link_text.key | t -%}
+                {%- if announcement_text == blank or announcement_text == announcement_link_text.key -%}
+                    {%- if announcement_link_text.string_value != blank -%}
+                        {%- assign announcement_text = announcement_link_text.string_value -%}
+                    {%- endif -%}
+                {%- endif -%}
+            {%- elsif announcement_link_text.string_value != blank -%}
+                {%- assign announcement_text = announcement_link_text.string_value -%}
+            {%- elsif announcement_link_text contains 'frontpage_presets.' -%}
+                {%- assign announcement_text = announcement_link_text | t -%}
+            {%- elsif announcement_link_text != blank -%}
+                {%- assign announcement_text = announcement_link_text -%}
+            {%- endif -%}
+
+            {%- if announcement_text != blank -%}
+
             <div class="swiper-slide">
 
-                <div class="swiper-slide-inner container{% if item.settings.announcementLink.text | size > 50 %} has-long-text{% endif %}">
+                <div class="swiper-slide-inner container">
 
                     {% if item.settings.announcementLink.url %}
 
@@ -31,7 +52,7 @@
                             class="site-announcement-text"
                             target="{{- item.settings.announcementLink.target -}}">
 
-                            {{ item.settings.announcementLink.text }}
+                            {{ announcement_text }}
 
                         </a>
 
@@ -39,7 +60,7 @@
 
                         <span class="site-announcement-text">
 
-                            {{ item.settings.announcementLink.text }}
+                            {{ announcement_text }}
 
                         </span>
 
@@ -49,9 +70,12 @@
 
             </div>
 
+            {%- endif -%}
+
         {%- endfor -%}
 
     {%- endcapture -%}
+    {%- assign slides = slides | strip -%}
 
     {%- if section.settings.setting_blocks.items.size > 1 -%}
         {%- assign autoplaySpeed = section.settings.carouselAutoplaySpeed -%}
@@ -59,57 +83,49 @@
         {%- assign autoplaySpeed = 0 -%}
     {%- endif -%}
 
-    <div class="site-announcement-container">
+    {%- if slides != blank -%}
 
-        <div class="site-announcement">
+        <div class="site-header-bar site-announcement-container">
 
-            {%- render 'swiper', slides: slides, slidesPerView: 1, style: 1, evenHeightSlides: true, standalone: true, class: 'w-100', noSwiping: true, autoplaySpeed: autoplaySpeed, loop: true, speed: 700, slidesGap: '0' -%}
+            <div class="site-announcement">
+
+                {%- render 'swiper', slides: slides, slidesPerView: 1, style: 1, evenHeightSlides: true, standalone: true, class: 'w-100', noSwiping: true, autoplaySpeed: autoplaySpeed, loop: true, speed: 700, slidesGap: '0' -%}
+
+            </div>
 
         </div>
 
-    </div>
+    {%- endif -%}
 
 {% endif %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Announcement",
-        "fi": "Ilmoitus"
-    },
+    "name": "t:sections.announcement.name",
     "tag": "section",
-    "is_creatable": false,
-    "is_removable": false,
-    "class": "section section-site-announcement",
+    "is_creatable": true,
+    "is_removable": true,
+    "section_groups": [
+        "header"
+    ],
+    "class": "section section-site-header-bar section-site-announcement",
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
+                "title": "t:all.groups.content.title",
                 "id": "items",
-                "call_to_action": {
-                    "en": "Add a announcement",
-                    "fi": "Lisää ilmoitus"
-                },
+                "call_to_action": "t:sections.announcement.groups.items.call_to_action",
                 "is_sortable": true,
                 "setting_blocks": [
                     {
                         "type": "text",
-                        "title": {
-                            "en": "Announcement",
-                            "fi": "ilmoitus"
-                        },
+                        "title": "t:sections.announcement.setting_blocks.text.title",
                         "settings": [
                             {
                                 "id": "announcementLink",
                                 "type": "url",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                },
+                                "label": "t:sections.announcement.setting_blocks.text.settings.announcementLink.label",
                                 "include_target": true,
                                 "include_text": true
                             }
@@ -118,129 +134,272 @@
                 ]
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "barBgColor",
+                                    "type": "color",
+                                    "gradient": true,
+                                    "label": "t:sections.announcement.settings.barBgColor.label",
+                                    "info": "t:sections.announcement.settings.barBgColor.info"
+                                },
+                                {
+                                    "id": "announcementVisibility",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.announcement.settings.announcementVisibility.label",
+                                    "default": "all",
+                                    "options": [
+                                        {
+                                            "value": "all",
+                                            "label": "t:sections.announcement.settings.announcementVisibility.options.all.label"
+                                        },
+                                        {
+                                            "value": "frontpage",
+                                            "label": "t:sections.announcement.settings.announcementVisibility.options.frontpage.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselAutoplaySpeed",
+                                    "label": "t:sections.announcement.settings.carouselAutoplaySpeed.label",
+                                    "type": "radio-pill",
+                                    "default": 3,
+                                    "options": [
+                                        {
+                                            "value": 3,
+                                            "label": "t:sections.announcement.settings.carouselAutoplaySpeed.options.3.label"
+                                        },
+                                        {
+                                            "value": 5,
+                                            "label": "t:sections.announcement.settings.carouselAutoplaySpeed.options.5.label"
+                                        },
+                                        {
+                                            "value": 10,
+                                            "label": "t:sections.announcement.settings.carouselAutoplaySpeed.options.10.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "announcementTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.announcement.settings.announcementTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:sections.announcement.settings.announcementTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:sections.announcement.settings.announcementTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:sections.announcement.settings.announcementTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:sections.announcement.settings.announcementTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 },
-                "settings": [
-                    {
-                        "id": "announcementStatus",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Show announcement",
-                            "fi": "Näytä ilmoitus"
-                        },
-                        "default": true,
-                        "options": [
-                            {
-                                "value": false,
-                                "label": "Off"
-                            },
-                            {
-                                "value": true,
-                                "label": "On"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "announcementTextAlign",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Content align",
-                            "fi": "Sisällön tasaus"
-                        },
-                        "default": "nil",
-                        "options": [
-                            {
-                                "value": "nil",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "start",
-                                "label": "{# icon.align-start #}"
-                            },
-                            {
-                                "value": "center",
-                                "label": "{# icon.align-center #}"
-                            },
-                            {
-                                "value": "end",
-                                "label": "{# icon.align-end #}"
-                            }
-                        ],
-                        "conditions": ["announcementStatus eq true"]
-                    },
-                    {
-                        "id": "announcementVisibility",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Visibility",
-                            "fi": "Näkyvyys"
-                        },
-                        "default": "all",
-                        "options": [
-                            {
-                                "value": "all",
-                                "label": {
-                                    "en": "On all pages",
-                                    "fi": "Kaikilla sivuilla"
-                                }
-                            },
-                            {
-                                "value": "frontpage",
-                                "label": {
-                                    "en": "On frontpage",
-                                    "fi": "Etusivulla"
-                                }
-                            }
-                        ],
-                        "conditions": ["announcementStatus eq true"]
-                    },
-                    {
-                        "id": "carouselAutoplaySpeed",
-                        "label": {
-                            "en": "Autoplay",
-                            "fi": "Automaattinen toisto"
-                        },
-                        "type": "radio-pill",
-                        "default": 3,
-                        "options": [
-                            {
-                                "value": 3,
-                                "label": "3 s"
-                            },
-                            {
-                                "value": 5,
-                                "label": "5 s"
-                            },
-                            {
-                                "value": 10,
-                                "label": "10 s"
-                            }
-                        ],
-                        "conditions": ["announcementStatus eq true"]
-                    }
-                ]
+                "id": "settings"
             }
         ]
     },
-    "presets": [
-        {
-            "settings": {
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "text",
-                            "settings": {
-                                "announcementLink": {
-                                    "text": "Tell your customers about upcoming events and offers."
+    "presets": {
+        "default": [
+            {
+                "keywords": [
+                    "Announcement",
+                    "Notice",
+                    "Message"
+                ],
+                "settings": {
+                    "announcementTextAlign": "center",
+                    "announcementVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Tell your customers about upcoming events and offers."
+                                    }
                                 }
                             }
-                        }
-                    ]
-                }
+                        ]
+                    }
+                },
+                "id": "message",
+                "name": "t:sections.announcement.presets.message.name"
+            },
+            {
+                "keywords": [
+                    "Announcement",
+                    "Carousel",
+                    "Promotion",
+                    "Sale"
+                ],
+                "settings": {
+                    "announcementTextAlign": "center",
+                    "announcementVisibility": "all",
+                    "carouselAutoplaySpeed": 5,
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "New collection has arrived — discover the latest arrivals!"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Use code SUMMER20 at checkout for 20% off your first order!"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "rotating-promos",
+                "name": "t:sections.announcement.presets.rotating-promos.name"
+            },
+            {
+                "keywords": [
+                    "Announcement",
+                    "Shipping",
+                    "Utility",
+                    "USP"
+                ],
+                "settings": {
+                    "announcementTextAlign": "start",
+                    "announcementVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Free shipping on orders over €50"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "message-on-left",
+                "name": "t:sections.announcement.presets.message-on-left.name"
             }
-        }
-    ]
+        ],
+        "fi": [
+            {
+                "keywords": [
+                    "Announcement",
+                    "Notice",
+                    "Message"
+                ],
+                "settings": {
+                    "announcementTextAlign": "center",
+                    "announcementVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Kerro asiakkaillesi tulevista tapahtumista ja tarjouksista."
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "message",
+                "name": "t:sections.announcement.presets.message.name"
+            },
+            {
+                "keywords": [
+                    "Announcement",
+                    "Carousel",
+                    "Promotion",
+                    "Sale"
+                ],
+                "settings": {
+                    "announcementTextAlign": "center",
+                    "announcementVisibility": "all",
+                    "carouselAutoplaySpeed": 5,
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Uusi mallisto on saapunut — tutustu uutuuksiin!"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Käytä koodia SUMMER20 kassalla ja saat 20 % alennuksen ensimmäisestä tilauksestasi!"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "rotating-promos",
+                "name": "t:sections.announcement.presets.rotating-promos.name"
+            },
+            {
+                "keywords": [
+                    "Announcement",
+                    "Shipping",
+                    "Utility",
+                    "USP"
+                ],
+                "settings": {
+                    "announcementTextAlign": "start",
+                    "announcementVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "announcementLink": {
+                                        "text": "Ilmainen toimitus yli 50 € tilauksille"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "message-on-left",
+                "name": "t:sections.announcement.presets.message-on-left.name"
+            }
+        ]
+    }
 }
 {% endschema %}

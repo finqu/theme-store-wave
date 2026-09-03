@@ -1,0 +1,10 @@
+{%- comment -%}
+  Resolves a block select value. Outputs theme_value when block_value is "default" or blank.
+  @param block_value {string}
+  @param theme_value {string}
+{%- endcomment -%}
+{%- if block_value == 'default' or block_value == blank -%}
+	{{- theme_value -}}
+{%- else -%}
+	{{- block_value -}}
+{%- endif -%}

@@ -1,0 +1,39 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        height: {{ block.settings.height }}rem;
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner"></div>
+
+{% schema %}
+{
+    "name": "t:blocks.spacer.name",
+    "tag": "div",
+    "class": "block block-spacer",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "height",
+                        "type": "range",
+                        "label": "t:blocks.spacer.settings.height.label",
+                        "min": 1,
+                        "max": 20,
+                        "step": 1,
+                        "default": "4",
+                        "unit": "rem"
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

@@ -3,7 +3,10 @@
 
 	Accepts:
 	- colorScheme: {String} scheme, 'secondary', 'light', 'dark', 'accent', 'custom'
-    - customColor: {String} #000000
+    - customColor: {String|Object} section background paint (solid or gradient)
+    - customTextColor: {String|Object} nullable section text color (blank = auto)
+    - customContentColor: {String|Object} content surface background (cards)
+    - customContentTextColor: {String|Object} nullable content text color (blank = auto)
     - section: {Object} section
 
 	Usage:
@@ -15,6 +18,9 @@
 
 {%- assign colorScheme = colorScheme | default: section.settings.sectionColorScheme -%}
 {%- assign customColor = customColor | default: section.settings.style_custom_color -%}
+{%- assign customTextColor = customTextColor | default: section.settings.style_custom_text_color -%}
+{%- assign customContentColor = customContentColor | default: section.settings.style_custom_content_color -%}
+{%- assign customContentTextColor = customContentTextColor | default: section.settings.style_custom_content_text_color -%}
 
 {%- if colorScheme -%}
 
@@ -29,8 +35,11 @@
             {%- assign styleTableBgColorBrightness = style.table_bg_color | color_brightness -%}
             {%- assign styleBgColorBrightness = style.bg_color | color_brightness -%}
             {%- assign styleBorderColorBrightness = style.border_color | color_brightness -%}
-            {%- assign styleButtonBgColorColorBrightness = style.btn_bg_color | color_brightness -%}
             {%- assign styleAccentColorBrightness = style.accent_color | color_brightness -%}
+            {%- comment -%}
+              Primary/secondary button tokens stay on theme Colors → Buttons.
+              Schemes only remapped surface/text tokens so Contrast (and Auto→contrast) adapt.
+            {%- endcomment -%}
 
             {%- assign bsBodyBg = style.bg_color -%}
             {%- assign bsBodyColor = style.text_color | color_min_contrast: bsBodyBg -%}
@@ -72,14 +81,6 @@
 
             {%- if style.border_color -%}
                 --style-border-color: {{ style.border_color }};
-            {%- endif -%}
-
-            {%- if style.btn_bg_color -%}
-                --style-btn-bg-color: {{ style.btn_bg_color }};
-            {%- endif -%}
-
-            {%- if style.btn_text_color -%}
-                --style-btn-text-color: {{ style.btn_text_color }};
             {%- endif -%}
 
             {%- if style.bg_color -%}
@@ -171,7 +172,7 @@
             {%- endif -%}
 
             {%- if styleFormBorderColorBrightness > 190 -%}
-                --style-form-border-focus-color: {{ style.form_border_color | color_dacolor_lightenrken: 10 }};
+                --style-form-border-focus-color: {{ style.form_border_color | color_darken: 10 }};
                 --style-form-border-disabled-color: {{ style.form_border_color | color_darken: 10 }};
             {%- else -%}
                 --style-form-border-focus-color: {{ style.form_border_color | color_lighten: 10 }};
@@ -222,18 +223,6 @@
                 --style-border-accent-color: {{ style.border_color | color_lighten: 50 }};
             {%- endif -%}
 
-            {%- if styleButtonBgColorColorBrightness > 190 -%}
-                --style-btn-bg-active-color: {{ style.btn_bg_color | color_darken: 10 }};
-                --style-btn-bg-hover-color: {{ style.btn_bg_color | color_darken: 8 }};
-                --style-btn-border-hover-color: {{ style.btn_bg_color | color_darken: 8 }};
-                --style-btn-border-active-color: {{ style.btn_bg_color | color_darken: 13 }};
-            {%- else -%}
-                --style-btn-bg-active-color: {{ style.btn_bg_color | color_lighten: 10 }};
-                --style-btn-bg-hover-color: {{ style.btn_bg_color | color_lighten: 8 }};
-                --style-btn-border-hover-color: {{ style.btn_bg_color | color_lighten: 8 }};
-                --style-btn-border-active-color: {{ style.btn_bg_color | color_lighten: 13 }};
-            {%- endif -%}
-
             {%- if styleAccentColorBrightness > 190 -%}
                 --style-accent-text-color: {{ '#000000' | color_min_contrast: style.accent_color }}
             {%- else -%}
@@ -242,12 +231,11 @@
 
             --style-bg-light-color: {{ style.bg_color | color_lighten: 35 }};
             --style-border-focus-color: {{ style.border_color | color_lighten: 25 }};
-            --style-btn-border-color: {{ style.btn_bg_color }};
             --style-form-placeholder-color: {{ style.form_text_color | color_lighten: 15 | color_min_contrast: style.form_bg_color }};
             --style-form-bg-readonly-color: {{ style.form_bg_color | color_lighten: 15 | color_min_contrast: style.form_text_color }};
             --style-text-darker-color: {{ style.text_color | color_darken: 5 | color_min_contrast: style.bg_color }};
             --style-accent-faded-color: {{ style.accent_color | color_lighten: 30 | color_min_contrast: style.bg_color }};
-            
+
             --style-loader-color: {{ style.icon_color  }};
             --style-loader-faded-color: {{ style.icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: style.bg_color }};
 
@@ -294,7 +282,7 @@
 
                 {%- assign bgColor = '#ffffff' -%}
                 {%- assign contentColor = '#000000' -%}
-                
+
             {%- elsif colorScheme == 'dark' -%}
 
                 {%- assign bgColor = '#000000'-%}
@@ -303,6 +291,9 @@
             {%- elsif colorScheme == 'accent' -%}
 
                 {%- assign bgColor = settings.style_accent_color -%}
+                {%- if bgColor == blank -%}
+                    {%- assign bgColor = settings.style_brand_color -%}
+                {%- endif -%}
                 {%- assign bgColorBrightness = bgColor | color_brightness -%}
 
                 {%- if bgColorBrightness > 190 -%}
@@ -312,17 +303,74 @@
                 {%- endif -%}
 
             {%- elsif colorScheme == 'custom' and customColor -%}
-            
+
                 {%- if section -%}
 
-                    {%- assign bgColor = customColor -%}
-                    {%- assign bgColorBrightness = bgColor | color_brightness -%}
+                    {%- comment -%}
+                        Custom scheme:
+                        - style_custom_color → section paint (solid/gradient)
+                        - style_custom_text_color → section text (nullable = auto)
+                        - style_custom_content_color → content/card background
+                        - style_custom_content_text_color → content text (nullable = auto)
+                        Auto text is high-contrast; borders/icons use a soft mix toward the bg.
+                    {%- endcomment -%}
+                    {%- assign customColorMode = customColor.mode -%}
+                    {%- assign sectionContrastBg = nil -%}
 
-                    {%- if bgColorBrightness > 190 -%}
-                        {%- assign contentColor = '#000000' | color_min_contrast: bgColor -%}
+                    {%- if customColorMode and customColorMode != 'solid' -%}
+                        {%- assign bgColorPaint = customColor.string_value | default: customColor -%}
+                        {%- assign customColorFirstStop = customColor.stops | first -%}
+                        {%- assign customColorLastStop = customColor.stops | last -%}
+                        {%- if customColorFirstStop.color -%}
+                            {%- assign bgColor = customColorFirstStop.color -%}
+                            {%- if customColorFirstStop.alpha -%}
+                                {%- assign bgColor = bgColor | color_modify: 'alpha', customColorFirstStop.alpha -%}
+                            {%- endif -%}
+                        {%- else -%}
+                            {%- assign bgColor = settings.style_bg_color -%}
+                        {%- endif -%}
+                        {%- if customColorLastStop.color -%}
+                            {%- assign sectionContrastBg = customColorLastStop.color -%}
+                            {%- if customColorLastStop.alpha -%}
+                                {%- assign sectionContrastBg = sectionContrastBg | color_modify: 'alpha', customColorLastStop.alpha -%}
+                            {%- endif -%}
+                        {%- endif -%}
                     {%- else -%}
-                        {%- assign contentColor = '#ffffff' | color_min_contrast: bgColor -%}
+                        {%- assign bgColor = customColor.string_value | default: customColor -%}
                     {%- endif -%}
+
+                    {%- assign sectionContrastBg = sectionContrastBg | default: bgColor -%}
+
+                    {%- if customContentColor != blank -%}
+                        {%- assign contentBgColor = customContentColor.string_value | default: customContentColor -%}
+                    {%- else -%}
+                        {%- assign contentBgColor = bgColor -%}
+                    {%- endif -%}
+
+                    {%- if customTextColor != blank -%}
+                        {%- assign contentColor = customTextColor.string_value | default: customTextColor -%}
+                    {%- else -%}
+                        {%- assign sectionContrastBgBrightness = sectionContrastBg | color_brightness -%}
+                        {%- if sectionContrastBgBrightness > 190 -%}
+                            {%- assign contentColor = '#000000' | color_min_contrast: sectionContrastBg -%}
+                        {%- else -%}
+                            {%- assign contentColor = '#ffffff' | color_min_contrast: sectionContrastBg -%}
+                        {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if customContentTextColor != blank -%}
+                        {%- assign contentSurfaceTextColor = customContentTextColor.string_value | default: customContentTextColor -%}
+                    {%- else -%}
+                        {%- assign contentBgBrightness = contentBgColor | color_brightness -%}
+                        {%- if contentBgBrightness > 190 -%}
+                            {%- assign contentSurfaceTextColor = '#000000' | color_min_contrast: contentBgColor -%}
+                        {%- else -%}
+                            {%- assign contentSurfaceTextColor = '#ffffff' | color_min_contrast: contentBgColor -%}
+                        {%- endif -%}
+                    {%- endif -%}
+
+                    {%- assign contentChromeColor = contentBgColor | color_mix: contentSurfaceTextColor, 22 -%}
+                    {%- assign sectionChromeColor = sectionContrastBg | color_mix: contentColor, 22 -%}
 
                 {%- else -%}
 
@@ -350,8 +398,9 @@
             {%- assign styleTableBgColorBrightness = bgColor | color_brightness -%}
             {%- assign styleBgColorBrightness = bgColor | color_brightness -%}
             {%- assign styleBorderColorBrightness = contentColor | color_brightness -%}
-            {%- assign styleButtonBgColorColorBrightness = contentColor | color_brightness -%}
+            {%- comment -%} Primary/secondary button colors stay at theme root; schemes remap text/bg for Contrast. {%- endcomment -%}
 
+            {%- assign sectionChromeColor = sectionChromeColor | default: contentColor -%}
             {%- assign bsBodyBg = bgColor -%}
             {%- assign bsBodyColor = contentColor | color_min_contrast: bsBodyBg -%}
             {%- assign bsSecondaryBg =  bgColor | color_darken: 30 -%}
@@ -369,25 +418,48 @@
             --style-text-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-link-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-icon-color: {{ contentColor | color_min_contrast: bgColor }};
-            --style-border-color: {{ contentColor }};
-            --style-btn-bg-color: {{ contentColor }};
-            --style-btn-text-color: {{ bgColor | color_min_contrast: contentColor }};
+            --style-border-color: {{ sectionChromeColor }};
             --style-bg-color: {{ bgColor }};
+            {%- if bgColorPaint -%}
+            --style-bg-paint: {{ bgColorPaint }};
+            {%- endif -%}
+            {%- if contentBgColor -%}
+            --style-content-bg-color: {{ contentBgColor }};
+            {%- assign contentBgBrightness = contentBgColor | color_brightness -%}
+            {%- if contentBgBrightness > 190 -%}
+            --style-content-bg-accent-color: {{ contentBgColor | color_darken: 8 }};
+            --style-content-bg-hover-color: {{ contentBgColor | color_darken: 5 }};
+            {%- else -%}
+            --style-content-bg-accent-color: {{ contentBgColor | color_lighten: 8 }};
+            --style-content-bg-hover-color: {{ contentBgColor | color_lighten: 5 }};
+            {%- endif -%}
+            --style-content-text-color: {{ contentSurfaceTextColor | color_min_contrast: contentBgColor }};
+            --style-content-border-color: {{ contentChromeColor }};
+            --style-content-icon-color: {{ contentChromeColor }};
+            --style-content-link-color: {{ contentSurfaceTextColor | color_min_contrast: contentBgColor }};
+            --style-content-product-title-color: {{ contentSurfaceTextColor | color_min_contrast: contentBgColor }};
+            --style-content-price-color: {{ contentSurfaceTextColor | color_min_contrast: contentBgColor }};
+            --style-content-sale-price-color: {{ contentSurfaceTextColor | color_min_contrast: contentBgColor }};
+            --style-content-badge-bg-color: {{ contentChromeColor }};
+            --style-content-badge-text-color: {{ contentBgColor | color_min_contrast: contentChromeColor }};
+            --style-content-review-icon-color: {{ contentChromeColor }};
+            --style-content-text-muted-color: {{ contentChromeColor }};
+            {%- endif -%}
             --style-product-title-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-price-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-sale-price-color: {{ contentColor | color_min_contrast: bgColor }};
-            --style-badge-bg-color: {{ contentColor }};
-            --style-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
-            --style-new-badge-bg-color: {{ contentColor }};
-            --style-new-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
-            --style-discount-badge-bg-color: {{ contentColor }};
-            --style-discount-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
-            --style-promotion-badge-bg-color: {{ contentColor }};
-            --style-promotion-badge-text-color: {{ bgColor | color_min_contrast: contentColor }};
-            --style-review-icon-color: {{ contentColor }};
+            --style-badge-bg-color: {{ sectionChromeColor }};
+            --style-badge-text-color: {{ bgColor | color_min_contrast: sectionChromeColor }};
+            --style-new-badge-bg-color: {{ sectionChromeColor }};
+            --style-new-badge-text-color: {{ bgColor | color_min_contrast: sectionChromeColor }};
+            --style-discount-badge-bg-color: {{ sectionChromeColor }};
+            --style-discount-badge-text-color: {{ bgColor | color_min_contrast: sectionChromeColor }};
+            --style-promotion-badge-bg-color: {{ sectionChromeColor }};
+            --style-promotion-badge-text-color: {{ bgColor | color_min_contrast: sectionChromeColor }};
+            --style-review-icon-color: {{ sectionChromeColor }};
             --style-table-bg-color: {{ bgColor }};
             --style-table-text-color: {{ contentColor | color_min_contrast: bgColor }};
-            --style-table-border-color: {{ contentColor }};
+            --style-table-border-color: {{ sectionChromeColor }};
             --style-form-bg-color: {{ contentColor }};
             --style-form-text-color: {{ bgColor | color_min_contrast: contentColor }};
 
@@ -462,27 +534,23 @@
                 --style-border-accent-color: {{ contentColor | color_lighten: 50 }};
             {%- endif -%}
 
-            {%- if styleButtonBgColorColorBrightness > 190 -%}
-                --style-btn-bg-active-color: {{ contentColor | color_darken: 10 }};
-                --style-btn-bg-hover-color: {{ contentColor | color_darken: 8 }};
-                --style-btn-border-hover-color: {{ contentColor | color_darken: 8 }};
-                --style-btn-border-active-color: {{ contentColor | color_darken: 13 }};
-            {%- else -%}
-                --style-btn-bg-active-color: {{ contentColor | color_lighten: 10 }};
-                --style-btn-bg-hover-color: {{ contentColor | color_lighten: 8 }};
-                --style-btn-border-hover-color: {{ contentColor | color_lighten: 8 }};
-                --style-btn-border-active-color: {{ contentColor | color_lighten: 13 }};
-            {%- endif -%}
-
             --style-accent-text-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-bg-light-color: {{ bgColor | color_lighten: 35 }};
             --style-border-focus-color: {{ contentColor | color_lighten: 25 }};
-            --style-btn-border-color: {{ contentColor }};
             --style-text-darker-color: {{ contentColor | color_darken: 5 | color_min_contrast: bgColor }};
             --style-accent-faded-color: {{ bgColor | color_lighten: 30 | color_min_contrast: bgColor }};
-            
+
             --style-loader-color: {{ contentColor | color_min_contrast: bgColor }};
             --style-loader-faded-color: {{ contentColor | color_modify: 'alpha', 0.1 | color_min_contrast: bgColor }};
+
+            --finqu-theme-svg-fg: {{ bgColor | color_darken: 10 }};
+            --finqu-theme-svg-accent: {{ contentColor | color_min_contrast: bgColor }};
+            {%- if styleBgColorBrightness > 128 -%}
+            --finqu-theme-svg-bg: #EEEEEE;
+            {%- else -%}
+            --finqu-theme-svg-bg: #111111;
+            {%- endif -%}
+            --finqu-theme-svg-outline: {{ contentColor | color_min_contrast: bgColor }};
 
             --bs-body-bg: {{ bsBodyBg }};
             --bs-body-bg-rgb: {{ bsBodyBg | color_to_rgb | color_extract: 'rgb' | join: ', ' }};

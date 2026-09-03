@@ -46,3 +46,16 @@
         box-shadow: calc(var(--style-loader-size) * 2) 0 var(--style-loader-color), calc(var(--style-loader-size) * -2) 0 var(--style-loader-faded-color);
     }
 }
+
+@if $style-elevation == 'hard' {
+    .loader {
+
+        &::before {
+            border: 1px solid $elevation-rule-color;
+            border-radius: var(--style-component-border-radius);
+            box-shadow:
+                calc(var(--style-loader-size) * 2) 0 var(--style-loader-faded-color),
+                calc(var(--style-loader-size) * -2) 0 var(--style-loader-color);
+        }
+    }
+}

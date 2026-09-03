@@ -1,0 +1,52 @@
+{%- assign truncateLength = block.settings.truncateLength | default: 300 -%}
+
+{%- if product.description.size > 0 -%}
+    {%- assign productDescription = product.description | strip_html | strip | truncate: truncateLength -%}
+{%- endif -%}
+
+{%- unless product -%}
+    {%- assign productDescription = 'placeholder.product_description' | t -%}
+{%- endunless -%}
+
+{%- if productDescription != blank -%}
+
+    <div class="product-description text-richtext fs-6">
+
+        <p class="mb-0">
+            {{- productDescription -}}
+        </p>
+
+    </div>
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-description.name",
+    "tag": "div",
+    "class": "block block-product-description",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "id": "style",
+                "settings": [
+                    {
+                        "id": "truncateLength",
+                        "type": "range",
+                        "label": "t:blocks.product-description.settings.truncateLength.label",
+                        "min": 40,
+                        "max": 600,
+                        "step": 10,
+                        "default": 300,
+                        "unit": " "
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

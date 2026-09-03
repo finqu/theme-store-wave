@@ -1,17 +1,5 @@
 {% assign sectionAnimationOrder = 0 %}
 
-{%- if section.settings.sectionOverline -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionTitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionSubtitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
 {%- capture slides -%}
 
     {% for item in section.settings.setting_blocks.items %}
@@ -102,7 +90,7 @@
 
             {% if item.settings.resource.url %}
 
-                <a href="{{- item.settings.resource.url -}}" class="text-reset" target="{{ item.settings.resource.target }}"">
+                <a href="{{- item.settings.resource.url -}}" class="text-reset" target="{{ item.settings.resource.target }}">
 
                     {{ slideContent }}
 
@@ -120,6 +108,20 @@
 
 {%- endcapture -%}
 
+{%- capture sectionHeaderBlocks -%}
+    {% container 'header' %}
+{%- endcapture -%}
+
+{%- capture sectionHeaderContent -%}
+    {%- if sectionHeaderBlocks != blank -%}
+        <div class="section-header">
+            <div class="container">
+                {{- sectionHeaderBlocks -}}
+            </div>
+        </div>
+    {%- endif -%}
+{%- endcapture -%}
+
 {%- capture sectionContent -%}
 
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
@@ -132,198 +134,66 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false %}
+{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false, sectionHeader: false %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Product review carousel",
-        "fi": "Tuotearvostelukaruselli"
-    },
+    "name": "t:sections.product-review-carousel.name",
     "tag": "section",
     "class": "section section-product-review-carousel",
     "category": "theme-product",
-    "keywords": {
-        "en": [
-            "Product",
-            "Carousel",
-            "Review",
-            "Feedback",
-            "Rating",
-            "Comment"
-        ],
-        "fi": [
-            "Tuote",
-            "Karuselli",
-            "Arvostelu",
-            "Palaute",
-            "Arvosana",
-            "Kommentti"
-        ]
-    },
+    "keywords": [
+        "Product",
+        "Carousel",
+        "Review",
+        "Feedback",
+        "Rating",
+        "Comment"
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionDescription",
-                        "type": "richtext",
-                        "label": {
-                            "en": "Description",
-                            "fi": "Kuvaus"
-                        },
-                        "conditions": ["sectionAdditionalText eq true"]
-                    },
-                    {
-                        "id": "carouselItemsPerView",
-                        "label": {
-                            "en": "Reviews visible at once",
-                            "fi": "Arvosteluja näkyvissä kerralla"
-                        },
-                        "type": "radio-pill",
-                        "default": 3,
-                        "options": [
-                            {
-                                "value": 2,
-                                "label": "2"
-                            },
-                            {
-                                "value": 3,
-                                "label": "3"
-                            },
-                            {
-                                "value": 4,
-                                "label": "4"
-                            },
-                            {
-                                "value": 5,
-                                "label": "5"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "carouselItemsPerViewMobile",
-                        "label": {
-                            "en": "Reviews visible at once on mobile device",
-                            "fi": "Arvosteluja näkyvissä kerralla mobiililaitteella"
-                        },
-                        "type": "radio-pill",
-                        "default": 1,
-                        "options": [
-                            {
-                                "value": 1,
-                                "label": "1"
-                            },
-                            {
-                                "value": 2,
-                                "label": "2"
-                            },
-                            {
-                                "value": 3,
-                                "label": "3"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "title": {
-                    "en": "Reviews",
-                    "fi": "Arvostelut"
-                },
+                "title": "t:sections.product-review-carousel.groups.items.title",
                 "id": "items",
-                "call_to_action": {
-                    "en": "Add a review",
-                    "fi": "Lisää arvostelu"
-                },
+                "call_to_action": "t:sections.product-review-carousel.groups.items.call_to_action",
                 "is_sortable": true,
                 "setting_blocks": [
                     {
                         "type": "text",
-                        "title": {
-                            "en": "Review",
-                            "fi": "Arvostelu"
-                        },
+                        "title": "t:sections.product-review-carousel.setting_blocks.text.title",
                         "settings": [
                             {
                                 "type": "text",
                                 "id": "heading",
-                                "label": {
-                                    "en": "Title",
-                                    "fi": "Title"
-                                }
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.heading.label"
                             },
                             {
-                                "type": "richtext", 
+                                "type": "richtext",
                                 "id": "description",
                                 "mode": "simple",
-                                "label": {
-                                    "en": "Description",
-                                    "fi": "Kuvaus"
-                                }
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.description.label"
                             },
                             {
                                 "type": "text",
                                 "id": "author",
-                                "label": {
-                                    "en": "Author",
-                                    "fi": "Kirjoittaja"
-                                }
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.author.label"
                             },
                             {
                                 "type": "text",
                                 "id": "authorInfo",
-                                "label": {
-                                    "en": "Author's additional information",
-                                    "fi": "Kirjoittajan lisätieto"
-                                }
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.authorInfo.label"
                             },
                             {
                                 "id": "resource",
                                 "type": "url",
-                                "label": {
-                                    "en": "Link",
-                                    "fi": "Linkki"
-                                },
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.resource.label",
                                 "include_target": true
                             },
                             {
                                 "type": "radio-pill",
                                 "id": "rating",
-                                "label": {
-                                    "en": "Rating",
-                                    "fi": "Arvosana"
-                                },
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.rating.label",
                                 "options": [
                                     {
                                         "value": "1",
@@ -350,10 +220,7 @@
                             {
                                 "type": "image-picker",
                                 "id": "img",
-                                "label": {
-                                    "en": "Image",
-                                    "fi": "Kuva"
-                                },
+                                "label": "t:sections.product-review-carousel.setting_blocks.text.settings.img.label",
                                 "adjustments": true
                             }
                         ]
@@ -361,553 +228,590 @@
                 ]
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.settings.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionHighlightItems",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content highlight",
-                                        "fi": "Sisällön korostaminen"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionHeaderTextAlign",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Heading text align",
-                                        "fi": "Otsikon tekstin tasaus"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "start",
-                                            "label": "{# icon.align-start #}"
-                                        },
-                                        {
-                                            "value": "center",
-                                            "label": "{# icon.align-center #}"
-                                        },
-                                        {
-                                            "value": "end",
-                                            "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionTextAlign",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content align",
-                                        "fi": "Sisällön tasaus"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "start",
-                                            "label": "{# icon.align-start #}"
-                                        },
-                                        {
-                                            "value": "center",
-                                            "label": "{# icon.align-center #}"
-                                        },
-                                        {
-                                            "value": "end",
-                                            "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "imgFit",
-                                    "type": "checkbox",
-                                    "label": {
-                                        "en": "Image area fill",
-                                        "fi": "Kuva-alueen täyttö"
-                                    },
-                                    "default": false
-                                },
-                                {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Carousel",
-                                        "fi": "Karuselli"
-                                    }
-                                },
-                                {
-                                    "id": "carouselStyle",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Style",
-                                        "fi": "Tyyli"
-                                    },
-                                    "default": 2,
-                                    "options": [
-                                        {
-                                            "value": 1,
-                                            "label": {
-                                                "en": "Style 1",
-                                                "fi": "Tyyli 1"
-                                            }
-                                        },
-                                        {
-                                            "value": 2,
-                                            "label": {
-                                                "en": "Style 2",
-                                                "fi": "Tyyli 2"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "carouselNavigation",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show navigation buttons",
-                                        "fi": "Näytä navigointipainikkeet"
-                                    },
-                                    "default": "hover",
-                                    "options": [
-                                        {
-                                            "value": "",
-                                            "label": {
-                                                "en": "Off",
-                                                "fi": "Off"
-                                            }
-                                        },
-                                        {
-                                            "value": "hover",
-                                            "label": {
-                                                "en": "On hover",
-                                                "fi": "Osoitin päällä"
-                                            }
-                                        },
-                                        {
-                                            "value": "on",
-                                            "label": {
-                                                "en": "Always",
-                                                "fi": "Aina"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "carouselPagination",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show pagination",
-                                        "fi": "Näytä sivutus"
-                                    },
-                                    "default": "on",
-                                    "options": [
-                                        {
-                                            "value": "",
-                                            "label": {
-                                                "en": "Off",
-                                                "fi": "Off"
-                                            }
-                                        },
-                                        {
-                                            "value": "hover",
-                                            "label": {
-                                                "en": "On hover",
-                                                "fi": "Osoitin päällä"
-                                            }
-                                        },
-                                        {
-                                            "value": "on",
-                                            "label": {
-                                                "en": "Always",
-                                                "fi": "Aina"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "carouselAutoplaySpeed",
-                                    "label": {
-                                        "en": "Autoplay",
-                                        "fi": "Automaattinen toisto"
-                                    },
-                                    "type": "radio-pill",
-                                    "default": 0,
-                                    "options": [
-                                        {
-                                            "value": 0,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": 3,
-                                            "label": "3 s"
-                                        },
-                                        {
-                                            "value": 5,
-                                            "label": "5 s"
-                                        },
-                                        {
-                                            "value": 10,
-                                            "label": "10 s"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionOverlineTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Main title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
-                                        {
-                                            "value": "h2",
-                                            "label": "H2"
-                                        },
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Section",
-                                "fi": "Osio"
-                            },
+                            "title": "t:all.groups.style.title",
                             "settings": [
                                 {
                                     "id": "sectionColorScheme",
                                     "type": "select",
-                                    "label": {
-                                        "en": "Color scheme",
-                                        "fi": "Värityyli"
-                                    },
+                                    "label": "t:all.settings.sectionColorScheme.label",
                                     "default": false,
                                     "options": [
                                         {
                                             "value": false,
-                                            "label": {
-                                                "en": "Disabled",
-                                                "fi": "Pois käytöstä"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
                                         },
                                         {
                                             "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
                                         },
                                         {
                                             "value": "light",
-                                            "label": {
-                                                "en": "Light background / Dark content",
-                                                "fi": "Vaalea tausta / Tumma sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
                                         },
                                         {
                                             "value": "dark",
-                                            "label": {
-                                                "en": "Dark background / Light content",
-                                                "fi": "Tumma tausta / Vaalea sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
                                         },
                                         {
                                             "value": "accent",
-                                            "label": {
-                                                "en": "Accent background / Adaptive content",
-                                                "fi": "Korostus tausta / Mukautuva sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "style_custom_color",
                                     "type": "color",
-                                    "label": {
-                                        "en": "Color",
-                                        "fi": "Väri"
-                                    },
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
                                     "default": "#f3f5f6",
-                                    "conditions": ["sectionColorScheme eq custom"]
-                                },
-                                {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
-                                    "id": "sectionAdditionalText",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show description",
-                                        "fi": "Näytä kuvaus"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
                                     "id": "sectionPaddingMode",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Padding",
-                                        "fi": "Välit"
-                                    },
+                                    "label": "t:all.settings.sectionPaddingMode.label",
                                     "default": "auto",
                                     "options": [
                                         {
                                             "value": "auto",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
-                                    "id": "sectionPaddingTop",
-                                    "label": {
-                                        "en": "Padding top",
-                                        "fi": "Väli ylhäällä"
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
                                     },
-                                    "type": "range",
                                     "min": 0,
                                     "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionPaddingBottom",
-                                    "label": {
-                                        "en": "Padding bottom",
-                                        "fi": "Väli alhaalla"
-                                    },
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
                                     "type": "range",
                                     "min": 0,
-                                    "max": 15,
+                                    "max": 50,
                                     "step": 1,
                                     "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImg",
                                     "type": "image-picker",
-                                    "label": {
-                                        "en": "Background image",
-                                        "fi": "Taustakuva"
-                                    },
+                                    "label": "t:all.settings.sectionBgImg.label",
                                     "adjustments": true
                                 },
                                 {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
                                     "id": "sectionBgImgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 90,
                                     "step": 5,
                                     "default": "0",
                                     "unit": "%",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 10,
                                     "step": 1,
                                     "default": "0",
                                     "unit": " ",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 }
-                            ]
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "settings": [
+                                {
+                                    "id": "sectionHighlightItems",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionHighlightItems.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionHighlightItems.options.nil.label"
+                                        },
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionHighlightItems.options.false.label"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "t:all.settings.sectionHighlightItems.options.true.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionHeaderTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionHeaderTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "imgFit",
+                                    "type": "checkbox",
+                                    "label": "t:all.settings.imgFit.label",
+                                    "default": false
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "Carousel"
+                                },
+                                {
+                                    "id": "carouselStyle",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.carouselStyle.label",
+                                    "default": 2,
+                                    "options": [
+                                        {
+                                            "value": 1,
+                                            "label": "t:all.settings.carouselStyle.options.1.label"
+                                        },
+                                        {
+                                            "value": 2,
+                                            "label": "t:all.settings.carouselStyle.options.2.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselNavigation",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.carouselNavigation.label",
+                                    "default": "hover",
+                                    "options": [
+                                        {
+                                            "value": "",
+                                            "label": "t:all.settings.carouselNavigation.options.off.label"
+                                        },
+                                        {
+                                            "value": "hover",
+                                            "label": "t:all.settings.carouselNavigation.options.hover.label"
+                                        },
+                                        {
+                                            "value": "on",
+                                            "label": "t:all.settings.carouselNavigation.options.on.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselPagination",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.carouselPagination.label",
+                                    "default": "on",
+                                    "options": [
+                                        {
+                                            "value": "",
+                                            "label": "t:all.settings.carouselPagination.options.off.label"
+                                        },
+                                        {
+                                            "value": "hover",
+                                            "label": "t:all.settings.carouselPagination.options.hover.label"
+                                        },
+                                        {
+                                            "value": "on",
+                                            "label": "t:all.settings.carouselPagination.options.on.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselAutoplaySpeed",
+                                    "label": "t:sections.product-review-carousel.settings.carouselAutoplaySpeed.label",
+                                    "type": "radio-pill",
+                                    "default": 0,
+                                    "options": [
+                                        {
+                                            "value": 0,
+                                            "label": "t:sections.product-review-carousel.settings.carouselAutoplaySpeed.options.off.label"
+                                        },
+                                        {
+                                            "value": 3,
+                                            "label": "t:sections.product-review-carousel.settings.carouselAutoplaySpeed.options.3.label"
+                                        },
+                                        {
+                                            "value": 5,
+                                            "label": "t:sections.product-review-carousel.settings.carouselAutoplaySpeed.options.5.label"
+                                        },
+                                        {
+                                            "value": 10,
+                                            "label": "t:sections.product-review-carousel.settings.carouselAutoplaySpeed.options.10.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselItemsPerView",
+                                    "label": "t:sections.product-review-carousel.settings.carouselItemsPerView.label",
+                                    "type": "radio-pill",
+                                    "default": 3,
+                                    "options": [
+                                        {
+                                            "value": 2,
+                                            "label": "2"
+                                        },
+                                        {
+                                            "value": 3,
+                                            "label": "3"
+                                        },
+                                        {
+                                            "value": 4,
+                                            "label": "4"
+                                        },
+                                        {
+                                            "value": 5,
+                                            "label": "5"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "carouselItemsPerViewMobile",
+                                    "label": "t:sections.product-review-carousel.settings.carouselItemsPerViewMobile.label",
+                                    "type": "radio-pill",
+                                    "default": 1,
+                                    "options": [
+                                        {
+                                            "value": 1,
+                                            "label": "1"
+                                        },
+                                        {
+                                            "value": 2,
+                                            "label": "2"
+                                        },
+                                        {
+                                            "value": 3,
+                                            "label": "3"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": "layout"
                         }
                     ]
-                }
+                },
+                "id": "settings"
             }
         ]
     },
-    "presets": [
-        {
-            "settings": {
-                "sectionTitle": "Customer Product Reviews",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "text",
-                            "settings": {
-                                "rating": 4,
-                                "heading": "Title",
-                                "description": "Write a product review here.",
-                                "author": "Author",
-                                "authorInfo": "Additional info"
+    "presets": {
+        "default": [
+            {
+                "settings": {
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 4,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Write a product review here.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 5,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Write a product review here.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 3,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Write a product review here.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
                             }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "rating": 5,
-                                "heading": "Title",
-                                "description": "Write a product review here.",
-                                "author": "Author",
-                                "authorInfo": "Additional info"
-                            }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "rating": 3,
-                                "heading": "Title",
-                                "description": "Write a product review here.",
-                                "author": "Author",
-                                "authorInfo": "Additional info"
-                            }
+                        ]
+                    }
+                },
+                "id": "preset",
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "header",
+                        "settings": {
+                            "title": "Customer Product Reviews"
                         }
-                    ]
-                }
+                    }
+                ]
             }
+        ],
+        "fi": [
+            {
+                "settings": {
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 4,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Kirjoita tuotearvio tähän.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 5,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Kirjoita tuotearvio tähän.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "rating": 3,
+                                    "heading": {
+                                        "type": "translation",
+                                        "key": "general.title",
+                                        "string_value": "Title"
+                                    },
+                                    "description": "Kirjoita tuotearvio tähän.",
+                                    "author": "Author",
+                                    "authorInfo": "Additional info"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "preset",
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "header",
+                        "settings": {
+                            "title": "Asiakkaiden tuotearviot"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "containers": [
+        {
+            "id": "header",
+            "title": "t:sections.product-review-carousel.containers.header.title",
+            "allowed_blocks": [
+                "badge",
+                "heading",
+                "text",
+                "button",
+                "button-group",
+                "spacer",
+                "separator"
+            ]
         }
     ]
 }

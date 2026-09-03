@@ -1,0 +1,1927 @@
+{%- comment -%}
+    Resolve images and layout inside this block so theme-editor setting updates
+    (which re-render the block without the parent section assigns) still show
+    real product media instead of the empty-state placeholder.
+{%- endcomment -%}
+{%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
+{%- assign mediaLayout = product_page_layout | default: section.settings.productPageLayout | default: 'swiper' -%}
+
+{%- capture imageAspectRatio -%}
+	{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatio, theme_value: settings.productImageAspectRatio -%}
+{%- endcapture -%}
+{%- assign imageAspectRatio = imageAspectRatio | strip -%}
+
+{%- capture imageAspectRatioFit -%}
+	{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatioFit, theme_value: settings.productImageAspectRatioFit -%}
+{%- endcapture -%}
+{%- assign imageAspectRatioFit = imageAspectRatioFit | strip -%}
+
+{%- if block.settings.overrideDisplaySettings -%}
+	{%- assign showNewBadge = block.settings.showNewBadge -%}
+	{%- assign showPromotionBadge = block.settings.showPromotionBadge -%}
+	{%- assign showDiscountBadge = block.settings.showDiscountBadge -%}
+	{%- assign showOutOfStockBadge = block.settings.showOutOfStockBadge -%}
+	{%- assign showBackorderBadge = block.settings.showBackorderBadge -%}
+{%- else -%}
+	{%- assign showNewBadge = settings.productShowNewBadge -%}
+	{%- assign showPromotionBadge = settings.productShowPromotionBadge -%}
+	{%- assign showDiscountBadge = settings.productShowDiscountBadge -%}
+	{%- assign showOutOfStockBadge = settings.productShowOutOfStockBadge -%}
+	{%- assign showBackorderBadge = settings.productShowBackorderBadge -%}
+{%- endif -%}
+
+{%- capture productPageMediaStyle -%}--product-image-aspect-ratio: {{ imageAspectRatio | replace: ':', ' / ' }}; --object-fit: {{ imageAspectRatioFit }};{%- endcapture -%}
+
+{%- case mediaLayout -%}
+
+    {%- when 'collage' -%}
+
+        <div class="product-media" data-dynamic-partial="media" style="{{ productPageMediaStyle | strip }}">
+
+            <div id="product-media-collage" class="gallery d-none d-md-block w-100">
+
+                {%- assign hasMultipleImgs = false -%}
+
+                {% if product.media.size > 1 %}
+                    {%- assign hasMultipleImgs = true -%}
+                {% endif %}
+
+                {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                    {% for group in product.default_or_selected_variant.customizations %}
+
+                        {% for option in group.options %}
+
+                            {% if option.image %}
+
+                                {% if product.media.size == 1 %}
+
+                                    {%- unless hasMultipleImgs -%}
+                                        {%- assign hasMultipleImgs = true -%}
+                                    {%- endunless -%}
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                <div class="product-media-collage-items row gy-g{% if hasMultipleImgs %} row-cols-2{% endif %}">
+
+                    {%- assign hasImg = false -%}
+                    {%- assign isFeaturedImgSelected = false -%}
+
+                    {% if hasMultipleImgs %}
+
+                        {% if imageAspectRatio == '9:13' %}
+
+                            {%- assign imgSizeSm = '415,590' -%}
+                            {%- assign imgSizeMd = '253,357' -%}
+                            {%- assign imgSizeLg = '364,517' -%}
+
+                        {% elsif imageAspectRatio == '4:3' %}
+
+                            {%- assign imgSizeSm = '415,316' -%}
+                            {%- assign imgSizeMd = '253,195' -%}
+                            {%- assign imgSizeLg = '364,278' -%}
+
+                        {% elsif imageAspectRatio == '3:4' %}
+
+                            {%- assign imgSizeSm = '415,553' -%}
+                            {%- assign imgSizeMd = '253,337' -%}
+                            {%- assign imgSizeLg = '364,485' -%}
+
+                        {% elsif imageAspectRatio == '1:1' %}
+
+                            {%- assign imgSizeSm = '415,415' -%}
+                            {%- assign imgSizeMd = '253,253' -%}
+                            {%- assign imgSizeLg = '364,364' -%}
+
+                        {% endif %}
+
+                    {% else %}
+
+                        {% if imageAspectRatio == '9:13' %}
+
+                            {%- assign imgSizeSm = '415,590' -%}
+                            {%- assign imgSizeMd = '507,723' -%}
+                            {%- assign imgSizeLg = '728,1043' -%}
+
+                        {% elsif imageAspectRatio == '4:3' %}
+
+                            {%- assign imgSizeSm = '415,316' -%}
+                            {%- assign imgSizeMd = '507,385' -%}
+                            {%- assign imgSizeLg = '728,551' -%}
+
+                        {% elsif imageAspectRatio == '3:4' %}
+
+                            {%- assign imgSizeSm = '415,553' -%}
+                            {%- assign imgSizeMd = '507,676' -%}
+                            {%- assign imgSizeLg = '728,971' -%}
+
+                        {% elsif imageAspectRatio == '1:1' %}
+
+                            {%- assign imgSizeSm = '415,415' -%}
+                            {%- assign imgSizeMd = '507,507' -%}
+                            {%- assign imgSizeLg = '728,728' -%}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                    {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                        {%- unless hasImg -%}
+                            {%- assign hasImg = true -%}
+                        {%- endunless -%}
+
+                        <div class="product-media-collage-item col gallery-item">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                    <picture>
+                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeLg }} 1x,
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeMd }} 1x,
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                        <source data-srcset="
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeSm }} 1x,
+                                            {{- product.default_or_selected_variant.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                            alt="{{ product.title }}"
+                                            data-gallery-img-src="{{ product.default_or_selected_variant.image }}"
+                                            src="{{ product.default_or_selected_variant.image | thumb: imgSizeSm }}">
+                                    </picture>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {%- unless isFeaturedImgSelected -%}
+                            {%- assign isFeaturedImgSelected = true -%}
+                        {%- endunless -%}
+
+                    {% endif %}
+
+                    {% for image in generalImages %}
+
+                        {%- unless hasImg -%}
+                            {%- assign hasImg = true -%}
+                        {%- endunless -%}
+
+                        <div class="product-media-collage-item col gallery-item">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                    <picture>
+                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                            {{- image | thumb: imgSizeLg }} 1x,
+                                            {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                            {{- image | thumb: imgSizeMd }} 1x,
+                                            {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                        <source data-srcset="
+                                            {{- image | thumb: imgSizeSm }} 1x,
+                                            {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                            alt="{{ product.title }}"
+                                            data-gallery-img-src="{{ image }}"
+                                            src="{{ image | thumb: imgSizeSm }}">
+                                    </picture>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {%- unless isFeaturedImgSelected -%}
+                            {%- assign isFeaturedImgSelected = true -%}
+                        {%- endunless -%}
+
+                    {% endfor %}
+
+                    {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                        {% for group in product.default_or_selected_variant.customizations %}
+
+                            {% for option in group.options %}
+
+                                {% if option.image %}
+
+                                    {%- unless hasImg -%}
+                                        {%- assign hasImg = true -%}
+                                    {%- endunless -%}
+
+                                    <div class="product-media-collage-item col gallery-item">
+
+                                        <div class="aspect-ratio-product">
+
+                                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                                <picture>
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeLg }} 1x,
+                                                        {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeMd }} 1x,
+                                                        {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                                    <source data-srcset="
+                                                        {{- option.image | thumb: imgSizeSm }} 1x,
+                                                        {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                    <img
+                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                        alt="{{ product.title }}"
+                                                        data-gallery-img-src="{{ option.image }}"
+                                                        src="{{ option.image | thumb: imgSizeSm }}">
+                                                </picture>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    {%- unless isFeaturedImgSelected -%}
+                                        {%- assign isFeaturedImgSelected = true -%}
+                                    {%- endunless -%}
+
+                                {% endif %}
+
+                                {% if option.child_group %}
+
+                                    {% for option in option.child_group.options %}
+
+                                        {% if option.image %}
+
+                                            {%- unless hasImg -%}
+                                                {%- assign hasImg = true -%}
+                                            {%- endunless -%}
+
+                                            <div class="col gallery-item">
+
+                                                <div class="aspect-ratio-product">
+
+                                                    <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                                        <picture>
+                                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                                {{- option.image | thumb: imgSizeLg }} 1x,
+                                                                {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                                {{- option.image | thumb: imgSizeMd }} 1x,
+                                                                {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                                            <source data-srcset="
+                                                                {{- option.image | thumb: imgSizeSm }} 1x,
+                                                                {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                            <img
+                                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                                alt="{{ product.title }}"
+                                                                data-gallery-img-src="{{ option.image }}"
+                                                                src="{{ option.image | thumb: imgSizeSm }}">
+                                                        </picture>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            {%- unless isFeaturedImgSelected -%}
+                                                {%- assign isFeaturedImgSelected = true -%}
+                                            {%- endunless -%}
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    {% unless hasImg %}
+
+                        <div class="product-media-collage-item col gallery-item">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                    {%- capture imgSrc -%}
+                                        {% render 'placeholder-svg', type: 'image', base64: true %}
+                                    {%- endcapture -%}
+
+                                    <img
+                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                        alt="{{ product.title }}"
+                                        data-gallery-img-src="{{ imgSrc }}"
+                                        data-src="{{ imgSrc }}">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endunless %}
+
+                    {% for video in product.videos %}
+
+                        {%- capture iframeSrc -%}
+                            {%- if video.youtube_id -%}
+                                https://www.youtube.com/embed/{{ video.youtube_id -}}
+                            {%- elsif video.vimeo_id -%}
+                                https://player.vimeo.com/video/{{ video.vimeo_id -}}
+                            {%- else -%}
+                                {{- video.url -}}
+                            {%- endif -%}
+                        {%- endcapture -%}
+
+                        <div class="product-media-collage-item col gallery-item">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
+
+                                    {% if video.thumb %}
+
+                                        <div class="product-media-video-icon-container cursor-zoom-in">
+                                            {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                        </div>
+
+                                        <picture>
+                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                {{- video.thumb | thumb: imgSizeLg }} 1x,
+                                                {{- video.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                {{- video.thumb | thumb: imgSizeMd }} 1x,
+                                                {{- video.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                            <source data-srcset="
+                                                {{- video.thumb | thumb: imgSizeSm }} 1x,
+                                                {{- video.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                alt="{{ product.title }}"
+                                                data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                                src="{{ video.thumb | thumb: imgSizeSm }}">
+                                        </picture>
+
+                                    {% else %}
+
+                                        {%- capture imgSrc -%}
+                                            {% render 'placeholder-svg', type: 'image', base64: true %}
+                                        {%- endcapture -%}
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
+                                            alt="{{ product.title }}"
+                                            data-src="{{ imgSrc }}"
+                                            data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                            data-srcset="{{ imgSrc }}">
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <div id="product-main-media-swiper" class="swiper gallery d-md-none">
+
+                <div class="swiper-wrapper">
+
+                    {%- assign hasImg = false -%}
+                    {%- assign isFeaturedImgSelected = false -%}
+
+                    {% if imageAspectRatio == '9:13' %}
+                        {%- assign imgSizeSm = '415,590' -%}
+                    {% elsif imageAspectRatio == '4:3' %}
+                        {%- assign imgSizeSm = '415,316' -%}
+                    {% elsif imageAspectRatio == '3:4' %}
+                        {%- assign imgSizeSm = '415,553' -%}
+                    {% elsif imageAspectRatio == '1:1' %}
+                        {%- assign imgSizeSm = '415,415' -%}
+                    {% endif %}
+
+                    {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                        {%- unless hasImg -%}
+                            {%- assign hasImg = true -%}
+                        {%- endunless -%}
+
+                            <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                <picture>
+                                    <source data-srcset="
+                                        {{- product.default_or_selected_variant.image | thumb: imgSizeSm }} 1x,
+                                        {{- product.default_or_selected_variant.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                        alt="{{ product.title }}"
+                                        data-gallery-img-src="{{ product.default_or_selected_variant.image }}"
+                                        src="{{ product.default_or_selected_variant.image | thumb: imgSizeSm }}">
+                                </picture>
+
+                            </div>
+
+                        </div>
+
+                        {%- unless isFeaturedImgSelected -%}
+                            {%- assign isFeaturedImgSelected = true -%}
+                        {%- endunless -%}
+
+                    {% endif %}
+
+                    {% for image in generalImages %}
+
+                        {%- unless hasImg -%}
+                            {%- assign hasImg = true -%}
+                        {%- endunless -%}
+
+                        <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                <picture>
+                                    <source data-srcset="
+                                        {{- image | thumb: imgSizeSm }} 1x,
+                                        {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                    <img
+                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                        alt="{{ product.title }}"
+                                        data-gallery-img-src="{{ image }}"
+                                        src="{{ image | thumb: imgSizeSm }}">
+                                </picture>
+
+                            </div>
+
+                        </div>
+
+                        {%- unless isFeaturedImgSelected -%}
+                            {%- assign isFeaturedImgSelected = true -%}
+                        {%- endunless -%}
+
+                    {% endfor %}
+
+                    {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                        {% for group in product.default_or_selected_variant.customizations %}
+
+                            {% for option in group.options %}
+
+                                {% if option.image %}
+
+                                    {%- unless hasImg -%}
+                                        {%- assign hasImg = true -%}
+                                    {%- endunless -%}
+
+                                    <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                            <picture>
+                                                <source data-srcset="
+                                                    {{- option.image | thumb: imgSizeSm }} 1x,
+                                                    {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                <img
+                                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                    alt="{{ product.title }}"
+                                                    data-gallery-img-src="{{ option.image }}"
+                                                    src="{{ option.image | thumb: imgSizeSm }}">
+                                            </picture>
+
+                                        </div>
+
+                                    </div>
+
+                                    {%- unless isFeaturedImgSelected -%}
+                                        {%- assign isFeaturedImgSelected = true -%}
+                                    {%- endunless -%}
+
+                                {% endif %}
+
+                                {% if option.child_group %}
+
+                                    {% for option in option.child_group.options %}
+
+                                        {% if option.image %}
+
+                                            {%- unless hasImg -%}
+                                                {%- assign hasImg = true -%}
+                                            {%- endunless -%}
+
+                                            <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                                <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                                    <picture>
+                                                        <source data-srcset="
+                                                            {{- option.image | thumb: imgSizeSm }} 1x,
+                                                            {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                        <img
+                                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                            alt="{{ product.title }}"
+                                                            data-gallery-img-src="{{ option.image }}"
+                                                            src="{{ option.image | thumb: imgSizeSm }}">
+                                                    </picture>
+
+                                                </div>
+
+                                            </div>
+
+                                            {%- unless isFeaturedImgSelected -%}
+                                                {%- assign isFeaturedImgSelected = true -%}
+                                            {%- endunless -%}
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                    {% unless hasImg %}
+
+                        <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                {%- capture imgSrc -%}
+                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                {%- endcapture -%}
+
+                                <img
+                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                    alt="{{ product.title }}"
+                                    data-gallery-img-src="{{ imgSrc }}"
+                                    data-src="{{ imgSrc }}">
+
+                            </div>
+
+                        </div>
+
+                    {% endunless %}
+
+                    {% for video in product.videos %}
+
+                        {%- capture iframeSrc -%}
+                            {%- if video.youtube_id -%}
+                                https://www.youtube.com/embed/{{ video.youtube_id -}}
+                            {%- elsif video.vimeo_id -%}
+                                https://player.vimeo.com/video/{{ video.vimeo_id -}}
+                            {%- else -%}
+                                {{- video.url -}}
+                            {%- endif -%}
+                        {%- endcapture -%}
+
+                        <div class="swiper-slide gallery-item">
+
+                            <div class="aspect-ratio-product">
+
+                                <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
+
+                                    {% if video.thumb %}
+
+                                        <div class="product-media-video-icon-container cursor-zoom-in">
+                                            {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                        </div>
+
+                                        <picture>
+                                            <source data-srcset="
+                                                {{- video.thumb | thumb: imgSizeSm }} 1x,
+                                                {{- video.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                                alt="{{ product.title }}"
+                                                data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                                src="{{ video.thumb | thumb: imgSizeSm }}">
+                                        </picture>
+
+                                    {% else %}
+
+                                        {%- capture imgSrc -%}
+                                            {% render 'placeholder-svg', type: 'image', base64: true %}
+                                        {%- endcapture -%}
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
+                                            alt="{{ product.title }}"
+                                            data-src="{{ imgSrc }}"
+                                            data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                            data-srcset="{{ imgSrc }}">
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% if product.media.size %}
+
+                    <div class="swiper-button-prev">
+                        {%- render 'icon', icon: 'angle-left' -%}
+                    </div>
+
+                    <div class="swiper-button-next">
+                        {%- render 'icon', icon: 'angle-right' -%}
+                    </div>
+
+                    <div class="swiper-pagination swiper-pagination-relative d-md-none"></div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+{%- when 'sticky' -%}
+
+<div class="section-highlight-item product-media-container">
+
+    <div class="product-media row g-0" data-dynamic-partial="media" style="{{ productPageMediaStyle | strip }}">
+
+        <div id="product-thumb-media-swiper" class="swiper swiper-vertical d-none d-lg-block flex-shrink-0 w-px-130 me-5 p-0" data-direction="vertical">
+
+            <div class="swiper-wrapper">
+
+                {%- assign hasImg = false -%}
+                {%- assign isFeaturedImgSelected = false -%}
+
+                {% if imageAspectRatio == '9:13' %}
+                    {%- assign imgSize = '132,182' -%}
+                {% elsif imageAspectRatio == '4:3' %}
+                    {%- assign imgSize = '122,104' -%}
+                {% elsif imageAspectRatio == '3:4' %}
+                    {%- assign imgSize = '122,163' -%}
+                {% elsif imageAspectRatio == '1:1' %}
+                    {%- assign imgSize = '132,132' -%}
+                {% endif %}
+
+                {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                alt="{{ product.title }}"
+                                data-src="{{ product.default_or_selected_variant.image | thumb: imgSize }}"
+                                data-srcset="{{ product.default_or_selected_variant.image | thumb: imgSize }} 1x, {{ product.default_or_selected_variant.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endif %}
+
+                {% for image in generalImages %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                alt="{{ product.title }}"
+                                data-src="{{ image | thumb: imgSize }}"
+                                data-srcset="{{ image | thumb: imgSize }} 1x, {{ image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endfor %}
+
+                {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                    {% for group in product.default_or_selected_variant.customizations %}
+
+                        {% for option in group.options %}
+
+                            {% if option.image %}
+
+                                {%- unless hasImg -%}
+                                    {%- assign hasImg = true -%}
+                                {%- endunless -%}
+
+                                <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                    <div class="aspect-ratio-container">
+
+                                        <img
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                            alt="{{ product.title }}"
+                                            data-src="{{ option.image | thumb: imgSize }}"
+                                            data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                                    </div>
+
+                                </div>
+
+                                {%- unless isFeaturedImgSelected -%}
+                                    {%- assign isFeaturedImgSelected = true -%}
+                                {%- endunless -%}
+
+                            {% endif %}
+
+                            {% if option.child_group %}
+
+                                {% for option in option.child_group.options %}
+
+                                    {% if option.image %}
+
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
+
+                                        <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                            <div class="aspect-ratio-container">
+
+                                                <img
+                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                    alt="{{ product.title }}"
+                                                    data-src="{{ option.image | thumb: imgSize }}"
+                                                    data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                                            </div>
+
+                                        </div>
+
+                                        {%- unless isFeaturedImgSelected -%}
+                                            {%- assign isFeaturedImgSelected = true -%}
+                                        {%- endunless -%}
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                {% unless hasImg %}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
+                                alt="{{ product.title }}"
+                                data-src="{{ imgSrc }}">
+
+                        </div>
+
+                    </div>
+
+                {% endunless %}
+
+                {% for video in product.videos %}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="product-media-video-container aspect-ratio-container">
+
+                            {% if video.thumb %}
+
+                                <div class="product-media-video-icon-container cursor-zoom-in">
+                                    {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                </div>
+
+                                <img
+                                    class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item"
+                                    alt="{{ product.title }}"
+                                    data-src="{{ video.thumb | thumb: imgSize }}"
+                                    data-srcset="{{ video.thumb | thumb: imgSize }} 1x, {{ video.thumb | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                            {% else %}
+
+                                {%- capture imgSrc -%}
+                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                {%- endcapture -%}
+
+                                <img
+                                    class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item svg-placeholder"
+                                    alt="{{ product.title }}"
+                                    data-src="{{ imgSrc }}">
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% if product.media.size %}
+
+                <div class="swiper-button-prev">
+                    {%- render 'icon', icon: 'angle-left' -%}
+                </div>
+
+                <div class="swiper-button-next">
+                    {%- render 'icon', icon: 'angle-right' -%}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div id="product-main-media-swiper" class="swiper swiper-navigation-hide-on-desktop gallery col">
+
+            {% render 'product-badges', product: product, showNew: showNewBadge, showPromotion: showPromotionBadge, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showBackorder: showBackorderBadge %}
+
+            <div class="swiper-wrapper">
+
+                {%- assign hasImg = false -%}
+                {%- assign isFeaturedImgSelected = false -%}
+
+                {% if imageAspectRatio == '9:13' %}
+
+                    {%- assign imgSizeSm = '555,792' -%}
+                    {%- assign imgSizeMd = '747,1070' -%}
+                    {%- assign imgSizeLg = '574,820' -%}
+
+                {% elsif imageAspectRatio == '4:3' %}
+
+                    {%- assign imgSizeSm = '555,421' -%}
+                    {%- assign imgSizeMd = '747,565' -%}
+                    {%- assign imgSizeLg = '574,435' -%}
+
+                {% elsif imageAspectRatio == '3:4' %}
+
+                    {%- assign imgSizeSm = '555,740' -%}
+                    {%- assign imgSizeMd = '747,996' -%}
+                    {%- assign imgSizeLg = '574,765' -%}
+
+                {% elsif imageAspectRatio == '1:1' %}
+
+                    {%- assign imgSizeSm = '555,555' -%}
+                    {%- assign imgSizeMd = '747,747' -%}
+                    {%- assign imgSizeLg = '574,574' -%}
+
+                {% endif %}
+
+                {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeLg }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeMd }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeSm }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                    alt="{{ product.title }}"
+                                    data-gallery-img-src="{{ product.default_or_selected_variant.image }}"
+                                    src="{{ product.default_or_selected_variant.image | thumb: imgSizeSm }}">
+                            </picture>
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endif %}
+
+                {% for image in generalImages %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- image | thumb: imgSizeLg }} 1x,
+                                    {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- image | thumb: imgSizeMd }} 1x,
+                                    {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- image | thumb: imgSizeSm }} 1x,
+                                    {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                    alt="{{ product.title }}"
+                                    data-gallery-img-src="{{ image }}"
+                                    src="{{ image | thumb: imgSizeSm }}">
+                            </picture>
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endfor %}
+
+                {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                    {% for group in product.default_or_selected_variant.customizations %}
+
+                        {% for option in group.options %}
+
+                            {% if option.image %}
+
+                                {%- unless hasImg -%}
+                                    {%- assign hasImg = true -%}
+                                {%- endunless -%}
+
+                                <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                    <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                        <picture>
+                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                {{- option.image | thumb: imgSizeLg }} 1x,
+                                                {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                {{- option.image | thumb: imgSizeMd }} 1x,
+                                                {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                            <source data-srcset="
+                                                {{- option.image | thumb: imgSizeSm }} 1x,
+                                                {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                alt="{{ product.title }}"
+                                                data-gallery-img-src="{{ option.image }}"
+                                                src="{{ option.image | thumb: imgSizeSm }}">
+                                        </picture>
+
+                                    </div>
+
+                                </div>
+
+                                {%- unless isFeaturedImgSelected -%}
+                                    {%- assign isFeaturedImgSelected = true -%}
+                                {%- endunless -%}
+
+                            {% endif %}
+
+                            {% if option.child_group %}
+
+                                {% for option in option.child_group.options %}
+
+                                    {% if option.image %}
+
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
+
+                                        <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                                <picture>
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeLg }} 1x,
+                                                        {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeMd }} 1x,
+                                                        {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                                    <source data-srcset="
+                                                        {{- option.image | thumb: imgSizeSm }} 1x,
+                                                        {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                    <img
+                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                        alt="{{ product.title }}"
+                                                        data-gallery-img-src="{{ option.image }}"
+                                                        src="{{ option.image | thumb: imgSizeSm }}">
+                                                </picture>
+
+                                            </div>
+
+                                        </div>
+
+                                        {%- unless isFeaturedImgSelected -%}
+                                            {%- assign isFeaturedImgSelected = true -%}
+                                        {%- endunless -%}
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                {% unless hasImg %}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img
+                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                alt="{{ product.title }}"
+                                data-gallery-img-src="{{ imgSrc }}"
+                                data-src="{{ imgSrc }}">
+
+                        </div>
+
+                    </div>
+
+                {% endunless %}
+
+                {% for video in product.videos %}
+
+                    {%- capture iframeSrc -%}
+                        {%- if video.youtube_id -%}
+                            https://www.youtube.com/embed/{{ video.youtube_id -}}
+                        {%- elsif video.vimeo_id -%}
+                            https://player.vimeo.com/video/{{ video.vimeo_id -}}
+                        {%- else -%}
+                            {{- video.url -}}
+                        {%- endif -%}
+                    {%- endcapture -%}
+
+                    <div class="swiper-slide gallery-item">
+
+                        <div class="aspect-ratio-product">
+
+                            <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
+
+                                {% if video.thumb %}
+
+                                    <div class="product-media-video-icon-container cursor-zoom-in">
+                                        {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                    </div>
+
+                                    <picture>
+                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                            {{- video.thumb | thumb: imgSizeLg }} 1x,
+                                            {{- video.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                            {{- video.thumb | thumb: imgSizeMd }} 1x,
+                                            {{- video.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                        <source data-srcset="
+                                            {{- video.thumb | thumb: imgSizeSm }} 1x,
+                                            {{- video.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                            alt="{{ product.title }}"
+                                            data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                            src="{{ video.thumb | thumb: imgSizeSm }}">
+                                    </picture>
+
+                                {% else %}
+
+                                    {%- capture imgSrc -%}
+                                        {% render 'placeholder-svg', type: 'image', base64: true %}
+                                    {%- endcapture -%}
+
+                                    <img
+                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
+                                        alt="{{ product.title }}"
+                                        data-src="{{ imgSrc }}"
+                                        data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                        data-srcset="{{ imgSrc }}">
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% if product.media.size %}
+
+                <div class="swiper-button-prev">
+                    {%- render 'icon', icon: 'angle-left' -%}
+                </div>
+
+                <div class="swiper-button-next">
+                    {%- render 'icon', icon: 'angle-right' -%}
+                </div>
+
+                <div class="swiper-pagination swiper-pagination-relative d-md-none"></div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{%- else -%}
+
+    <div class="product-media row g-0" data-dynamic-partial="media">
+
+        {%- if settings.styleElevation == 'hard' -%}
+            <div id="product-thumb-media-swiper" class="swiper product-thumb-media-swiper-below d-none d-md-block" data-direction="horizontal">
+        {%- else -%}
+            <div id="product-thumb-media-swiper" class="swiper swiper-vertical d-none d-lg-block w-px-80 me-g" data-direction="vertical">
+        {%- endif -%}
+
+            <div class="swiper-wrapper">
+
+                {%- assign hasImg = false -%}
+                {%- assign isFeaturedImgSelected = false -%}
+
+                {% if imageAspectRatio == '9:13' %}
+                    {%- assign imgSize = '90,124' -%}
+                {% elsif imageAspectRatio == '4:3' %}
+                    {%- assign imgSize = '90,71' -%}
+                {% elsif imageAspectRatio == '3:4' %}
+                    {%- assign imgSize = '90,120' -%}
+                {% elsif imageAspectRatio == '1:1' %}
+                    {%- assign imgSize = '90,90' -%}
+                {% endif %}
+
+                {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                alt="{{ product.title }}"
+                                data-src="{{ product.default_or_selected_variant.image | thumb: imgSize }}"
+                                data-srcset="{{ product.default_or_selected_variant.image | thumb: imgSize }} 1x, {{ product.default_or_selected_variant.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endif %}
+
+                {% for image in generalImages %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                alt="{{ product.title }}"
+                                data-src="{{ image | thumb: imgSize }}"
+                                data-srcset="{{ image | thumb: imgSize }} 1x, {{ image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endfor %}
+
+                {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                    {% for group in product.default_or_selected_variant.customizations %}
+
+                        {% for option in group.options %}
+
+                            {% if option.image %}
+
+                                {%- unless hasImg -%}
+                                    {%- assign hasImg = true -%}
+                                {%- endunless -%}
+
+                                <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                    <div class="aspect-ratio-container">
+
+                                        <img
+                                            class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                            alt="{{ product.title }}"
+                                            data-src="{{ option.image | thumb: imgSize }}"
+                                            data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                                    </div>
+
+                                </div>
+
+                                {%- unless isFeaturedImgSelected -%}
+                                    {%- assign isFeaturedImgSelected = true -%}
+                                {%- endunless -%}
+
+                            {% endif %}
+
+                            {% if option.child_group %}
+
+                                {% for option in option.child_group.options %}
+
+                                    {% if option.image %}
+
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
+
+                                        <div class="swiper-slide aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                            <div class="aspect-ratio-container">
+
+                                                <img
+                                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                    alt="{{ product.title }}"
+                                                    data-src="{{ option.image | thumb: imgSize }}"
+                                                    data-srcset="{{ option.image | thumb: imgSize }} 1x, {{ option.image | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                                            </div>
+
+                                        </div>
+
+                                        {%- unless isFeaturedImgSelected -%}
+                                            {%- assign isFeaturedImgSelected = true -%}
+                                        {%- endunless -%}
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                {% unless hasImg %}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="aspect-ratio-container">
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item cursor-pointer svg-placeholder"
+                                alt="{{ product.title }}"
+                                data-src="{{ imgSrc }}">
+
+                        </div>
+
+                    </div>
+
+                {% endunless %}
+
+                {% for video in product.videos %}
+
+                    <div class="swiper-slide aspect-ratio-product">
+
+                        <div class="product-media-video-container aspect-ratio-container">
+
+                            {% if video.thumb %}
+
+                                <div class="product-media-video-icon-container cursor-zoom-in">
+                                    {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                </div>
+
+                                <img
+                                    class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item"
+                                    alt="{{ product.title }}"
+                                    data-src="{{ video.thumb | thumb: imgSize }}"
+                                    data-srcset="{{ video.thumb | thumb: imgSize }} 1x, {{ video.thumb | thumb: imgSize | thumb: '@2x' }} 2x">
+
+                            {% else %}
+
+                                {%- capture imgSrc -%}
+                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                {%- endcapture -%}
+
+                                <img
+                                    class="lazy d-block mx-auto img-fluid cursor-pointer aspect-ratio-item svg-placeholder"
+                                    alt="{{ product.title }}"
+                                    data-src="{{ imgSrc }}">
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% if product.media.size %}
+
+                <div class="swiper-button-prev">
+                    {%- render 'icon', icon: 'angle-left' -%}
+                </div>
+
+                <div class="swiper-button-next">
+                    {%- render 'icon', icon: 'angle-right' -%}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div id="product-main-media-swiper" class="swiper swiper-navigation-hide-on-desktop gallery col">
+
+            {% render 'product-badges', product: product, showNew: showNewBadge, showPromotion: showPromotionBadge, showDiscount: showDiscountBadge, showOutOfStock: showOutOfStockBadge, showBackorder: showBackorderBadge %}
+
+            <div class="swiper-wrapper">
+
+                {%- assign hasImg = false -%}
+                {%- assign isFeaturedImgSelected = false -%}
+
+                {% if imageAspectRatio == '9:13' %}
+
+                    {%- assign imgSizeSm = '530,766' -%}
+                    {%- assign imgSizeMd = '449,649' -%}
+                    {%- assign imgSizeLg = '607,877' -%}
+
+                {% elsif imageAspectRatio == '4:3' %}
+
+                    {%- assign imgSizeSm = '530,398' -%}
+                    {%- assign imgSizeMd = '449,337' -%}
+                    {%- assign imgSizeLg = '607,455' -%}
+
+                {% elsif imageAspectRatio == '3:4' %}
+
+                    {%- assign imgSizeSm = '530,707' -%}
+                    {%- assign imgSizeMd = '449,599' -%}
+                    {%- assign imgSizeLg = '607,809' -%}
+
+                {% elsif imageAspectRatio == '1:1' %}
+
+                    {%- assign imgSizeSm = '530,530' -%}
+                    {%- assign imgSizeMd = '449,449' -%}
+                    {%- assign imgSizeLg = '607,607' -%}
+
+                {% endif %}
+
+                {% if product.default_or_selected_variant.image and product.has_only_default_variant == false %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeLg }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeMd }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeSm }} 1x,
+                                    {{- product.default_or_selected_variant.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                    alt="{{ product.title }}"
+                                    data-gallery-img-src="{{ product.default_or_selected_variant.image }}"
+                                    src="{{ product.default_or_selected_variant.image | thumb: imgSizeSm }}">
+                            </picture>
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endif %}
+
+                {% for image in generalImages %}
+
+                    {%- unless hasImg -%}
+                        {%- assign hasImg = true -%}
+                    {%- endunless -%}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- image | thumb: imgSizeLg }} 1x,
+                                    {{- image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- image | thumb: imgSizeMd }} 1x,
+                                    {{- image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- image | thumb: imgSizeSm }} 1x,
+                                    {{- image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                    alt="{{ product.title }}"
+                                    data-gallery-img-src="{{ image }}"
+                                    src="{{ image | thumb: imgSizeSm }}">
+                            </picture>
+
+                        </div>
+
+                    </div>
+
+                    {%- unless isFeaturedImgSelected -%}
+                        {%- assign isFeaturedImgSelected = true -%}
+                    {%- endunless -%}
+
+                {% endfor %}
+
+                {% if product.default_or_selected_variant.customizations.size > 0 %}
+
+                    {% for group in product.default_or_selected_variant.customizations %}
+
+                        {% for option in group.options %}
+
+                            {% if option.image %}
+
+                                {%- unless hasImg -%}
+                                    {%- assign hasImg = true -%}
+                                {%- endunless -%}
+
+                                <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                    <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                        <picture>
+                                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                {{- option.image | thumb: imgSizeLg }} 1x,
+                                                {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                {{- option.image | thumb: imgSizeMd }} 1x,
+                                                {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                            <source data-srcset="
+                                                {{- option.image | thumb: imgSizeSm }} 1x,
+                                                {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                            <img
+                                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                alt="{{ product.title }}"
+                                                data-gallery-img-src="{{ option.image }}"
+                                                src="{{ option.image | thumb: imgSizeSm }}">
+                                        </picture>
+
+                                    </div>
+
+                                </div>
+
+                                {%- unless isFeaturedImgSelected -%}
+                                    {%- assign isFeaturedImgSelected = true -%}
+                                {%- endunless -%}
+
+                            {% endif %}
+
+                            {% if option.child_group %}
+
+                                {% for option in option.child_group.options %}
+
+                                    {% if option.image %}
+
+                                        {%- unless hasImg -%}
+                                            {%- assign hasImg = true -%}
+                                        {%- endunless -%}
+
+                                        <div class="swiper-slide gallery-item aspect-ratio-product" data-product-customization-image="{{ option.id }}">
+
+                                            <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                                                <picture>
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeLg }} 1x,
+                                                        {{- option.image | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                                    <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                                        {{- option.image | thumb: imgSizeMd }} 1x,
+                                                        {{- option.image | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                                    <source data-srcset="
+                                                        {{- option.image | thumb: imgSizeSm }} 1x,
+                                                        {{- option.image | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                                    <img
+                                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}{% unless isFeaturedImgSelected %} featured-img{% endunless %}"
+                                                        alt="{{ product.title }}"
+                                                        data-gallery-img-src="{{ option.image }}"
+                                                        src="{{ option.image | thumb: imgSizeSm }}">
+                                                </picture>
+
+                                            </div>
+
+                                        </div>
+
+                                        {%- unless isFeaturedImgSelected -%}
+                                            {%- assign isFeaturedImgSelected = true -%}
+                                        {%- endunless -%}
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    {% endfor %}
+
+                {% endif %}
+
+                {% unless hasImg %}
+
+                    <div class="swiper-slide gallery-item aspect-ratio-product">
+
+                        <div class="product-media-img-container aspect-ratio-container" data-gallery-init>
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img
+                                class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in svg-placeholder{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                alt="{{ product.title }}"
+                                data-gallery-img-src="{{ imgSrc }}"
+                                data-src="{{ imgSrc }}">
+
+                        </div>
+
+                    </div>
+
+                {% endunless %}
+
+                {% for video in product.videos %}
+
+                    {%- capture iframeSrc -%}
+                        {%- if video.youtube_id -%}
+                            https://www.youtube.com/embed/{{ video.youtube_id -}}
+                        {%- elsif video.vimeo_id -%}
+                            https://player.vimeo.com/video/{{ video.vimeo_id -}}
+                        {%- else -%}
+                            {{- video -}}
+                        {%- endif -%}
+                    {%- endcapture -%}
+
+                    <div class="swiper-slide gallery-item">
+
+                        <div class="aspect-ratio-product">
+
+                            <div class="product-media-video-container aspect-ratio-container" data-gallery-init>
+
+                                {% if video.thumb %}
+
+                                    <div class="product-media-video-icon-container cursor-zoom-in">
+                                        {%- render 'icon', icon: 'play', class: 'svg-icon-fw product-media-video-icon' -%}
+                                    </div>
+
+                                    <picture>
+                                        <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                            {{- video.thumb | thumb: imgSizeLg }} 1x,
+                                            {{- video.thumb | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                        <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                            {{- video.thumb | thumb: imgSizeMd }} 1x,
+                                            {{- video.thumb | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                        <source data-srcset="
+                                            {{- video.thumb | thumb: imgSizeSm }} 1x,
+                                            {{- video.thumb | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                        <img
+                                            class="lazy lazy-disable-transition d-block mx-auto img-fluid aspect-ratio-item cursor-zoom-in{% if imageAspectRatio == '9:13' or imageAspectRatio == '3:4' %} aspect-ratio-item-position-top{% endif %}"
+                                            alt="{{ product.title }}"
+                                            data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                            src="{{ video.thumb | thumb: imgSizeSm }}">
+                                    </picture>
+
+                                {% else %}
+
+                                    {%- capture imgSrc -%}
+                                        {% render 'placeholder-svg', type: 'image', base64: true %}
+                                    {%- endcapture -%}
+
+                                    <img
+                                        class="lazy lazy-disable-transition d-block mx-auto img-fluid svg-placeholder"
+                                        alt="{{ product.title }}"
+                                        data-src="{{ imgSrc }}"
+                                        data-gallery-iframe-src="{{ iframeSrc | strip | replace: '  ', '' | strip_newlines }}"
+                                        data-srcset="{{ imgSrc }}">
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% if product.media.size %}
+
+                <div class="swiper-button-prev">
+                    {%- render 'icon', icon: 'angle-left' -%}
+                </div>
+
+                <div class="swiper-button-next">
+                    {%- render 'icon', icon: 'angle-right' -%}
+                </div>
+
+                <div class="swiper-pagination swiper-pagination-relative d-md-none"></div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+{%- endcase -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-media.name",
+    "tag": "div",
+    "class": "block block-product-page-media",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "settings": [
+                    {
+                        "default": "default",
+                        "id": "imageAspectRatio",
+                        "label": "t:all.settings.imageAspectRatio.label",
+                        "options": [
+                            {
+                                "label": "t:all.settings.imageAspectRatio.options.default.label",
+                                "value": "default"
+                            },
+                            {
+                                "label": "9:13",
+                                "value": "9:13"
+                            },
+                            {
+                                "label": "4:3",
+                                "value": "4:3"
+                            },
+                            {
+                                "label": "3:4",
+                                "value": "3:4"
+                            },
+                            {
+                                "label": "1:1",
+                                "value": "1:1"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "default": "default",
+                        "id": "imageAspectRatioFit",
+                        "label": "t:blocks.product-page-media.settings.imageAspectRatioFit.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-page-media.settings.imageAspectRatioFit.options.default.label",
+                                "value": "default"
+                            },
+                            {
+                                "label": "t:blocks.product-page-media.settings.imageAspectRatioFit.options.contain.label",
+                                "value": "contain"
+                            },
+                            {
+                                "label": "t:blocks.product-page-media.settings.imageAspectRatioFit.options.cover.label",
+                                "value": "cover"
+                            }
+                        ],
+                        "type": "select"
+                    }
+                ],
+                "id": "layout"
+            },
+            {
+                "title": "t:blocks.product-page-media.groups.badges.title",
+                "settings": [
+                    {
+                        "default": false,
+                        "id": "overrideDisplaySettings",
+                        "label": "t:blocks.product-page-media.settings.overrideDisplaySettings.label",
+                        "type": "checkbox"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq false"
+                        ],
+                        "subheading": "t:all.settings.overrideThemeDefaults.info",
+                        "type": "heading"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showNewBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-media.settings.showNewBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showPromotionBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-media.settings.showPromotionBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showDiscountBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-media.settings.showDiscountBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showOutOfStockBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-media.settings.showOutOfStockBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showBackorderBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-media.settings.showBackorderBadge.label",
+                        "default": true
+                    }
+                ],
+                "id": "badges"
+            }
+        ]
+    }
+}
+{% endschema %}

@@ -1,32 +1,383 @@
-{%- assign sectionTitle =  'general.page_not_found_title' | t -%}
-{%- assign sectionSubtitle = 'general.page_not_found_subtitle' | t -%}
+{%- assign contentAlign = section.settings.sectionTextAlign | default: 'center' -%}
+{%- if contentAlign == 'nil' or contentAlign == blank -%}
+    {%- assign contentAlign = 'center' -%}
+{%- endif -%}
 
 {%- capture sectionContent -%}
 
-	<div class="text-center">
+    {%- if section.settings.showMissingIcon != false -%}
+        <div class="mb-7">
+            {%- render 'icon', icon: 'page-missing', class: 'svg-icon-10x' -%}
+        </div>
+    {%- endif -%}
 
-		<div class="mb-7">
-			{%- render 'icon', icon: 'page-missing', class: 'svg-icon-10x' -%}
-		</div>
-
-		<a href="{{ routes.root_url }}" class="btn btn-primary">
-			{{- 'general.back_to_home_page' | t -}}
-		</a>
-
-	</div>
+    <div class="section-404-blocks">
+        {% container 'content' %}
+    </div>
 
 {%- endcapture -%}
 
-{% render 'section', sectionHandle: '.section-404', sectionTitle: sectionTitle, sectionTitleTag: 'h1', sectionSubtitle: sectionSubtitle, sectionContent: sectionContent, sectionHeaderTextAlign: 'center' %}
+{% render 'section', section: section, sectionHandle: '.section-404', sectionContent: sectionContent, sectionHeader: false, sectionTextAlign: contentAlign, sectionContentTextAlign: contentAlign %}
 
 {% schema %}
 {
-    "name": {
-        "en": "404",
-        "fi": "404"
-    },
+    "name": "t:sections.404-template.name",
     "tag": "section",
     "class": "section section-404",
-    "is_creatable": false
+    "is_creatable": false,
+    "templates": [
+        "404"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionColorScheme.label",
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
+                                    "default": "#f3f5f6",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionPaddingMode.label",
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
+                                    },
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 50,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImg",
+                                    "type": "image-picker",
+                                    "label": "t:all.settings.sectionBgImg.label",
+                                    "adjustments": true
+                                },
+                                {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgDimming",
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgBlur",
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " ",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                }
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "settings": [
+                                {
+                                    "id": "showMissingIcon",
+                                    "type": "checkbox",
+                                    "label": "t:sections.404-template.settings.showMissingIcon.label",
+                                    "default": true
+                                },
+                                {
+                                    "id": "sectionContainer",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionContainer.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionContainer.options.nil.label"
+                                        },
+                                        {
+                                            "value": "fair",
+                                            "label": "t:all.settings.sectionContainer.options.fair.label"
+                                        },
+                                        {
+                                            "value": "compact",
+                                            "label": "t:all.settings.sectionContainer.options.compact.label"
+                                        },
+                                        {
+                                            "value": "tiny",
+                                            "label": "t:all.settings.sectionContainer.options.tiny.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": "layout"
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    },
+    "containers": [
+        {
+            "id": "content",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "badge",
+                "spacer",
+                "separator",
+                "image",
+                "button",
+                "button-group",
+                "back-to-home"
+            ],
+            "preset": {
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "general.page_not_found_title",
+                                "string_value": "Sorry, we couldn't find the page you were looking for"
+                            },
+                            "titleTag": "h1",
+                            "titleStyle": "h1",
+                            "textAlign": "center"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "settings": {
+                            "richtext": {
+                                "type": "translation",
+                                "key": "general.page_not_found_subtitle",
+                                "string_value": "It looks like the page is no longer available."
+                            }
+                        }
+                    },
+                    {
+                        "name": "back-to-home",
+                        "settings": {
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
 }
 {% endschema %}

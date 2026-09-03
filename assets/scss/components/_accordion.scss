@@ -121,14 +121,15 @@
         button[aria-expanded="true"] {
 
             .accordion-indicator {
-                transform: rotate(45deg);
-                
+                transform: none;
+
                 &::before {
-                    opacity: 0;
+                    opacity: 1;
                 }
 
                 &::after {
-                    transform: rotate(45deg);
+                    opacity: 0;
+                    transform: translateX(-50%) scaleY(0);
                 }
             }
         }
@@ -140,5 +141,117 @@
 
     .accordion-indicator {
         margin-left: auto;
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .accordion:not(.accordion-navigation) {
+        background-color: transparent;
+        padding-right: $elevation-offset;
+        padding-bottom: $elevation-offset;
+
+        .accordion-item,
+        &.accordion-flush .accordion-item,
+        &.accordion-flush .accordion-item:first-child,
+        &.accordion-flush .accordion-item:last-child {
+            overflow: visible;
+            border: $elevation-border-width solid $elevation-rule-color;
+            border-radius: var(--style-component-border-radius);
+            background-color: var(--style-secondary-bg-color, var(--style-bg-color));
+            box-shadow: $elevation-offset $elevation-offset 0 $elevation-shadow-color;
+        }
+
+        .accordion-item + .accordion-item,
+        &.accordion-flush .accordion-item + .accordion-item {
+            margin-top: calc(#{spacer(3)} + #{$elevation-offset});
+        }
+
+        .accordion-header {
+            position: relative;
+            z-index: 1;
+
+            .btn,
+            .accordion-button {
+                pointer-events: auto;
+                cursor: pointer;
+                position: relative;
+                z-index: 1;
+                padding: spacer(3) spacer(4);
+                text-align: left;
+                background-color: transparent;
+                color: var(--style-text-color);
+                box-shadow: none;
+
+                .my-3 {
+                    margin-top: spacer(1);
+                    margin-bottom: spacer(1);
+                }
+
+                &:focus-visible {
+                    @include elevation-focus;
+                }
+            }
+
+            .accordion-indicator {
+                pointer-events: none;
+                flex-shrink: 0;
+                box-sizing: border-box;
+                width: $spacer * 2;
+                height: $spacer * 2;
+                margin-left: spacer(3);
+                border: $elevation-border-width solid $elevation-rule-color;
+                border-radius: var(--style-component-border-radius, 0);
+                background-color: var(--style-secondary-bg-color, var(--style-bg-color));
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+
+                &::before {
+                    width: 50%;
+                    height: var(--style-icon-stroke-width);
+                    left: 25%;
+                }
+
+                &::after {
+                    width: var(--style-icon-stroke-width);
+                    height: 50%;
+                    top: 25%;
+                    left: 50%;
+                }
+            }
+        }
+
+        .accordion-button {
+            background-color: var(--style-secondary-bg-color, var(--style-bg-color));
+            color: var(--style-text-color);
+            font-weight: $font-weight-bold;
+
+            &:not(.collapsed) {
+                background-color: var(--style-secondary-bg-color, var(--style-bg-color));
+                color: var(--style-text-color);
+                box-shadow: none;
+            }
+
+            &:focus-visible {
+                @include elevation-focus;
+            }
+        }
+
+        .accordion-collapse .accordion-body,
+        .accordion-body {
+            padding: spacer(3) spacer(4);
+            border-top: $elevation-border-width solid $elevation-rule-color;
+            background-color: var(--style-secondary-bg-color, var(--style-bg-color));
+        }
+    }
+
+    .accordion.accordion-navigation {
+
+        .accordion-item .accordion-header button:focus-visible {
+            @include elevation-focus;
+        }
+
+        .accordion-item .accordion-item .accordion-item {
+            border-left-width: $elevation-border-width;
+            border-left-color: $elevation-rule-color;
+        }
     }
 }

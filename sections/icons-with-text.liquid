@@ -8,99 +8,37 @@
 
     {%- for item in section.settings.setting_blocks.items -%}
 
+        {%- assign item_show_icon = false -%}
+        {%- assign item_icon_svg = false -%}
+        {%- if item.settings.iconFormat == 'svg' -%}
+            {%- if item.settings.svgContent != blank -%}
+                {%- assign item_show_icon = true -%}
+                {%- assign item_icon_svg = true -%}
+            {%- elsif request.design_mode -%}
+                {%- assign item_show_icon = true -%}
+                {%- assign item_icon_svg = true -%}
+            {%- endif -%}
+        {%- elsif item.settings.img != blank -%}
+            {%- assign item_show_icon = true -%}
+        {%- elsif request.design_mode -%}
+            {%- assign item_show_icon = true -%}
+        {%- endif -%}
+
         <div class="swiper-slide">
 
-            <div class="swiper-slide-inner">
+            <div class="swiper-slide-inner icons-with-text-item icons-with-text-item-{{ section.settings.orientation }}">
 
                 {%- if section.settings.orientation == 'horizontal' -%}
 
                     <div class="d-flex flex-column">
 
-                        {% if item.settings.iconFormat == 'svg' %}
+                        {%- if item_show_icon -%}
 
-                            {% if item.settings.svgContent %}
-
-                                <div class="text-{{ textAlign }}">
-
-                                    {{- item.settings.svgContent | replace: '<svg ', '<svg class="svg-icon svg-icon-3x" ' -}}
-
-                                </div>
-
-                            {% else %}
-
-                                <div class="aspect-ratio-1-1 align-self-{{ textAlign }}">
-
-                                    <div class="aspect-ratio-container max-w-px-40">
-
-                                        {%- capture imgSrc -%}
-                                            {% render 'placeholder-svg', type: 'image', base64: true %}
-                                        {%- endcapture -%}
-
-                                        <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ item.settings.title }}" data-src="{{ imgSrc | strip }}">
-
-                                    </div>
-
-                                </div>
-
-                            {% endif %}
-                        
-                        {% else %}
-
-                            <div class="aspect-ratio-1-1 align-self-{{ textAlign }}">
-
-                                <div class="aspect-ratio-container max-w-px-40">
-
-                                    {% if item.settings.img %}
-
-                                        <img
-                                            alt="{{ item.settings.img.alt }}"
-                                            data-src="{{ item.settings.img | thumb: '40,40' }}"
-                                            data-srcset="{{ item.settings.img | thumb: '40,40' }} 1x,{{ item.settings.img | thumb: '40,40' | thumb:'@2x' }} 2x"
-                                            class="lazy aspect-ratio-item"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
-
-                                    {% else %}
-
-                                        {%- capture imgSrc -%}
-                                            {% render 'placeholder-svg', type: 'image', base64: true %}
-                                        {%- endcapture -%}
-
-                                        <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ item.settings.title }}" data-src="{{ imgSrc | strip }}">
-
-                                    {% endif %}
-
-                                </div>
-
-                            </div>
-
-                        {% endif %}
-
-                        <div class="d-grid gap-2 mt-g text-{{ textAlign }}">
-
-                            {% if item.settings.title %}
-
-                                <span class="text-title d-block fw-medium">
-                                    {{ item.settings.title }}
-                                </span>
-
-                            {% endif %}
-
-                            {{ item.settings.richtext }}
-
-                        </div>
-
-                    </div>
-
-                {%- else -%}
-
-                    <div class="d-flex justify-content-{{ textAlign }}">
-
-                        <div class="me-g">
-
-                            {% if item.settings.iconFormat == 'svg' %}
+                            {% if item_icon_svg %}
 
                                 {% if item.settings.svgContent %}
 
-                                    <div>
+                                    <div class="icons-with-text-icon text-{{ textAlign }}">
 
                                         {{- item.settings.svgContent | replace: '<svg ', '<svg class="svg-icon svg-icon-3x" ' -}}
 
@@ -108,7 +46,7 @@
 
                                 {% else %}
 
-                                    <div class="aspect-ratio-1-1">
+                                    <div class="icons-with-text-icon aspect-ratio-1-1 align-self-{{ textAlign }}">
 
                                         <div class="aspect-ratio-container max-w-px-40">
 
@@ -126,7 +64,7 @@
                             
                             {% else %}
 
-                                <div class="aspect-ratio-1-1">
+                                <div class="icons-with-text-icon aspect-ratio-1-1 align-self-{{ textAlign }}">
 
                                     <div class="aspect-ratio-container max-w-px-40">
 
@@ -154,7 +92,93 @@
 
                             {% endif %}
 
+                        {%- endif -%}
+
+                        <div class="d-grid gap-2{% if item_show_icon %} mt-g{% endif %} text-{{ textAlign }}">
+
+                            {% if item.settings.title %}
+
+                                <span class="text-title d-block fw-medium">
+                                    {{ item.settings.title }}
+                                </span>
+
+                            {% endif %}
+
+                            {{ item.settings.richtext }}
+
                         </div>
+
+                    </div>
+
+                {%- else -%}
+
+                    <div class="d-flex justify-content-{{ textAlign }}">
+
+                        {%- if item_show_icon -%}
+
+                            <div class="icons-with-text-icon me-g">
+
+                                {% if item_icon_svg %}
+
+                                    {% if item.settings.svgContent %}
+
+                                        <div>
+
+                                            {{- item.settings.svgContent | replace: '<svg ', '<svg class="svg-icon svg-icon-3x" ' -}}
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="aspect-ratio-1-1">
+
+                                            <div class="aspect-ratio-container max-w-px-40">
+
+                                                {%- capture imgSrc -%}
+                                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                {%- endcapture -%}
+
+                                                <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ item.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+                                
+                                {% else %}
+
+                                    <div class="aspect-ratio-1-1">
+
+                                        <div class="aspect-ratio-container max-w-px-40">
+
+                                            {% if item.settings.img %}
+
+                                                <img
+                                                    alt="{{ item.settings.img.alt }}"
+                                                    data-src="{{ item.settings.img | thumb: '40,40' }}"
+                                                    data-srcset="{{ item.settings.img | thumb: '40,40' }} 1x,{{ item.settings.img | thumb: '40,40' | thumb:'@2x' }} 2x"
+                                                    class="lazy aspect-ratio-item"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--object-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}>
+
+                                            {% else %}
+
+                                                {%- capture imgSrc -%}
+                                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                                {%- endcapture -%}
+
+                                                <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ item.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {%- endif -%}
 
                         <div class="d-grid gap-2 text-start">
 
@@ -182,607 +206,602 @@
 
 {%- endcapture -%}
 
+{%- capture sectionHeaderBlocks -%}
+    {% container 'header' %}
+{%- endcapture -%}
+
+{%- capture sectionHeaderContent -%}
+    {%- if sectionHeaderBlocks != blank -%}
+        <div class="section-header">
+            <div class="container">
+                {{- sectionHeaderBlocks -}}
+            </div>
+        </div>
+    {%- endif -%}
+{%- endcapture -%}
+
 {%- capture sectionContent -%}
 
-    {%- render 'swiper', slides: slides, pagination: 'on', slidesPerView: section.settings.setting_blocks.items.size, slidesPerViewMobile: 2, style: 2, paginationPosition: 'relative', evenHeightSlides: true, standalone: true, freemode: true, class: 'swiper-navigation-hide-on-desktop' -%}
+    {%- render 'swiper', slides: slides, pagination: 'on', slidesPerView: section.settings.setting_blocks.items.size, slidesPerViewMobile: 2, style: 2, paginationPosition: 'relative', evenHeightSlides: true, standalone: true, freemode: true, class: 'icons-with-text-carousel swiper-navigation-hide-on-desktop' -%}
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent %}
+{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionHeader: false %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Icons with text",
-        "fi": "Kuvakkeet tekstin kanssa"
-    },
+    "name": "t:sections.icons-with-text.name",
     "tag": "section",
     "class": "section section-icons-with-text",
     "category": "theme-icon",
-    "keywords": {
-        "en": [
-            "Image",
-            "Icon",
-            "Svg"
-        ],
-        "fi": [
-            "Kuva",
-            "Kuvake",
-            "Svg"
-        ]
-    },
+    "keywords": [
+        "Image",
+        "Icon",
+        "Svg"
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "id": "orientation",
-                        "type": "hidden"
-                    },
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionDescription",
-                        "type": "richtext",
-                        "label": {
-                            "en": "Description",
-                            "fi": "Kuvaus"
-                        },
-                        "conditions": ["sectionAdditionalText eq true"]
-                    }
-                ]
-            },
-            {
-                "title": {
-                    "en": "Columns",
-                    "fi": "Sarakkeet"
-                },
+                "title": "t:sections.icons-with-text.groups.items.title",
                 "id": "items",
                 "max_blocks": 5,
-                "call_to_action": {
-                    "en": "Add a column",
-                    "fi": "Lisää sarake"
-                },
+                "call_to_action": "t:sections.icons-with-text.groups.items.call_to_action",
                 "is_sortable": true,
                 "setting_blocks": [
                     {
                         "type": "text",
-                        "title": {
-                            "en": "Column",
-                            "fi": "Sarake"
-                        },
+                        "title": "t:sections.icons-with-text.setting_blocks.text.title",
                         "settings": [
                             {
                                 "id": "iconFormat",
                                 "type": "radio-pill",
-                                "label": {
-                                    "en": "Icon format",
-                                    "fi": "Kuvakkeen tyyppi"
-                                },
+                                "label": "t:sections.icons-with-text.setting_blocks.text.settings.iconFormat.label",
                                 "default": "img",
                                 "options": [
                                     {
                                         "value": "img",
-                                        "label": "IMG"
+                                        "label": "t:sections.icons-with-text.setting_blocks.text.settings.iconFormat.options.img.label"
                                     },
                                     {
                                         "value": "svg",
-                                        "label": "SVG"
+                                        "label": "t:sections.icons-with-text.setting_blocks.text.settings.iconFormat.options.svg.label"
                                     }
                                 ]
                             },
                             {
                                 "id": "img",
                                 "type": "image-picker",
-                                "label": {
-                                    "en": "Image",
-                                    "fi": "Kuva"
-                                }, 
+                                "label": "t:sections.icons-with-text.setting_blocks.text.settings.img.label",
                                 "adjustments": true,
-                                "conditions": ["iconFormat eq img"]
+                                "conditions": [
+                                    "iconFormat eq img"
+                                ]
                             },
                             {
                                 "id": "svgContent",
                                 "type": "text",
-                                "label": {
-                                    "en": "SVG code",
-                                    "fi": "SVG-koodi"
-                                },
-                                "conditions": ["iconFormat eq svg"]
+                                "label": "t:sections.icons-with-text.setting_blocks.text.settings.svgContent.label",
+                                "conditions": [
+                                    "iconFormat eq svg"
+                                ]
                             },
                             {
                                 "id": "title",
                                 "type": "text",
-                                "label": {
-                                    "en": "Title",
-                                    "fi": "Teksti"
-                                }
+                                "label": "t:sections.icons-with-text.setting_blocks.text.settings.title.label"
                             },
                             {
                                 "id": "richtext",
                                 "type": "richtext",
                                 "mode": "simple",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                }
+                                "label": "t:sections.icons-with-text.setting_blocks.text.settings.richtext.label"
                             }
                         ]
                     }
                 ]
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.settings.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionContainer",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Indent",
-                                        "fi": "Sisennys"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "fair",
-                                            "label": "S"
-                                        },
-                                        {
-                                            "value": "compact",
-                                            "label": "M"
-                                        },
-                                        {
-                                            "value": "tiny",
-                                            "label": "L"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionTextAlign",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content align",
-                                        "fi": "Sisällön tasaus"
-                                    },
-                                    "default": "center",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "start",
-                                            "label": "{# icon.align-start #}"
-                                        },
-                                        {
-                                            "value": "center",
-                                            "label": "{# icon.align-center #}"
-                                        },
-                                        {
-                                            "value": "end",
-                                            "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionOverlineTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Main title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
-                                        {
-                                            "value": "h2",
-                                            "label": "H2"
-                                        },
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Section",
-                                "fi": "Osio"
-                            },
+                            "title": "t:all.groups.style.title",
                             "settings": [
                                 {
                                     "id": "sectionColorScheme",
                                     "type": "select",
-                                    "label": {
-                                        "en": "Color scheme",
-                                        "fi": "Värityyli"
-                                    },
+                                    "label": "t:all.settings.sectionColorScheme.label",
                                     "default": false,
                                     "options": [
                                         {
                                             "value": false,
-                                            "label": {
-                                                "en": "Disabled",
-                                                "fi": "Pois käytöstä"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
                                         },
                                         {
                                             "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
                                         },
                                         {
                                             "value": "light",
-                                            "label": {
-                                                "en": "Light background / Dark content",
-                                                "fi": "Vaalea tausta / Tumma sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
                                         },
                                         {
                                             "value": "dark",
-                                            "label": {
-                                                "en": "Dark background / Light content",
-                                                "fi": "Tumma tausta / Vaalea sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
                                         },
                                         {
                                             "value": "accent",
-                                            "label": {
-                                                "en": "Accent background / Adaptive content",
-                                                "fi": "Korostus tausta / Mukautuva sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "style_custom_color",
                                     "type": "color",
-                                    "label": {
-                                        "en": "Color",
-                                        "fi": "Väri"
-                                    },
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
                                     "default": "#f3f5f6",
-                                    "conditions": ["sectionColorScheme eq custom"]
-                                },
-                                {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
-                                    "id": "sectionAdditionalText",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show description",
-                                        "fi": "Näytä kuvaus"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
                                     "id": "sectionPaddingMode",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Padding",
-                                        "fi": "Välit"
-                                    },
+                                    "label": "t:all.settings.sectionPaddingMode.label",
                                     "default": "auto",
                                     "options": [
                                         {
                                             "value": "auto",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
-                                    "id": "sectionPaddingTop",
-                                    "label": {
-                                        "en": "Padding top",
-                                        "fi": "Väli ylhäällä"
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
                                     },
-                                    "type": "range",
                                     "min": 0,
                                     "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionPaddingBottom",
-                                    "label": {
-                                        "en": "Padding bottom",
-                                        "fi": "Väli alhaalla"
-                                    },
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
                                     "type": "range",
                                     "min": 0,
-                                    "max": 15,
+                                    "max": 50,
                                     "step": 1,
                                     "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImg",
                                     "type": "image-picker",
-                                    "label": {
-                                        "en": "Background image",
-                                        "fi": "Taustakuva"
-                                    },
+                                    "label": "t:all.settings.sectionBgImg.label",
                                     "adjustments": true
                                 },
                                 {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
                                     "id": "sectionBgImgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 90,
                                     "step": 5,
                                     "default": "0",
                                     "unit": "%",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 10,
                                     "step": 1,
                                     "default": "0",
                                     "unit": " ",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 }
-                            ]
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "settings": [
+                                {
+                                    "id": "sectionContainer",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionContainer.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionContainer.options.nil.label"
+                                        },
+                                        {
+                                            "value": "fair",
+                                            "label": "t:all.settings.sectionContainer.options.fair.label"
+                                        },
+                                        {
+                                            "value": "compact",
+                                            "label": "t:all.settings.sectionContainer.options.compact.label"
+                                        },
+                                        {
+                                            "value": "tiny",
+                                            "label": "t:all.settings.sectionContainer.options.tiny.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "orientation",
+                                    "type": "hidden"
+                                }
+                            ],
+                            "id": "layout"
                         }
                     ]
-                }
+                },
+                "id": "settings"
             }
         ]
     },
-    "presets": [
-        {
-            "settings": {
-                "orientation": "horizontal",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Delivery",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><\/g><\/svg>"
+    "presets": {
+        "default": [
+            {
+                "settings": {
+                    "orientation": "horizontal",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Delivery",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/></g></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Returns",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Customer Service",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Payment Methods",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
                             }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Returns",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
+                        ]
+                    }
+                },
+                "id": "preset-1",
+                "name": "t:sections.icons-with-text.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "orientation": "vertical",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Delivery",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/></g></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Returns",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Customer Service",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Payment Methods",
+                                    "richtext": "<p>Write briefly about this topic.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
                             }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Customer Service",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
-                            }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Payment Methods",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
-                            }
-                        }
-                    ]
-                }
+                        ]
+                    }
+                },
+                "id": "preset-2",
+                "name": "t:sections.icons-with-text.presets.preset-2.name"
             }
-        },
-        {
-            "settings": {
-                "orientation": "vertical",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Delivery",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"\/><\/g><\/svg>"
+        ],
+        "fi": [
+            {
+                "settings": {
+                    "orientation": "horizontal",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Toimitus",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/></g></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Palautukset",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Asiakaspalvelu",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Maksutavat",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
                             }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Returns",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
+                        ]
+                    }
+                },
+                "name": "t:sections.icons-with-text.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "orientation": "vertical",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Toimitus",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><g><path d=\"M19.67,14.87h1.51c.52-.04.91-.49.88-1.01v-7.47c.09-1.56-1.08-2.9-2.64-3.03h-5.27v11.5\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.67,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16h0c0,1.19.97,2.16,2.16,2.16,1.19,0,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87c0-1.19-.97-2.16-2.16-2.16s-2.16.97-2.16,2.16.97,2.16,2.16,2.16,2.16-.97,2.16-2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M17.03,3.37v3.47s0,.03,0,.04c.01.45.38.81.83.79h4.2\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M8.41,14.87h6.95\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M19.71,11.03h2.36\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,1.94c0-.79.64-1.44,1.44-1.44h10.78c.79,0,1.44.64,1.44,1.44v8.14s-13.66,0-13.66,0V1.94Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/><path d=\"M.5,10.07v3.35c0,.79.64,1.44,1.44,1.44h2.16\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"/></g></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Palautukset",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"m5.03125 20.840875 -4.3125 -4.3125 4.3125 -4.3125\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M0.71875 16.528375h14.375a7.1875 7.1875 0 0 0 0 -14.375h-5.75\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Asiakaspalvelu",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "title": "Maksutavat",
+                                    "richtext": "<p>Kirjoita aiheesta lyhyesti.</p>",
+                                    "iconFormat": "svg",
+                                    "svgContent": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"></path></svg>"
+                                }
                             }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Customer Service",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M4.3125 17.25h-0.71875a2.875 2.875 0 0 1 -2.875 -2.875v-2.875a2.875 2.875 0 0 1 2.875 -2.875h0.71875a0.71875 0.71875 0 0 1 0.71875 0.71875v7.1875a0.71875 0.71875 0 0 1 -0.71875 0.71875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M19.40625 17.25h-0.71875a0.71875 0.71875 0 0 1 -0.71875 -0.71875v-7.1875A0.71875 0.71875 0 0 1 18.6875 8.625h0.71875a2.875 2.875 0 0 1 2.875 2.875v2.875a2.875 2.875 0 0 1 -2.875 2.875Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M3.59375 8.625A7.90625 7.90625 0 0 1 11.5 0.71875h0A7.90625 7.90625 0 0 1 19.40625 8.625\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M14.375 20.84375h2.15625a2.875 2.875 0 0 0 2.875 -2.875h0V17.25\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"M12.9375 22.28125H11.5a1.4375 1.4375 0 0 1 -1.4375 -1.4375h0a1.4375 1.4375 0 0 1 1.4375 -1.4375h1.4375a1.4375 1.4375 0 0 1 1.4375 1.4375h0a1.4375 1.4375 0 0 1 -1.4375 1.4375Z\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
-                            }
-                        },
-                        {
-                            "type": "text",
-                            "settings": {
-                                "title": "Payment Methods",
-                                "richtext": "<p>Write briefly about this topic.<\/p>",
-                                "iconFormat": "svg",
-                                "svgContent": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" viewBox=\"-0.5 -0.5 24 24\"><path d=\"M2.15625 3.59375h18.6875s1.4375 0 1.4375 1.4375v12.9375s0 1.4375 -1.4375 1.4375H2.15625s-1.4375 0 -1.4375 -1.4375V5.03125s0 -1.4375 1.4375 -1.4375\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m0.71875 7.90625 21.5625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m5.03125 12.21875 7.90625 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><path d=\"m5.03125 15.09375 5.03125 0\" fill=\"none\" stroke=\"currentcolor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"1\"><\/path><\/svg>"
-                            }
-                        }
-                    ]
-                }
+                        ]
+                    }
+                },
+                "name": "t:sections.icons-with-text.presets.preset-2.name"
             }
+        ]
+    },
+    "containers": [
+        {
+            "id": "header",
+            "title": "t:sections.icons-with-text.containers.header.title",
+            "allowed_blocks": [
+                "badge",
+                "heading",
+                "text",
+                "button",
+                "button-group",
+                "spacer",
+                "separator"
+            ]
         }
     ]
 }

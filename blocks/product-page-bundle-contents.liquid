@@ -1,0 +1,27 @@
+{% if product.default_or_selected_variant.bundle_contents %}
+
+    <div class="product-bundle-contents mt-4">
+
+    <span class="d-block mb-2">
+        {{- 'product.bundle_includes' | t -}}
+    </span>
+
+    {% render 'product-bundle-contents', items: product.default_or_selected_variant.bundle_contents, sectionHandle: '#finqu-section-product-template', section: section %}
+
+</div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-bundle-contents.name",
+    "tag": "div",
+    "class": "block block-product-page-bundle-contents",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

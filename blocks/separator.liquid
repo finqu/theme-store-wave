@@ -1,0 +1,102 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner hr {
+        width: {{ block.settings.width }};
+        border-width: {{ block.settings.thickness }}px;
+        opacity: 1;
+        {%- if block.settings.color -%}
+            border-color: {{ block.settings.color }};
+        {%- endif -%}
+        margin-left: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align-margin-left){%- elsif block.settings.contentAlign == 'center' -%}auto{%- elsif block.settings.contentAlign == 'end' -%}auto{%- else -%}0{%- endif -%};
+        margin-right: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align-margin-right){%- elsif block.settings.contentAlign == 'center' -%}auto{%- elsif block.settings.contentAlign == 'start' -%}auto{%- else -%}0{%- endif -%};
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+    <hr>
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.separator.name",
+    "tag": "div",
+    "class": "block block-separator",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "thickness",
+                        "type": "range",
+                        "label": "t:blocks.separator.settings.thickness.label",
+                        "min": 1,
+                        "max": 5,
+                        "step": 1,
+                        "default": "1",
+                        "unit": "px"
+                    },
+                    {
+                        "id": "width",
+                        "type": "select",
+                        "label": "t:blocks.separator.settings.width.label",
+                        "default": "100%",
+                        "options": [
+                            {
+                                "value": "25%",
+                                "label": "25%"
+                            },
+                            {
+                                "value": "50%",
+                                "label": "50%"
+                            },
+                            {
+                                "value": "75%",
+                                "label": "75%"
+                            },
+                            {
+                                "value": "100%",
+                                "label": "100%"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "color",
+                        "type": "color",
+                        "label": "t:blocks.separator.settings.color.label",
+                        "nullable": true
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

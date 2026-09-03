@@ -1,14 +1,37 @@
+// Header bar (shared)
+// -----------------------------------------------------------------------------------------
+
+.site-header-bar,
+.site-announcement-container {
+    background: var(--style-announcement-bg-paint, var(--style-announcement-bg-color));
+    overflow: hidden;
+    color: var(--style-announcement-text-color);
+    --style-link-color: var(--style-announcement-text-color);
+    --bs-link-color: var(--style-announcement-text-color);
+    --bs-link-hover-color: var(--style-announcement-text-color);
+}
+
+.site-header-bar-inner {
+    min-height: var(--style-announcement-height);
+    padding-block: spacer(2);
+}
+
+.site-header-bar-discount {
+    border-color: var(--style-announcement-text-color) !important;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
 // Announcement
 // -----------------------------------------------------------------------------------------
 
 .site-announcement-container {
-    background-color: var(--style-announcement-bg-color);
-    overflow: hidden;
 
     .site-announcement {
         display: flex;
         align-items: center;
-        height: var(--style-announcement-height);
+        min-height: var(--style-announcement-height);
+        padding-block: spacer(2);
 
         .site-announcement-text {
             color: var(--style-announcement-text-color);
@@ -16,30 +39,116 @@
 
         .swiper-slide-inner {
             display: flex;
+            align-items: center;
             justify-content: var(--style-announcement-align);
 
             @include media-breakpoint-down(lg) {
                 justify-content: center;
             }
+        }
+    }
 
-            &.has-long-text {
-        
-                .site-announcement-text {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    text-align: var(--style-announcement-align);
-                    @include font-size($font-size-base * $announcementFontScale);
+    .site-header-bar-inner {
+        .block-text,
+        .block-button {
+            display: inline-flex;
+            align-items: center;
+            max-width: 100%;
+        }
 
-                    @include media-breakpoint-down(lg) {
-                        text-align: center;
-                        font-size: 90%;
-                        line-height: 1.3;
-                    }
-                }
+        .block-text .block-inner {
+            @include font-size($font-size-base * $announcementFontScale);
+            color: var(--style-announcement-text-color);
+
+            p:last-child {
+                margin-bottom: 0;
             }
+        }
+    }
+}
+
+.section-site-header-bar {
+
+    & + .section-site-header .site-header-items-container,
+    & + .section-site-header .site-mobile-header {
+        border-top: 1px solid var(--style-border-color);
+    }
+
+    .site-announcement-text {
+        @include font-size($font-size-base * $announcementFontScale);
+    }
+
+    // Decorative icons in bar copy — not button chrome
+    .svg-icon {
+        color: var(--style-announcement-text-color);
+    }
+
+    .btn .svg-icon,
+    .btn-text .svg-icon {
+        color: inherit;
+    }
+
+    // Contrast role should follow the bar surface, not the page
+    .btn.btn-contrast {
+        --btn-fill-bg: var(--style-announcement-text-color);
+        --btn-fill-text: var(--style-announcement-bg-color);
+        --btn-fill-border: var(--style-announcement-text-color);
+        --btn-fill-bg-hover: color-mix(in srgb, var(--style-announcement-text-color) 88%, var(--style-announcement-bg-color));
+        --btn-fill-border-hover: color-mix(in srgb, var(--style-announcement-text-color) 88%, var(--style-announcement-bg-color));
+        --btn-fill-bg-active: color-mix(in srgb, var(--style-announcement-text-color) 78%, var(--style-announcement-bg-color));
+        --btn-fill-border-active: color-mix(in srgb, var(--style-announcement-text-color) 78%, var(--style-announcement-bg-color));
+    }
+
+    .btn-text-contrast {
+        color: var(--style-announcement-text-color);
+
+        &:hover {
+            color: var(--style-announcement-text-color);
+        }
+    }
+
+    // Keep brand/text button colors — don't let bar link/text inheritance win
+    .text-underline-indicator.btn-text,
+    .text-icon-indicator.btn-text,
+    .text-icon-with-underline-indicator.btn-text {
+        &.btn-text-primary {
+            color: var(--style-btn-bg-color);
+        }
+
+        &.btn-text-secondary {
+            color: var(--style-btn-secondary-bg-color);
+        }
+
+        &.btn-text-contrast {
+            color: var(--style-announcement-text-color);
+        }
+    }
+}
+
+.section-site-announcement-discount {
+
+    .site-header-bar-message {
+        font-weight: $font-weight-medium;
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .section-site-header-bar {
+        border-bottom: $elevation-border-width solid color-mix(in srgb, var(--style-announcement-text-color), transparent 18%);
+
+        & + .section-site-header {
+
+            .site-header-items-container,
+            .site-mobile-header {
+                border-top: 0;
+            }
+        }
+
+        .site-announcement-text,
+        .site-header-bar-message {
+            font-weight: $font-weight-bold;
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
     }
 }

@@ -1,0 +1,68 @@
+{% comment %}
+	Renders the product-list sort dropdown, honoring theme sort-visibility settings.
+
+	Accepts:
+	- sort_options: {Array} Sort option keys from the listing object (required)
+	- active_sort: {String} Currently selected sort (required)
+	- button_class: {String} Classes for the toggle button (optional)
+	- label_class: {String} Classes for the active-sort label (optional)
+	- icon_class: {String} Classes for the chevron icon (optional)
+
+	Usage:
+	{% render 'product-sort-dropdown', sort_options: category.sort_options, active_sort: activeSortOption, button_class: 'btn btn-text text-title', label_class: 'svg-icon-spacer fw-bold', icon_class: 'svg-icon-fw' %}
+{% endcomment %}
+
+{%- assign visible_sort_count = 0 -%}
+
+{%- for option in sort_options -%}
+	{%- capture sort_option_visible -%}
+		{% render 'product-sort-option-visible', option: option %}
+	{%- endcapture -%}
+	{%- assign sort_option_visible = sort_option_visible | strip -%}
+	{%- if sort_option_visible == 'true' -%}
+		{%- assign visible_sort_count = visible_sort_count | plus: 1 -%}
+	{%- endif -%}
+{%- endfor -%}
+
+{%- if visible_sort_count > 0 -%}
+
+	<div class="dropdown">
+
+		<button type="button" class="{{ button_class | default: 'btn btn-text' }}" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+
+			<span class="{{ label_class | default: 'svg-icon-spacer' }}">
+
+				{% for option in sort_options %}
+					{% if option == active_sort %}
+						{{ option | prepend: 'filters.sort-by.' | t }}
+					{% endif %}
+				{% endfor %}
+
+			</span>
+
+			{%- render 'icon', icon: 'angle-down', class: icon_class -%}
+
+		</button>
+
+		<div class="dropdown-menu dropdown-menu-right">
+
+			{% for option in sort_options %}
+
+				{%- capture sort_option_visible -%}
+					{% render 'product-sort-option-visible', option: option %}
+				{%- endcapture -%}
+				{%- assign sort_option_visible = sort_option_visible | strip -%}
+
+				{%- if sort_option_visible == 'true' -%}
+					<button type="button" class="sort-by-action dropdown-item" value="{{ option }}">
+						{{ option | prepend: 'filters.sort-by.' | t }}
+					</button>
+				{%- endif -%}
+
+			{% endfor %}
+
+		</div>
+
+	</div>
+
+{%- endif -%}

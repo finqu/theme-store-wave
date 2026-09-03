@@ -4,6 +4,8 @@
 	Accepts:
     - highlightLabel: {Boolean}
 	- showAsDropdown: {Boolean}
+    - variantOptionAsImage: {String|Boolean} Taxonomy type shown as a swatch image
+    - imageAspectRatio: {String} Swatch image aspect ratio (default: '1:1')
 
 	Usage:
 	Render this snippet inside of "product-variants" class in the product-template.liquid file.
@@ -97,7 +99,7 @@
                     {%- assign taxanomyHasTypeMulticolor = optionTaxonomyValues | where: 'is_multicolor' -%}
                 {%- endif -%}
 
-                {% if taxanomyHasColors or taxanomyHasTypeTransparent or taxanomyHasTypeMulticolor or option.taxonomy_attribute.type == settings.productShowVariantOptionTaxonomyTypeAsImage and variantsHasImage %}
+                {% if taxanomyHasColors or taxanomyHasTypeTransparent or taxanomyHasTypeMulticolor or option.taxonomy_attribute.type == variantOptionAsImage and variantsHasImage %}
 
                     <label class="form-label text-title{% if highlightLabel %} fw-bold{% endif %}">
                         {{ option.title }}: {{ option.selected_value.title }}
@@ -113,7 +115,7 @@
 
             {% endif %}
 
-            {% if variantsHasImage and option.taxonomy_attribute.type == settings.productShowVariantOptionTaxonomyTypeAsImage %}
+            {% if variantsHasImage and option.taxonomy_attribute.type == variantOptionAsImage %}
 
                 <div class="form-check-imgs-container">
 
@@ -158,13 +160,13 @@
 
                                         {% if value.image %}
 
-                                            {% if settings.productImageAspectRatio == '9:13' %}
+                                            {% if imageAspectRatio == '9:13' %}
                                                 {%- assign imgSize = '80,115' -%}
-                                            {% elsif settings.productImageAspectRatio == '4:3' %}
+                                            {% elsif imageAspectRatio == '4:3' %}
                                                 {%- assign imgSize = '80,60' -%}
-                                            {% elsif settings.productImageAspectRatio == '3:4' %}
+                                            {% elsif imageAspectRatio == '3:4' %}
                                                 {%- assign imgSize = '80,107' -%}
-                                            {% elsif settings.productImageAspectRatio == '1:1' %}
+                                            {% elsif imageAspectRatio == '1:1' or imageAspectRatio == nil %}
                                                 {%- assign imgSize = '80,80' -%}
                                             {% endif %}
 

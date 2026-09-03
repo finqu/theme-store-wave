@@ -551,8 +551,9 @@ export default function() {
             if (submenuId) {
 
                 const submenuEl = containerEl.querySelector('.site-header-submenu[data-header-submenu-id="'+submenuId+'"]');
+                const menuItemTriggerEl = menuItemEl.querySelector('.site-header-menu-item-text');
 
-                if (submenuEl) {    
+                if (submenuEl && menuItemTriggerEl) {
 
                     const isMegamenu = submenuEl.classList.contains('is-megamenu');
                     let closeHandleTimer = null;
@@ -569,16 +570,18 @@ export default function() {
                         el.style.setProperty('--site-header-submenu-height', 0+'px');
 
                         closeHandleTimer = null;
+                        menuItemTriggerEl.setAttribute('aria-expanded', 'false');
 
                         if (isTouchDevice) {
                             menuItemEl.classList.remove('site-header-menu-item-clicked');
                         }
                     };
 
-                    const openEventHandler = (e) => {
+                    const openEventHandler = () => {
 
-                        if ((e.target.isEqualNode(submenuEl) || e.target.isEqualNode(menuItemEl)) && closeHandleTimer !== null) {
+                        if (closeHandleTimer !== null) {
                             clearTimeout(closeHandleTimer);
+                            closeHandleTimer = null;
                         }
 
                         const activeSubmenus = containerEl.querySelectorAll('.site-header-submenu-active');
@@ -614,6 +617,7 @@ export default function() {
 
                         submenuEl.classList.add('site-header-submenu-active');
                         submenuEl.style.setProperty('--site-header-submenu-height', submenuEl.scrollHeight+'px');
+                        menuItemTriggerEl.setAttribute('aria-expanded', 'true');
                     };
 
                     const closeEventHandler = () => {
@@ -641,11 +645,42 @@ export default function() {
                         }
                     };
 
+                    const triggerKeydownEventHandler = (e) => {
+
+                        const isMenuButton = menuItemTriggerEl.getAttribute('role') === 'button';
+                        const shouldOpen = e.key === 'ArrowDown' || (isMenuButton && (e.key === 'Enter' || e.key === ' '));
+
+                        if (shouldOpen) {
+                            e.preventDefault();
+                            openEventHandler();
+                            submenuEl.querySelector('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')?.focus();
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            closeSubmenu(submenuEl);
+                        }
+                    };
+
+                    const submenuKeydownEventHandler = (e) => {
+
+                        if (e.key === 'Escape') {
+                            e.preventDefault();
+                            closeSubmenu(submenuEl);
+                            menuItemTriggerEl.focus();
+                        }
+                    };
+
                     menuItemEl.addEventListener('mouseenter', openEventHandler);
                     menuItemEl.addEventListener('mouseleave', closeEventHandler);
+                    menuItemEl.addEventListener('focusin', openEventHandler);
+                    menuItemEl.addEventListener('focusout', closeEventHandler);
+                    menuItemTriggerEl.addEventListener('keydown', triggerKeydownEventHandler);
+
+                    submenuEl.addEventListener('focusin', openEventHandler);
+                    submenuEl.addEventListener('focusout', closeEventHandler);
+                    submenuEl.addEventListener('keydown', submenuKeydownEventHandler);
 
                     if (isTouchDevice) {
-                        menuItemEl.querySelector('.site-header-menu-item-text').addEventListener('click', touchClickEventHandler);
+                        menuItemTriggerEl.addEventListener('click', touchClickEventHandler);
                     }
 
                     submenuEl.addEventListener('mouseenter', openEventHandler);

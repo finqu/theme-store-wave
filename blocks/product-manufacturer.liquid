@@ -1,0 +1,91 @@
+{%- assign productManufacturerName = product.manufacturer.title | default: '' -%}
+
+{%- unless product -%}
+    {%- assign productManufacturerName = 'placeholder.manufacturer' | t -%}
+{%- endunless -%}
+
+{%- capture productUrl -%}
+    {%- assign resolvedUrl = product | link | default: '' -%}
+    {%- if resolvedUrl contains 'section=' -%}
+        {%- assign urlParts = resolvedUrl | split: '?' -%}
+        {%- if urlParts[1] -%}
+            {%- assign basePath = urlParts[0] -%}
+            {%- assign newUrl = basePath | append: '?' -%}
+            {%- assign queryParams = resolvedUrl | query_params -%}
+            {%- for param in queryParams -%}
+                {%- if param[0] != 'section' -%}
+                    {%- if forloop.first -%}
+                        {%- assign newUrl = newUrl | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- else -%}
+                        {%- assign newUrl = newUrl | append: '&' | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- endif -%}
+                {%- endif -%}
+            {%- endfor -%}
+            {%- assign resolvedUrl = newUrl -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- resolvedUrl -}}
+{%- endcapture -%}
+
+{%- assign linkToProduct = productCardLinkToProduct | default: block.settings.linkToProduct | default: true -%}
+
+{%- capture manufacturerMarkup -%}
+
+    <div class="product-manufacturer">
+
+        {%- if block.settings.showLabel -%}
+            <span class="product-manufacturer-label text-muted small me-1">{{ 'placeholder.manufacturer' | t }}:</span>
+        {%- endif -%}
+
+        <span class="product-manufacturer-name">
+            {{- productManufacturerName -}}
+        </span>
+
+    </div>
+
+{%- endcapture -%}
+
+{%- if linkToProduct and product and productUrl != blank -%}
+
+    <a href="{{ productUrl | strip }}" aria-label="{{ productManufacturerName }}">
+        {{- manufacturerMarkup -}}
+    </a>
+
+{%- else -%}
+
+    {{- manufacturerMarkup -}}
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-manufacturer.name",
+    "tag": "div",
+    "class": "block block-product-manufacturer",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showLabel",
+                        "type": "checkbox",
+                        "label": "t:all.settings.showLabel.label",
+                        "default": false
+                    },
+                    {
+                        "id": "linkToProduct",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-manufacturer.settings.linkToProduct.label",
+                        "default": true
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

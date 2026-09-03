@@ -1,0 +1,34 @@
+{% comment %}
+	Outputs CSS custom properties for a header bar background paint.
+
+	Accepts:
+	- barBgColor: {String|Object} solid color or gradient color setting
+
+	Usage (inside a sectionStyle capture):
+	{% render 'header-bar-bg', barBgColor: section.settings.barBgColor %}
+{% endcomment %}
+
+{%- if barBgColor -%}
+	{%- assign barBgMode = barBgColor.mode -%}
+	{%- if barBgMode and barBgMode != 'solid' -%}
+		{%- assign barBgPaint = barBgColor.string_value | default: barBgColor -%}
+		{%- if barBgPaint != blank -%}
+			--style-announcement-bg-paint: {{ barBgPaint }};
+			{%- assign barBgFirstStop = barBgColor.stops | first -%}
+			{%- if barBgFirstStop.color -%}
+				{%- assign barBgSolid = barBgFirstStop.color -%}
+				{%- if barBgFirstStop.alpha -%}
+					{%- assign barBgSolid = barBgSolid | color_modify: 'alpha', barBgFirstStop.alpha -%}
+				{%- endif -%}
+				--style-announcement-bg-color: {{ barBgSolid }};
+			{%- elsif barBgColor.string_value != blank -%}
+				--style-announcement-bg-color: {{ barBgColor.string_value }};
+			{%- endif -%}
+		{%- endif -%}
+	{%- else -%}
+		{%- assign barBgSolid = barBgColor.string_value | default: barBgColor -%}
+		{%- if barBgSolid != blank -%}
+			--style-announcement-bg-color: {{ barBgSolid }};
+		{%- endif -%}
+	{%- endif -%}
+{%- endif -%}

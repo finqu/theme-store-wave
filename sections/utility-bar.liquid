@@ -1,0 +1,416 @@
+{%- if section.settings.barVisibility == 'frontpage' and request.page_type == 'frontpage' -%}
+    {%- assign barIsVisible = true -%}
+{% elsif section.settings.barVisibility == 'all' %}
+    {%- assign barIsVisible = true -%}
+{%- else -%}
+    {%- assign barIsVisible = false -%}
+{%- endif -%}
+
+{%- if section.settings.barTextAlign == 'nil' -%}
+    {%- assign barTextAlign = settings.sectionTextAlign -%}
+{%- else -%}
+    {%- assign barTextAlign = section.settings.barTextAlign -%}
+{%- endif -%}
+
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} {
+        --style-announcement-align: {{ barTextAlign }};
+        {%- render 'header-bar-bg', barBgColor: section.settings.barBgColor -%}
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{% if barIsVisible or request.design_mode == 'edit' -%}
+
+    {%- capture utilityLinks -%}
+
+        {%- for item in section.settings.setting_blocks.items -%}
+
+            {%- if item.settings.link.text -%}
+
+                {%- if item.settings.link.url -%}
+
+                    <a
+                        href="{{ item.settings.link.url }}"
+                        class="site-utility-bar-link"
+                        target="{{ item.settings.link.target | default: '_self' }}">
+                        {{- item.settings.link.text -}}
+                    </a>
+
+                {%- else -%}
+
+                    <span class="site-utility-bar-link">
+                        {{- item.settings.link.text -}}
+                    </span>
+
+                {%- endif -%}
+
+            {%- endif -%}
+
+        {%- endfor -%}
+
+    {%- endcapture -%}
+
+    {%- capture utilityLocalization -%}
+
+        {% render 'localization-form',
+            form_id: 'utility-bar-localization',
+            class: 'site-utility-bar-localization',
+            preview: request.design_mode %}
+
+    {%- endcapture -%}
+
+    <div class="site-header-bar">
+
+        <div class="site-utility-bar container">
+
+            {%- if section.settings.utilityLayout == 'mixed' -%}
+
+                <div class="site-utility-bar-mixed">
+
+                    {%- if section.settings.setting_blocks.items.size > 0 -%}
+                        <div class="site-utility-bar-links">{{ utilityLinks }}</div>
+                    {%- endif -%}
+
+                    {{ utilityLocalization }}
+
+                </div>
+
+            {%- elsif section.settings.utilityLayout == 'localization' -%}
+
+                <div class="site-utility-bar-inner">
+                    {{ utilityLocalization }}
+                </div>
+
+            {%- else -%}
+
+                <div class="site-utility-bar-inner">
+                    <div class="site-utility-bar-links">{{ utilityLinks }}</div>
+                </div>
+
+            {%- endif -%}
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:sections.utility-bar.name",
+    "tag": "section",
+    "is_creatable": true,
+    "is_removable": true,
+    "section_groups": [
+        "header"
+    ],
+    "class": "section section-site-header-bar section-utility-bar",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "id": "items",
+                "call_to_action": "t:sections.utility-bar.groups.items.call_to_action",
+                "is_sortable": true,
+                "setting_blocks": [
+                    {
+                        "type": "text",
+                        "title": "t:sections.utility-bar.setting_blocks.text.title",
+                        "settings": [
+                            {
+                                "id": "link",
+                                "type": "url",
+                                "label": "t:sections.utility-bar.setting_blocks.text.settings.link.label",
+                                "include_target": true,
+                                "include_text": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "barBgColor",
+                                    "type": "color",
+                                    "gradient": true,
+                                    "label": "t:sections.utility-bar.settings.barBgColor.label",
+                                    "info": "t:sections.utility-bar.settings.barBgColor.info"
+                                },
+                                {
+                                    "id": "barVisibility",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.utility-bar.settings.barVisibility.label",
+                                    "default": "all",
+                                    "options": [
+                                        {
+                                            "value": "all",
+                                            "label": "t:sections.utility-bar.settings.barVisibility.options.all.label"
+                                        },
+                                        {
+                                            "value": "frontpage",
+                                            "label": "t:sections.utility-bar.settings.barVisibility.options.frontpage.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "utilityLayout",
+                                    "type": "hidden",
+                                    "default": "links"
+                                },
+                                {
+                                    "id": "barTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.utility-bar.settings.barTextAlign.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:sections.utility-bar.settings.barTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:sections.utility-bar.settings.barTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:sections.utility-bar.settings.barTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:sections.utility-bar.settings.barTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    },
+    "presets": {
+        "default": [
+            {
+                "keywords": [
+                    "Utility",
+                    "Links",
+                    "Contact"
+                ],
+                "settings": {
+                    "utilityLayout": "links",
+                    "barTextAlign": "center",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Contact",
+                                        "url": "/contact"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "FAQ",
+                                        "url": "/faq"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Track order",
+                                        "url": "/account/orders"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "links",
+                "name": "t:sections.utility-bar.presets.links.name"
+            },
+            {
+                "keywords": [
+                    "Utility",
+                    "Language",
+                    "Currency",
+                    "Localization"
+                ],
+                "settings": {
+                    "utilityLayout": "localization",
+                    "barTextAlign": "end",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": []
+                    }
+                },
+                "id": "language-and-currency",
+                "name": "t:sections.utility-bar.presets.language-and-currency.name"
+            },
+            {
+                "keywords": [
+                    "Utility",
+                    "Links",
+                    "Language",
+                    "Currency"
+                ],
+                "settings": {
+                    "utilityLayout": "mixed",
+                    "barTextAlign": "start",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Contact",
+                                        "url": "/contact"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Help",
+                                        "url": "/help"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "links-and-localization",
+                "name": "t:sections.utility-bar.presets.links-and-localization.name"
+            }
+        ],
+        "fi": [
+            {
+                "keywords": [
+                    "Utility",
+                    "Links",
+                    "Contact"
+                ],
+                "settings": {
+                    "utilityLayout": "links",
+                    "barTextAlign": "center",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Yhteystiedot",
+                                        "url": "/contact"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "UKK",
+                                        "url": "/faq"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Seuraa tilausta",
+                                        "url": "/account/orders"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "links",
+                "name": "t:sections.utility-bar.presets.links.name"
+            },
+            {
+                "keywords": [
+                    "Utility",
+                    "Language",
+                    "Currency",
+                    "Localization"
+                ],
+                "settings": {
+                    "utilityLayout": "localization",
+                    "barTextAlign": "end",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": []
+                    }
+                },
+                "id": "language-and-currency",
+                "name": "t:sections.utility-bar.presets.language-and-currency.name"
+            },
+            {
+                "keywords": [
+                    "Utility",
+                    "Links",
+                    "Language",
+                    "Currency"
+                ],
+                "settings": {
+                    "utilityLayout": "mixed",
+                    "barTextAlign": "start",
+                    "barVisibility": "all",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Yhteystiedot",
+                                        "url": "/contact"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "text",
+                                "settings": {
+                                    "link": {
+                                        "text": "Apua",
+                                        "url": "/help"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "links-and-localization",
+                "name": "t:sections.utility-bar.presets.links-and-localization.name"
+            }
+        ]
+    }
+}
+{% endschema %}

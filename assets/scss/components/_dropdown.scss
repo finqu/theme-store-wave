@@ -7,3 +7,27 @@
         z-index: $zindex-dropdown;
     }
 }
+
+@if $style-elevation == 'hard' {
+    .dropdown-menu {
+        @include elevation-slab;
+
+        .dropdown-item {
+            font-weight: $font-weight-medium;
+
+            &:hover,
+            &:focus,
+            &.active,
+            &:active {
+                background-color: color-mix(in srgb, var(--style-btn-bg-color), var(--style-bg-color) 86%);
+                color: var(--style-text-color);
+                box-shadow: inset spacer(1) 0 0 var(--style-btn-bg-color);
+            }
+
+            &:focus-visible {
+                outline: $elevation-border-width solid $elevation-focus-color;
+                outline-offset: calc(#{$elevation-border-width} * -1);
+            }
+        }
+    }
+}

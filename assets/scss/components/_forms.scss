@@ -23,7 +23,7 @@
 		& ~ .form-check-label {
 			background-color: var(--style-form-bg-color);
 			border: $form-check-input-border-width solid var(--style-form-border-color);
-			border-radius: 2rem;
+			border-radius: var(--style-btn-border-radius);
 			padding: .6rem 1.2rem;
 			line-height: 1;
 			cursor: pointer;
@@ -416,4 +416,189 @@ textarea {
 		--#{$prefix}border-color: var(--style-form-bg-color);
         --style-form-border-color: var(--style-form-bg-color);
     }
+}
+
+@if $style-elevation == 'hard' {
+	.form-control,
+	.form-select {
+		border: $elevation-border-width solid $elevation-rule-color;
+		border-radius: var(--style-input-border-radius);
+		background-color: var(--style-form-bg-color);
+		color: var(--style-form-text-color);
+		box-shadow: none;
+
+		&:hover {
+			border-color: $elevation-rule-color;
+		}
+
+		&:focus {
+			border-color: $elevation-rule-color;
+			box-shadow: $elevation-offset $elevation-offset 0 $elevation-accent-shadow-color;
+		}
+
+		&:focus-visible {
+			outline: 0;
+		}
+
+		&.is-invalid {
+			border-color: var(--bs-danger);
+			box-shadow: $elevation-offset $elevation-offset 0 color-mix(in srgb, var(--bs-danger), transparent 28%);
+		}
+
+	}
+
+	.form-control:disabled {
+		@include elevation-disabled;
+	}
+
+	.form-select:disabled {
+		@include elevation-disabled($form-select-indicator);
+		background-position: $form-select-bg-position, 0 0;
+		background-size: $form-select-bg-size, auto;
+	}
+
+	.form-check:not(.form-switch) {
+
+		.form-check-input {
+			border: $elevation-border-width solid $elevation-rule-color;
+			border-radius: var(--style-input-border-radius);
+			background-color: var(--style-form-bg-color);
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+
+			&:checked,
+			&:indeterminate {
+				border-color: $elevation-rule-color;
+				background-color: var(--style-btn-bg-color);
+				box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+			}
+
+			&:focus {
+				border-color: $elevation-rule-color;
+				box-shadow:
+					$elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color,
+					0 0 0 3px $elevation-focus-color;
+			}
+
+			&:disabled {
+				@include elevation-disabled(var(--#{$prefix}form-check-bg-image, linear-gradient(transparent, transparent)));
+				background-position: center, 0 0;
+				background-size: contain, auto;
+			}
+		}
+
+		.form-check-label {
+			font-weight: $font-weight-bold;
+		}
+	}
+
+	.form-switch {
+
+		.form-check-input {
+			border: $elevation-border-width solid $elevation-rule-color;
+			background-color: var(--style-form-bg-color);
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+
+			&:checked {
+				border-color: $elevation-rule-color;
+				background-color: var(--style-btn-bg-color);
+				box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+			}
+
+			&:focus {
+				border-color: $elevation-rule-color;
+				box-shadow:
+					$elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color,
+					0 0 0 3px $elevation-focus-color;
+			}
+
+			&:disabled {
+				@include elevation-disabled(var(--#{$prefix}form-switch-bg, linear-gradient(transparent, transparent)));
+			}
+		}
+	}
+
+	.form-check-badge {
+
+		.form-check-input {
+
+			& ~ .form-check-label {
+				border: $elevation-border-width solid $elevation-rule-color;
+				border-radius: var(--style-btn-border-radius);
+				box-shadow: $elevation-offset $elevation-offset 0 $elevation-shadow-color;
+				font-weight: $font-weight-bold;
+				transition:
+					transform $elevation-motion-duration ease,
+					box-shadow $elevation-motion-duration ease,
+					background-color $elevation-motion-duration ease;
+			}
+
+			&:focus-visible ~ .form-check-label {
+				@include elevation-focus;
+			}
+
+			&:active ~ .form-check-label,
+			&:checked ~ .form-check-label,
+			&[type="checkbox"]:indeterminate ~ .form-check-label {
+				border-color: $elevation-rule-color;
+				background-color: var(--style-btn-bg-color);
+				color: var(--style-btn-text-color);
+				transform: translate($elevation-offset-pressed, $elevation-offset-pressed);
+				box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+			}
+
+			&:disabled ~ .form-check-label {
+				@include elevation-disabled;
+			}
+		}
+	}
+
+	.form-check-img {
+
+		.form-check-input ~ .form-check-label {
+			@include elevation-media-frame;
+		}
+
+		.form-check-input:focus-visible ~ .form-check-label {
+			@include elevation-focus;
+		}
+
+		.form-check-input:checked ~ .form-check-label {
+			border-color: $elevation-rule-color;
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+		}
+	}
+
+	.form-check-color-swatch {
+
+		.form-check-input + .form-check-label {
+			border: $elevation-border-width solid $elevation-rule-color;
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+		}
+
+		.form-check-input:focus-visible + .form-check-label {
+			@include elevation-focus;
+		}
+
+		.form-check-input:checked + .form-check-label {
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+		}
+	}
+
+	.form-control-text:focus-visible {
+		@include elevation-focus;
+	}
+
+	.invalid-feedback,
+	.invalid-tooltip {
+		font-weight: $font-weight-bold;
+	}
+
+	.section-newsletter .section-inner,
+	.section-site-footer .section-inner {
+		--style-form-bg-color: var(--style-form-surface-bg-color);
+		--style-form-text-color: var(--style-form-surface-text-color);
+		--style-form-border-color: var(--style-form-surface-border-color);
+		--style-form-placeholder-color: color-mix(in srgb, var(--style-form-surface-text-color), transparent 42%);
+		--style-form-bg-hover-color: color-mix(in srgb, var(--style-form-surface-bg-color), var(--style-form-surface-text-color) 6%);
+	}
 }

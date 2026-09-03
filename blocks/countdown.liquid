@@ -1,0 +1,342 @@
+{%- assign blockHandle = '#finqu-block-' | append: block.id -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    {% if block.settings.datetime or request.design_mode %}
+
+        {%- if block.settings.datetime -%}
+
+            {%- if request.design_mode == 'edit' -%}
+                {%- assign eventName = 'finqu:section:load' -%}
+            {%- else -%}
+                {%- assign eventName = 'theme:ready' -%}
+            {%- endif -%}
+
+            <script defer="defer">
+                document.addEventListener('{{- eventName -}}', () => theme.utils.countdown({
+                    el: document.querySelector('{{ blockHandle }} .countdown-container'),
+                    datetime: {{ block.settings.datetime | json -}},
+                    zeroPad: {{ block.settings.zeroPad | json -}},
+                    hideTimeUnitOnZero: {{ block.settings.hideTimeUnitOnZero | json -}},
+                    showYears: {{ block.settings.showYears | json -}},
+                    showMonths: {{ block.settings.showMonths | json -}},
+                    events: {
+                        complete: () => location.reload()
+                    }
+                }));
+            </script>
+
+            {%- assign targetDate = block.settings.datetime | date: '%s' | times: 1000 -%}
+            {%- assign currentDate = 'now' | date: '%s' | times: 1000 -%}
+            {%- assign diff = targetDate | minus: currentDate -%}
+
+            {%- if block.settings.showYears and block.settings.showMonths -%}
+
+                {%- assign yearsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                {%- assign years = diff | divided_by: yearsEquationA | floor -%}
+
+                {%- assign monthsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                {%- assign monthsEquationB = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                {%- assign months = diff | modulo: monthsEquationA | divided_by: monthsEquationB | floor -%}
+
+                {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                {%- assign minutesEquationB = 1000 | times: 60 -%}
+                {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                {%- assign secondsEquationA = 1000 | times: 60 -%}
+                {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor -%}
+
+            {%- elsif block.settings.showYears -%}
+
+                {%- assign yearsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                {%- assign years = diff | divided_by: yearsEquationA | floor -%}
+
+                {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 365.25 -%}
+                {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                {%- assign minutesEquationB = 1000 | times: 60 -%}
+                {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                {%- assign secondsEquationA = 1000 | times: 60 -%}
+                {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor -%}
+
+            {%- elsif block.settings.showMonths -%}
+
+                {%- assign monthsEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                {%- assign months = diff | divided_by: monthsEquationA | floor -%}
+
+                {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 | times: 30.44 -%}
+                {%- assign daysEquationB = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign days = diff | modulo: daysEquationA | divided_by: daysEquationB | floor -%}
+
+                {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                {%- assign minutesEquationB = 1000 | times: 60 -%}
+                {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                {%- assign secondsEquationA = 1000 | times: 60 -%}
+                {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor -%}
+
+            {%- else -%}
+
+                {%- assign daysEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign days = diff | divided_by: daysEquationA | floor -%}
+
+                {%- assign hoursEquationA = 1000 | times: 60 | times: 60 | times: 24 -%}
+                {%- assign hoursEquationB = 1000 | times: 60 | times: 60 -%}
+                {%- assign hours = diff | modulo: hoursEquationA | divided_by: hoursEquationB | floor -%}
+
+                {%- assign minutesEquationA = 1000 | times: 60 | times: 60 -%}
+                {%- assign minutesEquationB = 1000 | times: 60 -%}
+                {%- assign minutes = diff | modulo: minutesEquationA | divided_by: minutesEquationB | floor -%}
+
+                {%- assign secondsEquationA = 1000 | times: 60 -%}
+                {%- assign seconds = diff | modulo: secondsEquationA | divided_by: 1000 | floor -%}
+
+            {%- endif -%}
+
+        {%- elsif request.design_mode -%}
+
+            {%- assign years = 0 -%}
+            {%- assign months = 0 -%}
+            {%- assign days = 0 -%}
+            {%- assign hours = 0 -%}
+            {%- assign minutes = 0 -%}
+            {%- assign seconds = 0 -%}
+
+        {%- endif -%}
+
+        {% if request.design_mode and block.settings.datetime == nil or seconds > 0 %}
+
+            <div class="countdown-container">
+
+                <div class="countdown">
+
+                    {% if block.settings.showYears %}
+
+                        {% unless years == 0 and block.settings.hideTimeUnitOnZero and request.design_mode %}
+
+                            <div class="countdown-item">
+
+                                <span class="countdown-item-value" data-countdown-years>
+                                    {%- if years < 10 and block.settings.zeroPad -%}
+                                        0{{ years -}}
+                                    {%- else -%}
+                                        {{- years -}}
+                                    {%- endif -%}
+                                </span>
+
+                                <span class="countdown-item-label">
+                                    {{ 'general.datetime.year_plural' | t }}
+                                </span>
+
+                            </div>
+
+                        {% endunless %}
+
+                    {% endif %}
+
+                    {% if block.settings.showMonths %}
+
+                        {% unless months == 0 and block.settings.hideTimeUnitOnZero and request.design_mode %}
+
+                            <div class="countdown-item">
+
+                                <span class="countdown-item-value" data-countdown-months>
+                                    {%- if months < 10 and block.settings.zeroPad -%}
+                                        0{{ months -}}
+                                    {%- else -%}
+                                        {{- months -}}
+                                    {%- endif -%}
+                                </span>
+
+                                <span class="countdown-item-label">{{ 'general.datetime.month_plural' | t }}</span>
+
+                            </div>
+
+                        {% endunless %}
+
+                    {% endif %}
+
+                    {% unless days == 0 and block.settings.hideTimeUnitOnZero and request.design_mode %}
+
+                        <div class="countdown-item">
+
+                            <span class="countdown-item-value" data-countdown-days>
+                                {%- if days < 10 and block.settings.zeroPad -%}
+                                    0{{ days -}}
+                                {%- else -%}
+                                    {{- days -}}
+                                {%- endif -%}
+                            </span>
+
+                            <span class="countdown-item-label">{{ 'general.datetime.day_plural' | t }}</span>
+
+                        </div>
+
+                    {% endunless %}
+
+                    {% unless hours == 0 and block.settings.hideTimeUnitOnZero and request.design_mode %}
+
+                        <div class="countdown-item">
+
+                            <span class="countdown-item-value" data-countdown-hours>
+                                {%- if hours < 10 and block.settings.zeroPad -%}
+                                    0{{ hours -}}
+                                {%- else -%}
+                                    {{- hours -}}
+                                {%- endif -%}
+                            </span>
+
+                            <span class="countdown-item-label">{{ 'general.datetime.hour_plural' | t }}</span>
+
+                        </div>
+
+                    {% endunless %}
+
+                    {% unless minutes == 0 and block.settings.hideTimeUnitOnZero and request.design_mode %}
+
+                        <div class="countdown-item">
+
+                            <span class="countdown-item-value" data-countdown-minutes>
+                                {%- if minutes < 10 and block.settings.zeroPad -%}
+                                    0{{ minutes -}}
+                                {%- else -%}
+                                    {{- minutes -}}
+                                {%- endif -%}
+                            </span>
+
+                            <span class="countdown-item-label">{{ 'general.datetime.minute_plural' | t }}</span>
+
+                        </div>
+
+                    {% endunless %}
+
+                    <div class="countdown-item">
+
+                        <span class="countdown-item-value" data-countdown-seconds>
+                            {%- if seconds < 10 and block.settings.zeroPad -%}
+                                0{{ seconds -}}
+                            {%- else -%}
+                                {{- seconds -}}
+                            {%- endif -%}
+                        </span>
+
+                        <span class="countdown-item-label">{{ 'general.datetime.second_plural' | t }}</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.countdown.name",
+    "tag": "div",
+    "class": "block block-countdown",
+    "category": "interactive",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "datetime",
+                        "type": "datetime",
+                        "label": "t:blocks.countdown.settings.datetime.label"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showYears",
+                        "type": "checkbox",
+                        "label": "t:blocks.countdown.settings.showYears.label",
+                        "default": false
+                    },
+                    {
+                        "id": "showMonths",
+                        "type": "checkbox",
+                        "label": "t:blocks.countdown.settings.showMonths.label",
+                        "default": false
+                    },
+                    {
+                        "id": "zeroPad",
+                        "type": "checkbox",
+                        "label": "t:blocks.countdown.settings.zeroPad.label",
+                        "default": true
+                    },
+                    {
+                        "id": "hideTimeUnitOnZero",
+                        "type": "checkbox",
+                        "label": "t:blocks.countdown.settings.hideTimeUnitOnZero.label",
+                        "default": false
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

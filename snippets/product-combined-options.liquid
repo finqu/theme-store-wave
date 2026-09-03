@@ -5,12 +5,16 @@
     - highlightLabel: {Boolean}
 	- showAsDropdown: {Boolean}
     - showRelatedProductsAsOptions: {Boolean} (Legacy option for old merchants)
+    - variantOptionAsImage: {String|Boolean} Taxonomy type shown as a swatch image
+    - imageAspectRatio: {String} Swatch image aspect ratio (default: '1:1')
 
 	Usage:
 	Render this snippet inside of "product-info" class in the product-template.liquid file.
 
 	{% render 'product-combined-options', highlightLabel: true %}
 {% endcomment %}
+
+{%- assign imageAspectRatio = imageAspectRatio | default: '1:1' -%}
 
 {% if showRelatedProductsAsOptions %}
 
@@ -52,13 +56,13 @@
 
                                     {% if product.featured_image %}
 
-                                        {% if settings.productImageAspectRatio == '9:13' %}
+                                        {% if imageAspectRatio == '9:13' %}
                                             {%- assign imgSize = '80,115' -%}
-                                        {% elsif settings.productImageAspectRatio == '4:3' %}
+                                        {% elsif imageAspectRatio == '4:3' %}
                                             {%- assign imgSize = '80,60' -%}
-                                        {% elsif settings.productImageAspectRatio == '3:4' %}
+                                        {% elsif imageAspectRatio == '3:4' %}
                                             {%- assign imgSize = '80,107' -%}
-                                        {% elsif settings.productImageAspectRatio == '1:1' %}
+                                        {% elsif imageAspectRatio == '1:1' %}
                                             {%- assign imgSize = '80,80' -%}
                                         {% endif %}
 
@@ -156,13 +160,13 @@
 
                                         {% if variantProduct.featured_image %}
 
-                                            {% if settings.productImageAspectRatio == '9:13' %}
+                                            {% if imageAspectRatio == '9:13' %}
                                                 {%- assign imgSize = '80,115' -%}
-                                            {% elsif settings.productImageAspectRatio == '4:3' %}
+                                            {% elsif imageAspectRatio == '4:3' %}
                                                 {%- assign imgSize = '80,60' -%}
-                                            {% elsif settings.productImageAspectRatio == '3:4' %}
+                                            {% elsif imageAspectRatio == '3:4' %}
                                                 {%- assign imgSize = '80,107' -%}
-                                            {% elsif settings.productImageAspectRatio == '1:1' %}
+                                            {% elsif imageAspectRatio == '1:1' %}
                                                 {%- assign imgSize = '80,80' -%}
                                             {% endif %}
 

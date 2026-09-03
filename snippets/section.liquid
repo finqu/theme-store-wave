@@ -24,6 +24,7 @@
     - sectionDescriptionTruncate: {Boolean}
     - sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
     - sectionHeader {Boolean}
+    - sectionHeaderContent {String} Custom header markup (renders instead of settings-based section-header)
     - sectionHeaderTextAlign {String} 'nil', 'start', 'center', 'end'
     - sectionHeaderClass {String}
     - sectionHeaderContainer: {String} 'nil', 'none', 'fixed', 'fluid', 'fair', 'compact', 'tiny'
@@ -52,8 +53,7 @@
     - sectionAnimationRepeat {Boolean}
     - sectionAction {String}
     - sectionHighlightItems {Boolean}
-    - sectionAdditionalTitles {Boolean}
-    - sectionAdditionalText {Boolean}
+    - sectionAdditionalText {Boolean|String} — true/"true"/"on" show description; default off
 
     Usage:
     {% render 'section', section: section %}
@@ -70,7 +70,17 @@
 {%- assign sectionContentAlign = section.settings.sectionContentAlign | default: 'center' -%}
 {%- assign sectionContentContainer = sectionContentContainer | default: sectionContainer -%}
 {%- assign sectionContentOverflow = sectionContentOverflow | default: section.settings.sectionContentOverflow | default: nil -%}
-{%- assign sectionBgImgPos = sectionBgImgPos | default: section.settings.sectionBgImgPos | default: settings.sectionBgImgPos -%}
+{%- unless sectionBgImgPos -%}
+    {%- if section.settings.sectionBgImgPosVertical and section.settings.sectionBgImgPosHorizontal -%}
+        {%- assign sectionBgImgPos = section.settings.sectionBgImgPosVertical | append: '-' | append: section.settings.sectionBgImgPosHorizontal -%}
+    {%- elsif section.settings.sectionBgImgPos -%}
+        {%- assign sectionBgImgPos = section.settings.sectionBgImgPos -%}
+    {%- elsif settings.sectionBgImgPosVertical and settings.sectionBgImgPosHorizontal -%}
+        {%- assign sectionBgImgPos = settings.sectionBgImgPosVertical | append: '-' | append: settings.sectionBgImgPosHorizontal -%}
+    {%- else -%}
+        {%- assign sectionBgImgPos = 'center-center' -%}
+    {%- endif -%}
+{%- endunless -%}
 {%- assign sectionBgImgDimming = sectionBgImgDimming | default: section.settings.sectionBgImgDimming | default: '0' -%}
 {%- assign sectionBgImgBlur = sectionBgImgBlur | default: section.settings.sectionBgImgBlur | default: '0' -%}
 {%- assign sectionBgImg = sectionBgImg | default: section.settings.sectionBgImg -%}
@@ -93,20 +103,21 @@
 {%- assign sectionOverlay = sectionOverlay | default: section.settings.sectionOverlay | default: false -%}
 {%- assign sectionOverlayPadding = sectionOverlayPadding | default: section.settings.sectionOverlayPadding | default: settings.sectionOverlayPadding -%}
 {%- assign sectionPaddingMode = sectionPaddingMode | default: section.settings.sectionPaddingMode -%}
-{%- assign sectionAdditionalTitles = sectionAdditionalTitles | default: section.settings.sectionAdditionalTitles | default: false -%}
-{%- assign sectionAdditionalText = sectionAdditionalText | default: section.settings.sectionAdditionalText -%}
+
+{%- assign sectionAdditionalTextRaw = sectionAdditionalText | default: section.settings.sectionAdditionalText | default: 'off' -%}
+{%- if sectionAdditionalTextRaw == true or sectionAdditionalTextRaw == 'true' or sectionAdditionalTextRaw == 'on' -%}
+    {%- assign sectionAdditionalText = true -%}
+{%- else -%}
+    {%- assign sectionAdditionalText = false -%}
+{%- endif -%}
 
 {%- if sectionContainer == 'nil' -%}
     {%- assign sectionContainer = 'fixed' -%}
 {%- endif -%}
 
-{%- unless sectionAdditionalTitles -%}
-    {%- assign sectionOverline = false -%}
-{%- endunless -%}
-
-{%- if sectionAdditionalText == false -%}
+{%- unless sectionAdditionalText -%}
     {%- assign sectionDescription = false -%}
-{%- endif -%}
+{%- endunless -%}
 
 {%- if sectionHandle == nil and section.id -%}
     {%- assign sectionHandle = '#finqu-section-' | append: section.id -%}
@@ -130,7 +141,7 @@
     {%- unless sectionContentAnimation == false -%}
         {%- assign sectionContentAnimation = sectionContentAnimation | default: sectionAnimation -%}
     {%- endunless -%}
-    
+
 {%- endif -%}
 
 {%- unless sectionHeader == false -%}
@@ -148,7 +159,7 @@
 {%- endif -%}
 
 {%- if sectionHeaderTextAlign == nil -%}
-    
+
     {%- if section.settings.sectionHeaderTextAlign and section.settings.sectionHeaderTextAlign != 'nil' -%}
         {%- assign sectionHeaderTextAlign = section.settings.sectionHeaderTextAlign -%}
     {%- elsif section.id != 'footer' and section.id != 'header' -%}
@@ -177,25 +188,41 @@
 
 {%- endif -%}
 
-{%- if sectionPaddingTop == nil -%}
-
-    {%- if section.settings.sectionPaddingTop != nil and sectionPaddingMode == 'custom' -%}
-        {%- assign sectionPaddingTop = section.settings.sectionPaddingTop | append: 'rem' -%}
-    {%- elsif settings.sectionPaddingTop != nil -%}
-        {%- assign sectionPaddingTop = settings.sectionPaddingTop -%}
+{%- comment -%} Native padding: { apply_to_all_sides, padding } — padding is a number or { top, right, bottom, left }. Also accept a flat { top, right, bottom, left } value (CLI / schema defaults). {%- endcomment -%}
+{%- assign sectionPaddingValue = sectionPadding | default: section.settings.sectionPadding -%}
+{%- if sectionPaddingMode == 'custom' and sectionPaddingValue != nil -%}
+    {%- if sectionPaddingValue.apply_to_all_sides -%}
+        {%- assign sectionPaddingTop = sectionPaddingValue.padding | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingRight = sectionPaddingValue.padding | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingBottom = sectionPaddingValue.padding | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingLeft = sectionPaddingValue.padding | default: 0 | append: 'rem' -%}
+    {%- else -%}
+        {%- assign paddingSides = sectionPaddingValue.padding | default: sectionPaddingValue -%}
+        {%- assign sectionPaddingTop = paddingSides.top | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingRight = paddingSides.right | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingBottom = paddingSides.bottom | default: 0 | append: 'rem' -%}
+        {%- assign sectionPaddingLeft = paddingSides.left | default: 0 | append: 'rem' -%}
     {%- endif -%}
-
 {%- endif -%}
 
-{%- if sectionPaddingBottom == nil -%}
-
-    {%- if section.settings.sectionPaddingBottom != nil and sectionPaddingMode == 'custom' -%}
-        {%- assign sectionPaddingBottom = section.settings.sectionPaddingBottom | append: 'rem' -%}
-    {%- elsif settings.sectionPaddingBottom != nil -%}
-        {%- assign sectionPaddingBottom = settings.sectionPaddingBottom -%}
-    {%- endif -%}
-
+{%- if sectionPaddingTop == nil and settings.sectionPaddingTop != nil -%}
+    {%- assign sectionPaddingTop = settings.sectionPaddingTop -%}
 {%- endif -%}
+
+{%- if sectionPaddingBottom == nil and settings.sectionPaddingBottom != nil -%}
+    {%- assign sectionPaddingBottom = settings.sectionPaddingBottom -%}
+{%- endif -%}
+
+{%- assign sectionBorderRadiusValue = sectionBorderRadius | default: section.settings.sectionBorderRadius -%}
+{%- assign sectionBorderRadiusCss = nil -%}
+{%- if sectionBorderRadiusValue != blank -%}
+    {%- if sectionBorderRadiusValue.top != blank or sectionBorderRadiusValue.right != blank or sectionBorderRadiusValue.bottom != blank or sectionBorderRadiusValue.left != blank -%}
+        {%- capture sectionBorderRadiusCss -%}{{ sectionBorderRadiusValue.top | default: 0 }}px {{ sectionBorderRadiusValue.right | default: 0 }}px {{ sectionBorderRadiusValue.bottom | default: 0 }}px {{ sectionBorderRadiusValue.left | default: 0 }}px{%- endcapture -%}
+    {%- elsif sectionBorderRadiusValue != 0 -%}
+        {%- assign sectionBorderRadiusCss = sectionBorderRadiusValue | append: 'px' -%}
+    {%- endif -%}
+{%- endif -%}
+{%- assign sectionBgImgFit = sectionBgImgFit | default: section.settings.sectionBgImgFit | default: 'cover' -%}
 
 {%- if sectionOverlay -%}
     {%- assign sectionClasses = sectionClasses | append: ' section-overlay' -%}
@@ -225,6 +252,22 @@
             --section-inner-gap-mobile: {{ sectionInnerGap | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
             --section-header-gap-scale: {{ sectionHeaderGapScale }};
             --section-bg-img-pos: {{ sectionBgImgPos | replace: '-', ' ' }};
+
+            {%- if sectionPaddingLeft -%}
+                --section-padding-left: {{ sectionPaddingLeft }};
+            {%- endif -%}
+
+            {%- if sectionPaddingRight -%}
+                --section-padding-right: {{ sectionPaddingRight }};
+            {%- endif -%}
+
+            {%- if sectionBorderRadiusCss != blank -%}
+                --section-border-radius: {{ sectionBorderRadiusCss | strip }};
+            {%- endif -%}
+
+            {%- if sectionBgImgFit and sectionBgImgFit != 'cover' -%}
+                --section-bg-img-fit: {{ sectionBgImgFit }};
+            {%- endif -%}
 
             {%- if sectionHeaderFontSizeScale -%}
                 --section-header-font-size-scale: {{ sectionHeaderFontSizeScale }};
@@ -312,7 +355,11 @@
 
     {%- render 'section-bg' sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur, sectionBgContainer: sectionBgContainer -%}
 
-    {%- if sectionHeader -%}
+    {%- if sectionHeaderContent -%}
+
+        {{- sectionHeaderContent -}}
+
+    {%- elsif sectionHeader -%}
 
         {%- if sectionTitle or sectionSubtitle or sectionOverline or sectionDescription or sectionBreadcrumbs or sectionAction -%}
 

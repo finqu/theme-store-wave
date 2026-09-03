@@ -94,6 +94,7 @@
 	    					color: var(--style-text-accent-color);
 						}
 					}
+
 				}
 			}
 		}
@@ -171,6 +172,60 @@
 	    			margin-top: spacer(2);
 	    		}
 	    	}
+		}
+	}
+}
+
+@if $style-elevation == 'hard' {
+	.section-account {
+
+		.progress {
+			height: .75rem;
+			border: $elevation-border-width solid $elevation-rule-color;
+			border-radius: var(--style-component-border-radius);
+			background-color: var(--style-bg-color);
+
+			.progress-bar {
+				background-color: var(--style-btn-bg-color);
+			}
+		}
+	}
+
+	.section-account-orders {
+
+		.order:has(a) {
+			@include elevation-lift;
+		}
+
+		.order-media {
+			@include elevation-media-frame;
+		}
+
+		.order-status-text {
+			display: inline-block;
+			border: $elevation-border-width solid $elevation-rule-color;
+			background-color: var(--style-btn-bg-color);
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+			padding: spacer(1) spacer(2);
+		}
+	}
+
+	.section-account-order {
+
+		.order-shipment-package,
+		.order-item {
+			border-bottom-width: $elevation-border-width !important;
+			border-bottom-color: $elevation-rule-color !important;
+		}
+
+		.order-item-media {
+			@include elevation-media-frame;
+		}
+
+		.order-summary-container {
+			border-top: $elevation-border-width solid $elevation-rule-color;
+			box-shadow: inset 0 spacer(1) 0 var(--style-btn-bg-color);
+			padding-top: spacer(4);
 		}
 	}
 }

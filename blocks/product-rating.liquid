@@ -1,0 +1,95 @@
+{%- assign productRating = product.rating | default: 0 -%}
+{%- assign productMaxRating = product.max_rating | default: 5 -%}
+
+{%- unless product -%}
+    {%- assign productRating = '0,1,2,3,4,5' | split: ',' | random -%}
+    {%- assign productMaxRating = 5 -%}
+{%- endunless -%}
+
+{%- assign hideWhenEmpty = block.settings.hideWhenEmpty | default: true -%}
+{%- assign ratingIconClass = 'svg-icon-gap-xs text-review-icon' -%}
+{%- assign ratingIconEmptyClass = 'svg-icon-gap-xs text-muted' -%}
+
+{%- if block.settings.iconSize == 'md' -%}
+    {%- assign ratingIconClass = 'svg-icon-gap-sm text-review-icon' -%}
+    {%- assign ratingIconEmptyClass = 'svg-icon-gap-sm text-muted' -%}
+{%- endif -%}
+
+{%- if hideWhenEmpty == false or productRating > 0 -%}
+
+    <div class="product-rating{% if block.settings.showNumericValue %} product-rating--with-value{% endif %}">
+
+        {%- for rating in (1..productMaxRating) -%}
+
+            {%- if productRating >= rating -%}
+
+                {%- render 'icon', icon: 'rating', class: ratingIconClass -%}
+
+            {%- else -%}
+
+                {%- render 'icon', icon: 'rating-empty', class: ratingIconEmptyClass -%}
+
+            {%- endif -%}
+
+        {%- endfor -%}
+
+        {%- if block.settings.showNumericValue and productRating > 0 -%}
+
+            <span class="product-rating-value small text-muted ms-1">
+                {{- productRating -}}/{{- productMaxRating -}}
+            </span>
+
+        {%- endif -%}
+
+    </div>
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-rating.name",
+    "tag": "div",
+    "class": "block block-product-rating",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showNumericValue",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-rating.settings.showNumericValue.label",
+                        "default": false
+                    },
+                    {
+                        "id": "hideWhenEmpty",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-rating.settings.hideWhenEmpty.label",
+                        "default": true
+                    },
+                    {
+                        "id": "iconSize",
+                        "type": "select",
+                        "label": "t:blocks.product-rating.settings.iconSize.label",
+                        "default": "sm",
+                        "options": [
+                            {
+                                "value": "sm",
+                                "label": "t:blocks.product-rating.settings.iconSize.options.sm.label"
+                            },
+                            {
+                                "value": "md",
+                                "label": "t:blocks.product-rating.settings.iconSize.options.md.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

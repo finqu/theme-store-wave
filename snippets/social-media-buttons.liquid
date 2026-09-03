@@ -4,8 +4,9 @@
     Accepts:
     - class {String}
     - attrs {String}
-    - size {String} xs | sm | m | lg | xl | inherit
-    - style {String} default | text | border-circle | box | bw | section
+    - size {String} xs | sm | md | lg | xl | inherit
+    - style {String} default | text | circle | box | bw | minimal | squared | rounded
+    - color {String} brand | monochrome (squared and rounded only)
     - preview {Boolean}
     - facebookPageUrl {String}
     - instagramPageUrl {String}
@@ -21,11 +22,12 @@
     - ravelryPageUrl {String}
 
     Usage:
-    {% render 'social-media-buttons', size: 'sm', style: 'default' %}
+    {% render 'social-media-buttons', size: 'md', style: 'default' %}
 {% endcomment %}
 
 {% assign size = size | default: 'sm' %}
 {% assign style = style | default: 'minimal' %}
+{% assign color = color | default: 'monochrome' %}
 {% assign facebookPageUrl = facebookPageUrl | default: settings.facebookPageUrl %}
 {% assign instagramPageUrl = instagramPageUrl | default: settings.instagramPageUrl %}
 {% assign xPageUrl = xPageUrl | default: settings.xPageUrl %}
@@ -45,7 +47,7 @@
     {{ xPageUrl | yepnope: 'true', 'false' }},
     {{ whatsappPageUrl | yepnope: 'true', 'false' }},
     {{ snapchatPageUrl | yepnope: 'true', 'false' }},
-    {{ interestPageUrl | yepnope: 'true', 'false' }},
+    {{ pinterestPageUrl | yepnope: 'true', 'false' }},
     {{ youtubePageUrl | yepnope: 'true', 'false' }},
     {{ linkedinPageUrl | yepnope: 'true', 'false' }},
     {{ tumblrPageUrl | yepnope: 'true', 'false' }},
@@ -69,73 +71,73 @@
 
         {% if facebookPageUrl %}
 
-            {% render 'social-media-button', type: 'facebook', url: facebookPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'facebook', url: facebookPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if instagramPageUrl %}
 
-            {% render 'social-media-button', type: 'instagram', url: instagramPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'instagram', url: instagramPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if xPageUrl %}
 
-            {% render 'social-media-button', type: 'x', url: xPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'x', url: xPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if whatsappPageUrl %}
 
-            {% render 'social-media-button', type: 'whatsapp', url: whatsappPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'whatsapp', url: whatsappPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if snapchatPageUrl %}
 
-            {% render 'social-media-button', type: 'snapchat', url: snapchatPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'snapchat', url: snapchatPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if pinterestPageUrl %}
 
-            {% render 'social-media-button', type: 'pinterest', url: pinterestPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'pinterest', url: pinterestPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if youtubePageUrl %}
 
-            {% render 'social-media-button', type: 'youtube', url: youtubePageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'youtube', url: youtubePageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if linkedinPageUrl %}
 
-            {% render 'social-media-button', type: 'linkedin', url: linkedinPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'linkedin', url: linkedinPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if tumblrPageUrl %}
 
-            {% render 'social-media-button', type: 'tumblr', url: tumblrPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'tumblr', url: tumblrPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if redditPageUrl %}
 
-            {% render 'social-media-button', type: 'reddit', url: redditPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'reddit', url: redditPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if tiktokPageUrl %}
 
-            {% render 'social-media-button', type: 'tiktok', url: tiktokPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'tiktok', url: tiktokPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 
         {% if ravelryPageUrl %}
 
-            {% render 'social-media-button', type: 'ravelry', url: ravelryPageUrl, style: style, size: size %}
+            {% render 'social-media-button', type: 'ravelry', url: ravelryPageUrl, style: style, size: size, color: color %}
 
         {% endif %}
 

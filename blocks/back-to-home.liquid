@@ -1,0 +1,123 @@
+{%- assign btnLabel = block.settings.btnLabel -%}
+{%- if btnLabel == blank -%}
+    {%- assign btnLabel = 'general.back_to_home_page' | t -%}
+{%- endif -%}
+{%- assign homeUrl = routes.root_url -%}
+
+<div class="block-inner">
+
+    {%- render 'section-quick-link', theme: block.settings.btnTheme, variant: block.settings.btnVariant, size: block.settings.btnSize, text: btnLabel, url: homeUrl -%}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.back-to-home.name",
+    "tag": "div",
+    "class": "block block-button block-back-to-home",
+    "category": "basic",
+    "private": true,
+    "display": "inline",
+    "templates": [
+        "404"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "btnLabel",
+                        "type": "text",
+                        "label": "t:blocks.back-to-home.settings.btnLabel.label"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "btnTheme",
+                        "type": "select",
+                        "label": "t:all.settings.btnTheme.label",
+                        "default": "primary",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.btnTheme.options.nil.label"
+                            },
+                            {
+                                "value": "primary",
+                                "label": "t:all.settings.btnTheme.options.primary.label"
+                            },
+                            {
+                                "value": "secondary",
+                                "label": "t:all.settings.btnTheme.options.secondary.label"
+                            },
+                            {
+                                "value": "contrast",
+                                "label": "t:all.settings.btnTheme.options.contrast.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnVariant",
+                        "type": "select",
+                        "label": "t:all.settings.btnVariant.label",
+                        "default": "filled",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.btnVariant.options.nil.label"
+                            },
+                            {
+                                "value": "filled",
+                                "label": "t:all.settings.btnVariant.options.filled.label"
+                            },
+                            {
+                                "value": "outline",
+                                "label": "t:all.settings.btnVariant.options.outline.label"
+                            },
+                            {
+                                "value": "ghost",
+                                "label": "t:all.settings.btnVariant.options.ghost.label"
+                            },
+                            {
+                                "value": "text",
+                                "label": "t:all.settings.btnVariant.options.text.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnSize",
+                        "type": "select",
+                        "label": "t:all.settings.btnSize.label",
+                        "default": "sm",
+                        "options": [
+                            {
+                                "value": "xs",
+                                "label": "t:all.settings.btnSize.options.xs.label"
+                            },
+                            {
+                                "value": "sm",
+                                "label": "t:all.settings.btnSize.options.sm.label"
+                            },
+                            {
+                                "value": "md",
+                                "label": "t:all.settings.btnSize.options.md.label"
+                            },
+                            {
+                                "value": "lg",
+                                "label": "t:all.settings.btnSize.options.lg.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

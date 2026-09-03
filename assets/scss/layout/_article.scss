@@ -54,3 +54,22 @@
         }
     }
 }
+
+@if $style-elevation == 'hard' {
+    .section-article {
+
+        .article-media {
+            @include elevation-media-frame;
+        }
+
+        .article-comment-inner {
+            @include elevation-slab;
+            padding: spacer(4);
+        }
+
+        .article-comment > .article-comment {
+            border-left: $elevation-border-width solid $elevation-rule-color;
+            padding-left: spacer(4);
+        }
+    }
+}

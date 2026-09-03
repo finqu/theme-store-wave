@@ -1,5 +1,6 @@
 {%- assign sectionTitle = 'blog.title' | t -%}
 {%- assign animatedItemsCount = settings.articlePerRow | times: 2 -%}
+{%- assign articlePerRow = settings.articlePerRow -%}
 
 {%- capture sectionContent -%}
 
@@ -29,7 +30,7 @@
 
 		{%- paginate blog.recent by 20 -%}
 
-			<div class="row gy-g row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ settings.articlePerRow }}">
+			<div class="row gy-g row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ articlePerRow }}">
 
 				{% if blog.recent.size > 0 %}
 
@@ -37,7 +38,11 @@
 
 						<div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
 
-							{%- render 'article-card-grid', article: article -%}
+							<div class="article-card-grid-item section-highlight-item">
+
+								{% block 'article-list-item' id:'section-article-card' %}
+
+							</div>
 
 						</div>
 
@@ -45,13 +50,19 @@
 
 				{% elsif request.design_mode %}
 
-					{%- assign itemCount = settings.articlePerRow | times: 3 -%}
+					{%- assign itemCount = articlePerRow | times: 3 -%}
 
 					{% for num in (1..itemCount) %}
 
+						{%- assign article = nil -%}
+
 						<div class="col"{% if forloop.index <= animatedItemsCount %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ forloop.index }}"{% endif %}>
 
-							{%- render 'article-card-grid' -%}
+							<div class="article-card-grid-item section-highlight-item">
+
+								{% block 'article-list-item' id:'section-article-card' %}
+
+							</div>
 
 						</div>
 
@@ -85,10 +96,7 @@
 
 {% schema %}
 {
-    "name": {
-        "en": "Blog",
-        "fi": "Blogi"
-    },
+    "name": "t:sections.blog-template.name",
     "tag": "section",
     "class": "section section-blog",
     "is_creatable": false

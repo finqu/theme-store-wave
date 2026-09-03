@@ -204,6 +204,98 @@
 	animation-timing-function: ease-in-out;
 }
 
+body[data-style-elevation="hard"]:not(.animations-enabled) {
+	--style-elevation-lift: 0;
+	--style-elevation-press-translate: 0;
+	--style-elevation-motion-duration: 1ms;
+
+	.btn,
+	.form-check-label,
+	.swiper-button-prev,
+	.swiper-button-next,
+	.product-card-grid-item,
+	.article-card-grid-item,
+	.section-category-list .category-items-container > .col > a,
+	.section-category-carousel .swiper-slide-inner > a,
+	.section-promotion-collage .collage-grid > div,
+	.section-account-orders .order,
+	.pagination .paginate-item-previous,
+	.pagination .paginate-item-next,
+	.filters-mobile-navigation,
+	.site-mobile-navigation-container,
+	.site-header-cart-offcanvas-container,
+	.modal-dialog {
+		transition-duration: 1ms !important;
+	}
+
+	.btn:is(:hover, :active),
+	.form-check-input:is(:active, :checked) ~ .form-check-label,
+	.swiper-button-prev:is(:hover, :active),
+	.swiper-button-next:is(:hover, :active),
+	.product-card-grid-item:is(:hover, :active),
+	.article-card-grid-item:is(:hover, :active),
+	.section-category-list .category-items-container > .col > a:is(:hover, :active),
+	.section-category-carousel .swiper-slide-inner > a:is(:hover, :active),
+	.section-promotion-collage .collage-grid > div:is(:hover, :active),
+	.section-account-orders .order:is(:hover, :active),
+	.pagination .paginate-item-previous:is(:hover, :active),
+	.pagination .paginate-item-next:is(:hover, :active) {
+		transform: none !important;
+	}
+
+	[data-aos] {
+		transition-delay: 0ms !important;
+		transition-duration: 1ms !important;
+	}
+}
+
+@media print, (prefers-reduced-motion: reduce) {
+	body[data-style-elevation="hard"] {
+		--style-elevation-lift: 0;
+		--style-elevation-press-translate: 0;
+		--style-elevation-motion-duration: 1ms;
+
+		.btn,
+		.form-check-label,
+		.swiper-button-prev,
+		.swiper-button-next,
+		.product-card-grid-item,
+		.article-card-grid-item,
+		.section-category-list .category-items-container > .col > a,
+		.section-category-carousel .swiper-slide-inner > a,
+		.section-promotion-collage .collage-grid > div,
+		.section-account-orders .order,
+		.pagination .paginate-item-previous,
+		.pagination .paginate-item-next,
+		.filters-mobile-navigation,
+		.site-mobile-navigation-container,
+		.site-header-cart-offcanvas-container,
+		.modal-dialog {
+			transition-duration: 1ms !important;
+		}
+
+		.btn:is(:hover, :active),
+		.form-check-input:is(:active, :checked) ~ .form-check-label,
+		.swiper-button-prev:is(:hover, :active),
+		.swiper-button-next:is(:hover, :active),
+		.product-card-grid-item:is(:hover, :active),
+		.article-card-grid-item:is(:hover, :active),
+		.section-category-list .category-items-container > .col > a:is(:hover, :active),
+		.section-category-carousel .swiper-slide-inner > a:is(:hover, :active),
+		.section-promotion-collage .collage-grid > div:is(:hover, :active),
+		.section-account-orders .order:is(:hover, :active),
+		.pagination .paginate-item-previous:is(:hover, :active),
+		.pagination .paginate-item-next:is(:hover, :active) {
+			transform: none !important;
+		}
+
+		[data-aos] {
+			transition-delay: 0ms !important;
+			transition-duration: 1ms !important;
+		}
+	}
+}
+
 @keyframes zoomFade {
 	from {
 		opacity: 0;

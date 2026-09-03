@@ -1,571 +1,494 @@
-{% assign sectionAnimationOrder = 0 %}
-
-{%- if section.settings.sectionOverline -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+{%- assign newsletterHasBackground = false -%}
+{%- if section.settings.sectionBgImg != blank -%}
+    {%- assign newsletterHasBackground = true -%}
 {%- endif -%}
-
-{%- if section.settings.sectionTitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionSubtitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.richtext -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionTextAlign == 'nil' -%}
-    {%- assign sectionTextAlign = settings.sectionTextAlign -%}
-{% else %}
-    {%- assign sectionTextAlign = section.settings.sectionTextAlign -%}
-{%- endif -%}
-
-{%- case sectionTextAlign -%}
-    {% when 'start' %}
-        {%- assign contentAlign = 'me-auto' -%}
-    {% when 'center' %}
-        {%- assign contentAlign = 'mx-auto' -%}
-    {% when 'end' %}
-        {%- assign contentAlign = 'ms-auto' -%}
-{%- endcase -%}
 
 {%- capture sectionContent -%}
 
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
+    <div class="newsletter-stack{% if newsletterHasBackground %} newsletter-stack-background{% endif %}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: 1">
 
-    <div data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
+        <div class="newsletter-intro">
+            {% container 'intro' %}
+        </div>
 
-        {% form 'customer', customer %}
+        <div class="newsletter-form">
+            {% block 'newsletter' id:'section-newsletter' %}
+        </div>
 
-            {% if form.posted_successfully? %}
-
-                <script type="application/javascript">
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.dispatchEvent(new CustomEvent('theme:newsletter:subscribe', {
-                            detail: {
-                                email: {{ form.email | json }}
-                            }
-                        }));
-                    });
-                </script>
-
-            {% endif %}
-
-            {% if customer and customer.accepts_marketing %}
-
-                <span class="d-block fw-bold">
-                    {{- 'general.newsletter_subscribed' | t -}}
-                </span>
-
-            {% elsif form.posted_successfully? %}
-
-                <span class="d-block fw-bold">
-                    {{- 'general.newsletter_subscribed' | t -}}
-                </span>
-
-            {% else %}
-
-                <div class="{{ contentAlign }} max-w-px-370">
-
-                    <div class="input-group">
-                                                        
-                        <div class="form-floating">
-
-                            <input id="footer-middle-newsletter" class="form-control" type="email" name="email" value="" placeholder="{{ 'general.email' | t }}" required>
-
-                            <label for="footer-middle-newsletter">
-                                {{- 'general.email' | t -}}
-                            </label>
-
-                        </div>
-
-                        <button type="submit" class="btn btn-icon">
-
-                            <span class="text-hidden">
-                                {{- 'general.subscribe' | t -}}
-                            </span>
-
-                            {% render 'icon', icon: 'angle-right' %}
-
-                        </button>
-
-                    </div>
-
-                    {% render 'form-error', error: form.error, class: 'mt-4' %}
-
-                </div>
-
-            {% endif %}
-
-        {% endform %}
+        <div class="newsletter-social">
+            {% container 'social' %}
+        </div>
 
     </div>
 
-    {% if section.settings.showSocialMediaIcons %}
-
-        {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-
-        {%- capture class -%}
-            social-media-buttons-container mt-6
-        {%- endcapture -%}
-
-        {%- capture attrs -%}
-            data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}"  data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"
-        {%- endcapture -%}
-
-        {% render 'social-media-buttons' class: class, attrs: attrs, preview: request.design_mode %}
-
-    {% endif %}
-
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionDescription: section.settings.richtext, sectionHeaderGapScale: 0.70, sectionInnerGap: '2rem' %}
+{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionInnerGap: '2rem' %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Newsletter",
-        "fi": "Uutiskirje"
-    },
+    "name": "t:sections.newsletter.name",
     "tag": "section",
     "class": "section section-newsletter",
     "category": "theme-marketing",
-    "keywords": {
-        "en": [
-            "Form",
-            "Subscribe",
-            "Email",
-            "Lead"
-        ],
-        "fi": [
-            "Lomake",
-            "Tilaa",
-            "Sähköposti",
-            "Liidi"
-        ]
-    },
+    "keywords": [
+        "Form",
+        "Subscribe",
+        "Email",
+        "Lead"
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "richtext",
-                        "type": "richtext",
-                        "mode": "simple",
-                        "label": {
-                            "en": "Description",
-                            "fi": "Kuvaus"
-                        }
-                    }
-                ]
-            },
-            {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.settings.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionHighlightItems",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content highlight",
-                                        "fi": "Sisällön korostaminen"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionTextAlign",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Content align",
-                                        "fi": "Sisällön tasaus"
-                                    },
-                                    "default": "nil",
-                                    "options": [
-                                        {
-                                            "value": "nil",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "start",
-                                            "label": "{# icon.align-start #}"
-                                        },
-                                        {
-                                            "value": "center",
-                                            "label": "{# icon.align-center #}"
-                                        },
-                                        {
-                                            "value": "end",
-                                            "label": "{# icon.align-end #}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "showSocialMediaIcons",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show social media icons",
-                                        "fi": "Näytä sosiaalisen median kuvakkeet"
-                                    },
-                                    "default": true,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionOverlineTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Main title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
-                                        {
-                                            "value": "h2",
-                                            "label": "H2"
-                                        },
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Section",
-                                "fi": "Osio"
-                            },
+                            "title": "t:all.groups.style.title",
                             "settings": [
                                 {
                                     "id": "sectionColorScheme",
                                     "type": "select",
-                                    "label": {
-                                        "en": "Color scheme",
-                                        "fi": "Värityyli"
-                                    },
+                                    "label": "t:all.settings.sectionColorScheme.label",
                                     "default": false,
                                     "options": [
                                         {
                                             "value": false,
-                                            "label": {
-                                                "en": "Disabled",
-                                                "fi": "Pois käytöstä"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
                                         },
                                         {
                                             "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
                                         },
                                         {
                                             "value": "light",
-                                            "label": {
-                                                "en": "Light background / Dark content",
-                                                "fi": "Vaalea tausta / Tumma sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
                                         },
                                         {
                                             "value": "dark",
-                                            "label": {
-                                                "en": "Dark background / Light content",
-                                                "fi": "Tumma tausta / Vaalea sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
                                         },
                                         {
                                             "value": "accent",
-                                            "label": {
-                                                "en": "Accent background / Adaptive content",
-                                                "fi": "Korostus tausta / Mukautuva sisältö"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "style_custom_color",
                                     "type": "color",
-                                    "label": {
-                                        "en": "Color",
-                                        "fi": "Väri"
-                                    },
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
                                     "default": "#f3f5f6",
-                                    "conditions": ["sectionColorScheme eq custom"]
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
                                     ]
                                 },
                                 {
                                     "id": "sectionPaddingMode",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Padding",
-                                        "fi": "Välit"
-                                    },
+                                    "label": "t:all.settings.sectionPaddingMode.label",
                                     "default": "auto",
                                     "options": [
                                         {
                                             "value": "auto",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
                                         },
                                         {
                                             "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
                                         }
                                     ]
                                 },
                                 {
-                                    "id": "sectionPaddingTop",
-                                    "label": {
-                                        "en": "Padding top",
-                                        "fi": "Väli ylhäällä"
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
                                     },
-                                    "type": "range",
                                     "min": 0,
                                     "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
-                                    "id": "sectionPaddingBottom",
-                                    "label": {
-                                        "en": "Padding bottom",
-                                        "fi": "Väli alhaalla"
-                                    },
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
                                     "type": "range",
                                     "min": 0,
-                                    "max": 15,
+                                    "max": 50,
                                     "step": 1,
                                     "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImg",
                                     "type": "image-picker",
-                                    "label": {
-                                        "en": "Background image",
-                                        "fi": "Taustakuva"
-                                    },
+                                    "label": "t:all.settings.sectionBgImg.label",
                                     "adjustments": true
                                 },
                                 {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
                                     "id": "sectionBgImgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 90,
                                     "step": 5,
                                     "default": "0",
                                     "unit": "%",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 },
                                 {
                                     "id": "sectionBgImgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 10,
                                     "step": 1,
                                     "default": "0",
                                     "unit": " ",
-                                    "conditions": ["!sectionBgImg eq false"]
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
                                 }
-                            ]
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "settings": [
+                                {
+                                    "id": "sectionHighlightItems",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionHighlightItems.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionHighlightItems.options.nil.label"
+                                        },
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionHighlightItems.options.false.label"
+                                        },
+                                        {
+                                            "value": true,
+                                            "label": "t:all.settings.sectionHighlightItems.options.true.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "id": "layout"
                         }
                     ]
-                }
+                },
+                "id": "settings"
             }
         ]
     },
-    "presets": [
+    "containers": [
         {
-            "settings": {
-                "sectionTitle": "Subscribe to our newsletter",
-                "richtext": "<p>Join the inner circle and be the first to know about store news, offers, and current events.<\/p>"
-            }
+            "id": "intro",
+            "title": "t:sections.newsletter.containers.intro.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "badge",
+                "spacer",
+                "separator"
+            ]
         },
         {
-            "settings": {
-                "sectionTextAlign": "center",
-                "sectionTitle": "Subscribe to our newsletter",
-                "richtext": "<p>Join the inner circle and be the first to know about store news, offers, and current events.<\/p>",
-                "sectionBgImg": {
-                    "string_value": "https:\/\/images.unsplash.com\/photo-1503602642458-232111445657",
-                    "src": "https:\/\/images.unsplash.com\/photo-1503602642458-232111445657",
-                    "offset_top": "72",
-                    "offset_left": "29",
-                    "width": "1980",
-                    "height": "1080"
-                },
-                "sectionBgImgDimming": "15",
-                "sectionColorScheme": "dark",
-                "showSocialMediaIcons": false
-            }
+            "id": "social",
+            "title": "t:sections.newsletter.containers.social.title",
+            "allowed_blocks": [
+                "social-media-buttons",
+                "button",
+                "button-group",
+                "spacer",
+                "separator"
+            ]
         }
-    ]
+    ],
+    "presets": {
+        "default": [
+            {
+                "name": "t:sections.newsletter.presets.newsletter.name",
+                "id": "newsletter",
+                "settings": {},
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": "Subscribe to our newsletter"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Join the inner circle and be the first to know about store news, offers, and current events.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-newsletter",
+                        "name": "newsletter"
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "social"
+                    }
+                ]
+            },
+            {
+                "name": "t:sections.newsletter.presets.newsletter-banner.name",
+                "id": "newsletter-banner",
+                "settings": {
+                    "sectionTextAlign": "center",
+                    "sectionBgImg": {
+                        "string_value": "https://images.unsplash.com/photo-1503602642458-232111445657",
+                        "src": "https://images.unsplash.com/photo-1503602642458-232111445657",
+                        "offset_top": "72",
+                        "offset_left": "29",
+                        "width": "1980",
+                        "height": "1080"
+                    },
+                    "sectionBgImgDimming": "15",
+                    "sectionColorScheme": "dark"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": "Subscribe to our newsletter"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Join the inner circle and be the first to know about store news, offers, and current events.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-newsletter",
+                        "name": "newsletter"
+                    }
+                ]
+            }
+        ],
+        "fi": [
+            {
+                "name": "t:sections.newsletter.presets.newsletter.name",
+                "id": "newsletter",
+                "settings": {},
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": "Tilaa uutiskirjeemme"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Liity sisäpiiriin ja kuule ensimmäisenä kaupan uutisista, tarjouksista ja tapahtumista.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-newsletter",
+                        "name": "newsletter"
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "social"
+                    }
+                ]
+            },
+            {
+                "name": "t:sections.newsletter.presets.newsletter-banner.name",
+                "id": "newsletter-banner",
+                "settings": {
+                    "sectionTextAlign": "center",
+                    "sectionBgImg": {
+                        "string_value": "https://images.unsplash.com/photo-1503602642458-232111445657",
+                        "src": "https://images.unsplash.com/photo-1503602642458-232111445657",
+                        "offset_top": "72",
+                        "offset_left": "29",
+                        "width": "1980",
+                        "height": "1080"
+                    },
+                    "sectionBgImgDimming": "15",
+                    "sectionColorScheme": "dark"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "intro",
+                        "settings": {
+                            "title": "Tilaa uutiskirjeemme"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "intro",
+                        "settings": {
+                            "richtext": "<p>Liity sisäpiiriin ja kuule ensimmäisenä kaupan uutisista, tarjouksista ja tapahtumista.</p>"
+                        }
+                    },
+                    {
+                        "id": "section-newsletter",
+                        "name": "newsletter"
+                    }
+                ]
+            }
+        ]
+    }
 }
 {% endschema %}

@@ -1,9 +1,15 @@
 // Variables
 // -----------------------------------------------------------------------------------------
 
+$style-elevation: 'soft' !default;
+
 // Options
 $enable-caret: false;
 $enable-rounded: true;
+
+@if $style-elevation == 'hard' {
+	$enable-rounded: false;
+}
 $enable-shadows: false;
 $enable-gradients: false;
 $enable-transitions: true;
@@ -521,14 +527,15 @@ $display-font-sizes: (
 	1: 5rem,
 	2: 4.5rem,
 	3: 4rem,
-	4: 3.5rem,
+	4: $display-font-size,
 	5: 3rem,
 	6: 2.5rem
 );
 
-$display-font-family: $headings-font-family;
-$display-font-style: $headings-font-style;
-$display-font-weight: $headings-font-weight;
+$display-font-family: $display-font-family;
+$display-font-style: $display-font-style;
+$display-font-weight: if($display-font-weight == 'inherit', $headings-font-weight, $display-font-weight);
+$display-text-transform: $display-text-transform;
 $display-line-height: $headings-line-height;
 
 $lead-font-size: $font-size-base * 1.25;
@@ -575,11 +582,19 @@ $input-btn-padding-y-sm: $input-btn-padding-y * 0.75;
 $input-btn-padding-x-sm: $input-btn-padding-x * 0.85;
 $input-btn-font-size-sm: $font-size-sm;
 
+$input-btn-padding-y-xs: $input-btn-padding-y * 0.5;
+$input-btn-padding-x-xs: $input-btn-padding-x * 0.65;
+$input-btn-font-size-xs: $font-size-base * 0.75;
+
 $input-btn-padding-y-lg: $input-btn-padding-y * 1.15;
 $input-btn-padding-x-lg: $input-btn-padding-x * 1.15;
 $input-btn-font-size-lg: $font-size-lg;
 
 $input-btn-border-width: 1px;
+
+@if $style-elevation == 'hard' {
+	$input-btn-border-width: 2px;
+}
 
 // Component
 $component-active-color: var(--style-accent-text-color);
@@ -715,24 +730,32 @@ $input-height-lg: add($input-line-height * 1em, add($input-padding-y-lg * 2, $in
 $input-transition:  border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
 // Button
-$btn-border-radius: var(--style-btn-border-radius);
-$btn-border-radius-lg: var(--style-btn-border-radius);
-$btn-border-radius-sm: var(--style-btn-border-radius);
+$btn-border-radius: var(--style-btn-border-radius) !default;
+$btn-border-radius-lg: var(--style-btn-border-radius) !default;
+$btn-border-radius-sm: var(--style-btn-border-radius) !default;
 
-$btn-border-width: 2px;
+// Overridable from main.scss.liquid (future theme setting: styleBtnBorderWidth)
+$btn-border-width: 2px !default;
 $btn-font-weight: $btn-font-weight;
 $btn-disabled-opacity: .65;
 
 $btn-font-size: $font-size-base;
 $btn-line-height: $line-height-base;
 
-$btn-padding-y-sm: $btn-padding-y * 0.85;
-$btn-padding-x-sm: $btn-padding-x * 0.85;
-$btn-font-size-sm: $font-size-sm;
+// Pair with form-control-sm/lg: same padding scale as inputs, adjusted so
+// total height matches when $btn-border-width ≠ $input-btn-border-width.
+// When borders are equal, compensation is 0.
+$btn-padding-y-sm: add($input-btn-padding-y-sm, subtract($input-btn-border-width, $btn-border-width));
+$btn-padding-x-sm: $input-btn-padding-x-sm;
+$btn-font-size-sm: $input-btn-font-size-sm;
 
-$btn-padding-y-lg: $btn-padding-y * 1.15;
-$btn-padding-x-lg: $btn-padding-y * 1.15;
-$btn-font-size-lg: $font-size-lg;
+$btn-padding-y-xs: add($input-btn-padding-y-xs, subtract($input-btn-border-width, $btn-border-width));
+$btn-padding-x-xs: $input-btn-padding-x-xs;
+$btn-font-size-xs: $input-btn-font-size-xs;
+
+$btn-padding-y-lg: add($input-btn-padding-y-lg, subtract($input-btn-border-width, $btn-border-width));
+$btn-padding-x-lg: $input-btn-padding-x-lg;
+$btn-font-size-lg: $input-btn-font-size-lg;
 
 $btn-color: $body-color;
 
@@ -765,12 +788,23 @@ $form-check-input-bg: $input-bg;
 $form-check-input-border-width: 1px;
 $form-check-input-border-radius: .25em;
 $form-check-radio-border-radius: 50%;
+
+@if $style-elevation == 'hard' {
+	$form-check-input-border-width: 2px;
+	$form-check-input-border-radius: 0;
+	$form-check-radio-border-radius: 0;
+}
 $form-check-input-focus-box-shadow: $input-btn-focus-box-shadow;
 $form-check-input-disabled-opacity: .5;
 
 $form-check-input-checked-color: var(--style-form-bg-color);
 $form-check-input-checked-bg-color: $component-active-bg;
 $form-check-input-checked-border-color: $form-check-input-checked-bg-color;
+
+@if $style-elevation == 'hard' {
+	$form-check-input-checked-color: var(--style-text-color);
+	$form-check-input-checked-border-color: var(--style-text-color);
+}
 
 $form-check-input-indeterminate-color: var(--style-form-bg-color);
 $form-check-input-indeterminate-bg-color: $component-active-bg;
@@ -914,6 +948,9 @@ $breadcrumb-border-radius: var(--style-component-border-radius);
 // Accordion
 $accordion-padding-y: 1rem;
 $accordion-padding-x: 0;
+@if $style-elevation == 'hard' {
+	$accordion-padding-x: 1.25rem;
+}
 $accordion-color: var(--style-text-color);
 $accordion-bg: transparent;
 $accordion-border-width: var(--#{$prefix}border-width);

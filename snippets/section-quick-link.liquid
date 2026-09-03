@@ -1,40 +1,145 @@
 {% comment %}
-	Renders a section quick link
+	Renders a section quick link / CTA button
 
 	Accepts:
-	- section: {String} (Required)
-    - style {String
-    - text {String}
-    - url {String}
-    - target {String}
-    - class {String}
+	- section: {Object}
+	- theme {String} primary | secondary | contrast | nil (Auto)
+	- variant {String} filled | outline | ghost | text | nil (Auto)
+	               Legacy aliases: style, primary|secondary|link|link-with-icon
+	- size {String} xs | sm | md | lg (default sm when omitted)
+	- color {String} Legacy alias for theme
+	- style {String} Legacy alias for variant
+	- outline {Boolean} Legacy only
+	- text {String}
+	- url {String}
+	- target {String}
+	- class {String}
+
+	Text / ghost behavior (underline, arrow) comes from theme settings:
+	- settings.btnTextUnderline / settings.btnTextIconAnimate
+	- settings.btnGhostIconAnimate
 
 	Usage:
-	Render this snippet inside of liquid capture and pass it to section snippet as sectionAction.
-
 	{% render 'section-quick-link', section: section %}
 {% endcomment %}
 
-{%- assign style = style | default: section.settings.sectionQuickLinkStyle -%}
-{%- assign text = text | default: section.settings.sectionQuickLinkResource.text -%}
+{%- if variant == nil -%}
+    {%- assign variant = style -%}
+{%- endif -%}
+{%- if theme == nil -%}
+    {%- assign theme = color -%}
+{%- endif -%}
+
+{%- assign variant = variant | default: section.settings.sectionQuickLinkVariant | default: section.settings.sectionQuickLinkStyle -%}
+{%- if theme == nil -%}
+    {%- assign theme = section.settings.sectionQuickLinkTheme | default: section.settings.sectionQuickLinkColor -%}
+{%- endif -%}
+{%- if size == nil -%}
+    {%- assign size = section.settings.sectionQuickLinkSize -%}
+{%- endif -%}
+{%- if outline == nil -%}
+    {%- assign outline = section.settings.sectionQuickLinkOutline -%}
+{%- endif -%}
+{%- assign text = text | default: section.settings.sectionQuickLinkResource.text | strip -%}
 {%- assign url = url | default: section.settings.sectionQuickLinkResource.url -%}
 {%- assign target = target | default: section.settings.sectionQuickLinkResource.target -%}
+{%- assign size = size | default: 'sm' -%}
 
-{%- if text | strip -%}
+{%- if text != blank -%}
 
-    {%- if style == 'nil' -%}
-        {%- assign style = settings.sectionQuickLinkStyle -%}
+    {%- if variant == 'nil' or variant == blank -%}
+        {%- assign variant = settings.sectionQuickLinkVariant | default: settings.sectionQuickLinkStyle | default: 'filled' -%}
+        {%- if theme == 'nil' or theme == blank -%}
+            {%- assign theme = settings.sectionQuickLinkTheme | default: settings.sectionQuickLinkColor | default: 'primary' -%}
+        {%- endif -%}
+        {%- if settings.sectionQuickLinkSize -%}
+            {%- assign size = settings.sectionQuickLinkSize -%}
+        {%- endif -%}
     {%- endif -%}
 
-     {%- case style -%}
-        {% when 'primary' %}
-            {%- assign classes = 'btn btn-primary btn-sm' -%}
-        {% when 'secondary' %}
-            {%- assign classes = 'btn btn-secondary btn-sm' -%}
-        {% when 'link' %}
-            {%- assign classes = 'text-reset text-underline-indicator fw-bold' -%}
-        {% when 'link-with-icon' %}
-            {%- assign classes = 'text-reset text-icon-with-underline-indicator fw-bold' -%}
+    {%- comment -%} Legacy value migration {%- endcomment -%}
+    {%- if variant == 'link-with-icon' -%}
+        {%- assign variant = 'text' -%}
+    {%- elsif variant == 'link' -%}
+        {%- assign variant = 'text' -%}
+    {%- elsif variant == 'primary' or variant == 'secondary' -%}
+        {%- assign theme = variant -%}
+        {%- if outline == true or outline == 'true' -%}
+            {%- assign variant = 'outline' -%}
+        {%- else -%}
+            {%- assign variant = 'filled' -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if theme == 'nil' or theme == blank -%}
+        {%- comment -%}
+          Auto: follow section color scheme via Contrast when a scheme is set;
+          otherwise use theme Buttons default (usually Primary).
+        {%- endcomment -%}
+        {%- assign scheme = section.settings.sectionColorScheme -%}
+        {%- if scheme and scheme != blank and scheme != 'false' and scheme != false -%}
+            {%- assign theme = 'contrast' -%}
+        {%- else -%}
+            {%- assign theme = settings.sectionQuickLinkTheme | default: settings.sectionQuickLinkColor | default: 'primary' -%}
+            {%- if theme == 'nil' or theme == blank -%}
+                {%- assign theme = 'primary' -%}
+            {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} Variant-specific behavior from theme Buttons → Text / Ghost pages {%- endcomment -%}
+    {%- assign underlineOn = false -%}
+    {%- assign iconAnimateOn = false -%}
+    {%- if variant == 'text' -%}
+        {%- if settings.btnTextUnderline == true or settings.btnTextUnderline == 'true' -%}
+            {%- assign underlineOn = true -%}
+        {%- endif -%}
+        {%- if settings.btnTextIconAnimate == true or settings.btnTextIconAnimate == 'true' -%}
+            {%- assign iconAnimateOn = true -%}
+        {%- endif -%}
+    {%- elsif variant == 'ghost' -%}
+        {%- if settings.btnGhostIconAnimate == true or settings.btnGhostIconAnimate == 'true' -%}
+            {%- assign iconAnimateOn = true -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- assign classes = '' -%}
+    {%- assign wrapIconContainer = false -%}
+
+    {%- assign sizeClass = '' -%}
+    {%- if size == 'lg' -%}
+        {%- assign sizeClass = ' btn-lg' -%}
+    {%- elsif size == 'md' -%}
+        {%- assign sizeClass = '' -%}
+    {%- elsif size == 'xs' -%}
+        {%- assign sizeClass = ' btn-xs' -%}
+    {%- else -%}
+        {%- assign sizeClass = ' btn-sm' -%}
+    {%- endif -%}
+
+    {%- case variant -%}
+        {% when 'filled' %}
+            {%- assign classes = 'btn btn-' | append: theme | append: sizeClass -%}
+        {% when 'outline' %}
+            {%- assign classes = 'btn btn-' | append: theme | append: ' btn-outline' | append: sizeClass -%}
+        {% when 'ghost' %}
+            {%- assign classes = 'btn btn-ghost btn-' | append: theme | append: sizeClass -%}
+            {%- if iconAnimateOn -%}
+                {%- assign classes = classes | append: ' btn-icon-animate' -%}
+            {%- endif -%}
+        {% when 'text' %}
+            {%- assign classes = 'btn-text fw-bold btn-text-' | append: theme -%}
+            {%- if underlineOn -%}
+                {%- if iconAnimateOn -%}
+                    {%- assign classes = classes | append: ' text-icon-with-underline-indicator' -%}
+                    {%- assign wrapIconContainer = true -%}
+                {%- else -%}
+                    {%- assign classes = classes | append: ' text-underline-indicator' -%}
+                {%- endif -%}
+            {%- elsif iconAnimateOn -%}
+                {%- assign classes = classes | append: ' btn-icon-animate' -%}
+                {%- assign wrapIconContainer = true -%}
+            {%- endif -%}
     {%- endcase -%}
 
     {%- if class -%}
@@ -42,34 +147,31 @@
     {%- endif -%}
 
     {%- capture content -%}
-
         {{- text -}}
-
-        {%- if style == 'link-with-icon' -%}
+        {%- if iconAnimateOn -%}
             {%- render 'icon', icon: 'arrow-right' -%}
         {%- endif -%}
-
     {%- endcapture -%}
 
-    {%- if style == 'link-with-icon' -%}
-        <div class="text-icon-with-underline-indicator-container">
+    {%- if wrapIconContainer -%}
+        {%- if underlineOn -%}
+            <div class="text-icon-with-underline-indicator-container">
+        {%- else -%}
+            <div class="btn-icon-animate-container">
+        {%- endif -%}
     {%- endif -%}
 
     {%- if url -%}
-
         <a href="{{ url | default: '#' }}" class="{{ classes }}" target="{{ target | default: '_self' }}">
             {{- content -}}
         </a>
-
     {%- else -%}
-
         <span class="{{ classes }}">
             {{- content -}}
         </span>
-
     {% endif %}
 
-    {%- if style == 'link-with-icon' -%}
+    {%- if wrapIconContainer -%}
         </div>
     {%- endif -%}
 

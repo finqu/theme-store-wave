@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     margin: 0;
+    margin-top: spacer('g');
     padding: 0;
 
     .pagination-item-container {
@@ -25,6 +26,43 @@
             padding: spacer(6);
             border-radius: var(--style-border-radius);
             @include font-size($font-size-base * 1.6);
+        }
+    }
+
+}
+
+@if $style-elevation == 'hard' {
+    .pagination {
+        gap: spacer(2);
+
+        .pagination-item-container {
+
+            .paginate-item-previous,
+            .paginate-item-next {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: spacer(2);
+                line-height: 1;
+                @include font-size($font-size-base);
+                @include elevation-slab($offset: $elevation-offset-pressed);
+                @include elevation-press-in;
+
+                .svg-icon {
+                    width: 1em;
+                    height: 1em;
+                }
+
+                &:focus-visible {
+                    @include elevation-focus;
+                }
+            }
+
+            .paginate-item-text {
+                font-family: $overlines-font-family;
+                font-weight: $font-weight-bold;
+                letter-spacing: .08em;
+            }
         }
     }
 }

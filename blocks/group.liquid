@@ -1,0 +1,604 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        container-type: inline-size;
+    }
+    #finqu-block-{{ block.id }} .block-grid {
+        display: grid;
+        {%- if block.settings.columns == '2' -%}
+            grid-template-columns: {{ block.settings.columnLeftWidth }}fr {{ block.settings.columnRightWidth }}fr;
+        {%- else -%}
+            grid-template-columns: repeat({{ block.settings.columns }}, 1fr);
+        {%- endif -%}
+        gap: {{ block.settings.gap }}rem;
+        align-items: {{ block.settings.verticalAlign }};
+    }
+    @container (max-width: 768px) {
+        #finqu-block-{{ block.id }} .block-grid {
+            grid-template-columns: repeat({{ block.settings.columnsMobile }}, 1fr);
+        }
+    }
+    {%- if block.settings.columns == '2' and block.settings.reverseOrder -%}
+        #finqu-block-{{ block.id }} .block-grid {
+            direction: rtl;
+        }
+        #finqu-block-{{ block.id }} .block-grid > * {
+            direction: ltr;
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    <div class="block-grid">
+
+        <div class="block-grid-col">
+            {% container 'column-1' %}
+        </div>
+
+        <div class="block-grid-col">
+            {% container 'column-2' %}
+        </div>
+
+        {%- if block.settings.columns >= '3' -%}
+            <div class="block-grid-col">
+                {% container 'column-3' %}
+            </div>
+        {%- endif -%}
+
+        {%- if block.settings.columns >= '4' -%}
+            <div class="block-grid-col">
+                {% container 'column-4' %}
+            </div>
+        {%- endif -%}
+
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.group.name",
+    "tag": "div",
+    "class": "block block-group",
+    "category": "layout",
+    "containers": [
+        {
+            "id": "column-1",
+            "title": "t:blocks.group.containers.column-1.title"
+        },
+        {
+            "id": "column-2",
+            "title": "t:blocks.group.containers.column-2.title"
+        },
+        {
+            "id": "column-3",
+            "title": "t:blocks.group.containers.column-3.title"
+        },
+        {
+            "id": "column-4",
+            "title": "t:blocks.group.containers.column-4.title"
+        }
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "columns",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.group.settings.columns.label",
+                                    "default": "2",
+                                    "options": [
+                                        {
+                                            "value": "2",
+                                            "label": "2"
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": "3"
+                                        },
+                                        {
+                                            "value": "4",
+                                            "label": "4"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "columnLeftWidth",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.group.settings.columnLeftWidth.label",
+                                    "default": "1",
+                                    "options": [
+                                        {
+                                            "value": "1",
+                                            "label": "1"
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": "2"
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": "3"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "columns eq 2"
+                                    ]
+                                },
+                                {
+                                    "id": "columnRightWidth",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.group.settings.columnRightWidth.label",
+                                    "default": "1",
+                                    "options": [
+                                        {
+                                            "value": "1",
+                                            "label": "1"
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": "2"
+                                        },
+                                        {
+                                            "value": "3",
+                                            "label": "3"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "columns eq 2"
+                                    ]
+                                },
+                                {
+                                    "id": "reverseOrder",
+                                    "type": "checkbox",
+                                    "label": "t:blocks.group.settings.reverseOrder.label",
+                                    "default": false,
+                                    "conditions": [
+                                        "columns eq 2"
+                                    ]
+                                },
+                                {
+                                    "id": "columnsMobile",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.group.settings.columnsMobile.label",
+                                    "default": "1",
+                                    "options": [
+                                        {
+                                            "value": "1",
+                                            "label": "1"
+                                        },
+                                        {
+                                            "value": "2",
+                                            "label": "2"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "gap",
+                                    "type": "range",
+                                    "label": "t:blocks.group.settings.gap.label",
+                                    "min": 0,
+                                    "max": 8,
+                                    "step": 0.5,
+                                    "default": "2",
+                                    "unit": "rem"
+                                },
+                                {
+                                    "id": "verticalAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.group.settings.verticalAlign.label",
+                                    "default": "stretch",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "t:blocks.group.settings.verticalAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:blocks.group.settings.verticalAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "stretch",
+                                            "label": "t:blocks.group.settings.verticalAlign.options.stretch.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    },
+    "presets": {
+        "default": [
+            {
+                "name": "t:blocks.group.presets.image-with-text.name",
+                "settings": {
+                    "columns": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "image",
+                        "container": "column-1"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Heading"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-2",
+                        "settings": {
+                            "richtext": "<p>Share your brand story, highlight a product, or welcome customers to your store.</p>"
+                        }
+                    },
+                    {
+                        "name": "button",
+                        "container": "column-2",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_learn_more",
+                                    "string_value": "Learn more"
+                                }
+                            },
+                            "btnVariant": "filled",
+                            "btnTheme": "primary"
+                        }
+                    }
+                ],
+                "id": "image-with-text"
+            },
+            {
+                "name": "t:blocks.group.presets.call-to-action.name",
+                "settings": {
+                    "columns": "2",
+                    "columnLeftWidth": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Ready to get started?"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Contact us today and let's discuss how we can help you.</p>"
+                        }
+                    },
+                    {
+                        "name": "contact-form",
+                        "container": "column-2"
+                    }
+                ],
+                "id": "call-to-action"
+            },
+            {
+                "name": "t:blocks.group.presets.newsletter-signup.name",
+                "settings": {
+                    "columns": "2",
+                    "columnLeftWidth": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Subscribe to our newsletter"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Be the first to know about new products, offers, and events.</p>"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "column-2"
+                    }
+                ],
+                "id": "newsletter-signup"
+            },
+            {
+                "name": "t:blocks.group.presets.features.name",
+                "settings": {
+                    "columns": "3",
+                    "verticalAlign": "start"
+                },
+                "blocks": [
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Feature 1",
+                            "richtext": "<p>Describe your feature or service here.</p>"
+                        }
+                    },
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Feature 2",
+                            "richtext": "<p>Describe your feature or service here.</p>"
+                        }
+                    },
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-3",
+                        "settings": {
+                            "title": "Feature 3",
+                            "richtext": "<p>Describe your feature or service here.</p>"
+                        }
+                    }
+                ],
+                "id": "features"
+            },
+            {
+                "name": "t:blocks.group.presets.content-columns.name",
+                "settings": {
+                    "columns": "3"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Column 1"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Add your content here.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Column 2"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-2",
+                        "settings": {
+                            "richtext": "<p>Add your content here.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-3",
+                        "settings": {
+                            "title": "Column 3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-3",
+                        "settings": {
+                            "richtext": "<p>Add your content here.</p>"
+                        }
+                    }
+                ],
+                "id": "content-columns"
+            }
+        ],
+        "fi": [
+            {
+                "name": "t:blocks.group.presets.image-with-text.name",
+                "settings": {
+                    "columns": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "image",
+                        "container": "column-1"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Otsikko"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-2",
+                        "settings": {
+                            "richtext": "<p>Jaa bränditarinasi, korosta tuotetta tai toivota asiakkaat tervetulleiksi kauppaasi.</p>"
+                        }
+                    },
+                    {
+                        "name": "button",
+                        "container": "column-2",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_learn_more",
+                                    "string_value": "Learn more"
+                                }
+                            },
+                            "btnVariant": "filled",
+                            "btnTheme": "primary"
+                        }
+                    }
+                ],
+                "id": "image-with-text"
+            },
+            {
+                "name": "t:blocks.group.presets.call-to-action.name",
+                "settings": {
+                    "columns": "2",
+                    "columnLeftWidth": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Valmis aloittamaan?"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Ota yhteyttä tänään, niin keskustellaan miten voimme auttaa.</p>"
+                        }
+                    },
+                    {
+                        "name": "contact-form",
+                        "container": "column-2"
+                    }
+                ],
+                "id": "call-to-action"
+            },
+            {
+                "name": "t:blocks.group.presets.newsletter-signup.name",
+                "settings": {
+                    "columns": "2",
+                    "columnLeftWidth": "2",
+                    "verticalAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Tilaa uutiskirjeemme"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Kuule ensimmäisenä uusista tuotteista, tarjouksista ja tapahtumista.</p>"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "column-2"
+                    }
+                ],
+                "id": "newsletter-signup"
+            },
+            {
+                "name": "t:blocks.group.presets.features.name",
+                "settings": {
+                    "columns": "3",
+                    "verticalAlign": "start"
+                },
+                "blocks": [
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Ominaisuus 1",
+                            "richtext": "<p>Kuvaile ominaisuutesi tai palvelusi tähän.</p>"
+                        }
+                    },
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Ominaisuus 2",
+                            "richtext": "<p>Kuvaile ominaisuutesi tai palvelusi tähän.</p>"
+                        }
+                    },
+                    {
+                        "name": "icon-with-text",
+                        "container": "column-3",
+                        "settings": {
+                            "title": "Ominaisuus 3",
+                            "richtext": "<p>Kuvaile ominaisuutesi tai palvelusi tähän.</p>"
+                        }
+                    }
+                ],
+                "id": "features"
+            },
+            {
+                "name": "t:blocks.group.presets.content-columns.name",
+                "settings": {
+                    "columns": "3"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "column-1",
+                        "settings": {
+                            "title": "Sarake 1"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-1",
+                        "settings": {
+                            "richtext": "<p>Lisää sisältösi tähän.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-2",
+                        "settings": {
+                            "title": "Sarake 2"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-2",
+                        "settings": {
+                            "richtext": "<p>Lisää sisältösi tähän.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "column-3",
+                        "settings": {
+                            "title": "Sarake 3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "column-3",
+                        "settings": {
+                            "richtext": "<p>Lisää sisältösi tähän.</p>"
+                        }
+                    }
+                ],
+                "id": "content-columns"
+            }
+        ]
+    }
+}
+{% endschema %}

@@ -1,0 +1,293 @@
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+{%- endcapture -%}
+
+{%- if block.settings.contentAlign == 'nil' -%}
+    {%- assign textAlign = 'var(--section-text-align-keyword, start)' -%}
+{%- else -%}
+    {%- assign textAlign = block.settings.contentAlign -%}
+{%- endif -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    {%- if block.settings.orientation == 'vertical' -%}
+
+        <div class="d-flex flex-column">
+
+            {% if block.settings.iconFormat == 'svg' %}
+
+                {% if block.settings.svgContent %}
+
+                    <div class="text-{{ textAlign }}">
+                        {{- block.settings.svgContent | replace: '<svg ', '<svg class="svg-icon svg-icon-3x" ' -}}
+                    </div>
+
+                {% else %}
+
+                    <div class="aspect-ratio-1-1 align-self-{{ textAlign }}">
+
+                        <div class="aspect-ratio-container max-w-px-40">
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ block.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            {% else %}
+
+                <div class="aspect-ratio-1-1 align-self-{{ textAlign }}">
+
+                    <div class="aspect-ratio-container max-w-px-40">
+
+                        {% if block.settings.img %}
+
+                            <img
+                                alt="{{ block.settings.img.alt }}"
+                                data-src="{{ block.settings.img | thumb: '40,40' }}"
+                                data-srcset="{{ block.settings.img | thumb: '40,40' }} 1x,{{ block.settings.img | thumb: '40,40' | thumb:'@2x' }} 2x"
+                                class="lazy aspect-ratio-item"{% if block.settings.img.offset_left or block.settings.img.offset_top %} style="--object-position: {{ block.settings.img.offset_left }}% {{ block.settings.img.offset_top }}%"{% endif %}>
+
+                        {% else %}
+
+                            {%- capture imgSrc -%}
+                                {% render 'placeholder-svg', type: 'image', base64: true %}
+                            {%- endcapture -%}
+
+                            <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ block.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            <div class="d-grid gap-2 mt-g text-{{ textAlign }}">
+
+                {% if block.settings.title %}
+
+                    <span class="text-title d-block fw-medium">
+                        {{ block.settings.title }}
+                    </span>
+
+                {% endif %}
+
+                {{ block.settings.richtext }}
+
+            </div>
+
+        </div>
+
+    {%- else -%}
+
+        <div class="d-flex justify-content-{{ textAlign }}">
+
+            <div class="me-g">
+
+                {% if block.settings.iconFormat == 'svg' %}
+
+                    {% if block.settings.svgContent %}
+
+                        {{- block.settings.svgContent | replace: '<svg ', '<svg class="svg-icon svg-icon-3x" ' -}}
+
+                    {% else %}
+
+                        <div class="aspect-ratio-1-1">
+
+                            <div class="aspect-ratio-container max-w-px-40">
+
+                                {%- capture imgSrc -%}
+                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                {%- endcapture -%}
+
+                                <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ block.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <div class="aspect-ratio-1-1">
+
+                        <div class="aspect-ratio-container max-w-px-40">
+
+                            {% if block.settings.img %}
+
+                                <img
+                                    alt="{{ block.settings.img.alt }}"
+                                    data-src="{{ block.settings.img | thumb: '40,40' }}"
+                                    data-srcset="{{ block.settings.img | thumb: '40,40' }} 1x,{{ block.settings.img | thumb: '40,40' | thumb:'@2x' }} 2x"
+                                    class="lazy aspect-ratio-item"{% if block.settings.img.offset_left or block.settings.img.offset_top %} style="--object-position: {{ block.settings.img.offset_left }}% {{ block.settings.img.offset_top }}%"{% endif %}>
+
+                            {% else %}
+
+                                {%- capture imgSrc -%}
+                                    {% render 'placeholder-svg', type: 'image', base64: true %}
+                                {%- endcapture -%}
+
+                                <img class="lazy lazy-disable-transition aspect-ratio-item svg-placeholder" alt="{{ block.settings.title }}" data-src="{{ imgSrc | strip }}">
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="d-grid gap-2">
+
+                {% if block.settings.title %}
+
+                    <span class="text-title d-block fw-medium">
+                        {{ block.settings.title }}
+                    </span>
+
+                {% endif %}
+
+                {{ block.settings.richtext }}
+
+            </div>
+
+        </div>
+
+    {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.icon-with-text.name",
+    "tag": "div",
+    "class": "block block-icon-with-text",
+    "category": "layout",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "iconFormat",
+                        "type": "radio-pill",
+                        "label": "t:blocks.icon-with-text.settings.iconFormat.label",
+                        "default": "svg",
+                        "options": [
+                            {
+                                "value": "svg",
+                                "label": "t:blocks.icon-with-text.settings.iconFormat.options.svg.label"
+                            },
+                            {
+                                "value": "img",
+                                "label": "t:blocks.icon-with-text.settings.iconFormat.options.img.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "svgContent",
+                        "type": "textarea",
+                        "label": "t:blocks.icon-with-text.settings.svgContent.label",
+                        "info": "t:blocks.icon-with-text.settings.svgContent.info",
+                        "conditions": [
+                            "iconFormat eq svg"
+                        ]
+                    },
+                    {
+                        "id": "img",
+                        "type": "image-picker",
+                        "label": "t:blocks.icon-with-text.settings.img.label",
+                        "conditions": [
+                            "iconFormat eq img"
+                        ]
+                    },
+                    {
+                        "id": "title",
+                        "type": "text",
+                        "label": "t:blocks.icon-with-text.settings.title.label"
+                    },
+                    {
+                        "id": "richtext",
+                        "type": "richtext",
+                        "label": "t:blocks.icon-with-text.settings.richtext.label",
+                        "size": "sm"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "orientation",
+                                    "type": "radio-pill",
+                                    "label": "t:blocks.icon-with-text.settings.orientation.label",
+                                    "default": "vertical",
+                                    "options": [
+                                        {
+                                            "value": "vertical",
+                                            "label": "t:blocks.icon-with-text.settings.orientation.options.vertical.label"
+                                        },
+                                        {
+                                            "value": "horizontal",
+                                            "label": "t:blocks.icon-with-text.settings.orientation.options.horizontal.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "contentAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.contentAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.contentAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.contentAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.contentAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.contentAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    }
+}
+{% endschema %}

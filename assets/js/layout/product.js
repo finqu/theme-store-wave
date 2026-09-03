@@ -8,19 +8,150 @@ import 'swiper/css/manipulation';
 
 export default function() {
     
-    const containerEl = document.querySelector('.section-product');
-    const dynamicPartialSelectors = [...containerEl.querySelectorAll('[data-dynamic-partial]')].map(el => '[data-dynamic-partial="'+el.dataset.dynamicPartial+'"]').join(', ');
+    let containerEl = document.querySelector('.section-product');
+
+    if (!containerEl) {
+        return;
+    }
+
+    let dynamicPartialSelectors = [...containerEl.querySelectorAll('[data-dynamic-partial]')].map(el => '[data-dynamic-partial="'+el.dataset.dynamicPartial+'"]').join(', ');
     let productThumbMediaSwiper = null;
     let productMainMediaSwiper = null;
+    let productThumbResizeHandler = null;
 
     const thumbHoverHandler = index => {
         productMainMediaSwiper?.slideTo(index, 0, true);
+    };
+
+    const refreshDynamicPartialSelectors = () => {
+        dynamicPartialSelectors = [...containerEl.querySelectorAll('[data-dynamic-partial]')].map(el => '[data-dynamic-partial="'+el.dataset.dynamicPartial+'"]').join(', ');
+    };
+
+    const destroyProductMedia = () => {
+
+        if (productThumbResizeHandler) {
+            window.removeEventListener('resize', productThumbResizeHandler);
+            productThumbResizeHandler = null;
+        }
+
+        if (productThumbMediaSwiper) {
+            try {
+                // Keep host classes like `swiper-vertical` — cleanStyles strips them and
+                // the next init would treat thumbs as a horizontal 5-up slider.
+                productThumbMediaSwiper.destroy(true, false);
+            } catch (e) {
+                // Element may already be gone after an editor block/section replace.
+            }
+            productThumbMediaSwiper = null;
+        }
+
+        if (productMainMediaSwiper) {
+            try {
+                productMainMediaSwiper.destroy(true, false);
+            } catch (e) {
+                // Element may already be gone after an editor block/section replace.
+            }
+            productMainMediaSwiper = null;
+        }
+    };
+
+    const loadProductMediaImages = () => {
+
+        if (!containerEl) {
+            return;
+        }
+
+        containerEl.querySelectorAll('#product-main-media-swiper img.lazy, #product-thumb-media-swiper img.lazy, [data-dynamic-partial="media"] img.lazy').forEach((el) => {
+            theme.lazyLoad.resetStatus(el);
+            theme.lazyLoad.load(el);
+        });
+
+        theme.lazyLoad.call('loadAll');
+    };
+
+    const waitForImages = (rootEl) => {
+
+        const imageEls = [...(rootEl?.querySelectorAll('img') || [])];
+
+        if (!imageEls.length) {
+            return Promise.resolve();
+        }
+
+        return Promise.all(imageEls.map((imgEl) => {
+
+            if (imgEl.complete && imgEl.naturalWidth > 0) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                const done = () => resolve();
+                imgEl.addEventListener('load', done, { once: true });
+                imgEl.addEventListener('error', done, { once: true });
+                // Editor/lazyload edge cases: don't block remount forever.
+                setTimeout(done, 400);
+            });
+        }));
+    };
+
+    // Vertical thumbs use slidesPerView: 'auto'. After a theme-editor HTML swap,
+    // Swiper often measures slides before aspect-ratio width settles and locks in
+    // tiny sizes. Size slides from the product aspect-ratio token instead.
+    const applyVerticalThumbSlideSizes = (thumbEl) => {
+
+        if (!thumbEl) {
+            return;
+        }
+
+        const mediaEl = thumbEl.closest('.product-media') || thumbEl;
+        const raw = getComputedStyle(mediaEl).getPropertyValue('--product-image-aspect-ratio').trim();
+        let heightFromWidth = 13 / 9;
+
+        if (raw.includes('/')) {
+            const [widthPart, heightPart] = raw.split('/').map((part) => parseFloat(part.trim()));
+
+            if (widthPart > 0 && heightPart > 0) {
+                heightFromWidth = heightPart / widthPart;
+            }
+        } else {
+            const numeric = parseFloat(raw);
+
+            // CSS aspect-ratio as a single number is width/height.
+            if (numeric > 0) {
+                heightFromWidth = 1 / numeric;
+            }
+        }
+
+        const slideWidth = thumbEl.clientWidth || parseFloat(getComputedStyle(thumbEl).width) || 130;
+        const slideHeight = Math.max(1, Math.round(slideWidth * heightFromWidth));
+
+        thumbEl.querySelectorAll('.swiper-slide').forEach((slideEl) => {
+            slideEl.style.width = '100%';
+            slideEl.style.height = slideHeight + 'px';
+        });
+    };
+
+    const refreshVerticalThumbSwiper = () => {
+
+        const thumbEl = containerEl?.querySelector('#product-thumb-media-swiper');
+
+        if (!thumbEl || thumbEl.dataset.direction !== 'vertical' || !productThumbMediaSwiper) {
+            return;
+        }
+
+        applyVerticalThumbSlideSizes(thumbEl);
+        productThumbMediaSwiper.updateSize();
+        productThumbMediaSwiper.updateSlides();
+        productThumbMediaSwiper.update();
     };
 
     const initProductMedia = () => {
 
         const productThumbMediaSwiperEl = containerEl.querySelector('#product-thumb-media-swiper');
         let productMainMediaSwiperEl = containerEl.querySelector('#product-main-media-swiper');
+
+        if (!productMainMediaSwiperEl) {
+            return;
+        }
 
         const productMainMediaSwiperOpts = {
             modules: [
@@ -51,6 +182,20 @@ export default function() {
             const baseSize = parseFloat(theme.utils.getCssVariable('font-size'), 10);
             const gutterWidth = parseFloat(theme.utils.getCssVariable('--style-grid-gutter-width'), 10);
 
+            // Prefer data-direction: Swiper destroy(cleanStyles) can remove `swiper-vertical`.
+            // Hard-elevation below-strip thumbs must win over a leftover vertical class.
+            const directionAttr = productThumbMediaSwiperEl.dataset.direction;
+            const isBelowThumbs = productThumbMediaSwiperEl.classList.contains('product-thumb-media-swiper-below')
+                || directionAttr === 'horizontal';
+            const isVerticalThumbs = !isBelowThumbs && (
+                directionAttr === 'vertical'
+                || productThumbMediaSwiperEl.classList.contains('swiper-vertical')
+            );
+
+            if (isVerticalThumbs) {
+                productThumbMediaSwiperEl.classList.add('swiper-vertical');
+            }
+
             const productThumbMediaSwiperOpts = {
                 modules: [
                     Navigation,
@@ -59,11 +204,14 @@ export default function() {
                     Mousewheel,
                     Manipulation
                 ],
-                direction: productThumbMediaSwiperEl.classList.contains('swiper-vertical') ? 'vertical' : 'horizontal',
+                direction: isVerticalThumbs ? 'vertical' : 'horizontal',
                 spaceBetween: Math.round(baseSize * gutterWidth),
-                slidesPerView: productThumbMediaSwiperEl.classList.contains('swiper-vertical') ? 'auto' : 5,
-                slidesPerGroup: productThumbMediaSwiperEl.classList.contains('swiper-vertical') ? 1 : 5,
-                slidesPerGroupAuto: productThumbMediaSwiperEl.classList.contains('swiper-vertical') ? true : false, 
+                slidesPerView: isVerticalThumbs || isBelowThumbs ? 'auto' : 5,
+                slidesPerGroup: isVerticalThumbs || isBelowThumbs ? 1 : 5,
+                slidesPerGroupAuto: isVerticalThumbs || isBelowThumbs,
+                observer: true,
+                observeParents: true,
+                resizeObserver: true,
                 freeMode: {
                     enabled: true,
                     minimumVelocity: 0.2,
@@ -79,8 +227,18 @@ export default function() {
                 }
             };
 
-            if (productThumbMediaSwiperOpts.direction === 'vertical') {
-                productThumbMediaSwiperEl.style.height = productMainMediaSwiperEl.getBoundingClientRect().height+'px';
+            if (isVerticalThumbs) {
+                // Width comes from CSS (w-px-80 / w-px-130). Clear any bad inline
+                // width left from earlier re-inits, then size height from the main gallery.
+                productThumbMediaSwiperEl.style.removeProperty('width');
+
+                const mainHeight = productMainMediaSwiperEl.getBoundingClientRect().height;
+
+                if (mainHeight > 50) {
+                    productThumbMediaSwiperEl.style.height = mainHeight + 'px';
+                }
+
+                applyVerticalThumbSlideSizes(productThumbMediaSwiperEl);
             }
 
             productThumbMediaSwiper = new Swiper(productThumbMediaSwiperEl, productThumbMediaSwiperOpts);
@@ -93,26 +251,64 @@ export default function() {
                 el.addEventListener('mouseover', thumbHoverHandler.bind(null, index));
             });
 
-            window.addEventListener('resize', theme.utils.debounce(() => {
+            if (productThumbResizeHandler) {
+                window.removeEventListener('resize', productThumbResizeHandler);
+            }
+
+            productThumbResizeHandler = theme.utils.debounce(() => {
 
                 productMainMediaSwiperEl = containerEl.querySelector('#product-main-media-swiper');
 
-                if (productThumbMediaSwiperOpts.direction === 'vertical') {
-                    productThumbMediaSwiperEl.style.height = productMainMediaSwiperEl.getBoundingClientRect().height+'px';
+                if (!productMainMediaSwiperEl || !productThumbMediaSwiperEl.isConnected) {
+                    return;
                 }
 
-            }, 150));
+                if (isVerticalThumbs) {
+                    const mainHeight = productMainMediaSwiperEl.getBoundingClientRect().height;
+
+                    if (mainHeight > 50) {
+                        productThumbMediaSwiperEl.style.height = mainHeight + 'px';
+                    }
+
+                    refreshVerticalThumbSwiper();
+                }
+
+            }, 150);
+
+            window.addEventListener('resize', productThumbResizeHandler);
         }
 
         productMainMediaSwiper = new Swiper(productMainMediaSwiperEl, productMainMediaSwiperOpts);
 
-        const productImageEls = productMainMediaSwiperEl.querySelectorAll('.lazy');
+        if (productThumbMediaSwiper && productThumbMediaSwiperEl?.dataset.direction === 'vertical') {
+            // Main gallery size can settle after its own init / lazy images.
+            requestAnimationFrame(() => {
+                const mainHeight = productMainMediaSwiperEl.getBoundingClientRect().height;
+
+                if (mainHeight > 50) {
+                    productThumbMediaSwiperEl.style.height = mainHeight + 'px';
+                }
+
+                refreshVerticalThumbSwiper();
+            });
+        }
+
+        const productImageEls = [
+            ...productMainMediaSwiperEl.querySelectorAll('.lazy'),
+            ...(productThumbMediaSwiperEl?.querySelectorAll('.lazy') || [])
+        ];
 
         // Preload product images so those are available when customer clicks thumb
         if (productImageEls.length) {
 
             productImageEls.forEach(el => {
                 theme.lazyLoad.load(el);
+            });
+        }
+
+        if (productThumbMediaSwiperEl?.dataset.direction === 'vertical') {
+            waitForImages(productThumbMediaSwiperEl).then(() => {
+                refreshVerticalThumbSwiper();
             });
         }
     };
@@ -553,6 +749,7 @@ export default function() {
                                 partialEl.replaceWith(newPartialEl);
 
                                 if (partialName === 'media') {
+                                    destroyProductMedia();
                                     initProductMedia();
                                     theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
                                 }
@@ -565,13 +762,24 @@ export default function() {
                         
                     } else {
 
+                        const infoPartialEl = containerEl.querySelector('[data-dynamic-partial="info"]');
+                        const infoAdditionalPartialEl = containerEl.querySelector('[data-dynamic-partial="info-additional"]');
                         const mediaPartialEl = containerEl.querySelector('[data-dynamic-partial="media"]');
                         const productMediaCollageItemsEl = containerEl.querySelector('#product-media-collage .product-media-collage-items');
                         const newInfoPartialEl = dom.querySelector('[data-dynamic-partial="info"]');
+                        const newInfoAdditionalPartialEl = dom.querySelector('[data-dynamic-partial="info-additional"]');
                         const newMediaPartialEl = dom.querySelector('[data-dynamic-partial="media"]');
 
-                        if (newInfoPartialEl) {
-                            containerEl.querySelector('[data-dynamic-partial="info"]').replaceWith(newInfoPartialEl);
+                        if (infoPartialEl && newInfoPartialEl) {
+                            infoPartialEl.replaceWith(newInfoPartialEl);
+                        }
+
+                        if (infoAdditionalPartialEl) {
+                            if (newInfoAdditionalPartialEl) {
+                                infoAdditionalPartialEl.replaceWith(newInfoAdditionalPartialEl);
+                            } else {
+                                infoAdditionalPartialEl.innerHTML = '';
+                            }
                         }
 
                         if (newMediaPartialEl) {
@@ -824,6 +1032,7 @@ export default function() {
                             partialEl.innerHTML = newPartialEl.innerHTML;
 
                             if (partialName === 'media') {
+                                destroyProductMedia();
                                 initProductMedia();
                                 theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
                             }
@@ -903,27 +1112,99 @@ export default function() {
         });
     };
 
-    if (containerEl.querySelector('.product-media-container')) {
-        initProductMedia();
-    }
+    const bindProductSection = () => {
 
-    if (containerEl.querySelector('.product-reviews')) {
-        initProductReviews();
-    }
+        if (!containerEl) {
+            return;
+        }
 
-    if (containerEl.querySelector('.product-customizations')) {
-        initProductCustomizations();
-    }
+        refreshDynamicPartialSelectors();
 
-    if (containerEl.querySelectorAll('.product-quantity, .product-inline-quantity').length) {
-        initProductQuantity();
-    }
+        if (containerEl.querySelector('.product-media-container, #product-main-media-swiper')) {
+            initProductMedia();
+            theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
+            loadProductMediaImages();
+        }
 
-    if (containerEl.querySelector('.product-variants:not(.product-card-grid-item .product-variants)')) {
-        initProductVariants();
-    }
+        if (containerEl.querySelector('.product-reviews')) {
+            initProductReviews();
+        }
 
-    if (containerEl.querySelector('.product-combined')) {
-        initProductCombined();
-    }
+        if (containerEl.querySelector('.product-customizations')) {
+            initProductCustomizations();
+        }
+
+        if (containerEl.querySelectorAll('.product-quantity, .product-inline-quantity').length) {
+            initProductQuantity();
+        }
+
+        if (containerEl.querySelector('.product-variants:not(.product-card-grid-item .product-variants)')) {
+            initProductVariants();
+        }
+
+        if (containerEl.querySelector('.product-combined')) {
+            initProductCombined();
+        }
+    };
+
+    bindProductSection();
+
+    // Theme editor replaces the media block HTML on setting changes without
+    // re-running this layout module — rebind swipers to the new markup.
+    document.addEventListener('finqu:block:load', (e) => {
+
+        const blockEl = e.target;
+
+        if (!blockEl || !containerEl?.contains(blockEl)) {
+            return;
+        }
+
+        if (!blockEl.querySelector('#product-main-media-swiper, [data-dynamic-partial="media"]')) {
+            return;
+        }
+
+        destroyProductMedia();
+
+        // Load images first, then init Swiper so vertical slidesPerView:auto
+        // does not lock in empty/collapsed slide measurements.
+        requestAnimationFrame(() => {
+            loadProductMediaImages();
+
+            waitForImages(blockEl).finally(() => {
+                requestAnimationFrame(() => {
+                    initProductMedia();
+                    theme.utils.initComponent('gallery', containerEl.querySelectorAll('.gallery'));
+                    refreshVerticalThumbSwiper();
+                });
+            });
+        });
+    });
+
+    // Full section setting changes replace `.section-product`. Swipers stay
+    // `visibility: hidden` until re-initialized on the new DOM.
+    document.addEventListener('finqu:section:unload', (e) => {
+
+        if (!e.target?.classList?.contains('section-product')) {
+            return;
+        }
+
+        destroyProductMedia();
+    });
+
+    document.addEventListener('finqu:section:load', (e) => {
+
+        if (!e.target?.classList?.contains('section-product')) {
+            return;
+        }
+
+        containerEl = e.target;
+        destroyProductMedia();
+
+        requestAnimationFrame(() => {
+            bindProductSection();
+            waitForImages(containerEl.querySelector('#product-thumb-media-swiper')).finally(() => {
+                refreshVerticalThumbSwiper();
+            });
+        });
+    });
 }

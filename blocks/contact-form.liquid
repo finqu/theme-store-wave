@@ -1,0 +1,180 @@
+<div class="block-inner">
+
+    {% form 'contact' %}
+
+        {% if form.posted_successfully? %}
+
+            <script type="application/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.dispatchEvent(new CustomEvent('theme:contact:sendEmail'));
+                });
+            </script>
+
+        {% endif %}
+
+        <div class="row">
+
+            <div class="col-12 col-md mb-4">
+
+                <div class="form-floating">
+
+                    <input
+                        type="text"
+                        id="{{ block.id }}-contact-name"
+                        class="form-control"
+                        name="name"
+                        placeholder="{{ 'contact.name' | t }}"
+                        value="{{ form.submitted.name | escape }}"
+                        required>
+
+                    <label for="{{ block.id }}-contact-name">
+                        {{- 'contact.name' | t -}}
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md mb-4">
+
+                <div class="form-floating">
+
+                    <input
+                        type="email"
+                        id="{{ block.id }}-contact-email"
+                        class="form-control"
+                        name="email"
+                        placeholder="{{ 'contact.email' | t }}"
+                        value="{{ form.submitted.email | escape }}"
+                        required>
+
+                    <label for="{{ block.id }}-contact-email">
+                        {{- 'contact.email' | t -}}
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% if block.settings.showPhonenumber or block.settings.showSubject %}
+
+            <div class="row">
+
+                {% if block.settings.showPhonenumber %}
+
+                    <div class="col-12 col-md mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="text"
+                                id="{{ block.id }}-contact-phonenumber"
+                                class="form-control"
+                                name="phonenumber"
+                                placeholder="{{ 'contact.phone' | t }}"
+                                value="{{ form.submitted.phonenumber | escape }}">
+
+                            <label for="{{ block.id }}-contact-phonenumber">
+                                {{- 'contact.phone' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+                {% if block.settings.showSubject %}
+
+                    <div class="col-12 col-md mb-4">
+
+                        <div class="form-floating">
+
+                            <input
+                                type="text"
+                                id="{{ block.id }}-contact-subject"
+                                class="form-control"
+                                name="subject"
+                                placeholder="{{ 'contact.subject' | t }}"
+                                value="{{ form.submitted.subject | escape }}">
+
+                            <label for="{{ block.id }}-contact-subject">
+                                {{- 'contact.subject' | t -}}
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+        <div class="form-floating mb-4">
+
+            <textarea
+                id="{{ block.id }}-contact-message"
+                name="message"
+                class="form-control"
+                placeholder="{{ 'contact.message' | t }}"
+                required>{{ form.submitted.message | escape }}</textarea>
+
+            <label for="{{ block.id }}-contact-message">
+                {{- 'contact.message' | t -}}
+            </label>
+
+        </div>
+
+        {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+        <button type="submit" class="btn btn-primary d-block w-100">
+            {{- 'contact.cta' | t -}}
+        </button>
+
+        {% if form.posted_successfully? %}
+
+            <span class="d-block fw-bold text-center mt-4">
+                {{- 'contact.success' | t -}}
+            </span>
+
+        {% endif %}
+
+    {% endform %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.contact-form.name",
+    "tag": "div",
+    "class": "block block-contact-form",
+    "category": "commerce",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "showPhonenumber",
+                        "type": "checkbox",
+                        "label": "t:blocks.contact-form.settings.showPhonenumber.label",
+                        "default": false
+                    },
+                    {
+                        "id": "showSubject",
+                        "type": "checkbox",
+                        "label": "t:blocks.contact-form.settings.showSubject.label",
+                        "default": false
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

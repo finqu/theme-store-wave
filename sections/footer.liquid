@@ -1,129 +1,28 @@
-{%- assign footerBgColorBrightness = settings.style_footer_bg_color | color_brightness -%}
-{%- assign footerContentColorBrightness = settings.style_footer_text_color | color_brightness -%}
-{%- assign accentColor = settings.style_footer_accent_color | color_min_contrast: settings.style_footer_bg_color, 2 -%}
-{%- assign footerAccentColorBrightness = accentColor | color_brightness -%}
+{%- assign footerGap = section.settings.footerGap -%}
+{%- if footerGap == blank -%}
+    {%- assign footerGap = settings.sectionInnerGap -%}
+{%- endif -%}
+
+{%- assign sectionClasses = '' -%}
+{%- if section.settings.footerTopBorder -%}
+    {%- assign sectionClasses = 'footer-has-top-border' -%}
+    {%- if section.settings.footerTopBorderFluid -%}
+        {%- assign sectionClasses = sectionClasses | append: ' footer-top-border-fluid' -%}
+    {%- endif -%}
+{%- endif -%}
+{%- if section.settings.footerLayout == '4' -%}
+    {%- assign sectionClasses = sectionClasses | append: ' footer-layout-4' -%}
+{%- endif -%}
 
 {%- capture sectionStyle -%}
     #finqu-section-{{ section.id }} {
-        --site-footer-gap: {{ section.settings.footerGap }};
-        --site-footer-padding-top: {{ section.settings.footerPaddingTop }};
-        --site-footer-padding-bottom: {{ section.settings.footerPaddingBottom }};
-        --style-bg-color: {{ settings.style_footer_bg_color }};
-        --style-text-color: {{ settings.style_footer_text_color }};
-        --style-link-color: {{ settings.style_footer_text_color }};
-        --style-icon-color: {{ settings.style_footer_text_color }};
-        --style-form-placeholder-color: {{ settings.style_footer_text_color }};
-        --style-form-text-color: {{ settings.style_footer_text_color }};
-        --style-form-border-color: {{ settings.style_footer_text_color }};
-        --style-form-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
-        --style-form-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
-        --style-form-border-disabled-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 10 }};
-        --style-border-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 15 }};
-        --style-border-focus-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 20 }};
-        --style-border-accent-color: {{ settings.style_footer_text_color | color_mix: settings.style_footer_bg_color, 50 }};
-        --style-btn-bg-color: {{ accentColor }};
-        --style-btn-border-color: {{ accentColor }};
-        --style-accent-color: {{ accentColor }};
-
-        {%- if footerAccentColorBrightness > 190 -%}
-            --style-btn-text-color: {{ '#000000' | color_min_contrast: accentColor }};
-            --style-accent-text-color: {{ '#000000' | color_min_contrast: accentColor }};
-        {%- else -%}
-            --style-btn-text-color: {{ '#ffffff' | color_min_contrast: accentColor }};
-            --style-accent-text-color: {{ '#ffffff' | color_min_contrast: accentColor }};
-        {%- endif -%}
-
-        {%- if footerContentColorBrightness > 190 -%}
-            --style-btn-bg-active-color: {{ accentColor | color_darken: 10 }};
-            --style-btn-bg-hover-color: {{ accentColor | color_darken: 8 }};
-            --style-btn-border-hover-color: {{ accentColor | color_darken: 8 }};
-            --style-btn-border-active-color: {{ accentColor | color_darken: 13 }};
-        {%- else -%}
-            --style-btn-bg-active-color: {{ accentColor | color_lighten: 10 }};
-            --style-btn-bg-hover-color: {{ accentColor | color_lighten: 8 }};
-            --style-btn-border-hover-color: {{ accentColor | color_lighten: 8 }};
-            --style-btn-border-active-color: {{ accentColor | color_lighten: 13 }};
-        {%- endif -%}
-
-        {%- if footerBgColorBrightness > 190 -%}
-            --style-heading-color: {{ settings.style_footer_text_color | color_darken: 10 }};
-            --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_darken: 5 }};
-            --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_darken: 10 }};
-
-            {%- if settings.styleInputBorder -%}
-                --style-form-bg-color: {{ settings.style_footer_bg_color }};
-            {%- else -%}
-                --style-form-bg-color: {{ settings.style_footer_bg_color | color_darken: 5 }};
-            {%- endif -%}
-
-        {%- else -%}
-
-            --style-heading-color: {{ settings.style_footer_text_color | color_lighten: 10 }};
-            --style-form-bg-hover-color: {{ settings.style_footer_bg_color | color_lighten: 5 }};
-            --style-form-bg-disabled-color: {{ settings.style_footer_bg_color | color_lighten: 10 }};
-
-            {%- if settings.styleInputBorder -%}
-                --style-form-bg-color: {{ settings.style_footer_bg_color }};
-            {%- else -%}
-                --style-form-bg-color: {{ settings.style_footer_bg_color | color_lighten: 5 }};
-            {%- endif -%}
-        {%- endif -%}
-
-        --bs-body-bg: {{ settings.style_footer_bg_color }};
-        --bs-body-bg-rgb: {{ settings.style_footer_bg_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-        --bs-body-color: {{ settings.style_footer_text_color }};
-        --bs-body-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-
-        --bs-secondary-bg: {{ settings.style_footer_bg_color | color_darken: 30 }};
-        --bs-secondary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 30 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-        --bs-secondary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.75 }};
-        --bs-secondary-color-rgb: {{ settings.style_footer_text_color | color_desaturate: 25 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-
-        --bs-tertiary-bg: {{ settings.style_footer_bg_color | color_darken: 10 }};
-        --bs-tertiary-bg-rgb: {{ settings.style_footer_bg_color | color_darken: 10 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-        --bs-tertiary-color: {{ settings.style_footer_text_color | color_modify: 'alpha', 0.5 }};
-        --bs-tertiary-color-rgb: {{ settings.style_footer_text_color | color_desaturate: 50 | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-
-        --bs-emphasis-color: {{ accentColor }};
-        --bs-emphasis-color-rgb: {{ accentColor | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-
-        --bs-link-color: {{ settings.style_footer_text_color }};
-        --bs-link-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-        --bs-link-hover-color: {{ settings.style_footer_text_color }};
-        --bs-link-hover-color-rgb: {{ settings.style_footer_text_color | color_to_rgb | color_extract: 'rgb' | join: ', ' }};
-
-        --bs-border-color: var(--style-border-color);
-        --bs-heading-color: var(--style-heading-color);
+        --site-footer-gap: {{ footerGap }};
     }
-    {%- if section.settings.footerTopBorder -%}
-
-        {%- if request.design_mode == 'edit' -%}
-            .finqu-sections-container:has(> section:last-of-type .section-inner:not(.section-has-color-scheme)) + #finqu-section-{{ section.id }} .site-footer-top{% unless section.settings.footerTopBorderFluid %} > .container{% endunless %}:before,
-        {%- endif -%}
-        .section:not(:has(.section-has-color-scheme)) + #finqu-section-{{ section.id }} .site-footer-top{% unless section.settings.footerTopBorderFluid %} > .container{% endunless %}:before {
-            content: '';
-            display: block;
-            border-top: 1px solid var(--style-border-color);
-            position: absolute;
-            top: 0;
-            left: {% if section.settings.footerTopBorderFluid %}0{% else %}var(--style-grid-container-padding-x){% endif %};
-            right: {% if section.settings.footerTopBorderFluid %}0{% else %}var(--style-grid-container-padding-x){% endif %};
-        }
-        #finqu-section-{{ section.id }} .site-footer-top{% unless section.settings.footerTopBorderFluid %} > .container{% endunless %} {
-            position: relative;
-            padding-top: var(--section-padding-top);
-        }
-        {%- unless section.settings.footerLayout == '4' .%}
-            #finqu-section-{{ section.id }} .section-inner {
-                padding-top: 0;
-            }
-        {%- endunless -%}
-    {%- endif -%}
     {%- if section.settings.footerBottomBorder -%}
         #finqu-section-{{ section.id }} .site-footer-bottom{% unless section.settings.footerBottomBorderFluid %} > .container{% endunless %}:before {
             content: '';
             display: block;
-            border-top: 1px solid var(--style-border-color);
+            border-top: {% if settings.styleElevation == 'hard' %}2px{% else %}1px{% endif %} solid var(--style-border-color);
             position: absolute;
             top: 0;
             left: {% if section.settings.footerBottomBorderFluid %}0{% else %}var(--style-grid-container-padding-x){% endif %};
@@ -136,424 +35,1080 @@
     {%- endif -%}
 {%- endcapture -%}
 
-<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+{%- if section.settings.footerLayout == '4' -%}
 
-{%- if section.settings.footerLayout == '1' -%}
+    {%- render 'footers/layout-simple', section: section, sectionClasses: sectionClasses -%}
 
-    {%- render 'footers/layout-1', section: section -%}
+{%- else -%}
 
-{%- elsif section.settings.footerLayout == '2' -%}
-
-    {%- render 'footers/layout-2', section: section -%}
-
-{%- elsif section.settings.footerLayout == '3' -%}
-
-    {%- render 'footers/layout-3', section: section -%}
-
-{%- elsif section.settings.footerLayout == '4' -%}
-
-    {%- render 'footers/layout-4', section: section -%}
-
-{%- elsif section.settings.footerLayout == '5' -%}
-
-    {%- render 'footers/layout-5', section: section -%}
-
-{%- elsif section.settings.footerLayout == '6' -%}
-
-    {%- render 'footers/layout-6', section: section -%}
+    {%- render 'footers/layout-columns', section: section, sectionClasses: sectionClasses -%}
 
 {%- endif -%}
 
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+{% render 'html-overscroll-bg', section: section %}
+
 {% schema %}
 {
-    "name": {
-        "en": "Footer",
-        "fi": "Alatunniste"
-    },
+    "name": "t:sections.footer.name",
     "tag": "section",
-    "is_creatable": false,
-    "is_removable": false,
+    "is_creatable": true,
+    "is_removable": true,
+    "section_groups": [
+        "footer"
+    ],
     "class": "section section-site-footer",
+    "containers": [
+        {
+            "id": "left",
+            "title": "t:sections.footer.containers.left.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "newsletter",
+                "social-media-buttons",
+                "image",
+                "spacer",
+                "separator"
+            ]
+        },
+        {
+            "id": "right",
+            "title": "t:sections.footer.containers.right.title",
+            "allowed_blocks": [
+                "heading",
+                "text",
+                "newsletter",
+                "social-media-buttons",
+                "image",
+                "spacer",
+                "separator"
+            ]
+        }
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
+                "title": "t:all.groups.content.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Introduction text",
-                                "fi": "Esittelyteksti"
-                            },
-                            "settings": [
-                                {
-                                    "id": "footerTextArea1Title",
-                                    "type": "text",
-                                    "label": {
-                                        "en": "Title",
-                                        "fi": "Otsikko"
-                                    }
-                                },
-                                {
-                                    "id": "footerTextArea1Content",
-                                    "type": "richtext",
-                                    "mode": "simple",
-                                    "label": {
-                                        "en": "Content",
-                                        "fi": "Sisältö"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Additional text",
-                                "fi": "Lisäteksti"
-                            },
+                            "title": "t:sections.footer.groups.legal.title",
                             "settings": [
                                 {
                                     "id": "footerTextArea2Content",
                                     "type": "richtext",
                                     "mode": "simple",
-                                    "label": {
-                                        "en": "Content",
-                                        "fi": "Sisältö"
-                                    }
+                                    "label": "t:sections.footer.settings.footerTextArea2Content.label"
                                 }
-                            ]
+                            ],
+                            "id": "legal"
                         },
                         {
-                            "title": {
-                                "en": "Newsletter",
-                                "fi": "Uutiskirje"
-                            },
-                            "settings": [
-                                {
-                                    "id": "footerNewsletterTitle",
-                                    "type": "text",
-                                    "label": {
-                                        "en": "Title",
-                                        "fi": "Otsikko"
-                                    }
-                                },
-                                {
-                                    "id": "footerNewsletterContent",
-                                    "type": "richtext",
-                                    "mode": "simple",
-                                    "label": {
-                                        "en": "Content",
-                                        "fi": "Sisältö"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Social media",
-                                "fi": "Sosiaalinen media"
-                            },
-                            "conditions": ["footerLayout eq 3"],
-                            "settings": [
-                                {
-                                    "id": "footerSocialMediaTitle",
-                                    "type": "text",
-                                    "label": {
-                                        "en": "Title",
-                                        "fi": "Otsikko"
-                                    },
-                                    "conditions": ["footerLayout eq 3"]
-                                },
-                                {
-                                    "id": "footerSocialMediaContent",
-                                    "type": "richtext",
-                                    "mode": "simple",
-                                    "label": {
-                                        "en": "Content",
-                                        "fi": "Sisältö"
-                                    },
-                                    "conditions": ["footerLayout eq 3"]
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Payment methods",
-                                "fi": "Maksutavat"
-                            },
+                            "title": "t:sections.footer.groups.payment.title",
                             "settings": [
                                 {
                                     "id": "footerPaymentMethodsImg",
                                     "type": "image-picker",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    }
+                                    "label": "t:sections.footer.settings.footerPaymentMethodsImg.label"
                                 }
-                            ]
+                            ],
+                            "id": "payment"
                         },
                         {
-                            "title": {
-                                "en": "Logo",
-                                "fi": "Logo"
-                            },
-                            "conditions": ["footerLayout in 5,6"],
+                            "title": "t:sections.footer.groups.brand.title",
                             "settings": [
                                 {
-                                    "type": "title",
-                                    "label": {
-                                        "en": "Image",
-                                        "fi": "Kuva"
-                                    },
-                                    "conditions": ["footerLayout in 5,6"]
-                                },
-                                {
                                     "id": "footerLogoImg",
-                                    "type": "image-picker",
-                                    "conditions": ["footerLayout in 5,6"]
+                                    "type": "image-picker"
                                 }
-                            ]
+                            ],
+                            "id": "brand"
                         }
                     ]
-                }
-            },
-            {   
-                "title": {
-                    "en": "Navigation",
-                    "fi": "Navigointi"
                 },
+                "id": "content"
+            },
+            {
+                "title": "t:sections.footer.groups.menus.title",
                 "settings": [
                     {
                         "type": "title",
-                        "label": {
-                            "en": "Navigation 1",
-                            "fi": "Navigaatio 1"
-                        }
+                        "label": "t:sections.footer.settings.footerMenu1Group.label"
                     },
                     {
                         "id": "footerMenu1Title",
                         "type": "text",
-                        "label": {
-                            "en": "Title",
-                            "fi": "Otsikko"
-                        },
-                        "conditions": ["!footerMenu1 eq blank"]
+                        "label": "t:sections.footer.settings.footerMenu1Title.label",
+                        "conditions": [
+                            "!footerMenu1 eq blank"
+                        ]
                     },
                     {
                         "id": "footerMenu1",
                         "type": "menu",
-                        "label": {
-                            "en": "Menu",
-                            "fi": "Valikko"
-                        },
+                        "label": "t:sections.footer.settings.footerMenu1.label",
                         "default": "footer",
                         "allow_empty": true
                     },
                     {
                         "type": "title",
-                        "label": {
-                            "en": "Navigation 2",
-                            "fi": "Navigaatio 2"
-                        },
-                        "conditions": ["footerLayout in 1,2,3,5,6"]
+                        "label": "t:sections.footer.settings.footerMenu2Group.label"
                     },
                     {
                         "id": "footerMenu2Title",
                         "type": "text",
-                        "label": {
-                            "en": "Title",
-                            "fi": "Otsikko"
-                        },
+                        "label": "t:sections.footer.settings.footerMenu2Title.label",
                         "conditions": [
-                            "!footerMenu2 eq blank",
-                            "footerLayout in 1,2,3,5,6"
+                            "!footerMenu2 eq blank"
                         ]
                     },
                     {
                         "id": "footerMenu2",
                         "type": "menu",
-                        "label": {
-                            "en": "Menu",
-                            "fi": "Valikko"
-                        },
+                        "label": "t:sections.footer.settings.footerMenu2.label",
                         "default": "footer",
-                        "conditions": ["footerLayout in 1,2,3,5,6"],
                         "allow_empty": true
                     },
                     {
                         "type": "title",
-                        "label": {
-                            "en": "Navigation 3",
-                            "fi": "Navigaatio 3"
-                        },
-                        "conditions": ["footerLayout in 1,5"]
+                        "label": "t:sections.footer.settings.footerMenu3Group.label"
                     },
                     {
                         "id": "footerMenu3Title",
                         "type": "text",
-                        "label": {
-                            "en": "Title",
-                            "fi": "Otsikko"
-                        },
+                        "label": "t:sections.footer.settings.footerMenu3Title.label",
                         "conditions": [
-                            "!footerMenu3 eq blank",
-                            "footerLayout in 1,5"
+                            "!footerMenu3 eq blank"
                         ]
                     },
                     {
                         "id": "footerMenu3",
                         "type": "menu",
-                        "label": {
-                            "en": "Menu",
-                            "fi": "Valikko"
-                        },
+                        "label": "t:sections.footer.settings.footerMenu3.label",
                         "default": "footer",
-                        "conditions": ["footerLayout in 1,5"],
                         "allow_empty": true
+                    }
+                ],
+                "id": "menus"
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionColorScheme.label",
+                                    "default": "secondary",
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
+                                    "default": "#f3f5f6",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionPaddingMode.label",
+                                    "default": "custom",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 3.6,
+                                        "right": 0,
+                                        "bottom": 3.6,
+                                        "left": 0
+                                    },
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 50,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImg",
+                                    "type": "image-picker",
+                                    "label": "t:all.settings.sectionBgImg.label",
+                                    "adjustments": true
+                                },
+                                {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgDimming",
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgBlur",
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " ",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "footerTopBorder",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerTopBorder.label",
+                                    "default": false
+                                },
+                                {
+                                    "id": "footerTopBorderFluid",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerTopBorderFluid.label",
+                                    "default": false,
+                                    "conditions": [
+                                        "footerTopBorder eq true"
+                                    ]
+                                },
+                                {
+                                    "id": "footerBottomBorder",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerBottomBorder.label",
+                                    "default": false
+                                },
+                                {
+                                    "id": "footerBottomBorderFluid",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerBottomBorderFluid.label",
+                                    "default": false,
+                                    "conditions": [
+                                        "footerBottomBorder eq true"
+                                    ]
+                                },
+                                {
+                                    "type": "title",
+                                    "label": "t:sections.footer.settings.show.label"
+                                },
+                                {
+                                    "id": "footerTextArea2Status",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerTextArea2Status.label",
+                                    "default": true
+                                },
+                                {
+                                    "id": "footerPaymentMethodsStatus",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerPaymentMethodsStatus.label",
+                                    "default": true
+                                },
+                                {
+                                    "id": "footerLocalizationStatus",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerLocalizationStatus.label",
+                                    "default": true
+                                },
+                                {
+                                    "id": "footerLogoStatus",
+                                    "type": "checkbox",
+                                    "label": "t:sections.footer.settings.footerLogoStatus.label",
+                                    "default": false
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "footerLayout",
+                                    "type": "hidden",
+                                    "default": "1"
+                                },
+                                {
+                                    "type": "hidden",
+                                    "id": "footerGap",
+                                    "default": "3.6rem"
+                                },
+                                {
+                                    "id": "sectionTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionTextAlign.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.sectionTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:all.settings.sectionTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:all.settings.sectionTextAlign.options.end.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    },
+    "presets": {
+        "default": [
+            {
+                "id": "three-menus",
+                "name": "t:sections.footer.presets.three-menus.name",
+                "settings": {
+                    "footerLayout": "1",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": "footer"
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "right",
+                        "settings": {
+                            "richtext": "<p>Welcome to our online store! We’re proud to offer you a smooth and delightful shopping experience. Committed to customer satisfaction, we aim to bring you the latest trends, unbeatable prices, and exceptional service.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
                     }
                 ]
             },
-            {   
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
+            {
+                "id": "intro-and-two-menus",
+                "name": "t:sections.footer.presets.intro-and-two-menus.name",
+                "settings": {
+                    "footerLayout": "2",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
                 },
-                "settings": [
+                "blocks": [
                     {
-                        "type": "hidden",
-                        "id": "footerGap"
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerPaddingTop"
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerPaddingBottom"
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerTopBorder",
-                        "default": false
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerTopBorderFluid",
-                        "default": false
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerBottomBorder",
-                        "default": false
-                    },
-                    {
-                        "type": "hidden",
-                        "id": "footerBottomBorderFluid",
-                        "default": false
-                    },
-                    {
-                        "type": "title",
-                        "label": {
-                            "en": "View",
-                            "fi": "Asettelu"
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
                         }
                     },
                     {
-                        "id": "footerLayout",
-                        "type": "radio-pill",
-                        "default": "1",
-                        "options": [
-                            {
-                                "value": "1",
-                                "label": "1"
-                            },
-                            {
-                                "value": "2",
-                                "label": "2"
-                            },
-                            {
-                                "value": "3",
-                                "label": "3"
-                            },
-                            {
-                                "value": "4",
-                                "label": "4"
-                            },
-                            {
-                                "value": "5",
-                                "label": "5"
-                            },
-                            {
-                                "value": "6",
-                                "label": "6"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "title",
-                        "label": {
-                            "en": "Show",
-                            "fi": "Näytä"
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Welcome to our online store! We’re proud to offer you a smooth and delightful shopping experience. Committed to customer satisfaction, we aim to bring you the latest trends, unbeatable prices, and exceptional service.</p>"
                         }
                     },
                     {
-                        "id": "footerTextArea1Status",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Introduction text",
-                            "fi": "Esittelyteksti"
-                        },
-                        "default": true
+                        "name": "social-media-buttons",
+                        "container": "left"
                     },
                     {
-                        "id": "footerTextArea2Status",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Additional text",
-                            "fi": "Lisäteksti"
-                        },
-                        "default": true
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
                     },
                     {
-                        "id": "footerNewsletterStatus",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Newsletter subscribe",
-                            "fi": "Uutiskirjeen tilaus"
-                        },
-                        "default": true
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "intro-menus-and-social",
+                "name": "t:sections.footer.presets.intro-menus-and-social.name",
+                "settings": {
+                    "footerLayout": "3",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
                     },
                     {
-                        "id": "footerSocialMediaButtonsStatus",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Social media buttons",
-                            "fi": "Sosiaalisen median kuvakkeet"
-                        },
-                        "default": true
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Welcome to our online store! We’re proud to offer you a smooth and delightful shopping experience. Committed to customer satisfaction, we aim to bring you the latest trends, unbeatable prices, and exceptional service.</p>"
+                        }
                     },
                     {
-                        "id": "footerPaymentMethodsStatus",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Payment methods",
-                            "fi": "Maksutavat"
-                        },
-                        "default": true
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
                     },
                     {
-                        "id": "footerLogoStatus",
-                        "type": "checkbox",
-                        "label": {
-                            "en": "Logo",
-                            "fi": "Logo"
-                        },
-                        "default": true,
-                        "conditions": ["footerLayout in 5,6"]
+                        "name": "newsletter",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.follow_us",
+                                "string_value": "Follow us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "minimal-centered",
+                "name": "t:sections.footer.presets.minimal-centered.name",
+                "settings": {
+                    "footerLayout": "4",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "",
+                    "footerMenu3": "",
+                    "sectionTextAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left",
+                        "settings": {
+                            "contentAlign": "center"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "logo-and-three-menus",
+                "name": "t:sections.footer.presets.logo-and-three-menus.name",
+                "settings": {
+                    "footerLayout": "5",
+                    "footerLogoStatus": true,
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": "footer"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Welcome to our online store! We’re proud to offer you a smooth and delightful shopping experience. Committed to customer satisfaction, we aim to bring you the latest trends, unbeatable prices, and exceptional service.</p>"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "logo-and-two-menus",
+                "name": "t:sections.footer.presets.logo-and-two-menus.name",
+                "settings": {
+                    "footerLayout": "6",
+                    "footerLogoStatus": true,
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Welcome to our online store! We’re proud to offer you a smooth and delightful shopping experience. Committed to customer satisfaction, we aim to bring you the latest trends, unbeatable prices, and exceptional service.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            }
+        ],
+        "fi": [
+            {
+                "id": "three-menus",
+                "name": "t:sections.footer.presets.three-menus.name",
+                "settings": {
+                    "footerLayout": "1",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": "footer"
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "right",
+                        "settings": {
+                            "richtext": "<p>Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaisen palvelun.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "intro-and-two-menus",
+                "name": "t:sections.footer.presets.intro-and-two-menus.name",
+                "settings": {
+                    "footerLayout": "2",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaisen palvelun.</p>"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "intro-menus-and-social",
+                "name": "t:sections.footer.presets.intro-menus-and-social.name",
+                "settings": {
+                    "footerLayout": "3",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaisen palvelun.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.follow_us",
+                                "string_value": "Follow us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "minimal-centered",
+                "name": "t:sections.footer.presets.minimal-centered.name",
+                "settings": {
+                    "footerLayout": "4",
+                    "footerMenu1": "footer",
+                    "footerMenu2": "",
+                    "footerMenu3": "",
+                    "sectionTextAlign": "center"
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left",
+                        "settings": {
+                            "contentAlign": "center"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "logo-and-three-menus",
+                "name": "t:sections.footer.presets.logo-and-three-menus.name",
+                "settings": {
+                    "footerLayout": "5",
+                    "footerLogoStatus": true,
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": "footer"
+                },
+                "blocks": [
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaisen palvelun.</p>"
+                        }
+                    },
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
+                    }
+                ]
+            },
+            {
+                "id": "logo-and-two-menus",
+                "name": "t:sections.footer.presets.logo-and-two-menus.name",
+                "settings": {
+                    "footerLayout": "6",
+                    "footerLogoStatus": true,
+                    "footerMenu1": "footer",
+                    "footerMenu2": "footer",
+                    "footerMenu3": ""
+                },
+                "blocks": [
+                    {
+                        "name": "social-media-buttons",
+                        "container": "left"
+                    },
+                    {
+                        "name": "heading",
+                        "container": "left",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "placeholder.about_us",
+                                "string_value": "About us"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "container": "left",
+                        "settings": {
+                            "richtext": "<p>Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaisen palvelun.</p>"
+                        }
+                    },
+                    {
+                        "name": "heading",
+                        "container": "right",
+                        "settings": {
+                            "title": {
+                                "type": "translation",
+                                "key": "marketing.newsletter_popup.overline",
+                                "string_value": "Newsletter"
+                            },
+                            "titleStyle": "h3"
+                        }
+                    },
+                    {
+                        "name": "newsletter",
+                        "container": "right"
                     }
                 ]
             }

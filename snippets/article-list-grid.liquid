@@ -1,0 +1,68 @@
+{% comment %}
+	Renders an article list grid. When the list is empty and the theme designer is active,
+	renders placeholder article cards so the section layout stays visible in the editor.
+
+	Accepts:
+	- items: {Array} Articles to display
+	- item_amount: {Number} Max items and placeholder count in design mode when empty
+	- article_per_row: {Number|String} Articles per row (grid column class); "nil" uses theme setting
+	- section: {Object} Section Liquid object (required — `render` uses an isolated context; needed for `{% block %}` config lookup)
+	- section_id: {String} Section id for AOS anchor (optional)
+	- article_list_block_id: {String} article-list-item block id (default: section-article-card)
+	- row_class: {String} Extra row CSS classes (optional)
+	- col_class: {String} Extra column CSS classes (optional)
+
+	Usage:
+	{% render 'article-list-grid', items: items, item_amount: section.settings.itemAmount, article_per_row: articlePerRow, section_id: section.id, section: section %}
+{% endcomment %}
+
+{%- assign articleListBlockId = article_list_block_id | default: 'section-article-card' -%}
+{%- assign articlePerRow = article_per_row -%}
+
+{%- if articlePerRow == 'nil' or articlePerRow == nil or articlePerRow == blank -%}
+	{%- assign articlePerRow = settings.articlePerRow -%}
+{%- endif -%}
+
+{%- assign placeholderCount = item_amount | default: articlePerRow | times: 2 -%}
+
+<div class="row gy-g row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ articlePerRow }}{% if row_class %} {{ row_class }}{% endif %}">
+
+	{% if items and items.size > 0 %}
+
+		{% for item in items %}
+
+			{%- assign article = item -%}
+
+			<div class="col{% if col_class %} {{ col_class }}{% endif %}" data-aos="{{ settings.sectionAnimation }}"{% if section_id %} data-aos-anchor="#finqu-section-{{ section_id }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+				<div class="article-card-grid-item section-highlight-item">
+
+					{% block 'article-list-item' id:articleListBlockId %}
+
+				</div>
+
+			</div>
+
+		{% endfor %}
+
+	{% elsif request.design_mode %}
+
+		{% for num in (1..placeholderCount) %}
+
+			{%- assign article = nil -%}
+
+			<div class="col{% if col_class %} {{ col_class }}{% endif %}" data-aos="{{ settings.sectionAnimation }}"{% if section_id %} data-aos-anchor="#finqu-section-{{ section_id }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
+
+				<div class="article-card-grid-item section-highlight-item">
+
+					{% block 'article-list-item' id:articleListBlockId %}
+
+				</div>
+
+			</div>
+
+		{% endfor %}
+
+	{% endif %}
+
+</div>

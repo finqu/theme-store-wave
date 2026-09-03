@@ -1,0 +1,79 @@
+{%- assign productCardLinkToProduct = block.settings.linkToProduct -%}
+{%- assign productCardTruncateName = block.settings.truncateName -%}
+{%- assign showOnlySelectedOptions = true -%}
+
+{%- capture bundleMediaBlockId -%}{{ block.id }}-media{%- endcapture -%}
+{%- capture bundleTitleBlockId -%}{{ block.id }}-title{%- endcapture -%}
+{%- capture bundleVariantsBlockId -%}{{ block.id }}-variants{%- endcapture -%}
+
+<div class="product-list-item-media">
+
+    {% block 'product-media' id:bundleMediaBlockId %}
+
+</div>
+
+<div class="product-caption{% if block.settings.contentAlign == 'center' %} text-center{% endif %}">
+
+    {% block 'product-title' id:bundleTitleBlockId %}
+
+    {% block 'product-variants' id:bundleVariantsBlockId %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.product-bundle-list-item.name",
+    "tag": "div",
+    "class": "block block-product-bundle-list-item",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "settings": [
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "start",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "layout"
+            },
+            {
+                "title": "t:blocks.product-bundle-list-item.groups.cardBehavior.title",
+                "settings": [
+                    {
+                        "id": "linkToProduct",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-bundle-list-item.settings.linkToProduct.label",
+                        "default": true
+                    },
+                    {
+                        "id": "truncateName",
+                        "type": "checkbox",
+                        "label": "t:all.settings.truncateName.label",
+                        "default": false
+                    }
+                ],
+                "id": "cardBehavior"
+            }
+        ]
+    }
+}
+{% endschema %}

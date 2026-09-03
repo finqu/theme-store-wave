@@ -214,50 +214,6 @@ const animate = function (el, animation, delay, duration) {
 	});
 };
 
-const loadScript = function (src, data = {}, onLoad, onError) {
-	return new Promise((resolve, reject) => {
-
-		if (!src) {
-			return;
-		}
-
-		let script = document.querySelector('script[src="'+src+'"]') || null;
-
-		if (script) {
-			script.remove();
-		}
-
-	    script = document.createElement('script');
-
-	    script.src = src;
-
-	    if (typeof onLoad === 'function') {
-	    	script.onload = onLoad;
-		}
-
-		if (typeof onError === 'function') {
-	    	script.onerror = onError;
-		}
-
-	    if (Object.entries(data).length > 0) {
-
-	    	for (const key of Object.keys(data)) {
-				script.dataset[key] = data[key];
-			}
-	    }
-
-	    document.head.appendChild(script);
-	});
-};
-
-const generateUuid = function () {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        let r = (Math.random() * 16) | 0,
-            v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-};
-
 const filterInput = function (el, filter, defaultVal, cb = null) {
 	if (!el || !filter) {
 		return false;
@@ -497,8 +453,6 @@ export {
 	formatCurrency,
 	formatNumber,
 	animate,
-	loadScript,
-	generateUuid,
 	filterInput,
 	placeholderSvg,
 	image,

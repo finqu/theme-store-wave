@@ -79,7 +79,7 @@
                 </a>{%- endcapture -%}
 
                 <p>
-                    {{- 'blog.comment_login' | t, link: loginLink -}}
+                    {{- 'blog.comment_login' | t:link: loginLink -}}
                 </p>
 
             {% else %}
@@ -88,7 +88,7 @@
 
                     <div class="article-comment-form-action">
 
-                        <button type="button" name="article-comment-form-show-action" class="btn btn-secondary btn-sm{% if form.error %} d-none{% endif %}" value="root">
+                        <button type="button" name="article-comment-form-show-action" class="btn btn-primary btn-outline btn-sm{% if form.error %} d-none{% endif %}" value="root">
                             {{- 'blog.leave_comment' | t -}}
                         </button>
 
@@ -122,7 +122,7 @@
 
                         {% render 'form-error', error: form.error, class: 'mb-4' %}
 
-                        <button type="button" name="article-comment-form-close-action" class="btn btn-secondary btn-sm" value="root">
+                        <button type="button" name="article-comment-form-close-action" class="btn btn-primary btn-outline btn-sm" value="root">
                         	{{- 'general.cancel' | t -}}
                         </button>
 
@@ -168,10 +168,7 @@
 
 {% schema %}
 {
-    "name": {
-        "en": "Article",
-        "fi": "Artikkeli"
-    },
+    "name": "t:sections.article-template.name",
     "tag": "section",
     "class": "section section-article",
     "is_creatable": false

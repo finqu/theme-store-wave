@@ -1,34 +1,180 @@
+{%- comment -%} Brand color fallbacks: derived colors inherit style_brand_color when left empty {%- endcomment -%}
+{%- assign styleBrandColor = settings.style_brand_color -%}
+{%- assign styleAccentColor = settings.style_accent_color -%}
+{%- if styleAccentColor == blank and styleBrandColor != blank -%}
+	{%- assign styleAccentColor = styleBrandColor -%}
+{%- endif -%}
+{%- assign styleBtnBgColor = settings.style_btn_bg_color -%}
+{%- if styleBtnBgColor == blank and styleBrandColor != blank -%}
+	{%- assign styleBtnBgColor = styleBrandColor -%}
+{%- endif -%}
+{%- assign styleBtnTextColor = settings.style_btn_text_color -%}
+{%- if styleBtnTextColor == blank and styleBtnBgColor != blank -%}
+	{%- assign styleBtnBgBrightnessForText = styleBtnBgColor | color_brightness -%}
+	{%- if styleBtnBgBrightnessForText > 190 -%}
+		{%- assign styleBtnTextColor = '#000000' | color_min_contrast: styleBtnBgColor -%}
+	{%- else -%}
+		{%- assign styleBtnTextColor = '#ffffff' | color_min_contrast: styleBtnBgColor -%}
+	{%- endif -%}
+{%- endif -%}
+{%- assign styleHeaderAccentColor = settings.style_header_accent_color -%}
+{%- if styleHeaderAccentColor == blank and styleBrandColor != blank -%}
+	{%- assign styleHeaderAccentColor = styleBrandColor -%}
+{%- endif -%}
+{%- assign styleAnnouncementBgColor = settings.style_announcement_bg_color -%}
+{%- if styleAnnouncementBgColor == blank and styleBrandColor != blank -%}
+	{%- assign styleBrandColorBrightness = styleBrandColor | color_brightness -%}
+	{%- if styleBrandColorBrightness > 128 -%}
+		{%- assign styleAnnouncementBgColor = styleBrandColor | color_mix: '#ffffff', 35 -%}
+	{%- else -%}
+		{%- assign styleAnnouncementBgColor = styleBrandColor | color_darken: 10 -%}
+	{%- endif -%}
+{%- endif -%}
+{%- assign styleAnnouncementTextColor = settings.style_announcement_text_color -%}
+{%- if styleAnnouncementTextColor == blank and styleAnnouncementBgColor != blank -%}
+	{%- assign styleAnnouncementBgBrightness = styleAnnouncementBgColor | color_brightness -%}
+	{%- if styleAnnouncementBgBrightness > 190 -%}
+		{%- assign styleAnnouncementTextColor = '#000000' | color_min_contrast: styleAnnouncementBgColor -%}
+	{%- else -%}
+		{%- assign styleAnnouncementTextColor = '#ffffff' | color_min_contrast: styleAnnouncementBgColor -%}
+	{%- endif -%}
+{%- endif -%}
+
 {%- assign styleFormBgColorBrightness = settings.style_form_bg_color | color_brightness -%}
 {%- assign styleFormBorderColorBrightness = settings.style_form_border_color | color_brightness -%}
 {%- assign styleTextColorBrightness = settings.style_text_color | color_brightness -%}
 {%- assign styleTableBgColorBrightness = settings.style_table_bg_color | color_brightness -%}
 {%- assign styleBgColorBrightness = settings.style_bg_color | color_brightness -%}
 {%- assign styleBorderColorBrightness = settings.style_border_color | color_brightness -%}
-{%- assign styleButtonBgColorColorBrightness = settings.style_btn_bg_color | color_brightness -%}
-{%- assign styleAccentColorBrightness = settings.style_accent_color | color_brightness -%}
+{%- assign styleButtonBgColorColorBrightness = styleBtnBgColor | color_brightness -%}
+{%- assign styleBtnSecondaryBg = settings.style_btn_secondary_bg_color -%}
+{%- if styleBtnSecondaryBg == blank -%}
+	{%- if styleButtonBgColorColorBrightness > 190 -%}
+		{%- assign styleBtnSecondaryBg = styleBtnBgColor | color_darken: 28 -%}
+	{%- else -%}
+		{%- assign styleBtnSecondaryBg = styleBtnBgColor | color_lighten: 42 -%}
+	{%- endif -%}
+{%- endif -%}
+{%- assign styleBtnSecondaryText = settings.style_btn_secondary_text_color -%}
+{%- if styleBtnSecondaryText == blank -%}
+	{%- assign styleBtnSecondaryText = '#ffffff' | color_min_contrast: styleBtnSecondaryBg -%}
+{%- endif -%}
+{%- assign styleButtonSecondaryBgColorBrightness = styleBtnSecondaryBg | color_brightness -%}
+{%- assign styleAccentColorBrightness = styleAccentColor | color_brightness -%}
 {%- assign bodySecondaryBg = settings.style_bg_color | color_darken: 30 -%}
 {%- assign bodyTertiaryBg = settings.style_bg_color | color_darken: 10 -%}
 
-$font-size-base: 1rem * {{- settings.textScale -}};
-$font-family-base: {{- settings.bodyTextFont -}};
+{%- assign styleStoreMaxWidth = settings.styleGridContainerMaxWidthXxl -%}
+{%- if settings.styleGridContainerMaxWidthPreset == 's' -%}
+	{%- assign styleStoreMaxWidth = 960 -%}
+{%- elsif settings.styleGridContainerMaxWidthPreset == 'm' -%}
+	{%- assign styleStoreMaxWidth = 1320 -%}
+{%- elsif settings.styleGridContainerMaxWidthPreset == 'l' -%}
+	{%- assign styleStoreMaxWidth = 1600 -%}
+{%- elsif settings.styleGridContainerMaxWidthPreset == 'edit' -%}
+	{%- assign styleStoreMaxWidth = settings.styleGridContainerMaxWidthXxl -%}
+{%- endif -%}
+{%- if styleStoreMaxWidth == blank -%}
+	{%- assign styleStoreMaxWidth = 1320 -%}
+{%- endif -%}
+{%- unless styleStoreMaxWidth contains 'px' -%}{%- assign styleStoreMaxWidth = styleStoreMaxWidth | append: 'px' -%}{%- endunless -%}
+
+{%- assign styleBorderRadiusGlobal = settings.styleBorderRadius -%}
+{%- if settings.styleBorderRadiusPreset == 'none' or settings.styleBorderRadiusPreset == 's' -%}
+	{%- assign styleBorderRadiusGlobal = 0 -%}
+{%- elsif settings.styleBorderRadiusPreset == 'small' -%}
+	{%- assign styleBorderRadiusGlobal = 8 -%}
+{%- elsif settings.styleBorderRadiusPreset == 'medium' or settings.styleBorderRadiusPreset == 'm' -%}
+	{%- assign styleBorderRadiusGlobal = 12 -%}
+{%- elsif settings.styleBorderRadiusPreset == 'pill' or settings.styleBorderRadiusPreset == 'l' -%}
+	{%- assign styleBorderRadiusGlobal = 50 -%}
+{%- elsif settings.styleBorderRadiusPreset == 'custom' or settings.styleBorderRadiusPreset == 'edit' -%}
+	{%- assign styleBorderRadiusGlobal = settings.styleBorderRadius | default: 12 -%}
+{%- endif -%}
+{%- unless styleBorderRadiusGlobal contains 'px' or styleBorderRadiusGlobal contains 'rem' -%}{%- assign styleBorderRadiusGlobal = styleBorderRadiusGlobal | append: 'px' -%}{%- endunless -%}
+
+{%- if settings.styleBorderRadiusFineTune -%}
+	{%- assign styleImageBorderRadius = settings.styleImageBorderRadius -%}
+	{%- assign styleInputBorderRadius = settings.styleInputBorderRadius -%}
+{%- else -%}
+	{%- assign styleImageBorderRadius = styleBorderRadiusGlobal -%}
+	{%- assign styleInputBorderRadius = styleBorderRadiusGlobal -%}
+{%- endif -%}
+
+{%- assign styleButtonBorderRadiusValue = settings.styleButtonBorderRadius -%}
+{%- if styleButtonBorderRadiusValue.apply_to_all_sides -%}
+	{%- assign styleButtonBorderRadius = styleButtonBorderRadiusValue.border_radius | default: 0 | append: 'px' -%}
+{%- else -%}
+	{%- assign styleButtonBorderRadiusTl = styleButtonBorderRadiusValue.top_left | default: 0 | append: 'px' -%}
+	{%- assign styleButtonBorderRadiusTr = styleButtonBorderRadiusValue.top_right | default: 0 | append: 'px' -%}
+	{%- assign styleButtonBorderRadiusBr = styleButtonBorderRadiusValue.bottom_right | default: 0 | append: 'px' -%}
+	{%- assign styleButtonBorderRadiusBl = styleButtonBorderRadiusValue.bottom_left | default: 0 | append: 'px' -%}
+	{%- assign styleButtonBorderRadius = styleButtonBorderRadiusTl | append: ' ' | append: styleButtonBorderRadiusTr | append: ' ' | append: styleButtonBorderRadiusBr | append: ' ' | append: styleButtonBorderRadiusBl -%}
+{%- endif -%}
+{%- if styleButtonBorderRadius == blank -%}
+	{%- assign styleButtonBorderRadius = styleBorderRadiusGlobal | default: '0px' -%}
+{%- endif -%}
+
+{%- unless styleImageBorderRadius contains 'px' or styleImageBorderRadius contains 'rem' -%}{%- assign styleImageBorderRadius = styleImageBorderRadius | append: 'px' -%}{%- endunless -%}
+{%- unless styleInputBorderRadius contains 'px' or styleInputBorderRadius contains 'rem' -%}{%- assign styleInputBorderRadius = styleInputBorderRadius | append: 'px' -%}{%- endunless -%}
+
+{%- comment -%} Heading fonts inherit bodyTextFont when left empty {%- endcomment -%}
+{%- assign bodyTextFont = settings.bodyTextFont -%}
+{%- assign headingFontFamily = settings.headingFont -%}
+{%- if headingFontFamily == blank -%}
+	{%- assign headingFontFamily = bodyTextFont -%}
+{%- endif -%}
+{%- assign h1FontFamily = settings.h1Font -%}
+{%- if h1FontFamily == blank -%}
+	{%- assign h1FontFamily = headingFontFamily -%}
+{%- endif -%}
+{%- assign h2FontFamily = settings.h2Font -%}
+{%- if h2FontFamily == blank -%}
+	{%- assign h2FontFamily = headingFontFamily -%}
+{%- endif -%}
+{%- assign h3FontFamily = settings.h3Font -%}
+{%- if h3FontFamily == blank -%}
+	{%- assign h3FontFamily = headingFontFamily -%}
+{%- endif -%}
+{%- assign displayFontFamily = settings.displayFont -%}
+{%- if displayFontFamily == blank -%}
+	{%- assign displayFontFamily = headingFontFamily -%}
+{%- endif -%}
+
+$font-size-base: {{- settings.bodyFontSize | default: '1' -}}rem * {{- settings.textScale -}};
+$font-family-base: {{- bodyTextFont -}};
 $font-style: {{- settings.bodyTextFontStyle -}};
 $letter-spacing: {{- settings.bodyLetterSpacing -}};
 $line-height-base: {{- settings.textLineHeight -}};
 
-$h1-font-size: 1.85rem * {{- settings.headingFontScale -}};
-$h2-font-size: 1.55rem * {{- settings.headingFontScale -}};
-$h3-font-size: 1.35rem * {{- settings.headingFontScale -}};
+$h1-font-size: {{- settings.h1FontSize | default: '1.85' -}}rem * {{- settings.headingFontScale -}};
+$h2-font-size: {{- settings.h2FontSize | default: '1.55' -}}rem * {{- settings.headingFontScale -}};
+$h3-font-size: {{- settings.h3FontSize | default: '1.35' -}}rem * {{- settings.headingFontScale -}};
 $h4-font-size: 1.15rem * {{- settings.headingFontScale -}};
 $h5-font-size: 1.05rem * {{- settings.headingFontScale -}};
 $h6-font-size: 0.82rem * {{- settings.headingFontScale -}};
-	
-$headings-font-family: {{- settings.headingFont -}};
+
+$headings-font-family: {{- headingFontFamily -}};
 $headings-font-weight: {{- settings.headingFontWeight -}};
 $headings-font-style: {{- settings.headingFontStyle -}};
 $headings-text-transform: {{- settings.headingTextTransform -}};
 $headings-letter-spacing: {{- settings.headingLetterSpacing -}};
 
+$h1-font-family: {{- h1FontFamily -}};
+$h1-font-weight: {{- settings.h1FontWeight | default: 'inherit' -}};
+$h2-font-family: {{- h2FontFamily -}};
+$h2-font-weight: {{- settings.h2FontWeight | default: 'inherit' -}};
+$h3-font-family: {{- h3FontFamily -}};
+$h3-font-weight: {{- settings.h3FontWeight | default: 'inherit' -}};
+
+$display-font-family: {{- displayFontFamily -}};
+$display-font-size: {{- settings.displayFontSize | default: '3.5' -}}rem;
+$display-font-weight: {{- settings.displayFontWeight | default: 'inherit' -}};
+$display-font-style: {{- settings.displayFontStyle | default: 'normal' -}};
+$display-text-transform: {{- settings.displayTextTransform | default: 'none' -}};
+
 $subheadings-font-family: {{- settings.subheadingFont -}};
+$subheadings-font-size: {{- settings.subheadingFontSize | default: '1' -}}rem;
 $subheadings-font-weight: {{- settings.subheadingFontWeight -}};
 $subheadings-font-style: {{- settings.subheadingFontStyle -}};
 $subheadings-text-transform: {{- settings.subheadingTextTransform -}};
@@ -46,21 +192,27 @@ $accent-font-style: {{- settings.accentFontStyle -}};
 $accent-text-transform: {{- settings.accentTextTransform -}};
 
 $navigation-font-size: 1rem * {{- settings.navigationFontScale -}};
+$navigation-submenu-font-scale: {{- settings.navigationSubmenuFontScale | default: '1' -}};
 $navigation-font-family: {{- settings.navigationFont -}};
 $navigation-font-weight: {{- settings.navigationFontWeight -}};
 $navigation-font-style: {{- settings.navigationFontStyle -}};
 $navigation-text-transform: {{- settings.navigationTextTransform -}};
 $navigation-letter-spacing: {{- settings.navigationLetterSpacing -}};
-	
+
 $btn-font-family: {{- settings.buttonFont -}};
 $btn-font-weight: {{- settings.buttonFontWeight -}};
 $btn-font-style: {{- settings.buttonFontStyle -}};
 $btn-text-transform: {{- settings.buttonTextTransform -}};
 $btn-letter-spacing: {{- settings.buttonLetterSpacing -}};
-$btn-primary-variant: {{- settings.styleButtonPrimaryVariant -}};
-$btn-secondary-variant: {{- settings.styleButtonSecondaryVariant -}};
+{%- assign btnPrimaryVariant = settings.styleButtonPrimaryVariant -%}
+{%- if btnPrimaryVariant == blank -%}{%- assign btnPrimaryVariant = '1' -%}{%- endif -%}
+{%- assign btnSecondaryVariant = settings.styleButtonSecondaryVariant -%}
+{%- if btnSecondaryVariant == blank -%}{%- assign btnSecondaryVariant = '1' -%}{%- endif -%}
+$btn-primary-variant: '{{ btnPrimaryVariant }}';
+$btn-secondary-variant: '{{ btnSecondaryVariant }}';
 $btn-padding-y: {{- settings.styleBtnPaddingY -}};
 $btn-padding-x: {{- settings.styleBtnPaddingX -}};
+$btn-border-width: {{- settings.styleBtnBorderWidth | default: 2 -}}px;
 
 $input-btn-padding-y: {{- settings.styleInputBtnPaddingY -}};
 $input-btn-padding-x: {{- settings.styleInputBtnPaddingX -}};
@@ -79,8 +231,8 @@ $container-max-widths: (
 	sm: {{ settings.styleGridContainerMaxWidthSm }},
 	md: {{ settings.styleGridContainerMaxWidthMd }},
 	lg: {{ settings.styleGridContainerMaxWidthLg }},
-	xl: {{ settings.styleGridContainerMaxWidthXl }},
-	xxl: {{ settings.styleGridContainerMaxWidthXxl }}
+	xl: {{ styleStoreMaxWidth }},
+	xxl: {{ styleStoreMaxWidth }}
 );
 
 $container-custom-max-widths: (
@@ -126,6 +278,9 @@ $article-image-aspect-ratio-fit: {{- settings.articleImageAspectRatioFit -}};
 
 $section-highlight-item-border: {%- if settings.sectionHighlightItemBorder -%}'true'{%- else -%}'false'{%- endif -%};
 $section-text-align: {{- settings.sectionTextAlign -}};
+{%- assign styleElevation = settings.styleElevation | default: 'soft' -%}
+{%- if styleElevation == blank -%}{%- assign styleElevation = 'soft' -%}{%- endif -%}
+$style-elevation: '{{ styleElevation }}';
 
 $spacer: 1rem;
 $spacers: (
@@ -146,8 +301,8 @@ $spacers: (
 	'c': var(--style-grid-container-padding-x)
 );
 
-$image-border-radius: {{ settings.styleImageBorderRadius }};
-$product-image-border-radius: {{ settings.styleProductImageBorderRadius }};
+$image-border-radius: {{ styleImageBorderRadius }};
+$product-image-border-radius: {{ styleImageBorderRadius }};
 
 $enable-input-borders: {%- if settings.styleInputBorder -%}'true'{%- else -%}'false'{%- endif -%};
 
@@ -160,23 +315,25 @@ $body-secondary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.7
 $body-tertiary-bg: {{ bodyTertiaryBg }};
 $body-tertiary-color: {{ settings.style_text_color | color_modify: 'alpha', 0.5 | color_min_contrast: bodyTertiaryBg }};
 
-$body-emphasis-color: {{ settings.style_accent_color }};
+$body-emphasis-color: {{ styleAccentColor }};
 
 $link-color: {{ settings.style_link_color }};
 $link-hover-color: {{ settings.style_link_color }};
 
 $form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='{{ settings.style_form_text_color }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>");
 
-{%- if styleAccentColorBrightness > 190 -%}
-	{%- assign formInputActiveColor = settings.style_form_text_color | color_min_contrast: settings.style_accent_color -%}
+{%- if styleElevation == 'hard' -%}
+	{%- assign formInputActiveColor = styleBtnTextColor | default: settings.style_text_color -%}
+{%- elsif styleAccentColorBrightness > 190 -%}
+	{%- assign formInputActiveColor = settings.style_form_text_color | color_min_contrast: styleAccentColor -%}
 {%- else -%}
-	{%- assign formInputActiveColor = '#ffffff' | color_min_contrast: settings.style_accent_color -%}
+	{%- assign formInputActiveColor = '#ffffff' | color_min_contrast: styleAccentColor -%}
 {%- endif -%}
 
 {%- if styleFormBgColorBrightness > 190 -%}
-	{%- assign formInputColor = settings.style_form_text_color | color_min_contrast: settings.style_accent_color -%}
+	{%- assign formInputColor = settings.style_form_text_color | color_min_contrast: styleAccentColor -%}
 {%- else -%}
-	{%- assign formInputColor = '#ffffff' | color_min_contrast: settings.style_accent_color -%}
+	{%- assign formInputColor = '#ffffff' | color_min_contrast: styleAccentColor -%}
 {%- endif -%}
 
 $form-check-input-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='{{ formInputActiveColor }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>");
@@ -188,7 +345,8 @@ $form-switch-focus-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.o
 $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='{{ formInputActiveColor }}'/></svg>");
 
 :root {
-	--style-accent-color: {{ settings.style_accent_color }};
+	--style-brand-color: {{ styleBrandColor | default: styleAccentColor | default: settings.style_text_color }};
+	--style-accent-color: {{ styleAccentColor }};
     --style-heading-color: {{ settings.style_heading_color }};
     --style-subheading-color: {{ settings.style_subheading_color }};
     --style-overline-color: {{ settings.style_overline_color }};
@@ -196,8 +354,10 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
     --style-link-color: {{ settings.style_link_color }};
     --style-icon-color: {{ settings.style_icon_color }};
     --style-border-color: {{ settings.style_border_color }};
-    --style-btn-bg-color: {{ settings.style_btn_bg_color }};
-    --style-btn-text-color: {{ settings.style_btn_text_color }};
+    --style-btn-bg-color: {{ styleBtnBgColor }};
+    --style-btn-text-color: {{ styleBtnTextColor }};
+    --style-btn-secondary-bg-color: {{ styleBtnSecondaryBg }};
+    --style-btn-secondary-text-color: {{ styleBtnSecondaryText }};
     --style-bg-color: {{ settings.style_bg_color }};
     --style-secondary-bg-color: {{ settings.style_secondary_bg_color }};
     --style-product-title-color: {{ settings.style_product_title_color }};
@@ -218,16 +378,35 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
 	--style-form-bg-color: {{ settings.style_form_bg_color }};
     --style-form-text-color: {{ settings.style_form_text_color }};
     --style-form-border-color: {{ settings.style_form_border_color }};
+	--style-form-surface-bg-color: {{ settings.style_form_bg_color }};
+	--style-form-surface-text-color: {{ settings.style_form_text_color }};
+	--style-form-surface-border-color: {{ settings.style_form_border_color }};
+
+	{%- if styleElevation == 'hard' -%}
+	--style-elevation-offset: 0.3125rem;
+	--style-elevation-offset-hover: 0.375rem;
+	--style-elevation-offset-pressed: 0.125rem;
+	--style-elevation-press-translate: 0.125rem;
+	--style-elevation-lift: -0.0625rem;
+	--style-elevation-grid-size: 2rem;
+	--style-elevation-motion-duration: 150ms;
+	{%- endif -%}
 
 	--style-header-bg-color: {{ settings.style_header_bg_color }};
 	--style-header-text-color: {{ settings.style_header_text_color }};
-	--style-header-accent-color: {{ settings.style_header_accent_color }};
+	--style-header-accent-color: {{ styleHeaderAccentColor }};
 
-	--style-footer-bg-color: {{ settings.style_footer_bg_color }};
-	--style-footer-text-color: {{ settings.style_footer_text_color }};
+	--style-announcement-bg-color: {{ styleAnnouncementBgColor }};
+	--style-announcement-text-color: {{ styleAnnouncementTextColor }};
 
-	--style-announcement-bg-color: {{ settings.style_announcement_bg_color }};
-	--style-announcement-text-color: {{ settings.style_announcement_text_color }};
+	--finqu-theme-svg-bg: {{ settings.style_bg_color }};
+	--finqu-theme-svg-accent: {{ styleAccentColor }};
+	{%- if styleBgColorBrightness > 128 -%}
+	--finqu-theme-svg-fg: #EEEEEE;
+	{%- else -%}
+	--finqu-theme-svg-fg: #111111;
+	{%- endif -%}
+	--finqu-theme-svg-outline: {{ settings.style_text_color }};
 
 	{%- if styleFormBgColorBrightness > 190 -%}
 		--style-form-bg-hover-color: {{ settings.style_form_bg_color | color_darken: 5 }};
@@ -263,12 +442,12 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
 		--pswp-bg: #000;
 		--pswp-placeholder-bg: #222;
 		--pswp-icon-color: #fff;
-		--swiper-theme-color: {{ settings.style_accent_color }};
+		--swiper-theme-color: {{ styleAccentColor }};
 		--swiper-btn-bg-color: {{ settings.style_bg_color }};
 		--swiper-btn-color: {{ settings.style_icon_color }};
 		--swiper-btn-border-color: {{ settings.style_bg_color | color_darken: 30 }};
 		--swiper-pagination-bullet-color: {{ settings.style_bg_color | color_darken: 70 }};
-        --swiper-pagination-bullet-active-color: {{ settings.style_accent_color }};
+        --swiper-pagination-bullet-active-color: {{ styleAccentColor }};
 		--swiper-pagination-bullet-border-color: {{ settings.style_bg_color | color_darken: 70 }};
 		--style-bg-hover-color: {{ settings.style_bg_color | color_darken: 5 }};
 		--style-bg-accent-color: {{ settings.style_bg_color | color_darken: 7 }};
@@ -277,12 +456,12 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
 		--pswp-bg: #fff;
 		--pswp-placeholder-bg: #222;
 		--pswp-icon-color: #000;
-		--swiper-theme-color: {{ settings.style_accent_color }};
+		--swiper-theme-color: {{ styleAccentColor }};
 		--swiper-btn-bg-color: {{ settings.style_bg_color }};
 		--swiper-btn-color: {{ settings.style_icon_color }};
 		--swiper-btn-border-color: {{ settings.style_bg_color | color_lighten: 30 }};
 		--swiper-pagination-bullet-color: {{ settings.style_bg_color | color_lighten: 70 }};
-        --swiper-pagination-bullet-active-color: {{ settings.style_accent_color }};
+        --swiper-pagination-bullet-active-color: {{ styleAccentColor }};
 		--swiper-pagination-bullet-border-color: {{ settings.style_bg_color | color_lighten: 70 }};
 		--style-bg-hover-color: {{ settings.style_bg_color | color_lighten: 5 }};
 		--style-bg-accent-color: {{ settings.style_bg_color | color_lighten: 7 }};
@@ -296,52 +475,65 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
 	{%- endif -%}
 
 	{%- if styleButtonBgColorColorBrightness > 190 -%}
-		--style-btn-bg-active-color: {{ settings.style_btn_bg_color | color_darken: 10 }};
-		--style-btn-bg-hover-color: {{ settings.style_btn_bg_color | color_darken: 8 }};
-		--style-btn-border-hover-color: {{ settings.style_btn_bg_color | color_darken: 8 }};
-		--style-btn-border-active-color: {{ settings.style_btn_bg_color | color_darken: 13 }};
+		--style-btn-bg-active-color: {{ styleBtnBgColor | color_darken: 10 }};
+		--style-btn-bg-hover-color: {{ styleBtnBgColor | color_darken: 8 }};
+		--style-btn-border-hover-color: {{ styleBtnBgColor | color_darken: 8 }};
+		--style-btn-border-active-color: {{ styleBtnBgColor | color_darken: 13 }};
 	{%- else -%}
-		--style-btn-bg-active-color: {{ settings.style_btn_bg_color | color_lighten: 10 }};
-		--style-btn-bg-hover-color: {{ settings.style_btn_bg_color | color_lighten: 8 }};
-		--style-btn-border-hover-color: {{ settings.style_btn_bg_color | color_lighten: 8 }};
-		--style-btn-border-active-color: {{ settings.style_btn_bg_color | color_lighten: 13 }};
+		--style-btn-bg-active-color: {{ styleBtnBgColor | color_lighten: 10 }};
+		--style-btn-bg-hover-color: {{ styleBtnBgColor | color_lighten: 8 }};
+		--style-btn-border-hover-color: {{ styleBtnBgColor | color_lighten: 8 }};
+		--style-btn-border-active-color: {{ styleBtnBgColor | color_lighten: 13 }};
+	{%- endif -%}
+
+	{%- if styleButtonSecondaryBgColorBrightness > 190 -%}
+		--style-btn-secondary-bg-active-color: {{ styleBtnSecondaryBg | color_darken: 10 }};
+		--style-btn-secondary-bg-hover-color: {{ styleBtnSecondaryBg | color_darken: 8 }};
+		--style-btn-secondary-border-hover-color: {{ styleBtnSecondaryBg | color_darken: 8 }};
+		--style-btn-secondary-border-active-color: {{ styleBtnSecondaryBg | color_darken: 13 }};
+	{%- else -%}
+		--style-btn-secondary-bg-active-color: {{ styleBtnSecondaryBg | color_lighten: 10 }};
+		--style-btn-secondary-bg-hover-color: {{ styleBtnSecondaryBg | color_lighten: 8 }};
+		--style-btn-secondary-border-hover-color: {{ styleBtnSecondaryBg | color_lighten: 8 }};
+		--style-btn-secondary-border-active-color: {{ styleBtnSecondaryBg | color_lighten: 13 }};
 	{%- endif -%}
 
 	{%- if styleAccentColorBrightness > 190 -%}
-		--style-accent-text-color: {{ '#000000' | color_min_contrast: settings.style_accent_color }}
+		--style-accent-text-color: {{ '#000000' | color_min_contrast: styleAccentColor }}
 	{%- else -%}
-		--style-accent-text-color: {{ '#ffffff' | color_min_contrast: settings.style_accent_color }}
+		--style-accent-text-color: {{ '#ffffff' | color_min_contrast: styleAccentColor }}
 	{%- endif -%}
 
 	--pswp-icon-stroke-width: 0px;
 	--pswp-icon-stroke-color: transparent;
 	--pswp-preloader-color-secondary: transparent;
 	--pswp-icon-color-secondary: transparent;
-	
+
 	--style-bg-light-color: {{ settings.style_bg_color | color_lighten: 35 }};
 	--style-border-focus-color: {{ settings.style_border_color | color_lighten: 25 }};
-	--style-btn-border-color: {{ settings.style_btn_bg_color }};
-	
+	--style-btn-border-color: {{ styleBtnBgColor }};
+	--style-btn-secondary-border-color: {{ styleBtnSecondaryBg }};
+
 	--style-form-placeholder-color: {{ settings.style_form_text_color | color_lighten: 15 }};
 	--style-form-bg-readonly-color: {{ settings.style_form_bg_color | color_lighten: 15 }};
 	--style-text-darker-color: {{ settings.style_text_color | color_darken: 5 | color_min_contrast: settings.style_bg_color }};
-	--style-accent-faded-color: {{ settings.style_accent_color | color_lighten: 30 }};
+	--style-accent-faded-color: {{ styleAccentColor | color_lighten: 30 }};
 
 	{%- if settings.style_header_bg_color == settings.style_bg_color -%}
-		--style-submenu-accent-color: {{ settings.style_header_accent_color }};
+		--style-submenu-accent-color: {{ styleHeaderAccentColor }};
 	{%- else -%}
-		--style-submenu-accent-color: {{ settings.style_accent_color | color_min_contrast: settings.style_bg_color }};
+		--style-submenu-accent-color: {{ styleAccentColor | color_min_contrast: settings.style_bg_color }};
 	{%- endif -%}
 
 	--style-loader-color: {{ settings.style_icon_color }};
 	--style-loader-faded-color: {{ settings.style_icon_color | color_modify: 'alpha', 0.1 | color_min_contrast: settings.style_bg_color }};
 
-	--style-border-radius: {{ settings.styleBorderRadius }};
-	--style-btn-border-radius: {{ settings.styleButtonBorderRadius }};
-	--style-input-border-radius: {{ settings.styleInputBorderRadius }};
-	--style-component-border-radius: {{ settings.styleComponentBorderRadius }};
-	--style-image-border-radius: {{ settings.styleImageBorderRadius }};
-	--style-product-image-border-radius: {{ settings.styleProductImageBorderRadius }};
+	--style-border-radius: {{ styleBorderRadiusGlobal }};
+	--style-btn-border-radius: {{ styleButtonBorderRadius }};
+	--style-input-border-radius: {{ styleInputBorderRadius }};
+	--style-component-border-radius: {{ styleBorderRadiusGlobal }};
+	--style-image-border-radius: {{ styleImageBorderRadius }};
+	--style-product-image-border-radius: {{ styleImageBorderRadius }};
 
 	--style-announcement-height: {{ settings.styleAnnouncementHeight }};
 	--style-announcement-font-scale: {{ settings.styleAnnouncementFontScale }};
@@ -350,15 +542,26 @@ $form-switch-checked-bg-image: url("data:image/svg+xml,<svg xmlns='http://www.w3
 	--style-grid-gutter-width: {{ settings.styleGridGutterWidth }};
 	--style-grid-gutter-width-mobile: {{ settings.styleGridGutterWidth | replace: 'rem', '' | times: 0.5 | append: 'rem' }};
 
-	--style-icon-stroke-width: {{ settings.styleIconStrokeWidth }};
+	{%- assign iconStrokeWidthValue = settings.styleIconStrokeWidth | replace: 'px', '' -%}
+	{%- if styleElevation == 'hard' -%}
+		--style-icon-stroke-width: {{ iconStrokeWidthValue | times: 1.5 | append: 'px' }};
+		--style-underline-indicator-height: 3px;
+	{%- else -%}
+		--style-icon-stroke-width: {{ settings.styleIconStrokeWidth }};
+		--style-underline-indicator-height: 2px;
+	{%- endif -%}
 
-	--style-underline-indicator-height: 2px;
-
-	{%- if settings.navigationFontWeight > 400 -%}
-		--style-navigation-icon-stroke-width: {{ settings.styleIconStrokeWidth | replace: 'px', '' | times: 1.5 | append: 'px' -}};
+	{%- if settings.navigationFontWeight > 400 or styleElevation == 'hard' -%}
+		{%- assign navIconStrokeMultiplier = 1.5 -%}
+		{%- if styleElevation == 'hard' -%}
+			{%- assign navIconStrokeMultiplier = 1.85 -%}
+		{%- endif -%}
+		--style-navigation-icon-stroke-width: {{ iconStrokeWidthValue | times: navIconStrokeMultiplier | append: 'px' -}};
 	{%- else -%}
 		--style-navigation-icon-stroke-width: var(--style-icon-stroke-width);
 	{%- endif -%}
+
+	--style-navigation-submenu-font-scale: {{ settings.navigationSubmenuFontScale | default: '1' }};
 
 	@each $key, $val in $spacers {
 		--style-spacer-#{$key}: #{$val};

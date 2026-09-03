@@ -1,0 +1,58 @@
+{% comment %}
+    Locale and currency selectors.
+
+    Accepts:
+    - form_id: {String} unique form id
+    - class: {String} wrapper class
+    - preview: {Boolean} show in designer even when only one locale/currency
+{% endcomment %}
+
+{%- assign showLocalization = false -%}
+{%- if store.published_locales.size > 1 or store.enabled_currencies.size > 1 -%}
+    {%- assign showLocalization = true -%}
+{%- endif -%}
+{%- assign localizationFormId = form_id | default: 'localization-form' -%}
+
+{% if showLocalization or preview %}
+
+    <div class="{{ class | default: 'site-localization' }}">
+
+        {% form 'localization', customer id: localizationFormId %}
+
+            {% if store.published_locales.size > 1 %}
+
+                <select name="locale_code" class="site-localization-locale-select">
+
+                    {% for locale in store.published_locales %}
+                        <option value="{{ locale.iso_code }}"{% if locale.iso_code == request.locale.iso_code %} selected{% endif %}>
+                            {{ locale.name }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+            {% endif %}
+
+            {% if store.enabled_currencies.size > 1 %}
+
+                <select name="currency_code" class="site-localization-currency-select{% if store.published_locales.size > 1 %} ms-4{% endif %}">
+
+                    {% for currency in store.enabled_currencies %}
+                        <option value="{{ currency.iso_code }}"{% if currency.iso_code == store.currency.iso_code %} selected{% endif %}>
+                            {{ currency.iso_code }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+
+                {%- render 'icon', icon: 'angle-down', class: 'ms-2' -%}
+
+            {% endif %}
+
+        {% endform %}
+
+    </div>
+
+{% endif %}

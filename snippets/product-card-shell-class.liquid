@@ -1,0 +1,20 @@
+{% comment %}
+    Outputs product-card-grid-item modifier classes. Accepts product.
+{% endcomment %}
+
+{%- assign productHasDiscount = false -%}
+
+{%- if product and product.default_or_selected_variant.discount_information != nil -%}
+    {%- assign productHasDiscount = true -%}
+{%- endif -%}
+
+{%- unless product -%}
+    {%- assign productHasDiscount = 'true,false' | split: ',' | random -%}
+    {%- if productHasDiscount == 'true' -%}
+        {%- assign productHasDiscount = true -%}
+    {%- else -%}
+        {%- assign productHasDiscount = false -%}
+    {%- endif -%}
+{%- endunless -%}
+
+{%- if productHasDiscount -%}product-has-discount{%- endif -%}

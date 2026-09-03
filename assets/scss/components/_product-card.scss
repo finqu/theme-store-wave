@@ -6,6 +6,41 @@
     flex-direction: column;
     height: 100%;
 
+    // Static product-media is a nested `.finqu-block` with editor float styles.
+    // Contain it so caption/content stack below the image in normal flow.
+    .product-list-item-media,
+    .product-caption {
+        display: flow-root;
+        width: 100%;
+    }
+
+    .product-list-item-media {
+
+        .finqu-block {
+            float: none;
+            width: 100%;
+        }
+
+        & + .product-caption {
+            padding-top: spacer(3);
+        }
+    }
+
+    .product-caption {
+
+        .finqu-block {
+            float: none;
+            width: 100%;
+        }
+    }
+
+    > .block-product-list-item {
+        display: flex;
+        flex-direction: column;
+        float: none;
+        width: 100%;
+    }
+
     @include media-breakpoint-up(lg) {
 
         &:hover {
@@ -51,6 +86,13 @@
     .product-media-container {
         position: relative;
 
+        // Keep linked media below overlays so the quick-add fill is not covered
+        // by the absolute image stacking context inside the media block.
+        > .product-media-link {
+            position: relative;
+            z-index: 0;
+        }
+
         @include media-breakpoint-up(lg) {
             &:hover {
 
@@ -84,16 +126,12 @@
             }
         }
 
-        & + .product-caption {
-            padding-top: spacer(3);
-        }
-
         .product-wishlist-action-container {
             display: flex;
             position: absolute;
             top: .7em;
             right: .7em;
-            z-index: 2;
+            z-index: 3;
             
             .product-wishlist-action {
                 display: flex;
@@ -103,7 +141,7 @@
                 border-radius: var(--style-btn-border-radius);
                 width: 2em;
                 height: 2em;
-                box-shadow: 0 4px 20px #0000001a, 0 1px 3px #00000012;
+                @include elevation-shadow-or((0 4px 20px #0000001a, 0 1px 3px #00000012));
                 @include font-size($font-size-base * 1.2);
             }
         }
@@ -112,7 +150,7 @@
             position: absolute;
             right: .7em;
             bottom: .7em;
-            z-index: 2;
+            z-index: 3;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -122,6 +160,12 @@
 
             .product-quick-add-action {
                 display: grid;
+
+                // `.btn-text` forces a transparent background; the opaque fill
+                // lives on the inner surface so the media cannot show through.
+                &.btn-text {
+                    background: transparent;
+                }
 
                 &:hover {
 
@@ -147,10 +191,11 @@
                     width: 37px;
                     min-height: 37px;
                     transition: width .3s ease;
-                    box-shadow: 0 4px 20px #0000001a, 0 1px 3px #00000012;
+                    @include elevation-shadow-or((0 4px 20px #0000001a, 0 1px 3px #00000012));
                     background-color: var(--style-bg-color);
                     border-radius: var(--style-btn-border-radius);
                     pointer-events: none;
+                    isolation: isolate;
 
                     .product-quick-add-action-icon {
                         width: 20px;
@@ -178,9 +223,14 @@
     .product-caption {
         display: flex;
         flex-direction: column;
+        gap: var(--product-card-content-gap, 0);
         text-align: var(--section-content-text-align, inherit);
         height: 100%;
         position: relative;
+
+        .product-media-container + * {
+            padding-top: spacer(3);
+        }
 
         > a {
             display: flex;
@@ -233,6 +283,38 @@
             }
         }
 
+        > .block[class*="block-product-"]:not(.block-product-media) + .block[class*="block-product-"] {
+            margin-top: spacer(2);
+        }
+
+        .block-product-title + .block-product-rating {
+            margin-top: spacer(1);
+        }
+
+        .product-title-price {
+            width: 100%;
+
+            &--inline {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: spacer(2);
+            }
+
+            &-start {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+
+            &-end {
+                flex-shrink: 0;
+            }
+
+            .product-name + .product-price {
+                margin-top: spacer(2);
+            }
+        }
+
         .product-combined {
             display: flex;
             flex-direction: column;
@@ -254,6 +336,16 @@
             @include font-size($font-size-base * 0.9);
             margin-top: auto;
             padding-top: spacer(2);
+
+            &--badge {
+
+                span {
+                    display: inline-block;
+                    padding: 0.15em 0.5em;
+                    border-radius: var(--bs-border-radius-sm);
+                    background-color: var(--style-bg-color-alt, rgba(0, 0, 0, 0.05));
+                }
+            }
         }
     }
 }
@@ -350,7 +442,7 @@
     display: flex;
     flex-direction: column;
     gap: spacer(2);
-    z-index: 2;
+    z-index: 3;
 
     &.product-badge-position-inline {
         display: inline-flex;
@@ -495,5 +587,106 @@
         background-color: #ecbd5e;
         border-radius: 50%;
         transform: translate(-50%,-50%);
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .product-card-grid-item {
+
+        &.section-highlight-item:has(
+            .product-media-link,
+            .product-name a,
+            .product-quick-add-action
+        ) {
+            @include elevation-lift;
+        }
+
+        .product-media-container {
+            border: $elevation-border-width solid $elevation-rule-color;
+            background-color: var(--style-bg-color);
+            box-shadow: $elevation-offset $elevation-offset 0 $elevation-accent-shadow-color;
+        }
+
+        .product-wishlist-action,
+        .product-quick-add-action-inner {
+            border: $elevation-border-width solid $elevation-rule-color;
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+        }
+
+        .product-wishlist-action {
+            @include elevation-press-in;
+
+            &:focus-visible {
+                @include elevation-focus;
+            }
+
+            &[aria-pressed="true"] {
+                background-color: var(--style-btn-bg-color);
+            }
+        }
+
+        .product-name-text {
+            font-weight: $font-weight-bold;
+        }
+    }
+
+    .product-quantity-container {
+
+        .product-quantity {
+
+            .product-quantity-decrease,
+            .product-quantity-increase {
+                border-width: $elevation-border-width;
+                border-color: $elevation-rule-color;
+                background-color: var(--style-bg-color);
+                color: var(--style-text-color);
+                box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+                @include elevation-press-in($elevation-accent-shadow-color);
+
+                &:focus-visible {
+                    @include elevation-focus;
+                }
+            }
+
+            .product-quantity-input {
+                border-width: $elevation-border-width;
+
+                &:focus {
+                    border-color: $elevation-focus-color;
+                    box-shadow: 0 0 0 $elevation-focus-width $elevation-focus-color;
+                }
+            }
+        }
+
+        .product-inline-quantity {
+            border-width: $elevation-border-width;
+            border-color: $elevation-rule-color;
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+
+            .product-quantity-decrease,
+            .product-quantity-increase {
+                color: var(--style-text-color);
+
+                &:focus-visible {
+                    @include elevation-focus;
+                }
+            }
+
+            .product-quantity-input:focus {
+                @include elevation-focus;
+            }
+        }
+    }
+
+    .product-badges {
+
+        .product-badge-content {
+            border: $elevation-border-width solid $elevation-rule-color;
+            box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+            font-family: $overlines-font-family;
+            font-weight: $font-weight-bold;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
     }
 }

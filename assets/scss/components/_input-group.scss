@@ -20,6 +20,7 @@
                 border-color: var(--style-form-border-color);
             }
         }
+
     }
 
     &:not(.disable-focus):focus-within {
@@ -136,5 +137,41 @@
 
     & > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
         z-index: 5;
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .input-group {
+        overflow: visible;
+
+        .form-control,
+        .form-select,
+        .input-group-text,
+        .btn:not(.btn-primary):not(.btn-secondary) {
+            border-width: $elevation-border-width;
+            border-color: $elevation-rule-color;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            // Keep the input under the floating label (z-index: 2).
+            // The hover/focus bar lives on the group, not this input.
+            box-shadow: none;
+        }
+
+        .form-floating > label {
+            z-index: 3;
+            color: var(--style-form-placeholder-color);
+        }
+
+        .input-group-text {
+            background-color: var(--style-form-bg-color);
+            color: var(--style-form-text-color);
+        }
+
+        &:hover,
+        &:focus-within {
+            box-shadow: 0 $elevation-offset 0 $elevation-accent-shadow-color;
+        }
     }
 }

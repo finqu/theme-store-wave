@@ -1,0 +1,75 @@
+{%- assign footerMenu1 = linklists[section.settings.footerMenu1] -%}
+{%- assign footerMenu2 = linklists[section.settings.footerMenu2] -%}
+{%- assign footerMenu3 = linklists[section.settings.footerMenu3] -%}
+
+{%- capture sectionContent -%}
+
+    <div class="site-footer-container">
+
+        <div class="site-footer">
+
+            <div class="site-footer-top">
+
+                <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                    <div class="row gy-4 site-footer-columns">
+
+                        <div class="site-footer-blocks site-footer-blocks-left col-12 col-md-6 col-lg">
+
+                            {% render 'footers/brand', section: section %}
+
+                            {% container 'left' %}
+
+                        </div>
+
+                        {%- if section.settings.footerMenu1 -%}
+
+                            <div class="col-12 col-md-4 col-lg-2">
+
+                                {% render 'footers/menu', menu: footerMenu1, title: section.settings.footerMenu1Title %}
+
+                            </div>
+
+                        {%- endif -%}
+
+                        {%- if section.settings.footerMenu2 -%}
+
+                            <div class="col-12 col-md-4 col-lg-2">
+
+                                {% render 'footers/menu', menu: footerMenu2, title: section.settings.footerMenu2Title %}
+
+                            </div>
+
+                        {%- endif -%}
+
+                        {%- if section.settings.footerMenu3 -%}
+
+                            <div class="col-12 col-md-4 col-lg-2">
+
+                                {% render 'footers/menu', menu: footerMenu3, title: section.settings.footerMenu3Title %}
+
+                            </div>
+
+                        {%- endif -%}
+
+                        <div class="site-footer-blocks site-footer-blocks-right col-12 col-md-6 col-lg">
+
+                            {% container 'right' %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% render 'footers/bottom-bar', section: section, include_payment: true %}
+
+        </div>
+
+    </div>
+
+{%- endcapture -%}
+
+{% render 'footers/render-section', section: section, sectionContent: sectionContent, sectionClasses: sectionClasses, sectionGutterWidth: '4rem' %}

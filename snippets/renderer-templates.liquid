@@ -30,21 +30,7 @@
 
                                 {{#if item.image.original}}
 
-                                    {{#ifCond productImageAspectRatio '===' 9:13}}
-                                        {{ assign 'imgSize' '110,142' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 4:3}}
-                                        {{ assign 'imgSize' '110,93' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 3:4}}
-                                        {{ assign 'imgSize' '110,147' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 1:1}}
-                                        {{ assign 'imgSize' '110,110' }}
-                                    {{/ifCond}}
+                                    {{ assign 'imgSize' '110,110' }}
 
                                     <img
                                         alt="{{ item.name }}"
@@ -72,22 +58,6 @@
                         <div class="row row align-items-center h-100">
 
                             <div class="col-12 col-md">
-
-                                {{#if @root.productShowManufacturer}}
-
-                                    {{#if item.manufacturer}}
-
-                                        <div class="cart-item-manufacturer">
-
-                                            <span class="cart-item-manufacturer-text">
-                                                {{ manufacturer }}
-                                            </span>
-
-                                        </div>
-
-                                    {{/if}}
-
-                                {{/if}}
 
                                 <div class="cart-item-name">
 
@@ -435,7 +405,7 @@
                             {{> cart_items cart=cart}}
                         </div>
 
-                        <div class="cart-aside"{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 2"{% raw %}{{/if}}{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 2"{% raw %}{{/if}}>
+                        <div class="cart-aside"{{#if isInitialRender}}{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 2"{% raw %}{{/if}}>
 
                             <div class="cart-aside-inner section-highlight-item">
 
@@ -479,7 +449,7 @@
 
             <div class="section-content"{% endraw %} data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-cart-template" data-aos-delay style="--aos-order: 1"{% raw %}>
 
-                <div class="container-tiny text-center">
+                <div class="container-tiny text-center cart-empty">
     
                     {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-7x mb-3' -%}{% raw %}
 
@@ -565,21 +535,7 @@
 
                                     {{#if item.image.original}}
 
-                                        {{#ifCond productImageAspectRatio '===' 9:13}}
-                                            {{ assign 'imgSize' '110,142' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 4:3}}
-                                            {{ assign 'imgSize' '110,93' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 3:4}}
-                                            {{ assign 'imgSize' '110,147' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 1:1}}
-                                            {{ assign 'imgSize' '110,110' }}
-                                        {{/ifCond}}
+                                        {{ assign 'imgSize' '110,110' }}
 
                                         <picture>
                                             <img
@@ -609,22 +565,6 @@
                             <div class="row g-0">
 
                                 <div class="col">
-
-                                    {{#if @root.productShowManufacturer}}
-
-                                        {{#if item.manufacturer}}
-
-                                            <div class="cart-item-manufacturer">
-
-                                                <span class="cart-item-manufacturer-text">
-                                                    {{ manufacturer }}
-                                                </span>
-
-                                            </div>
-
-                                        {{/if}}
-
-                                    {{/if}}
 
                                     <div class="cart-item-name">
 
@@ -764,7 +704,7 @@
 
         <div class="cart-actions">
 
-            <a href="{{ cartUrl }}" class="btn btn-secondary d-block w-100 mt-2">
+            <a href="{{ cartUrl }}" class="btn btn-primary btn-outline d-block w-100 mt-2">
                 {{ t 'cart.view_cart' }}
             </a>
 
@@ -830,7 +770,7 @@
 
         {{else}}
 
-            <div class="cart-header text-center">
+            <div class="cart-header text-center cart-empty">
 
                 {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-3x mb-3' -%}{% raw %}
 
@@ -919,22 +859,7 @@
                                     {{#if item.image}}
 
                                         {{ assign 'imgSrc' item.image.original }}
-
-                                        {{#ifCond productImageAspectRatio '===' 9:13}}
-                                            {{ assign 'imgSize' '110,142' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 4:3}}
-                                            {{ assign 'imgSize' '110,93' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 3:4}}
-                                            {{ assign 'imgSize' '110,147' }}
-                                        {{/ifCond}}
-
-                                        {{#ifCond productImageAspectRatio '===' 1:1}}
-                                            {{ assign 'imgSize' '110,110' }}
-                                        {{/ifCond}}
+                                        {{ assign 'imgSize' '110,110' }}
 
                                         <picture>
                                             <img
@@ -964,22 +889,6 @@
                             <div class="row g-0">
 
                                 <div class="col">
-
-                                    {{#if @root.productShowManufacturer}}
-
-                                        {{#if item.manufacturer}}
-
-                                            <div class="cart-item-manufacturer">
-
-                                                <span class="cart-item-manufacturer-text">
-                                                    {{ manufacturer }}
-                                                </span>
-
-                                            </div>
-
-                                        {{/if}}
-
-                                    {{/if}}
 
                                     <div class="cart-item-name">
 
@@ -1119,7 +1028,7 @@
 
         <div class="cart-actions">
 
-            <a href="{{ cartUrl }}" class="btn btn-secondary d-block w-100 mt-2">
+            <a href="{{ cartUrl }}" class="btn btn-primary btn-outline d-block w-100 mt-2">
                 {{ t 'cart.view_cart' }}
             </a>
 
@@ -1185,7 +1094,7 @@
 
         {{else}}
 
-            <div class="cart-header text-center">
+            <div class="cart-header text-center cart-empty">
 
                 {% endraw %}{%- render 'icon', icon: 'cart', class: 'svg-icon-5x mb-3' -%}{% raw %}
 
@@ -1266,21 +1175,7 @@
 
                                 {{#if image.original}}
 
-                                    {{#ifCond productImageAspectRatio '===' 9:13}}
-                                        {{ assign 'imgSize' '50,81' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 4:3}}
-                                        {{ assign 'imgSize' '50,33' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 3:4}}
-                                        {{ assign 'imgSize' '50,67' }}
-                                    {{/ifCond}}
-
-                                    {{#ifCond productImageAspectRatio '===' 1:1}}
-                                        {{ assign 'imgSize' '50,50' }}
-                                    {{/ifCond}}
+                                    {{ assign 'imgSize' '50,50' }}
 
                                     <picture>
                                         <img

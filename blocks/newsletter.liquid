@@ -1,13 +1,161 @@
+{%- assign placeholderText = block.settings.placeholder -%}
+{%- if placeholderText == blank -%}
+    {%- assign placeholderText = 'general.email' | t -%}
+{%- endif -%}
+{%- assign submitAppearance = block.settings.submitAppearance | default: 'icon' -%}
+{%- if submitAppearance == 'button' and block.settings.btnLabel != blank -%}
+    {%- assign btnLabel = block.settings.btnLabel -%}
+{%- else -%}
+    {%- assign btnLabel = 'general.subscribe' | t -%}
+{%- endif -%}
+{%- if submitAppearance == 'button' -%}
+    {%- assign submitPosition = 'outside' -%}
+    {%- assign submitLayout = block.settings.submitLayout | default: 'inline' -%}
+{%- else -%}
+    {%- assign submitPosition = 'inside' -%}
+    {%- assign submitLayout = 'inline' -%}
+{%- endif -%}
+{%- assign formMaxWidth = block.settings.formMaxWidth | default: 'auto' -%}
+{%- assign inputId = block.id | append: '-newsletter-email' -%}
+
+{%- comment -%} Migrate previous pixel values to Auto {%- endcomment -%}
+{%- if formMaxWidth == '300' or formMaxWidth == '370' or formMaxWidth == '400' or formMaxWidth == '460' or formMaxWidth == '500' -%}
+    {%- assign formMaxWidth = 'auto' -%}
+{%- endif -%}
+
+{%- case formMaxWidth -%}
+    {% when 'half' %}
+        {%- assign formWidthValue = '50%' -%}
+    {% when 'full' %}
+        {%- assign formWidthValue = '100%' -%}
+    {% else %}
+        {%- assign formWidthValue = 'min(100%, 23.125rem)' -%}
+{%- endcase -%}
+
+{%- if block.settings.contentAlign == 'nil' -%}
+    {%- assign formJustify = 'var(--section-text-align)' -%}
+{%- elsif block.settings.contentAlign == 'start' -%}
+    {%- assign formJustify = 'flex-start' -%}
+{%- elsif block.settings.contentAlign == 'end' -%}
+    {%- assign formJustify = 'flex-end' -%}
+{%- else -%}
+    {%- assign formJustify = block.settings.contentAlign -%}
+{%- endif -%}
+{%- if submitLayout == 'stack' -%}
+    {%- assign formAlignItems = 'stretch' -%}
+{%- else -%}
+    {%- assign formAlignItems = formJustify -%}
+{%- endif -%}
+
+{%- assign btnSize = block.settings.btnSize | default: 'sm' -%}
+{%- assign formControlClass = 'form-control' -%}
+{%- assign sizeClass = '' -%}
+
+{%- if submitAppearance == 'button' -%}
+    {%- assign btnTheme = block.settings.btnTheme -%}
+    {%- assign btnVariant = block.settings.btnVariant -%}
+
+    {%- if btnVariant == 'nil' or btnVariant == blank -%}
+        {%- assign btnVariant = settings.sectionQuickLinkVariant | default: settings.sectionQuickLinkStyle | default: 'filled' -%}
+    {%- endif -%}
+
+    {%- if btnTheme == 'nil' or btnTheme == blank -%}
+        {%- assign btnTheme = settings.sectionQuickLinkTheme | default: settings.sectionQuickLinkColor | default: 'primary' -%}
+        {%- if btnTheme == 'nil' or btnTheme == blank -%}
+            {%- assign btnTheme = 'primary' -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- assign underlineOn = false -%}
+    {%- assign iconAnimateOn = false -%}
+    {%- if btnVariant == 'text' -%}
+        {%- if settings.btnTextUnderline == true or settings.btnTextUnderline == 'true' -%}
+            {%- assign underlineOn = true -%}
+        {%- endif -%}
+        {%- if settings.btnTextIconAnimate == true or settings.btnTextIconAnimate == 'true' -%}
+            {%- assign iconAnimateOn = true -%}
+        {%- endif -%}
+    {%- elsif btnVariant == 'ghost' -%}
+        {%- if settings.btnGhostIconAnimate == true or settings.btnGhostIconAnimate == 'true' -%}
+            {%- assign iconAnimateOn = true -%}
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if btnSize == 'lg' -%}
+        {%- assign sizeClass = ' btn-lg' -%}
+        {%- assign formControlClass = 'form-control form-control-lg' -%}
+    {%- elsif btnSize == 'md' -%}
+        {%- assign sizeClass = '' -%}
+        {%- assign formControlClass = 'form-control' -%}
+    {%- elsif btnSize == 'xs' -%}
+        {%- assign sizeClass = ' btn-xs' -%}
+        {%- assign formControlClass = 'form-control form-control-sm' -%}
+    {%- else -%}
+        {%- assign sizeClass = ' btn-sm' -%}
+        {%- assign formControlClass = 'form-control form-control-sm' -%}
+    {%- endif -%}
+
+    {%- assign wrapIconContainer = false -%}
+    {%- case btnVariant -%}
+        {% when 'filled' %}
+            {%- assign btnClasses = 'btn btn-' | append: btnTheme | append: sizeClass -%}
+        {% when 'outline' %}
+            {%- assign btnClasses = 'btn btn-' | append: btnTheme | append: ' btn-outline' | append: sizeClass -%}
+        {% when 'ghost' %}
+            {%- assign btnClasses = 'btn btn-ghost btn-' | append: btnTheme | append: sizeClass -%}
+            {%- if iconAnimateOn -%}
+                {%- assign btnClasses = btnClasses | append: ' btn-icon-animate' -%}
+            {%- endif -%}
+        {% when 'text' %}
+            {%- assign btnClasses = 'btn-text fw-bold btn-text-' | append: btnTheme -%}
+            {%- if underlineOn -%}
+                {%- if iconAnimateOn -%}
+                    {%- assign btnClasses = btnClasses | append: ' text-icon-with-underline-indicator' -%}
+                    {%- assign wrapIconContainer = true -%}
+                {%- else -%}
+                    {%- assign btnClasses = btnClasses | append: ' text-underline-indicator' -%}
+                {%- endif -%}
+            {%- elsif iconAnimateOn -%}
+                {%- assign btnClasses = btnClasses | append: ' btn-icon-animate' -%}
+                {%- assign wrapIconContainer = true -%}
+            {%- endif -%}
+    {%- endcase -%}
+{%- endif -%}
+
 {%- capture blockStyle -%}
     #finqu-block-{{ block.id }} .block-inner {
         display: flex;
-        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+        justify-content: {{ formJustify }};
+        width: 100%;
     }
-    {%- if block.settings.blockPaddingMode == 'custom' -%}
-        #finqu-block-{{ block.id }} {
-            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
-            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
-        }
+    #finqu-block-{{ block.id }} .block-inner > form {
+        display: flex;
+        flex-direction: column;
+        align-items: {{ formAlignItems }};
+        width: 100%;
+        max-width: 100%;
+    }
+    #finqu-block-{{ block.id }} .newsletter-form-row {
+        width: {{ formWidthValue }};
+        max-width: 100%;
+    }
+    {%- if submitAppearance == 'button' and submitLayout != 'stack' -%}
+    #finqu-block-{{ block.id }} .newsletter-form-row > .newsletter-form-field {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    #finqu-block-{{ block.id }} .newsletter-form-row > .newsletter-form-field > .form-control {
+        width: 100%;
+    }
+    {%- endif -%}
+    {%- if submitLayout == 'stack' -%}
+    #finqu-block-{{ block.id }} .newsletter-form-row--stack {
+        width: {{ formWidthValue }};
+        max-width: 100%;
+    }
+    #finqu-block-{{ block.id }} .newsletter-form-row--stack .btn {
+        width: 100%;
+    }
     {%- endif -%}
 {%- endcapture -%}
 
@@ -45,31 +193,73 @@
 
         {% else %}
 
-            <div class="input-group max-w-px-370 mt-4">
-                                                    
-                <div class="form-floating">
+            {%- capture newsletterField -%}
+                {%- if submitAppearance == 'button' and submitLayout != 'stack' -%}
+                    <div class="newsletter-form-field">
+                        <label class="text-hidden" for="{{ inputId }}">
+                            {{- placeholderText -}}
+                        </label>
+                        <input id="{{ inputId }}" class="{{ formControlClass }}" type="email" name="email" value="" placeholder="{{ placeholderText }}" required>
+                    </div>
+                {%- else -%}
+                    <div class="form-floating">
+                        <input id="{{ inputId }}" class="form-control" type="email" name="email" value="" placeholder="{{ placeholderText }}" required>
+                        <label for="{{ inputId }}">
+                            {{- placeholderText -}}
+                        </label>
+                    </div>
+                {%- endif -%}
+            {%- endcapture -%}
 
-                    <input id="footer-middle-newsletter" class="form-control" type="email" name="email" value="" placeholder="{{ 'general.email' | t }}" required>
+            {%- capture newsletterSubmit -%}
+                {%- if submitAppearance == 'button' -%}
+                    {%- if wrapIconContainer -%}
+                        {%- if underlineOn -%}
+                            <div class="text-icon-with-underline-indicator-container">
+                        {%- else -%}
+                            <div class="btn-icon-animate-container">
+                        {%- endif -%}
+                    {%- endif -%}
 
-                    <label for="footer-middle-newsletter">
-                        {{- 'general.email' | t -}}
-                    </label>
+                    <button type="submit" class="{{ btnClasses }}{% if submitLayout == 'stack' %} d-block w-100{% endif %}">
+                        {{- btnLabel -}}
+                        {%- if iconAnimateOn -%}
+                            {%- render 'icon', icon: 'arrow-right' -%}
+                        {%- endif -%}
+                    </button>
 
+                    {%- if wrapIconContainer -%}
+                        </div>
+                    {%- endif -%}
+                {%- else -%}
+                    <button type="submit" class="btn btn-icon">
+                        <span class="text-hidden">
+                            {{- btnLabel -}}
+                        </span>
+                        {% render 'icon', icon: 'angle-right' %}
+                    </button>
+                {%- endif -%}
+            {%- endcapture -%}
+
+            {%- if submitPosition == 'outside' and submitLayout == 'stack' -%}
+                <div class="newsletter-form-row newsletter-form-row--stack d-flex flex-column gap-4">
+                    {{ newsletterField }}
+                    {% render 'form-error', error: form.error %}
+                    {{ newsletterSubmit }}
                 </div>
-
-                <button type="submit" class="btn btn-icon">
-
-                    <span class="text-hidden">
-                        {{- 'general.subscribe' | t -}}
-                    </span>
-
-                    {% render 'icon', icon: 'angle-right' %}
-
-                </button>
-
-            </div>
-
-            {% render 'form-error', error: form.error, class: 'mt-4' %}
+            {%- elsif submitPosition == 'outside' -%}
+                <div class="newsletter-form-row d-flex gap-2 align-items-stretch">
+                    {{ newsletterField }}
+                    {{ newsletterSubmit }}
+                </div>
+                {% render 'form-error', error: form.error, class: 'mt-4' %}
+            {%- else -%}
+                <div class="newsletter-form-row input-group">
+                    {{ newsletterField }}
+                    {{ newsletterSubmit }}
+                </div>
+                {% render 'form-error', error: form.error, class: 'mt-4' %}
+            {%- endif -%}
 
         {% endif %}
 
@@ -79,100 +269,201 @@
 
 {% schema %}
 {
-    "name": {
-        "en": "Newsletter form",
-        "fi": "Uutiskirje -lomake"
-    },
+    "name": "t:blocks.newsletter.name",
     "tag": "div",
     "class": "block block-newsletter",
-    "category": "basic",
+    "category": "commerce",
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.content.title",
                 "settings": [
-                     {
-                        "id": "contentAlign",
+                    {
+                        "id": "submitAppearance",
                         "type": "radio-pill",
-                        "label": {
-                            "en": "Alignment",
-                            "fi": "Ryhmittyminen"
-                        },
+                        "label": "t:blocks.newsletter.settings.submitAppearance.label",
+                        "default": "icon",
+                        "options": [
+                            {
+                                "value": "icon",
+                                "label": "t:blocks.newsletter.settings.submitAppearance.options.icon.label"
+                            },
+                            {
+                                "value": "button",
+                                "label": "t:blocks.newsletter.settings.submitAppearance.options.button.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "placeholder",
+                        "type": "text",
+                        "label": "t:blocks.newsletter.settings.placeholder.label"
+                    },
+                    {
+                        "id": "btnLabel",
+                        "type": "text",
+                        "label": "t:blocks.newsletter.settings.btnLabel.label",
+                        "conditions": [
+                            "submitAppearance eq button"
+                        ]
+                    },
+                    {
+                        "id": "submitLayout",
+                        "type": "radio-pill",
+                        "label": "t:blocks.newsletter.settings.submitLayout.label",
+                        "default": "inline",
+                        "options": [
+                            {
+                                "value": "inline",
+                                "label": "t:blocks.newsletter.settings.submitLayout.options.inline.label"
+                            },
+                            {
+                                "value": "stack",
+                                "label": "t:blocks.newsletter.settings.submitLayout.options.stack.label"
+                            }
+                        ],
+                        "conditions": [
+                            "submitAppearance eq button"
+                        ]
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "btnTheme",
+                        "type": "select",
+                        "label": "t:all.settings.btnTheme.label",
                         "default": "nil",
                         "options": [
                             {
                                 "value": "nil",
-                                "label": "Auto"
+                                "label": "t:all.settings.btnTheme.options.nil.label"
                             },
                             {
-                                "value": "start",
-                                "label": "{# icon.align-start #}"
+                                "value": "primary",
+                                "label": "t:all.settings.btnTheme.options.primary.label"
                             },
                             {
-                                "value": "center",
-                                "label": "{# icon.align-center #}"
+                                "value": "secondary",
+                                "label": "t:all.settings.btnTheme.options.secondary.label"
                             },
                             {
-                                "value": "end",
-                                "label": "{# icon.align-end #}"
+                                "value": "contrast",
+                                "label": "t:all.settings.btnTheme.options.contrast.label"
                             }
+                        ],
+                        "conditions": [
+                            "submitAppearance eq button"
                         ]
                     },
                     {
-                        "id": "blockPaddingMode",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Padding",
-                            "fi": "Välit"
-                        },
+                        "id": "btnVariant",
+                        "type": "select",
+                        "label": "t:all.settings.btnVariant.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.btnVariant.options.nil.label"
+                            },
+                            {
+                                "value": "filled",
+                                "label": "t:all.settings.btnVariant.options.filled.label"
+                            },
+                            {
+                                "value": "outline",
+                                "label": "t:all.settings.btnVariant.options.outline.label"
+                            },
+                            {
+                                "value": "ghost",
+                                "label": "t:all.settings.btnVariant.options.ghost.label"
+                            },
+                            {
+                                "value": "text",
+                                "label": "t:all.settings.btnVariant.options.text.label"
+                            }
+                        ],
+                        "conditions": [
+                            "submitAppearance eq button"
+                        ]
+                    },
+                    {
+                        "id": "btnSize",
+                        "type": "select",
+                        "label": "t:all.settings.btnSize.label",
+                        "default": "sm",
+                        "options": [
+                            {
+                                "value": "xs",
+                                "label": "t:all.settings.btnSize.options.xs.label"
+                            },
+                            {
+                                "value": "sm",
+                                "label": "t:all.settings.btnSize.options.sm.label"
+                            },
+                            {
+                                "value": "md",
+                                "label": "t:all.settings.btnSize.options.md.label"
+                            },
+                            {
+                                "value": "lg",
+                                "label": "t:all.settings.btnSize.options.lg.label"
+                            }
+                        ],
+                        "conditions": [
+                            "submitAppearance eq button"
+                        ]
+                    },
+                    {
+                        "id": "formMaxWidth",
+                        "type": "select",
+                        "label": "t:blocks.newsletter.settings.formMaxWidth.label",
                         "default": "auto",
                         "options": [
                             {
                                 "value": "auto",
-                                "label": "Auto"
+                                "label": "t:blocks.newsletter.settings.formMaxWidth.options.auto.label"
                             },
                             {
-                                "value": "custom",
-                                "label": {
-                                    "en": "Custom",
-                                    "fi": "Mukautettu"
-                                }
+                                "value": "half",
+                                "label": "t:blocks.newsletter.settings.formMaxWidth.options.half.label"
+                            },
+                            {
+                                "value": "full",
+                                "label": "t:blocks.newsletter.settings.formMaxWidth.options.full.label"
                             }
                         ]
                     },
                     {
-                        "id": "blockPaddingTop",
-                        "label": {
-                            "en": "Padding top",
-                            "fi": "Väli ylhäällä"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "blockPaddingBottom",
-                        "label": {
-                            "en": "Padding bottom",
-                            "fi": "Väli alhaalla"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
                     }
-                ]
+                ],
+                "id": "style"
             }
         ]
     }

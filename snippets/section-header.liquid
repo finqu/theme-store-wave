@@ -8,7 +8,9 @@
 	- sectionSubtitle: {String}
 	- sectionSubtitleTag: {String}
 	- sectionOverline: {String}
+	- sectionOverlineClass: {String}
 	- sectionOverlineTag: {String}
+	- sectionSubtitleClass: {String}
 	- sectionDescription: {String}
 	- sectionDescriptionTruncate: {Boolean}
 	- sectionBreadcrumbs: {Object} Breadcrumbs Liquid object
@@ -33,6 +35,42 @@
 {% assign sectionSubtitleTag = sectionSubtitleTag | default: 'span' %}
 {% assign sectionOverlineTag = sectionOverlineTag | default: 'span' %}
 {% assign sectionHeaderContainer = sectionHeaderContainer | default: 'fixed' %}
+
+{%- if sectionTitleClass == blank and section -%}
+    {%- assign sectionTitleStyle = section.settings.sectionTitleStyle -%}
+    {%- case sectionTitleStyle -%}
+        {%- when 'h1' -%}
+            {%- assign sectionTitleClass = 'h1' -%}
+        {%- when 'h2' -%}
+            {%- assign sectionTitleClass = 'h2' -%}
+        {%- when 'h3' -%}
+            {%- assign sectionTitleClass = 'h3' -%}
+        {%- when 'display' -%}
+            {%- assign sectionTitleClass = 'display-4' -%}
+        {%- when 'text' -%}
+            {%- assign sectionTitleClass = 'fs-reset' -%}
+        {%- when 'fs-reset' -%}
+            {%- assign sectionTitleClass = 'fs-reset' -%}
+    {%- endcase -%}
+{%- endif -%}
+
+{%- if sectionSubtitleClass == blank and section -%}
+    {%- assign sectionSubtitleStyle = section.settings.sectionSubtitleStyle -%}
+    {%- case sectionSubtitleStyle -%}
+        {%- when 'h1' -%}
+            {%- assign sectionSubtitleClass = 'h1' -%}
+        {%- when 'h2' -%}
+            {%- assign sectionSubtitleClass = 'h2' -%}
+        {%- when 'h3' -%}
+            {%- assign sectionSubtitleClass = 'h3' -%}
+        {%- when 'display' -%}
+            {%- assign sectionSubtitleClass = 'display-4' -%}
+        {%- when 'text' -%}
+            {%- assign sectionSubtitleClass = 'fs-reset' -%}
+        {%- when 'fs-reset' -%}
+            {%- assign sectionSubtitleClass = 'fs-reset' -%}
+    {%- endcase -%}
+{%- endif -%}
 
 {%- if sectionHeaderContainer == 'nil' -%}
     {%- assign sectionHeaderContainer = 'fixed' -%}
@@ -77,6 +115,10 @@
 <div class="section-header{% if sectionHeaderClass %} {{ sectionHeaderClass }}{% endif %}{% if sectionHeaderContainer == 'none' %} d-block{% endif %}"{% if sectionHeaderStyle %} style="{{ sectionHeaderStyle }}"{% endif %}>
 
 	<div class="container{% if sectionHeaderContainer and sectionHeaderContainer != 'fixed' %}-{{- sectionHeaderContainer -}}{% endif %}">
+
+		{% if section and sectionTitle and settings.styleElevation == 'hard' %}
+			<span class="section-sequence" aria-hidden="true"></span>
+		{% endif %}
 
 		{% if sectionHeaderSecondaryAction %}
 
@@ -144,7 +186,7 @@
 
 			<div class="overline-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
 
-				<{{ sectionOverlineTag }} class="overline">
+				<{{ sectionOverlineTag }} class="overline{% if sectionOverlineClass %} {{ sectionOverlineClass }}{% endif %}">
 					{{- sectionOverline -}}
 				</{{ sectionOverlineTag }}>
 
@@ -196,7 +238,7 @@
 
 			<div class="subtitle-container"{% if sectionAnimation %} data-aos="{{ sectionAnimation }}"{% if sectionAnimationRepeat %} data-aos-once="false"{% endif %}{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}"{% endif %}>
 
-				<{{ sectionSubtitleTag }} class="subtitle">
+				<{{ sectionSubtitleTag }} class="subtitle{% if sectionSubtitleClass %} {{ sectionSubtitleClass }}{% endif %}">
 					{{- sectionSubtitle -}}
 				</{{ sectionSubtitleTag }}>
 
@@ -218,7 +260,7 @@
 
 					<div id="collapse-{{- descriptionCollapseId -}}" class="description-collapse collapse{% if sectionDescription.size < 751 %} show-lg{% endif %}{% if sectionDescription.size < 404 %} show-md{% endif %}{% if sectionDescription.size < 391 %} show-sm{% endif %}">
 
-						<div class="description text-richtext"">
+						<div class="description text-richtext">
 							{{- sectionDescription -}}
 						</div>
 
@@ -235,7 +277,7 @@
 
 				{% else %}
 
-					<div class="description text-richtext"">
+					<div class="description text-richtext">
 						{{- sectionDescription -}}
 					</div>
 

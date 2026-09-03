@@ -1,0 +1,83 @@
+{% comment %}
+    Footer bottom row: legal text, powered-by, optional localization, optional payment logos.
+
+    Accepts:
+    - section: {Object}
+    - centered: {Boolean}
+    - include_payment: {Boolean}
+{% endcomment %}
+
+{%- assign showLocalization = false -%}
+{%- if section.settings.footerLocalizationStatus -%}
+    {%- if store.published_locales.size > 1 or store.enabled_currencies.size > 1 -%}
+        {%- assign showLocalization = true -%}
+    {%- endif -%}
+{%- endif -%}
+
+<div class="site-footer-bottom">
+
+    <div class="container" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+        {%- if centered -%}
+
+            {%- if include_payment -%}
+                {% render 'footers/payment-methods', section: section, class: 'justify-content-center' %}
+            {%- endif -%}
+
+            <div class="text-center">
+
+                {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                    <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> -
+                {%- endif -%}
+
+                {{ powered_by_link }}
+
+            </div>
+
+            {%- if showLocalization -%}
+
+                {% render 'localization-form',
+                    form_id: 'footer-localization',
+                    class: 'site-footer-localization text-center' %}
+
+            {%- endif -%}
+
+        {%- else -%}
+
+            <div class="row gy-4 align-items-center">
+
+                <div class="col-12 col-md">
+
+                    {%- if section.settings.footerTextArea2Status and section.settings.footerTextArea2Content -%}
+                        <span class="d-inline-block text-richtext">{{- section.settings.footerTextArea2Content -}}</span> -
+                    {%- endif -%}
+
+                    {{ powered_by_link }}
+
+                    {%- if showLocalization -%}
+
+                        {% render 'localization-form',
+                            form_id: 'footer-localization',
+                            class: 'site-footer-localization mt-3' %}
+
+                    {%- endif -%}
+
+                </div>
+
+                {%- if include_payment -%}
+
+                    <div class="col-12 col-md">
+
+                        {% render 'footers/payment-methods', section: section, class: 'justify-content-md-end' %}
+
+                    </div>
+
+                {%- endif -%}
+
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+</div>

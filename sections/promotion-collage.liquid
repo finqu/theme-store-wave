@@ -1,22 +1,43 @@
 {% assign sectionAnimationOrder = 0 %}
 
-{%- if section.settings.sectionOverline -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionTitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
-{%- if section.settings.sectionSubtitle -%}
-    {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
-{%- endif -%}
-
 {%- if section.settings.textHorizontalAlign == 'nil' -%}
     {%- assign textHorizontalAlign = settings.sectionTextAlign -%}
 {%- else -%}
     {%- assign textHorizontalAlign = section.settings.textHorizontalAlign -%}
 {%- endif -%}
+
+{%- comment -%}
+  Effective bottom padding for stacked collage spacing.
+  Mirrors snippet `section` padding API (sectionPaddingMode + sectionPadding).
+{%- endcomment -%}
+{%- assign collagePadBottom = nil -%}
+{%- if section.settings.sectionPaddingMode == 'custom' and section.settings.sectionPadding != nil -%}
+    {%- assign collagePadValue = section.settings.sectionPadding -%}
+    {%- if collagePadValue.apply_to_all_sides -%}
+        {%- assign collagePadBottom = collagePadValue.padding | default: 0 -%}
+    {%- else -%}
+        {%- assign collagePadSides = collagePadValue.padding | default: collagePadValue -%}
+        {%- assign collagePadBottom = collagePadSides.bottom | default: 0 -%}
+    {%- endif -%}
+{%- elsif settings.sectionPaddingBottom != nil -%}
+    {%- assign collagePadBottom = settings.sectionPaddingBottom | remove: 'rem' | plus: 0 -%}
+{%- else -%}
+    {%- assign collagePadBottom = 0 -%}
+{%- endif -%}
+
+{%- capture sectionHeaderBlocks -%}
+    {% container 'header' %}
+{%- endcapture -%}
+
+{%- capture sectionHeaderContent -%}
+    {%- if sectionHeaderBlocks != blank -%}
+        <div class="section-header">
+            <div class="container">
+                {{- sectionHeaderBlocks -}}
+            </div>
+        </div>
+    {%- endif -%}
+{%- endcapture -%}
 
 {%- capture sectionContent -%}
 
@@ -31,7 +52,7 @@
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
             }
-            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                 grid-column: 2 / span 1;
                 grid-row: 1 / span 1;
             }
@@ -56,7 +77,7 @@
                     grid-row: 1 / span 2;
                 }
             }
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -93,7 +114,7 @@
             {% for item in section.settings.setting_blocks.items %}
 
                 {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-   
+
                 {% if forloop.index == 5 %}
 
                     {%- assign imgSizeSm = '414,414' -%}
@@ -142,14 +163,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -168,20 +189,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -200,7 +221,7 @@
                     grid-column: 1 / span 1;
                     grid-row: 1 / span 1;
                 }
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                     grid-column: 1 / span 1;
                     grid-row: 2 / span 1;
                 }
@@ -224,7 +245,7 @@
                     grid-row: 1 / span 2;
                 }
             }
-            {%- if section.settings.sectionPaddingBottom == 0 -%}
+            {%- if collagePadBottom == 0 -%}
                 #finqu-section-{{ section.id }} + .section-promotion-collage {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -312,14 +333,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -338,20 +359,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -376,7 +397,7 @@
         {%- endcase -%}
 
         {%- capture sectionStyle -%}
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -478,14 +499,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -504,20 +525,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -542,7 +563,7 @@
         {%- endcase -%}
 
         {%- capture sectionStyle -%}
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -614,14 +635,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -640,20 +661,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -671,7 +692,7 @@
                 grid-column: 1 / span 2;
                 grid-row: 1 / span 2;
             }
-            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                 grid-column: 1 / span 1;
                 grid-row: 3 / span 1;
             }
@@ -691,7 +712,7 @@
                     grid-column: 1 / span 2;
                     grid-row: 1 / span 2;
                 }
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                     grid-column: 3 / span 1;
                     grid-row: 1 / span 1;
                 }
@@ -704,7 +725,7 @@
                     grid-row: 2 / span 1;
                 }
             }
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -793,14 +814,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -819,20 +840,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -849,7 +870,7 @@
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
             }
-            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                 grid-column: 2 / span 1;
                 grid-row: 1 / span 1;
             }
@@ -877,7 +898,7 @@
                     grid-column: 1 / span 1;
                     grid-row: 1 / span 1;
                 }
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                     grid-column: 2 / span 1;
                     grid-row: 1 / span 1;
                 }
@@ -898,7 +919,7 @@
                     grid-row: 2 / span 1;
                 }
             }
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -982,14 +1003,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -1008,20 +1029,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -1038,7 +1059,7 @@
                 grid-column: 1 / span 2;
                 grid-row: 1 / span 1;
             }
-            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                 grid-column: 1 / span 2;
                 grid-row: 2 / span 1;
             }
@@ -1058,7 +1079,7 @@
                     grid-column: 1 / span 1;
                     grid-row: 1 / span 1;
                 }
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                     grid-column: 2 / span 1;
                     grid-row: 1 / span 1;
                 }
@@ -1071,7 +1092,7 @@
                     grid-row: 2 / span 1;
                 }
             }
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -1148,14 +1169,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -1174,20 +1195,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -1204,7 +1225,7 @@
                 grid-column: 1 / span 1;
                 grid-row: 1 / span 1;
             }
-            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+            #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                 grid-column: 2 / span 1;
                 grid-row: 1 / span 1;
             }
@@ -1216,12 +1237,12 @@
                     grid-column: 1 / span 1;
                     grid-row: 1 / span 1;
                 }
-                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) { 
+                #finqu-section-{{ section.id }} .section-content .collage-grid > div:nth-child(2) {
                     grid-column: 2 / span 1;
                     grid-row: 1 / span 1;
                 }
             }
-            {% if section.settings.sectionPaddingBottom == 0 %}
+            {% if collagePadBottom == 0 %}
                 #finqu-section-{{ section.id }} + .section-promotion-collage:not(:has(.collage-grid-compact)) {
                     --section-padding-top: var(--style-grid-gutter-width);
                 }
@@ -1263,7 +1284,7 @@
             {% for item in section.settings.setting_blocks.items %}
 
                 {% assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 %}
-                
+
                 <div class="position-relative img-indicator-zoom text-inherit">
 
                     {%- if item.settings.btnLink.url %}
@@ -1298,14 +1319,14 @@
 
                                 </picture>
 
-                            {%- elsif request.design_mode -%}
+                            {%- else -%}
 
                                 {%- capture class -%}
                                     aspect-ratio-item aspect-ratio-item-cover
                                 {%- endcapture -%}
 
                                 {% render 'placeholder-svg', type: 'image', class: class %}
-                    
+
                             {%- endif -%}
 
                         </div>
@@ -1324,20 +1345,20 @@
 
                                 <div class="d-flex mt-4 justify-content-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
 
-                                    {%- render 'section-quick-link', style: section.settings.btnStyle, text: item.settings.btnLink.text -%}
+                                    {%- render 'section-quick-link', theme: section.settings.btnTheme, variant: section.settings.btnVariant, size: section.settings.btnSize, text: item.settings.btnLink.text  -%}
 
                                 </div>
 
                             {%- endif -%}
 
                         </div>
-                    
+
                     </div>
 
                     {%- if item.settings.btnLink.url %}
                         </a>
                     {%- endif %}
-                
+
                 </div>
 
             {% endfor %}
@@ -1348,378 +1369,491 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionContentTextAlign: textHorizontalAlign %}
+{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentAnimation: false, sectionContentTextAlign: textHorizontalAlign, sectionHeader: false %}
 
 {% schema %}
 {
-    "name": {
-        "en": "Promotion collage",
-        "fi": "Mainoskollaasi"
-    },
+    "name": "t:sections.promotion-collage.name",
     "tag": "section",
     "class": "section section-promotion-collage",
     "category": "theme-marketing",
-    "keywords": {
-        "en": [
-            "Product",
-            "Promotion",
-            "Collage",
-            "Marketing",
-            "Advertisement",
-            "Campaign"
-        ],
-        "fi": [
-            "Tuote",
-            "Mainos",
-            "Kollaasi",
-            "Markkinointi",
-            "Kampanja"
-        ]
-    },
+    "keywords": [
+        "Product",
+        "Promotion",
+        "Collage",
+        "Marketing",
+        "Advertisement",
+        "Campaign"
+    ],
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
-                "settings": [
-                    {
-                        "type": "hidden",
-                        "id": "collageLayout"
-                    },
-                    {
-                        "id": "sectionOverline",
-                        "type": "text",
-                        "label": {
-                            "en": "Top title",
-                            "fi": "Yläotsikko"
-                        },
-                        "conditions": ["sectionAdditionalTitles eq true"]
-                    },
-                    {
-                        "id": "sectionTitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Main title",
-                            "fi": "Pääotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionSubtitle",
-                        "type": "text",
-                        "label": {
-                            "en": "Subtitle",
-                            "fi": "Alaotsikko"
-                        }
-                    },
-                    {
-                        "id": "sectionDescription",
-                        "type": "richtext",
-                        "label": {
-                            "en": "Description",
-                            "fi": "Kuvaus"
-                        },
-                        "conditions": ["sectionAdditionalText eq true"]
-                    },
-                    {
-                        "id": "imgAspectRatio",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Image aspect ratio",
-                            "fi": "Kuvasuhde"
-                        },
-                        "default": "16:9",
-                        "options": [
-                            {
-                                "value": "16:9",
-                                "label": "16:9"
-                            },
-                            {
-                                "value": "4:3",
-                                "label": "4:3"
-                            },
-                            {
-                                "value": "1:1",
-                                "label": "1:1"
-                            }
-                        ],
-                        "conditions": ["collageLayout in 3,4"]
-                    }
-                ]
-            },
-            {
-                "title": {
-                    "en": "Promotions",
-                    "fi": "Mainokset"
-                },
+                "title": "t:sections.promotion-collage.groups.items.title",
                 "id": "items",
-                "call_to_action": {
-                    "en": "Add a promotion",
-                    "fi": "Lisää mainos"
-                },
+                "call_to_action": "t:sections.promotion-collage.groups.items.call_to_action",
                 "is_sortable": true,
                 "display_icons": true,
                 "setting_blocks": [
                     {
                         "type": "image",
-                        "title": {
-                            "en": "Promotion",
-                            "fi": "Mainos"
-                        },
+                        "title": "t:sections.promotion-collage.setting_blocks.image.title",
                         "settings": [
                             {
                                 "id": "overline",
                                 "type": "text",
-                                "label": {
-                                    "en": "Top title",
-                                    "fi": "Yläotsikko"
-                                },
-                                "conditions": ["sectionAdditionalTitles eq true"]
+                                "label": "t:sections.promotion-collage.setting_blocks.image.settings.overline.label"
                             },
                             {
                                 "id": "title",
                                 "type": "text",
-                                "label": {
-                                    "en": "Main title",
-                                    "fi": "Pääotsikko"
-                                }
+                                "label": "t:sections.promotion-collage.setting_blocks.image.settings.title.label"
                             },
                             {
                                 "id": "subtitle",
                                 "type": "text",
-                                "label": {
-                                    "en": "Subtitle",
-                                    "fi": "Alaotsikko"
-                                }
+                                "label": "t:sections.promotion-collage.setting_blocks.image.settings.subtitle.label"
                             },
                             {
                                 "id": "btnLink",
                                 "type": "url",
-                                "label": {
-                                    "en": "Button",
-                                    "fi": "Painike"
-                                },
+                                "label": "t:all.settings.btnLink.label",
                                 "include_target": true,
                                 "include_text": true
                             },
                             {
                                 "id": "img",
                                 "type": "image-picker",
-                                "label": {
-                                    "en": "Image",
-                                    "fi": "Kuva"
-                                },
+                                "label": "t:sections.promotion-collage.setting_blocks.image.settings.img.label",
                                 "adjustments": true
                             },
                             {
                                 "id": "colorScheme",
                                 "type": "select",
-                                "label": {
-                                    "en": "Color scheme",
-                                    "fi": "Värityyli"
-                                },
+                                "label": "t:all.settings.colorScheme.label",
                                 "default": false,
                                 "options": [
                                     {
                                         "value": false,
-                                        "label": {
-                                            "en": "Disabled",
-                                            "fi": "Pois käytöstä"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.false.label"
                                     },
                                     {
                                         "value": "secondary",
-                                        "label": {
-                                            "en": "Secondary",
-                                            "fi": "Toissijainen"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.secondary.label"
                                     },
                                     {
                                         "value": "light",
-                                        "label": {
-                                            "en": "Light background / Dark content",
-                                            "fi": "Vaalea tausta / Tumma sisältö"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.light.label"
                                     },
                                     {
                                         "value": "dark",
-                                        "label": {
-                                            "en": "Dark background / Light content",
-                                            "fi": "Tumma tausta / Vaalea sisältö"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.dark.label"
                                     },
                                     {
                                         "value": "accent",
-                                        "label": {
-                                            "en": "Accent background / Adaptive content",
-                                            "fi": "Korostus tausta / Mukautuva sisältö"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.accent.label"
                                     },
                                     {
                                         "value": "custom",
-                                        "label": {
-                                            "en": "Custom",
-                                            "fi": "Mukautettu"
-                                        }
+                                        "label": "t:all.settings.colorScheme.options.custom.label"
                                     }
                                 ]
                             },
                             {
                                 "id": "colorSchemeCustomColor",
                                 "type": "color",
-                                "label": {
-                                    "en": "Color",
-                                    "fi": "Väri"
-                                },
+                                "label": "t:sections.promotion-collage.setting_blocks.image.settings.colorSchemeCustomColor.label",
                                 "default": "#ffffff",
-                                "conditions": ["colorScheme eq custom"]
+                                "conditions": [
+                                    "colorScheme eq custom"
+                                ]
                             }
                         ]
                     }
                 ]
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.settings.title",
                 "settings": {
                     "list_type": "list",
                     "groups": [
                         {
-                            "title": {
-                                "en": "Content",
-                                "fi": "Sisältö"
-                            },
+                            "title": "t:all.groups.style.title",
+                            "settings": [
+                                {
+                                    "id": "sectionColorScheme",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionColorScheme.label",
+                                    "default": false,
+                                    "options": [
+                                        {
+                                            "value": false,
+                                            "label": "t:all.settings.sectionColorScheme.options.false.label"
+                                        },
+                                        {
+                                            "value": "secondary",
+                                            "label": "t:all.settings.sectionColorScheme.options.secondary.label"
+                                        },
+                                        {
+                                            "value": "light",
+                                            "label": "t:all.settings.sectionColorScheme.options.light.label"
+                                        },
+                                        {
+                                            "value": "dark",
+                                            "label": "t:all.settings.sectionColorScheme.options.dark.label"
+                                        },
+                                        {
+                                            "value": "accent",
+                                            "label": "t:all.settings.sectionColorScheme.options.accent.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionColorScheme.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "gradient": true,
+                                    "label": "t:all.settings.style_custom_color.label",
+                                    "default": "#f3f5f6",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "label": "t:all.settings.style_custom_content_color.label",
+                                    "default": "#ffffff",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "style_custom_content_text_color",
+                                    "type": "color",
+                                    "alpha": true,
+                                    "nullable": true,
+                                    "label": "t:all.settings.style_custom_content_text_color.label",
+                                    "conditions": [
+                                        "sectionColorScheme eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPaddingMode",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionPaddingMode.label",
+                                    "default": "auto",
+                                    "options": [
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionPaddingMode.options.auto.label"
+                                        },
+                                        {
+                                            "value": "custom",
+                                            "label": "t:all.settings.sectionPaddingMode.options.custom.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "sectionPadding",
+                                    "type": "padding",
+                                    "label": "t:all.settings.sectionPadding.label",
+                                    "padding": {
+                                        "top": 0,
+                                        "right": 0,
+                                        "bottom": 0,
+                                        "left": 0
+                                    },
+                                    "min": 0,
+                                    "max": 15,
+                                    "step": 0.5,
+                                    "apply_to_all_sides": false,
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBorderRadius",
+                                    "label": "t:all.settings.sectionBorderRadius.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 50,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": "px",
+                                    "conditions": [
+                                        "sectionPaddingMode eq custom"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImg",
+                                    "type": "image-picker",
+                                    "label": "t:all.settings.sectionBgImg.label",
+                                    "adjustments": true
+                                },
+                                {
+                                    "id": "sectionBgImgFit",
+                                    "type": "select",
+                                    "label": "t:all.settings.sectionBgImgFit.label",
+                                    "default": "cover",
+                                    "options": [
+                                        {
+                                            "value": "cover",
+                                            "label": "t:all.settings.sectionBgImgFit.options.cover.label"
+                                        },
+                                        {
+                                            "value": "contain",
+                                            "label": "t:all.settings.sectionBgImgFit.options.contain.label"
+                                        },
+                                        {
+                                            "value": "auto",
+                                            "label": "t:all.settings.sectionBgImgFit.options.auto.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosHorizontal",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosHorizontal.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "left",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.left.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.center.label"
+                                        },
+                                        {
+                                            "value": "right",
+                                            "label": "t:all.settings.sectionBgImgPosHorizontal.options.right.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgPosVertical",
+                                    "type": "radio-pill",
+                                    "label": "t:all.settings.sectionBgImgPosVertical.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "top",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.top.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.center.label"
+                                        },
+                                        {
+                                            "value": "bottom",
+                                            "label": "t:all.settings.sectionBgImgPosVertical.options.bottom.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgDimming",
+                                    "label": "t:all.settings.sectionBgImgDimming.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 90,
+                                    "step": 5,
+                                    "default": "0",
+                                    "unit": "%",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                },
+                                {
+                                    "id": "sectionBgImgBlur",
+                                    "label": "t:all.settings.sectionBgImgBlur.label",
+                                    "type": "range",
+                                    "min": 0,
+                                    "max": 10,
+                                    "step": 1,
+                                    "default": "0",
+                                    "unit": " ",
+                                    "conditions": [
+                                        "!sectionBgImg eq false"
+                                    ]
+                                }
+                            ],
+                            "id": "style"
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
                             "settings": [
                                 {
                                     "id": "sectionHeaderTextAlign",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Heading text align",
-                                        "fi": "Otsikon tekstin tasaus"
-                                    },
+                                    "label": "t:all.settings.sectionHeaderTextAlign.label",
                                     "default": "nil",
                                     "options": [
                                         {
                                             "value": "nil",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.nil.label"
                                         },
                                         {
                                             "value": "start",
-                                            "label": "{# icon.align-start #}"
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.start.label"
                                         },
                                         {
                                             "value": "center",
-                                            "label": "{# icon.align-center #}"
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.center.label"
                                         },
                                         {
                                             "value": "end",
-                                            "label": "{# icon.align-end #}"
+                                            "label": "t:all.settings.sectionHeaderTextAlign.options.end.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "textHorizontalAlign",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Text horizontal align",
-                                        "fi": "Tekstin tasaus vaakasuunnassa"
-                                    },
+                                    "label": "t:all.settings.textHorizontalAlign.label",
                                     "default": "nil",
                                     "options": [
                                         {
                                             "value": "nil",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.textHorizontalAlign.options.nil.label"
                                         },
                                         {
                                             "value": "start",
-                                            "label": "{# icon.align-start #}"
+                                            "label": "t:all.settings.textHorizontalAlign.options.start.label"
                                         },
                                         {
                                             "value": "center",
-                                            "label": "{# icon.align-center #}"
+                                            "label": "t:all.settings.textHorizontalAlign.options.center.label"
                                         },
                                         {
                                             "value": "end",
-                                            "label": "{# icon.align-end #}"
+                                            "label": "t:all.settings.textHorizontalAlign.options.end.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "textVerticalAlign",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Text vertical align",
-                                        "fi": "Tekstin tasaus pystysuunnassa"
-                                    },
+                                    "label": "t:all.settings.textVerticalAlign.label",
                                     "default": "start",
                                     "options": [
                                         {
                                             "value": "start",
-                                            "label": "{# icon.align-top #}"
+                                            "label": "t:all.settings.textVerticalAlign.options.start.label"
                                         },
                                         {
                                             "value": "center",
-                                            "label": "{# icon.align-middle #}"
+                                            "label": "t:all.settings.textVerticalAlign.options.center.label"
                                         },
                                         {
                                             "value": "end",
-                                            "label": "{# icon.align-bottom #}"
+                                            "label": "t:all.settings.textVerticalAlign.options.end.label"
                                         }
                                     ]
                                 },
                                 {
-                                    "id": "btnStyle",
+                                    "id": "btnTheme",
                                     "type": "select",
-                                    "label": {
-                                        "en": "Button style",
-                                        "fi": "Painikkeen tyyli"
-                                    },
+                                    "label": "t:all.settings.btnTheme.label",
                                     "default": "nil",
                                     "options": [
                                         {
                                             "value": "nil",
-                                            "label": "Auto"
+                                            "label": "t:all.settings.btnTheme.options.nil.label"
                                         },
                                         {
                                             "value": "primary",
-                                            "label": {
-                                                "en": "Fill",
-                                                "fi": "Täytetty"
-                                            }
+                                            "label": "t:all.settings.btnTheme.options.primary.label"
                                         },
                                         {
                                             "value": "secondary",
-                                            "label": {
-                                                "en": "Outline",
-                                                "fi": "Ääriviivat"
-                                            }
+                                            "label": "t:all.settings.btnTheme.options.secondary.label"
                                         },
                                         {
-                                            "value": "link",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
+                                            "value": "contrast",
+                                            "label": "t:all.settings.btnTheme.options.contrast.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "btnVariant",
+                                    "type": "select",
+                                    "label": "t:all.settings.btnVariant.label",
+                                    "default": "nil",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:all.settings.btnVariant.options.nil.label"
                                         },
                                         {
-                                            "value": "link-with-icon",
-                                            "label": {
-                                                "en": "Text with icon",
-                                                "fi": "Teksti kuvakkeella osoittimen ollessa päällä"
-                                            }
+                                            "value": "filled",
+                                            "label": "t:all.settings.btnVariant.options.filled.label"
+                                        },
+                                        {
+                                            "value": "outline",
+                                            "label": "t:all.settings.btnVariant.options.outline.label"
+                                        },
+                                        {
+                                            "value": "ghost",
+                                            "label": "t:all.settings.btnVariant.options.ghost.label"
+                                        },
+                                        {
+                                            "value": "text",
+                                            "label": "t:all.settings.btnVariant.options.text.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "btnSize",
+                                    "type": "select",
+                                    "label": "t:all.settings.btnSize.label",
+                                    "default": "sm",
+                                    "options": [
+                                        {
+                                            "value": "xs",
+                                            "label": "t:all.settings.btnSize.options.xs.label"
+                                        },
+                                        {
+                                            "value": "sm",
+                                            "label": "t:all.settings.btnSize.options.sm.label"
+                                        },
+                                        {
+                                            "value": "md",
+                                            "label": "t:all.settings.btnSize.options.md.label"
+                                        },
+                                        {
+                                            "value": "lg",
+                                            "label": "t:all.settings.btnSize.options.lg.label"
                                         }
                                     ]
                                 },
                                 {
                                     "id": "imgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
+                                    "label": "t:all.settings.imgDimming.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 90,
@@ -1729,924 +1863,1567 @@
                                 },
                                 {
                                     "id": "imgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
+                                    "label": "t:all.settings.imgBlur.label",
                                     "type": "range",
                                     "min": 0,
                                     "max": 10,
                                     "step": 1,
                                     "default": "0",
                                     "unit": " "
-                                }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "SEO",
-                                "fi": "SEO"
-                            },
-                            "settings": [
+                                },
                                 {
-                                    "id": "sectionOverlineTag",
+                                    "type": "hidden",
+                                    "id": "collageLayout"
+                                },
+                                {
+                                    "id": "imgAspectRatio",
                                     "type": "radio-pill",
-                                    "label": {
-                                        "en": "Top title SEO priority",
-                                        "fi": "Yläotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
+                                    "label": "t:sections.promotion-collage.settings.imgAspectRatio.label",
+                                    "default": "16:9",
                                     "options": [
                                         {
-                                            "value": "h3",
-                                            "label": "H3"
+                                            "value": "16:9",
+                                            "label": "16:9"
                                         },
                                         {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
+                                            "value": "4:3",
+                                            "label": "4:3"
+                                        },
+                                        {
+                                            "value": "1:1",
+                                            "label": "1:1"
                                         }
                                     ],
-                                    "conditions": ["sectionAdditionalTitles eq true"]
-                                },
-                                {
-                                    "id": "sectionTitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Main title SEO priority",
-                                        "fi": "Pääotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h2",
-                                    "options": [
-                                        {
-                                            "value": "h1",
-                                            "label": "H1"
-                                        },
-                                        {
-                                            "value": "h2",
-                                            "label": "H2"
-                                        },
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionSubtitleTag",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Subtitle SEO priority",
-                                        "fi": "Alaotsikon SEO-prioriteetti"
-                                    },
-                                    "default": "h3",
-                                    "options": [
-                                        {
-                                            "value": "h3",
-                                            "label": "H3"
-                                        },
-                                        {
-                                            "value": "span",
-                                            "label": {
-                                                "en": "Text",
-                                                "fi": "Teksti"
-                                            }
-                                        }
+                                    "conditions": [
+                                        "collageLayout in 3,4"
                                     ]
                                 }
-                            ]
-                        },
-                        {
-                            "title": {
-                                "en": "Section",
-                                "fi": "Osio"
-                            },
-                            "settings": [
-                                {
-                                    "id": "sectionColorScheme",
-                                    "type": "select",
-                                    "label": {
-                                        "en": "Color scheme",
-                                        "fi": "Värityyli"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": {
-                                                "en": "Disabled",
-                                                "fi": "Pois käytöstä"
-                                            }
-                                        },
-                                        {
-                                            "value": "secondary",
-                                            "label": {
-                                                "en": "Secondary",
-                                                "fi": "Toissijainen"
-                                            }
-                                        },
-                                        {
-                                            "value": "light",
-                                            "label": {
-                                                "en": "Light background / Dark content",
-                                                "fi": "Vaalea tausta / Tumma sisältö"
-                                            }
-                                        },
-                                        {
-                                            "value": "dark",
-                                            "label": {
-                                                "en": "Dark background / Light content",
-                                                "fi": "Tumma tausta / Vaalea sisältö"
-                                            }
-                                        },
-                                        {
-                                            "value": "accent",
-                                            "label": {
-                                                "en": "Accent background / Adaptive content",
-                                                "fi": "Korostus tausta / Mukautuva sisältö"
-                                            }
-                                        },
-                                        {
-                                            "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "style_custom_color",
-                                    "type": "color",
-                                    "label": {
-                                        "en": "Color",
-                                        "fi": "Väri"
-                                    },
-                                    "default": "#f3f5f6",
-                                    "conditions": ["sectionColorScheme eq custom"]
-                                },
-                                {
-                                    "id": "sectionAdditionalTitles",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show additional titles",
-                                        "fi": "Näytä lisäotsikot"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionAdditionalText",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Show description",
-                                        "fi": "Näytä kuvaus"
-                                    },
-                                    "default": false,
-                                    "options": [
-                                        {
-                                            "value": false,
-                                            "label": "Off"
-                                        },
-                                        {
-                                            "value": true,
-                                            "label": "On"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionPaddingMode",
-                                    "type": "radio-pill",
-                                    "label": {
-                                        "en": "Padding",
-                                        "fi": "Välit"
-                                    },
-                                    "default": "auto",
-                                    "options": [
-                                        {
-                                            "value": "auto",
-                                            "label": "Auto"
-                                        },
-                                        {
-                                            "value": "custom",
-                                            "label": {
-                                                "en": "Custom",
-                                                "fi": "Mukautettu"
-                                            }
-                                        }
-                                    ]
-                                },
-                                {
-                                    "id": "sectionPaddingTop",
-                                    "label": {
-                                        "en": "Padding top",
-                                        "fi": "Väli ylhäällä"
-                                    },
-                                    "type": "range",
-                                    "min": 0,
-                                    "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
-                                },
-                                {
-                                    "id": "sectionPaddingBottom",
-                                    "label": {
-                                        "en": "Padding bottom",
-                                        "fi": "Väli alhaalla"
-                                    },
-                                    "type": "range",
-                                    "min": 0,
-                                    "max": 15,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": "rem",
-                                    "conditions": ["sectionPaddingMode eq custom"]
-                                },
-                                {
-                                    "id": "sectionBgImg",
-                                    "type": "image-picker",
-                                    "label": {
-                                        "en": "Background image",
-                                        "fi": "Taustakuva"
-                                    },
-                                    "adjustments": true
-                                },
-                                {
-                                    "id": "sectionBgImgDimming",
-                                    "label": {
-                                        "en": "Image dimming",
-                                        "fi": "Kuvan tummennus"
-                                    },
-                                    "type": "range",
-                                    "min": 0,
-                                    "max": 90,
-                                    "step": 5,
-                                    "default": "0",
-                                    "unit": "%",
-                                    "conditions": ["!sectionBgImg eq false"]
-                                },
-                                {
-                                    "id": "sectionBgImgBlur",
-                                    "label": {
-                                        "en": "Image blur",
-                                        "fi": "Kuvan sumentaminen"
-                                    },
-                                    "type": "range",
-                                    "min": 0,
-                                    "max": 10,
-                                    "step": 1,
-                                    "default": "0",
-                                    "unit": " ",
-                                    "conditions": ["!sectionBgImg eq false"]
-                                }
-                            ]
+                            ],
+                            "id": "layout"
                         }
                     ]
-                }
+                },
+                "id": "settings"
             }
         ]
     },
-    "presets": [
-        {
-            "settings": {
-                "collageLayout": 1,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+    "presets": {
+        "default": [
+            {
+                "settings": {
+                    "collageLayout": 1,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "id": "preset-1",
+                "name": "t:sections.promotion-collage.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 2,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "id": "preset-2",
+                "name": "t:sections.promotion-collage.presets.preset-2.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 3,
+                    "imgAspectRatio": "16:9",
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "center",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Promotion Title",
+                                    "subtitle": "Tell customers briefly about the promotion",
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Promotion Title",
+                                    "subtitle": "Tell customers briefly about the promotion",
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "id": "preset-3",
+                "name": "t:sections.promotion-collage.presets.preset-3.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 4,
+                    "imgAspectRatio": "1:1",
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "center",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Promotion Title",
+                                    "subtitle": "Tell customers briefly about the promotion.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Promotion Title",
+                                    "subtitle": "Tell customers briefly about the promotion.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Promotion Title",
+                                    "subtitle": "Tell customers briefly about the promotion.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "id": "preset-4",
+                "name": "t:sections.promotion-collage.presets.preset-4.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 5,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        }
-                    ]
-                }
+                        ]
+                    }
+                },
+                "id": "preset-5",
+                "name": "t:sections.promotion-collage.presets.preset-5.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 6,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd",
+                                        "src": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "preset-6",
+                "name": "t:sections.promotion-collage.presets.preset-6.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 7,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "preset-7",
+                "name": "t:sections.promotion-collage.presets.preset-7.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 8,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "preset-8",
+                "name": "t:sections.promotion-collage.presets.preset-8.name"
             }
-        },
-        {
-            "settings": {
-                "collageLayout": 2,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+        ],
+        "fi": [
+            {
+                "settings": {
+                    "collageLayout": 1,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-1.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 2,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-2.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 3,
+                    "imgAspectRatio": "16:9",
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "center",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Tarjouksen otsikko",
+                                    "subtitle": "Kerro lyhyesti tarjouksesta",
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Tarjouksen otsikko",
+                                    "subtitle": "Kerro lyhyesti tarjouksesta",
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-3.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 4,
+                    "imgAspectRatio": "1:1",
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "center",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Tarjouksen otsikko",
+                                    "subtitle": "Kerro lyhyesti tarjouksesta.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Tarjouksen otsikko",
+                                    "subtitle": "Kerro lyhyesti tarjouksesta.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "title": "Tarjouksen otsikko",
+                                    "subtitle": "Kerro lyhyesti tarjouksesta.",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                 "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-4.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 5,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
                                 }
                             }
-                        }
-                    ]
-                }
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-5.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 6,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "src": "https://images.unsplash.com/photo-1518019671582-55004f1bc9ab",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd",
+                                        "src": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-6.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 7,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "src": "https://images.unsplash.com/photo-1532204182725-d0f67855ac87",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "src": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-7.name"
+            },
+            {
+                "settings": {
+                    "collageLayout": 8,
+                    "textHorizontalAlign": "center",
+                    "textVerticalAlign": "end",
+                    "setting_blocks": {
+                        "items": [
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "src": "https://images.unsplash.com/photo-1582345486418-0eeaeecb5dda",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "image",
+                                "settings": {
+                                    "colorSchemeCustomColor": "#ffffff",
+                                    "btnLink": {
+                                        "text": {
+                                            "type": "translation",
+                                            "key": "frontpage_presets.cta_shop",
+                                            "string_value": "Shop now"
+                                        }
+                                    },
+                                    "img": {
+                                        "string_value": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "src": "https://images.unsplash.com/photo-1531326842537-a4bb23c9544e",
+                                        "offset_top": "50",
+                                        "offset_left": "50",
+                                        "width": "1080",
+                                        "height": "1080"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "t:sections.promotion-collage.presets.preset-8.name"
             }
-        },
+        ]
+    },
+    "containers": [
         {
-            "settings": {
-                "collageLayout": 3,
-                "imgAspectRatio": "16:9",
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "center",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "title": "Promotion Title",
-                                "subtitle": "Tell customers briefly about the promotion",
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "title": "Promotion Title",
-                                "subtitle": "Tell customers briefly about the promotion",
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 4,
-                "imgAspectRatio": "1:1",
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "center",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "title": "Promotion Title",
-                                "subtitle": "Tell customers briefly about the promotion.",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "title": "Promotion Title",
-                                "subtitle": "Tell customers briefly about the promotion.",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "title": "Promotion Title",
-                                "subtitle": "Tell customers briefly about the promotion.",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 5,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 6,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1518019671582-55004f1bc9ab",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1506619216599-9d16d0903dfd",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1506619216599-9d16d0903dfd",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 7,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1532204182725-d0f67855ac87",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1578500494198-246f612d3b3d",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "settings": {
-                "collageLayout": 8,
-                "textHorizontalAlign": "center",
-                "textVerticalAlign": "end",
-                "setting_blocks": {
-                    "items": [
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1582345486418-0eeaeecb5dda",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        },
-                        {
-                            "type": "image",
-                            "settings": {
-                                "colorSchemeCustomColor": "#ffffff",
-                                "btnLink": {
-                                    "text": "Shop now"
-                                },
-                                "img": {
-                                    "string_value": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "src": "https:\/\/images.unsplash.com\/photo-1531326842537-a4bb23c9544e",
-                                    "offset_top": "50",
-                                    "offset_left": "50",
-                                    "width": "1080",
-                                    "height": "1080"
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
+            "id": "header",
+            "title": "t:sections.promotion-collage.containers.header.title",
+            "allowed_blocks": [
+                "badge",
+                "heading",
+                "text",
+                "button",
+                "button-group",
+                "spacer",
+                "separator"
+            ]
         }
     ]
 }

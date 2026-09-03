@@ -1,0 +1,104 @@
+{%- assign productCardLinkToProduct = block.settings.linkToProduct -%}
+{%- assign productCardTruncateName = block.settings.truncateName -%}
+
+{%- capture productListMediaBlockId -%}{{ block.id }}-media{%- endcapture -%}
+{%- capture productListContentContainerId -%}{{ block.id }}-content{%- endcapture -%}
+
+<div class="product-list-item-media">
+
+    {% block 'product-media' id:productListMediaBlockId %}
+
+</div>
+
+<div class="product-caption{% if block.settings.contentAlign == 'center' %} text-center{% endif %}"{% if block.settings.contentGap %} style="--product-card-content-gap: {{ block.settings.contentGap }}rem;"{% endif %}>
+
+    {% container 'content', id: productListContentContainerId %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.product-list-item.name",
+    "tag": "div",
+    "class": "block block-product-list-item",
+    "category": "commerce",
+    "containers": [
+        {
+            "id": "content",
+            "title": "t:blocks.product-list-item.containers.content.title",
+            "allowed_blocks": [
+                "product-manufacturer",
+                "product-title",
+                "product-title-price",
+                "product-rating",
+                "product-price",
+                "product-variants",
+                "product-inventory"
+            ],
+            "preset": {
+                "blocks": [
+                    "product-title",
+                    "product-rating",
+                    "product-price",
+                    "product-variants"
+                ]
+            }
+        }
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "settings": [
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "start",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "contentGap",
+                        "type": "range",
+                        "label": "t:blocks.product-list-item.settings.contentGap.label",
+                        "min": 0,
+                        "max": 4,
+                        "step": 0.5,
+                        "default": "0",
+                        "unit": "rem"
+                    }
+                ],
+                "id": "layout"
+            },
+            {
+                "title": "t:blocks.product-list-item.groups.cardBehavior.title",
+                "settings": [
+                    {
+                        "id": "linkToProduct",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-list-item.settings.linkToProduct.label",
+                        "default": true
+                    },
+                    {
+                        "id": "truncateName",
+                        "type": "checkbox",
+                        "label": "t:all.settings.truncateName.label",
+                        "default": true
+                    }
+                ],
+                "id": "cardBehavior"
+            }
+        ]
+    }
+}
+{% endschema %}

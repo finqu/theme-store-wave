@@ -1,0 +1,520 @@
+{%- capture imageAspectRatio -%}
+	{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatio, theme_value: settings.productImageAspectRatio -%}
+{%- endcapture -%}
+{%- assign imageAspectRatio = imageAspectRatio | strip -%}
+
+{%- capture imageAspectRatioFit -%}
+	{%- render 'resolve-product-card-select', block_value: block.settings.imageAspectRatioFit, theme_value: settings.productImageAspectRatioFit -%}
+{%- endcapture -%}
+{%- assign imageAspectRatioFit = imageAspectRatioFit | strip -%}
+
+{%- if block.settings.overrideDisplaySettings -%}
+	{%- assign showNewBadge = block.settings.showNewBadge -%}
+	{%- assign showPromotionBadge = block.settings.showPromotionBadge -%}
+	{%- assign showDiscountBadge = block.settings.showDiscountBadge -%}
+	{%- assign showDiscountPercentage = block.settings.showDiscountPercentage -%}
+	{%- assign floorDiscountPercentage = block.settings.floorDiscountPercentage -%}
+	{%- assign showOutOfStockBadge = block.settings.showOutOfStockBadge -%}
+	{%- assign showBackorderBadge = block.settings.showBackorderBadge -%}
+	{%- assign showAddToCart = block.settings.showAddToCart -%}
+{%- else -%}
+	{%- assign showNewBadge = settings.productShowNewBadge -%}
+	{%- assign showPromotionBadge = settings.productShowPromotionBadge -%}
+	{%- assign showDiscountBadge = settings.productShowDiscountBadge -%}
+	{%- assign showDiscountPercentage = settings.productShowDiscountPercentage -%}
+	{%- assign floorDiscountPercentage = settings.productFloorDiscountPercentage -%}
+	{%- assign showOutOfStockBadge = settings.productShowOutOfStockBadge -%}
+	{%- assign showBackorderBadge = settings.productShowBackorderBadge -%}
+	{%- assign showAddToCart = settings.productShowAddToCart -%}
+{%- endif -%}
+
+{%- if wishlist != false and block.settings.showWishlist -%}
+    {%- assign wishlist = 'toggle' -%}
+{%- else -%}
+    {%- assign wishlist = false -%}
+{%- endif -%}
+
+{%- assign productPerRow = productPerRow | default: 5 -%}
+
+{%- if product -%}
+    {%- if store.customer_has_purchase_right == false or product.default_or_selected_variant.in_preview -%}
+        {%- assign showAddToCart = false -%}
+    {%- endif -%}
+
+    {% unless product.is_directly_buyable %}
+        {%- assign showAddToCart = false -%}
+    {% endunless %}
+{%- endif -%}
+
+{%- assign productName = product.title | default: '' -%}
+
+{%- unless product -%}
+    {%- assign productName = 'placeholder.product' | t -%}
+    {%- assign productHasDiscount = 'true,false' | split: ',' | random -%}
+    {%- assign productIsNew = 'true,false' | split: ',' | random -%}
+    {%- assign productDiscountPercent = 25 -%}
+
+    {%- if productIsNew == 'true' -%}
+        {%- assign productIsNew = true -%}
+    {%- else -%}
+        {%- assign productIsNew = false -%}
+    {%- endif -%}
+
+    {%- if productHasDiscount != 'true' -%}
+        {%- assign productHasDiscount = false -%}
+        {%- assign productDiscountPercent = 0 -%}
+    {%- else -%}
+        {%- assign productHasDiscount = true -%}
+    {%- endif -%}
+{%- else -%}
+    {%- assign productHasDiscount = false -%}
+    {%- if product.default_or_selected_variant.discount_information != nil -%}
+        {%- assign productHasDiscount = true -%}
+    {%- endif -%}
+{%- endunless -%}
+
+{%- capture productUrl -%}
+    {%- assign resolvedUrl = product | link | default: '' -%}
+    {%- if url -%}
+        {%- assign resolvedUrl = url -%}
+    {%- endif -%}
+    {%- if resolvedUrl contains 'section=' -%}
+        {%- assign urlParts = resolvedUrl | split: '?' -%}
+        {%- if urlParts[1] -%}
+            {%- assign basePath = urlParts[0] -%}
+            {%- assign newUrl = basePath | append: '?' -%}
+            {%- assign queryParams = resolvedUrl | query_params -%}
+            {%- for param in queryParams -%}
+                {%- if param[0] != 'section' -%}
+                    {%- if forloop.first -%}
+                        {%- assign newUrl = newUrl | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- else -%}
+                        {%- assign newUrl = newUrl | append: '&' | append: param[0] | append: '=' | append: param[1] -%}
+                    {%- endif -%}
+                {%- endif -%}
+            {%- endfor -%}
+            {%- assign resolvedUrl = newUrl -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- resolvedUrl -}}
+{%- endcapture -%}
+
+    <div class="product-media-container">
+
+        {%- if showDiscountBadge or showOutOfStockBadge or showNewBadge or showPromotionBadge or showBackorderBadge -%}
+
+            {%- if product -%}
+
+                {%- render 'product-badges', product: product, showDiscount: showDiscountBadge, showDiscountPercentage: showDiscountPercentage, floorDiscountPercentage: floorDiscountPercentage, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge, showBackorder: showBackorderBadge -%}
+
+            {%- else -%}
+
+                {%- render 'product-badges', productHasDiscount: productHasDiscount, productDiscountPercent: productDiscountPercent, productIsNew: productIsNew, showDiscount: showDiscountBadge, showDiscountPercentage: showDiscountPercentage, floorDiscountPercentage: floorDiscountPercentage, showOutOfStock: showOutOfStockBadge, showNew: showNewBadge, showPromotion: showPromotionBadge, showBackorder: showBackorderBadge -%}
+
+            {%- endif -%}
+
+        {%- endif -%}
+
+        {%- if product -%}
+
+            {%- if wishlist and settings.accessibilityShowWishlist -%}
+
+                <div class="product-wishlist-action-container">
+
+                    <button
+                        type="button"
+                        class="product-wishlist-action"
+                        data-wishlist-{{- wishlist -}}="{{ product.default_or_selected_variant.product_id }}"
+                        aria-pressed="{{ product.in_customers_wishlist | yepnope: 'true', 'false' }}"
+                        aria-label="{{ product.in_customers_wishlist | yepnope: 'wishlist.remove', 'wishlist.add' | t }}">
+                        {%- render 'icon', icon: 'like', class: 'svg-icon-fw' -%}
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+        {%- capture productMedia -%}
+
+            <div class="product-media aspect-ratio-product" style="--product-image-aspect-ratio: {{ imageAspectRatio | replace: ':', ' / ' }}; --object-fit: {{ imageAspectRatioFit }};">
+
+                {%- if product.images -%}
+
+                    {%- assign generalImages = product.images | where: 'attached_to_variant', false -%}
+
+                    {% if generalImages.size > 1 %}
+
+                        {%- assign img1 = generalImages[0] -%}
+                        {%- assign img2 = generalImages[1] -%}
+
+                    {% elsif generalImages.size == 1 and product.default_or_selected_variant.image %}
+
+                        {%- assign img1 = generalImages[0] -%}
+                        {%- assign img2 = product.default_or_selected_variant.image -%}
+
+                    {% elsif generalImages.size == 1 %}
+
+                        {%- assign img1 = generalImages[0] -%}
+
+                    {%- elsif product.default_or_selected_variant.image -%}
+
+                        {%- assign img1 = product.default_or_selected_variant.image -%}
+
+                    {% endif %}
+
+                    {%- if imageAspectRatio == '9:13' -%}
+
+                        {%- assign imgSizeSm = '388,388' -%}
+                        {%- assign imgSizeMd = '330,330' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '850,850' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '560,560' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '416,416' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '330,330' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '272,272' -%}
+                        {%- endcase -%}
+
+                    {%- elsif imageAspectRatio == '4:3' -%}
+
+                        {%- assign imgSizeSm = '280,210' -%}
+                        {%- assign imgSizeMd = '240,180' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '613,460' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '413,310' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '313,235' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,190' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,160' -%}
+                        {%- endcase -%}
+
+                    {%- elsif imageAspectRatio == '3:4' -%}
+
+                        {%- assign imgSizeSm = '280,373' -%}
+                        {%- assign imgSizeMd = '240,320' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,800' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,533' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,400' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,320' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,267' -%}
+                        {%- endcase -%}
+
+                    {%- elsif imageAspectRatio == '1:1' -%}
+
+                        {%- assign imgSizeSm = '280,280' -%}
+                        {%- assign imgSizeMd = '240,240' -%}
+
+                        {%- case productPerRow -%}
+                            {% when '2' %}
+                                {%- assign imgSizeLg = '600,600' -%}
+                            {% when '3' %}
+                                {%- assign imgSizeLg = '400,400' -%}
+                            {% when '4' %}
+                                {%- assign imgSizeLg = '300,300' -%}
+                            {% when '5' %}
+                                {%- assign imgSizeLg = '240,240' -%}
+                            {% when '6' %}
+                                {%- assign imgSizeLg = '200,200' -%}
+                        {%- endcase -%}
+
+                    {%- endif -%}
+
+                    <div class="product-media-img-container aspect-ratio-container">
+
+                        <picture>
+                            <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                {{- img1 | thumb: imgSizeLg }} 1x,
+                                {{- img1 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                            <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                {{- img1 | thumb: imgSizeMd }} 1x,
+                                {{- img1 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                            <source data-srcset="
+                                {{- img1 | thumb: imgSizeSm }} 1x,
+                                {{- img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                            <img
+                                alt="{{ productName }}"
+                                data-src="{{ img1 | thumb: imgSizeSm }}"
+                                data-srcset="{{ img1 | thumb: imgSizeSm }} 1x, {{ img1 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                class="lazy d-block mx-auto img-fluid aspect-ratio-item featured-img">
+                        </picture>
+
+                    </div>
+
+                    {% if img2 %}
+
+                        <div class="product-media-img-container aspect-ratio-container">
+
+                            <picture>
+                                <source media="(min-width: {{ settings.styleGridBreakpointLg }})" data-srcset="
+                                    {{- img2 | thumb: imgSizeLg }} 1x,
+                                    {{- img2 | thumb: imgSizeLg | thumb:'@2x' }} 2x">
+
+                                <source media="(min-width: {{ settings.styleGridBreakpointSm }})" data-srcset="
+                                    {{- img2 | thumb: imgSizeMd }} 1x,
+                                    {{- img2 | thumb: imgSizeMd | thumb:'@2x' }} 2x">
+
+                                <source data-srcset="
+                                    {{- img2 | thumb: imgSizeSm }} 1x,
+                                    {{- img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x">
+
+                                <img
+                                    alt="{{ productName }}"
+                                    data-src="{{ img2 | thumb: imgSizeSm }}"
+                                    data-srcset="{{ img2 | thumb: imgSizeSm }} 1x, {{ img2 | thumb: imgSizeSm | thumb:'@2x' }} 2x"
+                                    class="lazy d-block mx-auto img-fluid aspect-ratio-item">
+                            </picture>
+
+                        </div>
+
+                    {% endif %}
+
+                {%- else -%}
+
+                    <div class="product-media-img-container aspect-ratio-container">
+
+                        {%- if product -%}
+                            {%- render 'placeholder-svg', type: 'image', class: 'aspect-ratio-item' -%}
+                        {% else %}
+                            {%- render 'placeholder-svg', type: 'product', class: 'aspect-ratio-item' -%}
+                        {%- endif -%}
+
+                    </div>
+
+                {%- endif -%}
+
+            </div>
+
+        {%- endcapture -%}
+
+        {%- if productUrl != blank -%}
+
+            <a href="{{ productUrl | strip }}" class="product-media-link" aria-label="{{ productName }}">
+                {{- productMedia -}}
+            </a>
+
+        {%- else -%}
+
+            <div class="product-media-link">
+                {{- productMedia -}}
+            </div>
+
+        {%- endif -%}
+
+        {%- if showAddToCart -%}
+
+            <div class="product-quick-add-action-container">
+
+                <button
+                    type="button"
+                    class="product-quick-add-action btn btn-text"
+                    data-cart-add="{{ product.id }}"
+                    data-cart-quantity="{{ product.min_quantity }}">
+
+                        <div class="product-quick-add-action-inner">
+
+                            {%- render 'icon', icon: 'cart', class: 'svg-icon-fw product-quick-add-action-icon' -%}
+
+                            <span class="product-quick-add-action-text">
+                                {{- 'cart.quick_add' | t -}}
+                            </span>
+
+                        </div>
+
+                </button>
+
+            </div>
+
+        {%- endif -%}
+
+    </div>
+
+{% schema %}
+{
+    "name": "t:blocks.product-media.name",
+    "tag": "div",
+    "class": "block block-product-media",
+    "category": "commerce",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "settings": [
+                    {
+                        "default": "default",
+                        "id": "imageAspectRatio",
+                        "label": "t:all.settings.imageAspectRatio.label",
+                        "options": [
+                            {
+                                "label": "t:all.settings.imageAspectRatio.options.default.label",
+                                "value": "default"
+                            },
+                            {
+                                "label": "9:13",
+                                "value": "9:13"
+                            },
+                            {
+                                "label": "4:3",
+                                "value": "4:3"
+                            },
+                            {
+                                "label": "3:4",
+                                "value": "3:4"
+                            },
+                            {
+                                "label": "1:1",
+                                "value": "1:1"
+                            }
+                        ],
+                        "type": "select"
+                    },
+                    {
+                        "default": "default",
+                        "id": "imageAspectRatioFit",
+                        "label": "t:blocks.product-media.settings.imageAspectRatioFit.label",
+                        "options": [
+                            {
+                                "label": "t:blocks.product-media.settings.imageAspectRatioFit.options.default.label",
+                                "value": "default"
+                            },
+                            {
+                                "label": "t:blocks.product-media.settings.imageAspectRatioFit.options.contain.label",
+                                "value": "contain"
+                            },
+                            {
+                                "label": "t:blocks.product-media.settings.imageAspectRatioFit.options.cover.label",
+                                "value": "cover"
+                            }
+                        ],
+                        "type": "select"
+                    }
+                ],
+                "id": "layout"
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "default": false,
+                        "id": "overrideDisplaySettings",
+                        "label": "t:blocks.product-media.settings.overrideDisplaySettings.label",
+                        "type": "checkbox"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq false"
+                        ],
+                        "subheading": "t:all.settings.overrideThemeDefaults.info",
+                        "type": "heading"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showNewBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showNewBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showPromotionBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showPromotionBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showDiscountBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showDiscountBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true",
+                            "!showDiscountBadge eq false"
+                        ],
+                        "default": true,
+                        "id": "showDiscountPercentage",
+                        "label": "t:blocks.product-media.settings.showDiscountPercentage.label",
+                        "type": "checkbox"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true",
+                            "!showDiscountBadge eq false",
+                            "!showDiscountPercentage eq false"
+                        ],
+                        "default": true,
+                        "id": "floorDiscountPercentage",
+                        "label": "t:blocks.product-media.settings.floorDiscountPercentage.label",
+                        "type": "checkbox"
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showOutOfStockBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showOutOfStockBadge.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showBackorderBadge",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showBackorderBadge.label",
+                        "default": true
+                    },
+                    {
+                        "id": "showWishlist",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showWishlist.label",
+                        "default": true
+                    },
+                    {
+                        "conditions": [
+                            "overrideDisplaySettings eq true"
+                        ],
+                        "id": "showAddToCart",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-media.settings.showAddToCart.label",
+                        "default": true
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    }
+}
+{% endschema %}

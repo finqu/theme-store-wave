@@ -1,0 +1,502 @@
+{%- if section.settings.barVisibility == 'frontpage' and request.page_type == 'frontpage' -%}
+    {%- assign barIsVisible = true -%}
+{% elsif section.settings.barVisibility == 'all' %}
+    {%- assign barIsVisible = true -%}
+{%- else -%}
+    {%- assign barIsVisible = false -%}
+{%- endif -%}
+
+{%- if section.settings.barTextAlign == 'nil' -%}
+    {%- assign barTextAlign = settings.sectionTextAlign -%}
+{%- else -%}
+    {%- assign barTextAlign = section.settings.barTextAlign -%}
+{%- endif -%}
+
+{%- capture sectionStyle -%}
+    #finqu-section-{{ section.id }} {
+        --style-announcement-align: {{ barTextAlign }};
+        {%- render 'header-bar-bg', barBgColor: section.settings.barBgColor -%}
+    }
+{%- endcapture -%}
+
+<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+{% if barIsVisible or request.design_mode == 'edit' -%}
+
+    {%- capture countdownBarTitle -%}
+
+        {%- if section.settings.title -%}
+
+            <span class="site-countdown-bar-title">
+                {{- section.settings.title -}}
+            </span>
+
+        {%- endif -%}
+
+    {%- endcapture -%}
+
+    {%- capture countdownBarTimer -%}
+
+        {% block 'countdown' id:'section-countdown', display: 'inline' %}
+
+    {%- endcapture -%}
+
+    {%- capture countdownBarCta -%}
+
+        <div class="site-countdown-bar-cta">
+
+            {% block 'button' id:'section-countdown-button', display: 'inline' %}
+
+        </div>
+
+    {%- endcapture -%}
+
+    {%- capture countdownBarContent -%}
+        {{- countdownBarTitle -}}
+        {{- countdownBarTimer -}}
+    {%- endcapture -%}
+
+    <div class="site-header-bar">
+
+        <div class="site-countdown-bar container">
+
+            <div class="site-countdown-bar-inner site-countdown-bar-inner--btn-{{ section.settings.btnPosition }} site-countdown-bar-inner--btn-{{ section.settings.btnSpacing }}">
+
+                {%- if section.settings.btnSpacing == 'spaced' -%}
+
+                    {%- if section.settings.btnPosition == 'start' -%}
+                        {{- countdownBarCta -}}
+                        <div class="site-countdown-bar-content">{{ countdownBarContent }}</div>
+                    {%- else -%}
+                        <div class="site-countdown-bar-content">{{ countdownBarContent }}</div>
+                        {{- countdownBarCta -}}
+                    {%- endif -%}
+
+                {%- else -%}
+
+                    {%- if section.settings.btnPosition == 'start' -%}
+                        {{- countdownBarCta -}}
+                        {{- countdownBarContent -}}
+                    {%- else -%}
+                        {{- countdownBarContent -}}
+                        {{- countdownBarCta -}}
+                    {%- endif -%}
+
+                {%- endif -%}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:sections.countdown-bar.name",
+    "tag": "section",
+    "is_creatable": true,
+    "is_removable": true,
+    "section_groups": [
+        "header"
+    ],
+    "class": "section section-site-header-bar section-countdown-bar",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "settings": [
+                    {
+                        "id": "title",
+                        "type": "text",
+                        "label": "t:sections.countdown-bar.settings.title.label",
+                        "default": "Sale ends in"
+                    }
+                ],
+                "id": "content"
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": {
+                    "list_type": "list",
+                    "groups": [
+                        {
+                            "title": "t:all.groups.style.title",
+                            "id": "style",
+                            "settings": [
+                                {
+                                    "id": "barBgColor",
+                                    "type": "color",
+                                    "gradient": true,
+                                    "label": "t:sections.countdown-bar.settings.barBgColor.label",
+                                    "info": "t:sections.countdown-bar.settings.barBgColor.info"
+                                },
+                                {
+                                    "id": "btnSpacing",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.countdown-bar.settings.btnSpacing.label",
+                                    "default": "compact",
+                                    "options": [
+                                        {
+                                            "value": "compact",
+                                            "label": "t:sections.countdown-bar.settings.btnSpacing.options.compact.label"
+                                        },
+                                        {
+                                            "value": "spaced",
+                                            "label": "t:sections.countdown-bar.settings.btnSpacing.options.spaced.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "barVisibility",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.countdown-bar.settings.barVisibility.label",
+                                    "default": "all",
+                                    "options": [
+                                        {
+                                            "value": "all",
+                                            "label": "t:sections.countdown-bar.settings.barVisibility.options.all.label"
+                                        },
+                                        {
+                                            "value": "frontpage",
+                                            "label": "t:sections.countdown-bar.settings.barVisibility.options.frontpage.label"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "title": "t:all.groups.layout.title",
+                            "id": "layout",
+                            "settings": [
+                                {
+                                    "id": "btnPosition",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.countdown-bar.settings.btnPosition.label",
+                                    "default": "end",
+                                    "options": [
+                                        {
+                                            "value": "start",
+                                            "label": "t:sections.countdown-bar.settings.btnPosition.options.start.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:sections.countdown-bar.settings.btnPosition.options.end.label"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "barTextAlign",
+                                    "type": "radio-pill",
+                                    "label": "t:sections.countdown-bar.settings.barTextAlign.label",
+                                    "default": "center",
+                                    "options": [
+                                        {
+                                            "value": "nil",
+                                            "label": "t:sections.countdown-bar.settings.barTextAlign.options.nil.label"
+                                        },
+                                        {
+                                            "value": "start",
+                                            "label": "t:sections.countdown-bar.settings.barTextAlign.options.start.label"
+                                        },
+                                        {
+                                            "value": "center",
+                                            "label": "t:sections.countdown-bar.settings.barTextAlign.options.center.label"
+                                        },
+                                        {
+                                            "value": "end",
+                                            "label": "t:sections.countdown-bar.settings.barTextAlign.options.end.label"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        "btnSpacing eq compact"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "id": "settings"
+            }
+        ]
+    },
+    "presets": {
+        "default": [
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Sale ends in",
+                    "btnPosition": "end",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer",
+                "name": "t:sections.countdown-bar.presets.timer.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Link"
+                ],
+                "settings": {
+                    "title": "Sale ends in",
+                    "btnPosition": "end",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnVariant": "text"
+                        }
+                    }
+                ],
+                "id": "timer-with-link",
+                "name": "t:sections.countdown-bar.presets.timer-with-link.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Sale ends in",
+                    "btnPosition": "end",
+                    "btnSpacing": "spaced",
+                    "barTextAlign": "start",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer-spaced-button",
+                "name": "t:sections.countdown-bar.presets.timer-spaced-button.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Sale ends in",
+                    "btnPosition": "start",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer-button-on-left",
+                "name": "t:sections.countdown-bar.presets.timer-button-on-left.name"
+            }
+        ],
+        "fi": [
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Alennus päättyy",
+                    "btnPosition": "end",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer",
+                "name": "t:sections.countdown-bar.presets.timer.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Link"
+                ],
+                "settings": {
+                    "title": "Alennus päättyy",
+                    "btnPosition": "end",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnVariant": "text"
+                        }
+                    }
+                ],
+                "id": "timer-with-link",
+                "name": "t:sections.countdown-bar.presets.timer-with-link.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Alennus päättyy",
+                    "btnPosition": "end",
+                    "btnSpacing": "spaced",
+                    "barTextAlign": "start",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer-spaced-button",
+                "name": "t:sections.countdown-bar.presets.timer-spaced-button.name"
+            },
+            {
+                "keywords": [
+                    "Countdown",
+                    "Timer",
+                    "Button"
+                ],
+                "settings": {
+                    "title": "Alennus päättyy",
+                    "btnPosition": "start",
+                    "btnSpacing": "compact",
+                    "barTextAlign": "center",
+                    "barVisibility": "all"
+                },
+                "blocks": [
+                    {
+                        "id": "section-countdown-button",
+                        "name": "button",
+                        "settings": {
+                            "btnLink": {
+                                "text": {
+                                    "type": "translation",
+                                    "key": "frontpage_presets.cta_shop",
+                                    "string_value": "Shop now"
+                                }
+                            },
+                            "btnSize": "xs",
+                            "btnTheme": "primary",
+                            "btnVariant": "filled"
+                        }
+                    }
+                ],
+                "id": "timer-button-on-left",
+                "name": "t:sections.countdown-bar.presets.timer-button-on-left.name"
+            }
+        ]
+    }
+}
+{% endschema %}

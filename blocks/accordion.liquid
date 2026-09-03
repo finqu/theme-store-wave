@@ -1,0 +1,116 @@
+<div class="block-inner">
+
+    <div id="accordion-{{ block.id }}" class="accordion accordion-flush">
+
+        {% for item in block.settings.setting_blocks.items %}
+
+            <div class="accordion-item">
+
+                <div id="accordion-{{ block.id }}-{{ forloop.index }}-header" class="accordion-header">
+
+                    <button
+                        class="btn d-block w-100 btn-text d-flex align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-{{ block.id }}-{{ forloop.index }}"
+                        aria-controls="accordion-{{ block.id }}-{{ forloop.index }}"
+                        aria-expanded="false">
+
+                        <span class="fw-medium fs-4 my-3 text-title">
+                            {{- item.settings.title -}}
+                        </span>
+
+                        <span class="accordion-indicator"></span>
+
+                    </button>
+
+                </div>
+
+                <div id="accordion-{{ block.id }}-{{ forloop.index }}" class="collapse" aria-labelledby="accordion-{{ block.id }}-{{ forloop.index }}-header" data-bs-parent="#accordion-{{ block.id }}">
+
+                    <div class="accordion-body text-richtext">
+                        {{- item.settings.richtext -}}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% if block.settings.setting_blocks.items.size > 0 and block.settings.includeFaqSchema %}
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {%- for item in block.settings.setting_blocks.items -%}
+                {
+                    "@type": "Question",
+                    "name": {{ item.settings.title | json }},
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": {{ item.settings.richtext | strip_html | json }}
+                    }
+                }{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+            ]
+        }
+        </script>
+
+    {% endif %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.accordion.name",
+    "tag": "div",
+    "class": "block block-accordion",
+    "category": "interactive",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "is_sortable": true,
+                "call_to_action": "t:blocks.accordion.groups.items.call_to_action",
+                "setting_blocks": [
+                    {
+                        "type": "item",
+                        "title": "t:all.setting_blocks.item.title",
+                        "settings": [
+                            {
+                                "id": "title",
+                                "type": "text",
+                                "label": "t:all.setting_blocks.item.settings.title.label"
+                            },
+                            {
+                                "id": "richtext",
+                                "type": "richtext",
+                                "label": "t:all.setting_blocks.item.settings.richtext.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "items"
+            },
+            {
+                "title": "t:all.groups.settings.title",
+                "settings": [
+                    {
+                        "id": "includeFaqSchema",
+                        "type": "checkbox",
+                        "label": "t:blocks.accordion.settings.includeFaqSchema.label",
+                        "default": false,
+                        "info": "t:blocks.accordion.settings.includeFaqSchema.info"
+                    }
+                ],
+                "id": "settings"
+            }
+        ]
+    }
+}
+{% endschema %}

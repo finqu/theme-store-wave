@@ -14,6 +14,7 @@ body.cookie-policy-visible {
                 z-index: 10;
             }
         }
+
     }
 }
 
@@ -243,6 +244,38 @@ body.cookie-policy-visible {
 
         .cookie-policy-actions {
             display: flex;
+        }
+    }
+}
+
+@if $style-elevation == 'hard' {
+    body.cookie-policy-visible {
+
+        .cookie-policy.cookie-policy-position-middle::before {
+            opacity: .68;
+        }
+    }
+
+    .cookie-policy {
+
+        .cookie-policy-inner {
+            @include elevation-overlay;
+        }
+
+        .cookie-policy-title {
+            font-family: $headings-font-family;
+            letter-spacing: -0.035em;
+            text-transform: uppercase;
+        }
+
+        &.cookie-policy-position-bottom {
+
+            .cookie-policy-inner {
+                border-right: 0;
+                border-bottom: 0;
+                border-left: 0;
+                box-shadow: 0 calc(#{$elevation-offset} * -1) 0 $elevation-accent-shadow-color;
+            }
         }
     }
 }

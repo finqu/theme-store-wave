@@ -1,183 +1,118 @@
-{%- assign btnLabel =  block.settings.btnLink.text | default: 'placeholder.label' | t -%}
-
-{%- capture blockStyle -%}
-    #finqu-block-{{ block.id }} .block-inner {
-        display: flex;
-        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
-    }
-    {%- if block.settings.blockPaddingMode == 'custom' -%}
-        #finqu-block-{{ block.id }} {
-            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
-            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
-        }
-    {%- endif -%}
-{%- endcapture -%}
-
-<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+{%- assign btnLabel = block.settings.btnLink.text -%}
+{%- if btnLabel == blank and request.design_mode == 'edit' -%}
+    {%- assign btnLabel = 'placeholder.label' | t -%}
+{%- endif -%}
 
 <div class="block-inner">
 
-    {%- render 'section-quick-link', style: block.settings.btnStyle, text: btnLabel, url: block.settings.btnLink.url, target: block.settings.btnLink.target -%}
+    {%- render 'section-quick-link', theme: block.settings.btnTheme, variant: block.settings.btnVariant, size: block.settings.btnSize, text: btnLabel, url: block.settings.btnLink.url, target: block.settings.btnLink.target  -%}
 
 </div>
 
 {% schema %}
 {
-    "name": {
-        "en": "Button",
-        "fi": "Nappi"
-    },
+    "name": "t:blocks.button.name",
     "tag": "div",
     "class": "block block-button",
     "category": "basic",
+    "display": "inline",
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Content",
-                    "fi": "Sisältö"
-                },
+                "title": "t:all.groups.content.title",
                 "settings": [
                     {
                         "id": "btnLink",
                         "type": "url",
-                        "label": {
-                            "en": "Button",
-                            "fi": "Painike"
-                        },
+                        "label": "t:all.settings.btnLink.label",
                         "include_target": true,
                         "include_text": true
                     }
-                ]
+                ],
+                "id": "content"
             },
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.style.title",
                 "settings": [
                     {
-                        "id": "btnStyle",
+                        "id": "btnTheme",
                         "type": "select",
-                        "label": {
-                            "en": "Button style",
-                            "fi": "Painikkeen tyyli"
-                        },
+                        "label": "t:all.settings.btnTheme.label",
                         "default": "nil",
                         "options": [
                             {
                                 "value": "nil",
-                                "label": "Auto"
+                                "label": "t:all.settings.btnTheme.options.nil.label"
                             },
                             {
                                 "value": "primary",
-                                "label": {
-                                    "en": "Fill",
-                                    "fi": "Täytetty"
-                                }
+                                "label": "t:all.settings.btnTheme.options.primary.label"
                             },
                             {
                                 "value": "secondary",
-                                "label": {
-                                    "en": "Outline",
-                                    "fi": "Ääriviivat"
-                                }
+                                "label": "t:all.settings.btnTheme.options.secondary.label"
                             },
                             {
-                                "value": "link",
-                                "label": {
-                                    "en": "Text",
-                                    "fi": "Teksti"
-                                }
-                            },
-                            {
-                                "value": "link-with-icon",
-                                "label": {
-                                    "en": "Text with icon",
-                                    "fi": "Teksti kuvakkeella osoittimen ollessa päällä"
-                                }
+                                "value": "contrast",
+                                "label": "t:all.settings.btnTheme.options.contrast.label"
                             }
                         ]
                     },
                     {
-                        "id": "blockPaddingMode",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Padding",
-                            "fi": "Välit"
-                        },
-                        "default": "auto",
-                        "options": [
-                            {
-                                "value": "auto",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "custom",
-                                "label": {
-                                    "en": "Custom",
-                                    "fi": "Mukautettu"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "blockPaddingTop",
-                        "label": {
-                            "en": "Padding top",
-                            "fi": "Väli ylhäällä"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "blockPaddingBottom",
-                        "label": {
-                            "en": "Padding bottom",
-                            "fi": "Väli alhaalla"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "contentAlign",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Content alignment",
-                            "fi": "Sisällön ryhmittyminen"
-                        },
+                        "id": "btnVariant",
+                        "type": "select",
+                        "label": "t:all.settings.btnVariant.label",
                         "default": "nil",
                         "options": [
                             {
                                 "value": "nil",
-                                "label": "Auto"
+                                "label": "t:all.settings.btnVariant.options.nil.label"
                             },
                             {
-                                "value": "start",
-                                "label": "{# icon.align-start #}"
+                                "value": "filled",
+                                "label": "t:all.settings.btnVariant.options.filled.label"
                             },
                             {
-                                "value": "center",
-                                "label": "{# icon.align-center #}"
+                                "value": "outline",
+                                "label": "t:all.settings.btnVariant.options.outline.label"
                             },
                             {
-                                "value": "end",
-                                "label": "{# icon.align-end #}"
+                                "value": "ghost",
+                                "label": "t:all.settings.btnVariant.options.ghost.label"
+                            },
+                            {
+                                "value": "text",
+                                "label": "t:all.settings.btnVariant.options.text.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnSize",
+                        "type": "select",
+                        "label": "t:all.settings.btnSize.label",
+                        "default": "sm",
+                        "options": [
+                            {
+                                "value": "xs",
+                                "label": "t:all.settings.btnSize.options.xs.label"
+                            },
+                            {
+                                "value": "sm",
+                                "label": "t:all.settings.btnSize.options.sm.label"
+                            },
+                            {
+                                "value": "md",
+                                "label": "t:all.settings.btnSize.options.md.label"
+                            },
+                            {
+                                "value": "lg",
+                                "label": "t:all.settings.btnSize.options.lg.label"
                             }
                         ]
                     }
-                ]
+                ],
+                "id": "style"
             }
         ]
     }

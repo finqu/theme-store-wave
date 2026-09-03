@@ -145,12 +145,22 @@ body {
 				}
 
 				#product-thumb-media-swiper {
+					flex: 0 0 80px;
+					width: 80px;
+					min-width: 80px;
+					max-width: 80px;
 					height: var(--style-product-thumb-media-swiper-height, auto);
 					will-change: height;
 
 					.swiper-slide {
 						border: 2px solid transparent;
-						height: auto;
+						box-sizing: border-box;
+						height: auto !important;
+						width: 100% !important;
+
+						.aspect-ratio-container {
+							width: 100%;
+						}
 
 						&.swiper-slide-thumb-active  {
 							border-color: var(--style-border-accent-color);
@@ -229,7 +239,7 @@ body {
 					}
 				}
 
-				> .product-review-rating {
+				.product-review-rating {
 
 					#product-show-reviews {
 						display: flex;

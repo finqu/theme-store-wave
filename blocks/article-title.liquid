@@ -1,0 +1,62 @@
+{%- assign articleName = article.title | default: '' -%}
+
+{%- unless article -%}
+	{%- assign articleName = 'placeholder.article' | t -%}
+{%- endunless -%}
+
+{%- assign linkToArticle = articleCardLinkToArticle | default: block.settings.linkToArticle | default: true -%}
+
+{%- capture articleUrl -%}
+	{{- article | link | default: '' -}}
+{%- endcapture -%}
+
+{%- capture titleMarkup -%}
+
+	<div class="article-title">
+
+		<h3 class="article-title-text text-title">
+			{{- articleName -}}
+		</h3>
+
+	</div>
+
+{%- endcapture -%}
+
+{%- if linkToArticle and article and articleUrl != blank -%}
+
+	<a href="{{ articleUrl | strip }}" aria-label="{{ articleName }}">
+		{{- titleMarkup -}}
+	</a>
+
+{%- else -%}
+
+	{{- titleMarkup -}}
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.article-title.name",
+    "tag": "div",
+    "class": "block block-article-title",
+    "category": "basic",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "id": "style",
+                "settings": [
+                    {
+                        "id": "linkToArticle",
+                        "type": "checkbox",
+                        "label": "t:blocks.article-title.settings.linkToArticle.label",
+                        "default": true
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

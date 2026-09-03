@@ -1,0 +1,43 @@
+{% comment %}
+    Paints html overscroll to match a footer-group section's color scheme.
+    The last footer-group section in the DOM wins.
+
+    Accepts:
+    - section: {Object}
+{% endcomment %}
+
+{%- assign colorScheme = section.settings.sectionColorScheme -%}
+{%- assign htmlBgColor = settings.style_bg_color -%}
+{%- assign schemeStyle = settings.styles[colorScheme] -%}
+
+{%- if schemeStyle.bg_color -%}
+    {%- assign htmlBgColor = schemeStyle.bg_color -%}
+{%- elsif colorScheme == 'secondary' -%}
+    {%- assign htmlBgColor = settings.style_secondary_bg_color -%}
+{%- elsif colorScheme == 'light' -%}
+    {%- assign htmlBgColor = '#ffffff' -%}
+{%- elsif colorScheme == 'dark' -%}
+    {%- assign htmlBgColor = '#000000' -%}
+{%- elsif colorScheme == 'accent' -%}
+    {%- assign htmlBgColor = settings.style_accent_color -%}
+    {%- if htmlBgColor == blank -%}
+        {%- assign htmlBgColor = settings.style_brand_color -%}
+    {%- endif -%}
+{%- elsif colorScheme == 'custom' -%}
+    {%- assign customColor = section.settings.style_custom_color -%}
+    {%- assign customColorMode = customColor.mode -%}
+    {%- if customColorMode and customColorMode != 'solid' -%}
+        {%- assign customColorFirstStop = customColor.stops | first -%}
+        {%- if customColorFirstStop.color -%}
+            {%- assign htmlBgColor = customColorFirstStop.color -%}
+        {%- else -%}
+            {%- assign htmlBgColor = customColor.string_value | default: settings.style_bg_color -%}
+        {%- endif -%}
+    {%- elsif customColor != blank -%}
+        {%- assign htmlBgColor = customColor.string_value | default: customColor -%}
+    {%- endif -%}
+{%- endif -%}
+
+{%- if htmlBgColor != blank -%}
+<style>html { background-color: {{ htmlBgColor }}; }</style>
+{%- endif -%}

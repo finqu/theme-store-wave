@@ -19,18 +19,25 @@
 		{%- endfor -%}
 
 		{%- capture fontsStr -%}
-			{{- settings.bodyTextFont -}},{{- settings.headingFont -}},{{- settings.subheadingFont -}},{{- settings.overlineFont -}},{{- settings.accentFont -}},{{- settings.buttonFont -}},{{- settings.navigationFont -}}
+			{{- settings.bodyTextFont -}},{{- settings.headingFont -}},{{- settings.h1Font -}},{{- settings.h2Font -}},{{- settings.h3Font -}},{{- settings.displayFont -}},{{- settings.subheadingFont -}},{{- settings.overlineFont -}},{{- settings.accentFont -}},{{- settings.buttonFont -}},{{- settings.navigationFont -}}
 		{%- endcapture -%}
-		
-		{%- assign fonts = fontsStr | replace: ' ', '+' | split: ',' | uniq -%}
+
+		{%- assign fonts = fontsStr | replace: ' ', '+' | split: ',' | compact | uniq -%}
 		{%- assign fontFamilies = '' -%}
-		
+		{%- assign fontLinkCount = 0 -%}
+
 		{%- for font in fonts -%}
-			{%- capture fontFamily -%}family={{- font -}}:ital,wght@0,400;0,500;0,700;1,400{% unless forloop.last %}&{% endunless %}{%- endcapture -%}
-			{%- assign fontFamilies = fontFamilies | append: fontFamily -%}
+			{%- if font != blank -%}
+				{%- if fontLinkCount > 0 -%}{%- assign fontFamilies = fontFamilies | append: '&' -%}{%- endif -%}
+				{%- capture fontFamily -%}family={{- font -}}:ital,wght@0,400;0,500;0,700;1,400{%- endcapture -%}
+				{%- assign fontFamilies = fontFamilies | append: fontFamily -%}
+				{%- assign fontLinkCount = fontLinkCount | plus: 1 -%}
+			{%- endif -%}
 		{%- endfor -%}
 
-		<link rel="preload" href="https://fonts.googleapis.com/css2?{{- fontFamilies -}}&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		{%- if fontFamilies != blank -%}
+			<link rel="preload" href="https://fonts.googleapis.com/css2?{{- fontFamilies -}}&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		{%- endif -%}
 		<link rel="stylesheet" href="{{ 'main.css' | asset_url }}" type="text/css" media="all">
 
 		{%- if settings.accessibilityShowWishlist == false and request.page_type == 'customers/wishlist' -%}
@@ -92,14 +99,13 @@
 		{{- 'template-' | append: request.page_type | handle | append: ',' -}}
 	{%- endcapture -%}
 
-	<body class="{{ bodyClasses | strip_newlines | split: ',' | compact | join: ' ' }}">
+	<body class="{{ bodyClasses | strip_newlines | split: ',' | compact | join: ' ' }}" data-style-elevation="{{ settings.styleElevation | default: 'soft' }}">
 
-		{% section 'announcement' %}
-		{% section 'header' %}
+		{% sections 'header' %}
 
 		{{- content_for_layout -}}
 
-		{% section 'footer' %}
+		{% sections 'footer' %}
 		{% render 'cookie-policy' %}
 		{% render 'renderer-templates' %}
 
@@ -112,7 +118,7 @@
 			{%- if settings.schemaWebsite -%}
 				{% render 'schemas/website' %}
 			{%- endif -%}
-			
+
 		{%- endif -%}
 
 	</body>

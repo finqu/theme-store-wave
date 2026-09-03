@@ -54,6 +54,7 @@
         "login_or_signup": "Kirjaudu / Rekisteröidy",
         "or": "Tai",
         "navigation": "Navigaatio",
+        "share": "Jaa",
         "increase": "Lisää",
         "decrease": "Vähennä",
         "policies": {
@@ -85,8 +86,8 @@
     "filters": {
         "title": "Suodattimet",
         "clear_filters": "Tyhjennä suodattimet",
-        "show_result": " Näytä {{ amount }} tuote",
-        "show_result_plural": " Näytä {{ amount }} tuotetta",
+        "show_result": "Näytä {{ amount }} tuote",
+        "show_result_plural": "Näytä {{ amount }} tuotetta",
         "no_results": "Valitut suodattimet eivät löytäneet yhtään osumaa, kokeile muita suodattimia.",
         "filter": {
             "availability": {
@@ -116,7 +117,11 @@
             "title-ascending": "Tuotenimike (A-Z)",
             "title-descending": "Tuotenimike (Z-A)",
             "created-ascending": "Tuotteen luontiaika (Vanhin)",
-            "created-descending": "Tuotteen luontiaika (Uusin)"
+            "created-descending": "Tuotteen luontiaika (Uusin)",
+            "bestselling-ascending": "Myydyimmät (Vähiten)",
+            "bestselling-descending": "Myydyimmät (Eniten)",
+            "last-sold-ascending": "Viimeksi myyty (Vanhin)",
+            "last-sold-descending": "Viimeksi myyty (Uusin)"
         },
         "range": {
             "from": "Alkaen",
@@ -156,6 +161,7 @@
         "product_identifier": "Tuotetunniste",
         "delivery_time_dynamic": "Toimitus {{ min_days }}-{{ max_days }} arkipäivää",
         "return_time_dynamic": "{{ days }} päivän palautusoikeus",
+        "no_return_policy": "Tuotteella ei ole palautusoikeutta",
         "free_shipping_dynamic": "Ilmainen toimitus yli {{ amount }} arvoisille tilauksille",
         "related_products": "Ostetaan usein yhdessä",
         "similar_products": "Saattaisit pitää näistä",
@@ -442,7 +448,8 @@
         "already_logged_in": "Olet jo kirjautunut sisään.",
         "forgot_password": "Unohditko salasanasi?",
         "new_customer": "Oletko uusi asiakas?",
-        "register": "Rekisteröidy nyt"
+        "register": "Rekisteröidy nyt",
+        "email_placeholder": "Sähköposti"
     },
     "register": {
         "title": "Rekisteröityminen",
@@ -466,7 +473,8 @@
         "description": "Syötä alla olevaan kenttään sähköpostiosoite, jota käytit rekisteröitymisessä. Lähetämme ohjeet salasanan vaihdosta antamaasi osoitteeseen.",
         "success": "Ohjeet lähetettiin sähköpostiisi.",
         "cta": "Lähetä",
-        "login": "Kirjaudu sisään"
+        "login": "Kirjaudu sisään",
+        "email_placeholder": "Sähköposti"
     },
     "password_protection": {
         "title": "Tulossa pian",
@@ -495,7 +503,15 @@
         "member": "Jäsen",
         "role": "Rooli",
         "button": "Painike",
-        "text": "Tämä on esimerkkiteksti."
+        "text": "Tämä on esimerkkiteksti.",
+        "announcement": "Luo ensimmäinen ilmoituksesi! Kerro asiakkaillesi tarjouksista ja tapahtumista.",
+        "footer_newsletter": "Tilaa uutiskirjeemme ja saat tietoa uutuuksista, tarjouksista ja tapahtumista.",
+        "quick_links": "Pikalinkit",
+        "about_us": "Tietoa meistä",
+        "about_us_content": "Tervetuloa verkkokauppaamme! Tarjoamme sujuvan ja miellyttävän ostokokemuksen. Sitoudumme asiakastyytyväisyyteen ja tuomme sinulle uusimmat trendit, kilpailukykyiset hinnat ja erinomaista palvelua.",
+        "follow_us": "Seuraa meitä",
+        "get_inspired": "Inspiroidu",
+        "get_inspired_subtitle": "Katso mitä muut lukevat."
     },
     "error": {
         "general": "Tapahtui virhe",
@@ -548,6 +564,109 @@
             "customers_register": "Rekisteröidy",
             "customers_reset_password": "Salasanan vaihto",
             "customers_wishlist": "Suosikit"
+        }
+    },
+    "cookie_notification": {
+        "content": "Käytämme evästeitä parantaaksemme käyttökokemustasi, tarjotaksemme personoitua sisältöä ja analysoidaksemme tietoliikennettä. Klikkaamalla \"Hyväksy kaikki\" hyväksyt evästeiden käytön.",
+        "cta": "Hyväksy kaikki",
+        "privacy_policy": "Tietosuojaseloste"
+    },
+    "frontpage_presets": {
+        "cta_shop": "Osta nyt",
+        "cta_learn_more": "Lue lisää",
+        "products_first": {
+            "announcement_1": "Löydä jotain, johon ihastut",
+            "announcement_2": "Tutustu uusimpiin poimintoihin",
+            "hero_overline": "Seuraava suosikkisi on täällä",
+            "hero_title": "Löydä juuri sinulle sopiva.",
+            "hero_subtitle": "Tutustu valikoimaan, vertaile vaihtoehtoja ja valitse luottavaisin mielin.",
+            "cta_primary": "Selaa valikoimaa",
+            "cta_secondary": "Katso uutuudet",
+            "trust_payments_title": "Valitse luottavaisin mielin",
+            "trust_payments_text": "<p>Löydä tarvitsemasi tiedot ja valitse sinulle sopivin vaihtoehto.</p>",
+            "trust_delivery_title": "Tutustu omaan tahtiisi",
+            "trust_delivery_text": "<p>Selaa valikoimaa ja vertaile vaihtoehtoja kaikessa rauhassa.</p>",
+            "trust_support_title": "Apua tarvittaessa",
+            "trust_support_text": "<p>Kaipaatko neuvoa? Ota yhteyttä, niin autamme mielellämme.</p>",
+            "trust_returns_title": "Löydä sinulle sopiva",
+            "trust_returns_text": "<p>Tutustu tarkemmin ja valitse vaihtoehto, joka tuntuu oikealta.</p>",
+            "proof_overline": "Ennen tilausta",
+            "proof_title": "Hinta ja toimitus näkyvät etukäteen.",
+            "proof_what_title": "Toimitusaika",
+            "proof_what_text": "<p>Arvioitu toimitusaika on merkitty tuotteeseen.</p>",
+            "proof_how_title": "Palautus",
+            "proof_how_text": "<p>Kuluttajalla on 14 päivää aikaa perua tilaus.</p>",
+            "proof_when_title": "Yhteys",
+            "proof_when_text": "<p>Saat meidät kiinni puhelimella ja sähköpostilla.</p>",
+            "products_overline": "Tutustumisen arvoisia",
+            "products_title": "Aloita suosikeistamme",
+            "products_cta": "Selaa kaikkia tuotteita",
+            "categories_overline": "Osta omalla tavallasi",
+            "categories_title": "Tutustu tuoteryhmiin",
+            "terms_title": "Vieläkö mietit?",
+            "terms_subtitle": "Kerro, mitä etsit, niin autamme sinut alkuun.",
+            "terms_cta": "Ota yhteyttä",
+            "terms_text": "<p>Kerro, mitä etsit, niin autamme sinut alkuun.</p>"
+        },
+        "categories_centered": {
+            "announcement_1": "Löydä oikea vaihtoehto",
+            "announcement_2": "Tutustu kaikkiin tuoteryhmiin",
+            "hero_overline": "Aloita siitä, mitä tarvitset",
+            "hero_title": "Oikea paikka aloittaa.",
+            "hero_subtitle": "Valitse tuoteryhmä, tutustu vaihtoehtoihin ja löydä arkeesi sopivat tuotteet.",
+            "cta_primary": "Tutustu tuoteryhmiin",
+            "categories_overline": "Selaa valikoimaa",
+            "categories_title": "Osta tuoteryhmittäin",
+            "products_overline": "Hieman inspiraatiota",
+            "products_title": "Tutustumisen arvoisia tuotteita",
+            "products_cta": "Selaa kaikkia tuotteita",
+            "howto_overline": "Helpompi tapa tehdä ostoksia",
+            "howto_title": "Ensisilmäyksestä lopulliseen valintaan.",
+            "howto_categories_title": "Aloita tuoteryhmästä",
+            "howto_categories_text": "<p>Siirry suoraan siihen valikoiman osaan, joka vastaa tarpeitasi.</p>",
+            "howto_rows_title": "Vertaile vaihtoehtoja",
+            "howto_rows_text": "<p>Tutustu yksityiskohtiin ja valitse sinulle parhaiten sopiva vaihtoehto.</p>",
+            "howto_filters_title": "Tee siitä omasi",
+            "howto_filters_text": "<p>Valitse suosikkisi ja jatka silloin, kun sinulle sopii.</p>"
+        },
+        "storytelling": {
+            "announcement_1": "Valittu tarkoituksella",
+            "announcement_2": "Valikoima, jolla on oma näkökulma",
+            "announcement_3": "Löydä seuraava suosikkisi",
+            "hero_overline": "Valikoiman taustalla oleva ajatus",
+            "hero_title": "Hyvät asiat kuuluvat yhteen.",
+            "hero_subtitle": "Tutustu harkittuun valikoimaan, jota yhdistää yksi selkeä näkökulma.",
+            "cta_primary": "Tutustu valikoimaan",
+            "cta_secondary": "Meidän näkökulmamme",
+            "products_overline": "Täällä tarina jatkuu",
+            "products_title": "Tutustu valikoimaan",
+            "products_cta": "Selaa kaikkia tuotteita",
+            "manifesto_overline": "Mikä meitä ohjaa",
+            "manifesto_title": "Valittu sinun arkeasi varten.",
+            "manifesto_subtitle": "Selkeä näkökulma auttaa löytämään tuotteet, jotka tuntuvat juuri oikeilta.",
+            "manifesto_cta": "Tutustu tuotteisiin",
+            "principle_1_title": "Valittu harkiten",
+            "principle_1_text": "<p>Jokaisella tuotteella on paikkansa yhtenäisessä valikoimassa.</p>",
+            "principle_2_title": "Oikeaa elämää varten",
+            "principle_2_text": "<p>Etsi hyödyllistä, kaunista ja pieniä asioita, jotka tuovat iloa päivääsi.</p>",
+            "principle_3_title": "Helppo tehdä omaksi",
+            "principle_3_text": "<p>Seuraa tarinaa, tutustu yksityiskohtiin ja löydä tuotteet, jotka puhuttelevat sinua.</p>"
+        },
+        "collection_launch": {
+            "announcement_1": "Uusi mallisto on saapunut",
+            "announcement_2": "Tutustu uusimpiin tuotteisiin",
+            "hero_badge": "Juuri julkaistu",
+            "hero_title": "Tutustu uuteen mallistoon.",
+            "hero_subtitle": "Yksi raikas ajatus herää eloon mallistossa, joka odottaa löytäjäänsä.",
+            "cta_primary": "Tutustu mallistoon",
+            "products_overline": "Uusin julkaisu",
+            "products_title": "Löydä suosikkisi",
+            "tab_all": "Kaikki",
+            "tab_new": "Uutuudet",
+            "tab_sale": "Ale",
+            "lookbook_overline": "Näe se omalla tavallasi",
+            "lookbook_title": "Tutustu mallistoon lähempää",
+            "lookbook_cta": "Selaa mallistoa"
         }
     }
 }

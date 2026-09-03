@@ -1,0 +1,37 @@
+{% comment %}
+	Outputs true/false for whether a product-list sort option should appear in the UI.
+
+	Accepts:
+	- option: {String} Sort option key from the listing object (required)
+
+	Usage:
+	{%- capture sort_option_visible -%}
+		{% render 'product-sort-option-visible', option: option %}
+	{%- endcapture -%}
+{% endcomment %}
+{%- case option -%}
+	{%- when 'default' -%}
+		{%- if settings.productSortDefault == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'price-ascending' -%}
+		{%- if settings.productSortPriceAscending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'price-descending' -%}
+		{%- if settings.productSortPriceDescending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'title-ascending' -%}
+		{%- if settings.productSortTitleAscending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'title-descending' -%}
+		{%- if settings.productSortTitleDescending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'created-ascending' -%}
+		{%- if settings.productSortCreatedAscending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'created-descending' -%}
+		{%- if settings.productSortCreatedDescending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'bestselling-ascending' -%}
+		{%- if settings.productSortBestsellingAscending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'bestselling-descending' -%}
+		{%- if settings.productSortBestsellingDescending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'last-sold-ascending' -%}
+		{%- if settings.productSortLastSoldAscending == false -%}false{%- else -%}true{%- endif -%}
+	{%- when 'last-sold-descending' -%}
+		{%- if settings.productSortLastSoldDescending == false -%}false{%- else -%}true{%- endif -%}
+	{%- else -%}
+		true
+{%- endcase -%}

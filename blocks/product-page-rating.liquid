@@ -1,0 +1,61 @@
+                        {% if product.default_or_selected_variant.in_preview == false %}
+
+                            {% if product.review_count > 0 and product.reviews_are_enabled %}
+
+                                <div class="product-review-rating mb-4">
+
+                                    <button
+                                        type="button"
+                                        id="product-show-reviews"
+                                        class="btn btn-text"
+                                        aria-label="{{ 'product.show_reviews' | t }}">
+
+                                        <div class="product-review-icons">
+
+                                            {% for rating in (1..product.max_rating) %}
+
+                                                <div class="product-review-icon">
+
+                                                    {% if product.rating >= rating %}
+
+                                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                                    {% else %}
+
+                                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                        <span class="product-review-text">
+                                            {%- if product.review_count == 1 -%}
+                                                {{- 'product.review_count_dynamic' | t: amount: product.review_count -}}
+                                            {%- else -%}
+                                                {{- 'product.review_count_plural_dynamic' | t: amount: product.review_count -}}
+                                            {%- endif -%}
+                                        </span>
+
+                                    </button>
+
+                                </div>
+
+                            {% endif %}
+                        {% endif %}
+{% schema %}
+{
+    "name": "t:blocks.product-page-rating.name",
+    "tag": "div",
+    "class": "block block-product-page-rating",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

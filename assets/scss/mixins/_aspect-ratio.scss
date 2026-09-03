@@ -5,7 +5,7 @@
 
     @if $key == product {
         $fit: $product-image-aspect-ratio-fit;
-        $border-radius: var(--style-product-image-border-radius);
+        $border-radius: var(--style-image-border-radius);
     } @else if $key == article {
         $fit: $article-image-aspect-ratio-fit;
     }
@@ -32,7 +32,13 @@
     > .aspect-ratio-container {
         display: flex;
         justify-content: center;
-        aspect-ratio: aspect-ratio($key);
+
+        @if $key == product {
+            aspect-ratio: var(--product-image-aspect-ratio, #{aspect-ratio($key)});
+        } @else {
+            aspect-ratio: aspect-ratio($key);
+        }
+
         overflow: hidden; // Safari & IOS Fix, prevent container from stretching
 
         &:has(.lazy) {
@@ -49,7 +55,7 @@
                 width: 100%;
                 height: 100%;
                 background-color: var(--style-bg-accent-color);
-                border-radius: var(--border-radius);
+                border-radius: #{$border-radius};
             }
         }
 
@@ -64,7 +70,7 @@
 
         .aspect-ratio-item {
             object-fit: var(--object-fit, #{$fit});
-            border-radius: var(--border-radius);
+            border-radius: #{$border-radius};
 
             @if $key == product {
                 &:not(.svg-placeholder) {

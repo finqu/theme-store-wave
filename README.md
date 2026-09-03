@@ -1,13 +1,31 @@
 # Wave
-Modern and responsive theme designed for Finqu e-commerce platform. It offers a clean and intuitive user interface, making it easy for customers to navigate and find products. The theme is highly customizable, allowing store owners to tailor the look and feel to match their brand. Wave also includes a variety of features to enhance the shopping experience, such as product carousels, wishlists, and a robust search functionality.
+
+> _Make yourself at home._ A warm, natural theme that defaults to home and interior — but works just as well for outdoor gear, garden stores, and eco-conscious brands.
+
+## About this theme
+
+**Default market:** Home and interior stores, furniture retailers, home decor, lighting and textiles.
+
+**Also works for:** Outdoor gear and sports stores, garden and plant shops, eco-friendly brands, and any store with an earthy, natural feel.
+
+**Design character:** Wave is rooted in the natural world — a deep forest green (#1f4722) anchors the palette, with a soft green secondary background (#f8fcf8) and nature-toned text. Its most distinctive UI detail is pill-shaped buttons (60px border-radius) and pill inputs (46px), giving the theme a rounded, approachable energy. Poppins is used throughout for a bold, clear typographic feel.
+
+**UI style:** Large hero sections with full-bleed lifestyle imagery set the scene. Category carousels guide browsing, while product carousels surface bestsellers and new arrivals. Icons-with-text sections highlight service promises (delivery, assembly, returns) or sustainability credentials depending on the market.
+
+**Best suited for:** Stores where lifestyle imagery and a natural, welcoming tone drive the shopping experience — from living rooms to hiking trails.
+
+**Available presets:** Default (Home & Interior), Outdoor & Sports.
 
 ## Events API
+
 The theme dispatch various events that developers can use to extend functionality or integrate with other systems. Below is a list of events that the theme dispatch, along with their details.
 
 ### `theme:ready`
+
 Dispatched when the theme is fully loaded and ready access window.theme object.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:ready', (e) => {
     console.log('Theme is ready', e.detail);
@@ -15,14 +33,17 @@ document.addEventListener('theme:ready', (e) => {
 ```
 
 **Detail:**
+
 ```
 Theme App object (window.theme)
 ```
 
 ### `theme:cart:render`
+
 Dispatched when the cart is rendered.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:render', () => {
     console.log('Cart rendered');
@@ -30,9 +51,11 @@ document.addEventListener('theme:cart:render', () => {
 ```
 
 ### `theme:cart:update`
+
 Dispatched when the cart is updated.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:update', (e) => {
     console.log('Cart updated', e.detail);
@@ -40,6 +63,7 @@ document.addEventListener('theme:cart:update', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": "1",
@@ -99,17 +123,12 @@ document.addEventListener('theme:cart:update', (e) => {
             "out_of_stock": false,
             "product_id": 1,
             "requires_shipping": true,
-            "category_path": [
-                "Category 1"
-            ],
+            "category_path": ["Category 1"],
             "sku": "SKU123",
             "model": "Model123",
             "manufacturer": "Manufacturer Name",
             "type": "product",
-            "attributes": [
-                "Color: Red",
-                "Size: M"
-            ],
+            "attributes": ["Color: Red", "Size: M"],
             "attributes_label": "Color: Red, Size: M",
             "weight_in_grams": 500,
             "shipping_weight_in_grams": 500,
@@ -123,9 +142,11 @@ document.addEventListener('theme:cart:update', (e) => {
 ```
 
 ### `theme:cart:show`
+
 Dispatched when the cart is shown.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:show', () => {
     console.log('Cart shown');
@@ -133,9 +154,11 @@ document.addEventListener('theme:cart:show', () => {
 ```
 
 ### `theme:cart:hide`
+
 Dispatched when the cart is hidden.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:hide', () => {
     console.log('Cart hidden');
@@ -143,9 +166,11 @@ document.addEventListener('theme:cart:hide', () => {
 ```
 
 ### `theme:cart:addItem`
+
 Dispatched when an item is added to the cart.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:addItem', (e) => {
     console.log('Item added to cart', e.detail);
@@ -153,6 +178,7 @@ document.addEventListener('theme:cart:addItem', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "name": "Product Name",
@@ -180,10 +206,7 @@ document.addEventListener('theme:cart:addItem', (e) => {
     "out_of_stock": false,
     "product_id": 1,
     "requires_shipping": true,
-    "category_path": [
-        "Category 1",
-        "Category 2"
-    ],
+    "category_path": ["Category 1", "Category 2"],
     "sku": "SKU123",
     "model": "Model123",
     "manufacturer": "Manufacturer Name",
@@ -197,9 +220,11 @@ document.addEventListener('theme:cart:addItem', (e) => {
 ```
 
 ### `theme:cart:updateItem`
+
 Dispatched when an item in the cart is updated.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:updateItem', (e) => {
     console.log('Cart item updated', e.detail);
@@ -207,6 +232,7 @@ document.addEventListener('theme:cart:updateItem', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "name": "Product Name",
@@ -234,10 +260,7 @@ document.addEventListener('theme:cart:updateItem', (e) => {
     "out_of_stock": false,
     "product_id": 1,
     "requires_shipping": true,
-    "category_path": [
-        "Category 1",
-        "Category 2"
-    ],
+    "category_path": ["Category 1", "Category 2"],
     "sku": "SKU123",
     "model": "Model123",
     "manufacturer": "Manufacturer Name",
@@ -251,9 +274,11 @@ document.addEventListener('theme:cart:updateItem', (e) => {
 ```
 
 ### `theme:cart:removeItem`
+
 Dispatched when an item is removed from the cart.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:removeItem', (e) => {
     console.log('Item removed from cart', e.detail);
@@ -261,6 +286,7 @@ document.addEventListener('theme:cart:removeItem', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "name": "Product Name",
@@ -288,10 +314,7 @@ document.addEventListener('theme:cart:removeItem', (e) => {
     "out_of_stock": false,
     "product_id": 1,
     "requires_shipping": true,
-    "category_path": [
-        "Category 1",
-        "Category 2"
-    ],
+    "category_path": ["Category 1", "Category 2"],
     "sku": "SKU123",
     "model": "Model123",
     "manufacturer": "Manufacturer Name",
@@ -305,9 +328,11 @@ document.addEventListener('theme:cart:removeItem', (e) => {
 ```
 
 ### `theme:cart:clear`
+
 Dispatched when the cart is cleared.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:clear', (e) => {
     console.log('Cart cleared', e.detail);
@@ -315,6 +340,7 @@ document.addEventListener('theme:cart:clear', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": null,
@@ -347,9 +373,11 @@ document.addEventListener('theme:cart:clear', (e) => {
 ```
 
 ### `theme:cart:initiateCheckout`
+
 Dispatched when the checkout process is initiated.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cart:initiateCheckout', (e) => {
     console.log('Checkout initiated', e.detail);
@@ -357,6 +385,7 @@ document.addEventListener('theme:cart:initiateCheckout', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "currency": "EUR",
@@ -402,10 +431,7 @@ document.addEventListener('theme:cart:initiateCheckout', (e) => {
             "out_of_stock": false,
             "product_id": 1,
             "requires_shipping": true,
-            "category_path": [
-                "Category 1",
-                "Category 2"
-            ],
+            "category_path": ["Category 1", "Category 2"],
             "sku": "SKU123",
             "model": "Model123",
             "manufacturer": "Manufacturer Name",
@@ -423,9 +449,11 @@ document.addEventListener('theme:cart:initiateCheckout', (e) => {
 ```
 
 ### `theme:wishlist:addItem`
+
 Dispatched when an item is added to the wishlist.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:wishlist:addItem', (e) => {
     console.log('Item added to wishlist', e.detail);
@@ -433,6 +461,7 @@ document.addEventListener('theme:wishlist:addItem', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": 1
@@ -440,9 +469,11 @@ document.addEventListener('theme:wishlist:addItem', (e) => {
 ```
 
 ### `theme:wishlist:removeItem`
+
 Dispatched when an item is removed from the wishlist.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:wishlist:removeItem', (e) => {
     console.log('Item removed from wishlist', e.detail);
@@ -450,6 +481,7 @@ document.addEventListener('theme:wishlist:removeItem', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": 1
@@ -457,9 +489,11 @@ document.addEventListener('theme:wishlist:removeItem', (e) => {
 ```
 
 ### `theme:cookiePolicy:consentGranted`
+
 Dispatched when cookie policy consent is granted.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cookiePolicy:consentGranted', (e) => {
     console.log('Cookie policy consent granted', e.detail);
@@ -467,23 +501,19 @@ document.addEventListener('theme:cookiePolicy:consentGranted', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
-    "consents": [
-        "required",
-        "analytics",
-        "marketing",
-        "functional",
-        "security",
-        "personalization"
-    ]
+    "consents": ["required", "analytics", "marketing", "functional", "security", "personalization"]
 }
 ```
 
 ### `theme:cookiePolicy:consentRequested`
+
 Dispatched when cookie policy consent is requested.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:cookiePolicy:consentRequested', () => {
     console.log('Cookie policy consent requested');
@@ -491,9 +521,11 @@ document.addEventListener('theme:cookiePolicy:consentRequested', () => {
 ```
 
 ### `theme:search`
+
 Dispatched when a search is performed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:search', (e) => {
     console.log('Search performed', e.detail);
@@ -501,6 +533,7 @@ document.addEventListener('theme:search', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "query": "search term",
@@ -528,9 +561,11 @@ document.addEventListener('theme:search', (e) => {
 ```
 
 ### `theme:search:view`
+
 Dispatched when search results are viewed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:search:view', (e) => {
     console.log('Search results viewed', e.detail);
@@ -538,20 +573,19 @@ document.addEventListener('theme:search:view', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
-    "product_ids": [
-        1,
-        2,
-        3
-    ]
+    "product_ids": [1, 2, 3]
 }
 ```
 
 ### `theme:product:price`
+
 Dispatched when product price is updated on product page due customization select.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:product:price', (e) => {
     console.log('Product price updated', e.detail);
@@ -559,6 +593,7 @@ document.addEventListener('theme:product:price', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": 1,
@@ -577,9 +612,11 @@ document.addEventListener('theme:product:price', (e) => {
 ```
 
 ### `theme:product:view`
+
 Dispatched when a product is viewed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:product:view', (e) => {
     console.log('Product viewed', e.detail);
@@ -587,6 +624,7 @@ document.addEventListener('theme:product:view', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "id": 1,
@@ -594,16 +632,16 @@ document.addEventListener('theme:product:view', (e) => {
     "name": "Product Name",
     "manufacturer": "Manufacturer Name",
     "currency": "EUR",
-    "breadcrumbs": [
-        "Category 1"
-    ]
+    "breadcrumbs": ["Category 1"]
 }
 ```
 
 ### `theme:customer:register`
+
 Dispatched when a customer registers.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:customer:register', () => {
     console.log('Customer registered');
@@ -611,9 +649,11 @@ document.addEventListener('theme:customer:register', () => {
 ```
 
 ### `theme:customer:acceptsMarketing`
+
 Dispatched when a customer accepts marketing.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:customer:acceptsMarketing', (e) => {
     console.log('Customer accepts marketing', e.detail);
@@ -621,6 +661,7 @@ document.addEventListener('theme:customer:acceptsMarketing', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "email": "user@example.com"
@@ -628,9 +669,11 @@ document.addEventListener('theme:customer:acceptsMarketing', (e) => {
 ```
 
 ### `theme:customer:deniesMarketing`
+
 Dispatched when a customer denies marketing.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:customer:deniesMarketing', (e) => {
     console.log('Customer denies marketing', e.detail);
@@ -638,6 +681,7 @@ document.addEventListener('theme:customer:deniesMarketing', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "email": "user@example.com"
@@ -645,9 +689,11 @@ document.addEventListener('theme:customer:deniesMarketing', (e) => {
 ```
 
 ### `theme:catalog:view`
+
 Dispatched when a catalog is viewed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:catalog:view', (e) => {
     console.log('Catalog viewed', e.detail);
@@ -655,20 +701,19 @@ document.addEventListener('theme:catalog:view', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
-    "product_ids": [
-        1,
-        2,
-        3
-    ]
+    "product_ids": [1, 2, 3]
 }
 ```
 
 ### `theme:category:view`
+
 Dispatched when a category is viewed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:category:view', (e) => {
     console.log('Category viewed', e.detail);
@@ -676,24 +721,21 @@ document.addEventListener('theme:category:view', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "name": "Category Name",
-    "breadcrumbs": [
-        "Parent Category"
-    ],
-    "product_ids": [
-        1,
-        2,
-        3
-    ]
+    "breadcrumbs": ["Parent Category"],
+    "product_ids": [1, 2, 3]
 }
 ```
 
 ### `theme:manufacturer:view`
+
 Dispatched when a manufacturer is viewed.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:manufacturer:view', (e) => {
     console.log('Manufacturer viewed', e.detail);
@@ -701,20 +743,19 @@ document.addEventListener('theme:manufacturer:view', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
-    "product_ids": [
-        1,
-        2,
-        3
-    ]
+    "product_ids": [1, 2, 3]
 }
 ```
 
 ### `theme:newsletter:subscribe`
+
 Dispatched when a user subscribes to the newsletter.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:newsletter:subscribe', (e) => {
     console.log('Newsletter subscribed', e.detail);
@@ -722,6 +763,7 @@ document.addEventListener('theme:newsletter:subscribe', (e) => {
 ```
 
 **Detail:**
+
 ```json
 {
     "email": "user@example.com"
@@ -729,9 +771,11 @@ document.addEventListener('theme:newsletter:subscribe', (e) => {
 ```
 
 ### `theme:contact:sendEmail`
+
 Dispatched when a contact email is sent.
 
 **Snippet:**
+
 ```javascript
 document.addEventListener('theme:contact:sendEmail', () => {
     console.log('Contact email sent');

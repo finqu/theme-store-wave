@@ -1,0 +1,82 @@
+{%- assign dateFormat = 'general.date_format' | t -%}
+
+{%- comment -%}
+	Theme default restores legacy article-card-grid behavior (settings.articleShowAuthor).
+	Explicit true/false on the block override the theme setting.
+{%- endcomment -%}
+{%- if block.settings.showAuthor == 'default' or block.settings.showAuthor == blank or block.settings.showAuthor == nil -%}
+	{%- assign showAuthor = settings.articleShowAuthor -%}
+{%- else -%}
+	{%- assign showAuthor = block.settings.showAuthor -%}
+{%- endif -%}
+
+<div class="article-info">
+
+	<ul class="list-separator">
+
+		<li class="article-date list-inline-item">
+
+			<i>
+				{%- if article -%}
+					<time datetime="{{ article.published_at | date: "%F" }}">{{ article.published_at | date: dateFormat }}</time>
+				{%- else -%}
+					<time datetime="{{ 'now' | date: "%F" }}">{{ 'now' | date: dateFormat }}</time>
+				{%- endif -%}
+			</i>
+
+		</li>
+
+		{% if showAuthor and article.author %}
+
+			<li class="article-author list-inline-item">
+
+				{{- article.author -}}
+
+			</li>
+
+		{% endif %}
+
+	</ul>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.article-meta.name",
+    "tag": "div",
+    "class": "block block-article-meta",
+    "category": "basic",
+    "private": true,
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.style.title",
+                "id": "style",
+                "settings": [
+                    {
+                        "id": "showAuthor",
+                        "type": "select",
+                        "label": "t:blocks.article-meta.settings.showAuthor.label",
+                        "default": "default",
+                        "options": [
+                            {
+                                "value": "default",
+                                "label": "t:blocks.article-meta.settings.showAuthor.options.default.label"
+                            },
+                            {
+                                "value": true,
+                                "label": "t:blocks.article-meta.settings.showAuthor.options.true.label"
+                            },
+                            {
+                                "value": false,
+                                "label": "t:blocks.article-meta.settings.showAuthor.options.false.label"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+{% if product.manufacturer %}
+
+    <div class="product-manufacturer mb-1">
+
+        <a href="{{ product.manufacturer | link }}" class="product-manufacturer-text">
+            {{ product.manufacturer.title }}
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-manufacturer.name",
+    "tag": "div",
+    "class": "block block-product-page-manufacturer",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

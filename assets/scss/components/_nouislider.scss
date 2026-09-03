@@ -334,3 +334,40 @@
     top: auto;
     right: 28px;
 }
+
+@if $style-elevation == 'hard' {
+    .noUi-target {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-input-border-radius);
+        background-color: var(--style-form-bg-color);
+    }
+
+    .noUi-connect {
+        background-color: var(--style-btn-bg-color);
+    }
+
+    .noUi-handle {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-input-border-radius);
+        background-color: var(--style-form-bg-color);
+        box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+
+        &:focus-visible,
+        &.noUi-active {
+            outline: 3px solid $elevation-focus-color;
+            outline-offset: $elevation-border-width;
+        }
+    }
+
+    .noUi-tooltip {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-component-border-radius);
+        box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+        font-weight: $font-weight-bold;
+    }
+
+    [disabled].noUi-target,
+    [disabled] .noUi-handle {
+        @include elevation-disabled;
+    }
+}

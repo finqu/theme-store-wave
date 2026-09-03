@@ -1,0 +1,19 @@
+{% comment %}
+    Wraps footer markup in the shared section shell.
+
+    Accepts:
+    - section: {Object}
+    - sectionContent: {String}
+    - sectionClasses: {String}
+    - sectionGutterWidth: {String}
+{% endcomment %}
+
+{% render 'section',
+    section: section,
+    sectionContent: sectionContent,
+    sectionContainer: 'none',
+    sectionClasses: sectionClasses,
+    sectionHeader: false,
+    sectionAnimation: false,
+    sectionGutterWidth: sectionGutterWidth
+%}

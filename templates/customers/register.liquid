@@ -254,7 +254,7 @@
 
                 <div class="mb-4 form-check">
 
-                    <input type="checkbox" name="terms_and_conditions" id="register-terms-conditions" class="form-check-input form-check-input-required">  
+                    <input type="checkbox" name="terms_and_conditions" id="register-terms-conditions" class="form-check-input form-check-input-required">
 
                     <label for="register-terms-conditions" class="form-check-label">
 
@@ -262,7 +262,7 @@
                             {{- 'general.policies.terms_and_conditions' | t -}}
                         </a>{%- endcapture -%}
 
-                        {{- 'general.policy_accept_text' | t, policy: policyLink -}}
+                        {{- 'general.policy_accept_text' | t:policy: policyLink -}}
 
                     </label>
 
@@ -282,7 +282,7 @@
                             {{- 'general.policies.privacy_policy' | t -}}
                         </a>{%- endcapture -%}
 
-                        {{- 'general.policy_accept_text' | t, policy: policyLink -}}
+                        {{- 'general.policy_accept_text' | t:policy: policyLink -}}
 
                     </label>
 
@@ -344,11 +344,11 @@
                         {{- 'general.policies.privacy_policy' | t -}}
                     </a>{%- endcapture -%}
 
-                    {{- 'register.inline_terms_with_policy' | t, action: actionText, terms: termsLink, policy: policyLink -}}
+                    {{- 'register.inline_terms_with_policy' | t:action: actionText, terms: termsLink, policy: policyLink -}}
 
                 {% else %}
 
-                   {{- 'register.inline_terms' | t, action: actionText, terms: termsLink -}}
+                   {{- 'register.inline_terms' | t:action: actionText, terms: termsLink -}}
 
                 {% endif %}
 
@@ -362,7 +362,7 @@
             {{- 'register.returning_customer' | t -}}
         </h3>
 
-        <a href="{{ routes.account_login_url }}" class="btn btn-secondary d-block w-100">
+        <a href="{{ routes.account_login_url }}" class="btn btn-primary btn-outline d-block w-100">
             {{- 'register.login' | t -}}
         </a>
 

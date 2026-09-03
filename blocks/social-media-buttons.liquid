@@ -5,119 +5,163 @@
     }
     #finqu-block-{{ block.id }} .block-inner .social-media-buttons-container {
         width: fit-content;
+        --social-media-buttons-gap: {{ block.settings.gap }}rem;
     }
-    {%- if block.settings.blockPaddingMode == 'custom' -%}
-        #finqu-block-{{ block.id }} {
-            --block-padding-top: {{ block.settings.blockPaddingTop }}rem;
-            --block-padding-bottom: {{ block.settings.blockPaddingBottom }}rem;
-        }
-    {%- endif -%}
 {%- endcapture -%}
 
 <style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
 <div class="block-inner">
 
-    {% render 'social-media-buttons' %}
+    {% assign btn_style = block.settings.btnStyle | default: 'minimal' %}
+    {% assign btn_color = block.settings.btnColor | default: 'monochrome' %}
+    {% assign btn_size = block.settings.btnSize | default: 'md' %}
+
+    {% comment %} Support legacy s/m/l values alongside shared sm/md/lg. {% endcomment %}
+    {% if btn_size == 's' or btn_size == 'sm' %}
+        {% assign btn_size_class = 'sm' %}
+    {% elsif btn_size == 'l' or btn_size == 'lg' %}
+        {% assign btn_size_class = 'lg' %}
+    {% else %}
+        {% assign btn_size_class = 'md' %}
+    {% endif %}
+
+    {% render 'social-media-buttons',
+        style: btn_style,
+        color: btn_color,
+        size: btn_size_class,
+        preview: request.design_mode
+    %}
 
 </div>
 
 {% schema %}
 {
-    "name": {
-        "en": "Social media buttons",
-        "fi": "Sosiaalisen median kuvakkeet"
-    },
+    "name": "t:blocks.social-media-buttons.name",
     "tag": "div",
     "class": "block block-social-media-buttons",
-    "category": "basic",
+    "category": "social",
     "settings": {
         "list_type": "tabs",
         "groups": [
             {
-                "title": {
-                    "en": "Settings",
-                    "fi": "Asetukset"
-                },
+                "title": "t:all.groups.style.title",
                 "settings": [
+                    {
+                        "id": "btnStyle",
+                        "type": "select",
+                        "label": "t:all.settings.btnStyle.label",
+                        "default": "minimal",
+                        "options": [
+                            {
+                                "value": "minimal",
+                                "label": "t:all.settings.btnStyle.options.minimal.label"
+                            },
+                            {
+                                "value": "default",
+                                "label": "t:all.settings.btnStyle.options.default.label"
+                            },
+                            {
+                                "value": "text",
+                                "label": "t:all.settings.btnStyle.options.text.label"
+                            },
+                            {
+                                "value": "circle",
+                                "label": "t:all.settings.btnStyle.options.circle.label"
+                            },
+                            {
+                                "value": "box",
+                                "label": "t:all.settings.btnStyle.options.box.label"
+                            },
+                            {
+                                "value": "bw",
+                                "label": "t:all.settings.btnStyle.options.bw.label"
+                            },
+                            {
+                                "value": "squared",
+                                "label": "t:all.settings.btnStyle.options.squared.label"
+                            },
+                            {
+                                "value": "rounded",
+                                "label": "t:all.settings.btnStyle.options.rounded.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "btnColor",
+                        "type": "radio-pill",
+                        "label": "t:blocks.social-media-buttons.settings.btnColor.label",
+                        "default": "monochrome",
+                        "options": [
+                            {
+                                "value": "brand",
+                                "label": "t:blocks.social-media-buttons.settings.btnColor.options.brand.label"
+                            },
+                            {
+                                "value": "monochrome",
+                                "label": "t:blocks.social-media-buttons.settings.btnColor.options.monochrome.label"
+                            }
+                        ],
+                        "conditions": [
+                            "btnStyle in squared,rounded"
+                        ]
+                    },
+                    {
+                        "id": "btnSize",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.btnSize.label",
+                        "default": "md",
+                        "options": [
+                            {
+                                "value": "sm",
+                                "label": "t:all.settings.btnSize.options.sm.label"
+                            },
+                            {
+                                "value": "md",
+                                "label": "t:all.settings.btnSize.options.md.label"
+                            },
+                            {
+                                "value": "lg",
+                                "label": "t:all.settings.btnSize.options.lg.label"
+                            }
+                        ]
+                    },
                     {
                         "id": "contentAlign",
                         "type": "radio-pill",
-                        "label": {
-                            "en": "Alignment",
-                            "fi": "Ryhmittyminen"
-                        },
+                        "label": "t:all.settings.contentAlign.label",
                         "default": "nil",
                         "options": [
                             {
                                 "value": "nil",
-                                "label": "Auto"
+                                "label": "t:all.settings.contentAlign.options.nil.label"
                             },
                             {
                                 "value": "start",
-                                "label": "{# icon.align-start #}"
+                                "label": "t:all.settings.contentAlign.options.start.label"
                             },
                             {
                                 "value": "center",
-                                "label": "{# icon.align-center #}"
+                                "label": "t:all.settings.contentAlign.options.center.label"
                             },
                             {
                                 "value": "end",
-                                "label": "{# icon.align-end #}"
+                                "label": "t:all.settings.contentAlign.options.end.label"
                             }
                         ]
                     },
                     {
-                        "id": "blockPaddingMode",
-                        "type": "radio-pill",
-                        "label": {
-                            "en": "Padding",
-                            "fi": "Välit"
-                        },
-                        "default": "auto",
-                        "options": [
-                            {
-                                "value": "auto",
-                                "label": "Auto"
-                            },
-                            {
-                                "value": "custom",
-                                "label": {
-                                    "en": "Custom",
-                                    "fi": "Mukautettu"
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "id": "blockPaddingTop",
-                        "label": {
-                            "en": "Padding top",
-                            "fi": "Väli ylhäällä"
-                        },
+                        "id": "gap",
                         "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
-                    },
-                    {
-                        "id": "blockPaddingBottom",
-                        "label": {
-                            "en": "Padding bottom",
-                            "fi": "Väli alhaalla"
-                        },
-                        "type": "range",
-                        "min": 0,
-                        "max": 15,
-                        "step": 1,
-                        "default": "0",
-                        "unit": "rem",
-                        "conditions": ["blockPaddingMode eq custom"]
+                        "label": "t:blocks.social-media-buttons.settings.gap.label",
+                        "min": 0.5,
+                        "max": 1.5,
+                        "step": 0.5,
+                        "default": "0.5",
+                        "unit": "rem"
                     }
-                ]
+                ],
+                "id": "style"
             }
         ]
     }

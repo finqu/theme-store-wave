@@ -204,6 +204,40 @@ $social-media-sizes: (
 	}
 }
 
+%style-squared {
+	border-radius: var(--style-btn-border-radius);
+	text-decoration: none;
+	transition: color .15s linear, background-color .15s linear;
+}
+
+%style-rounded {
+	border-radius: 50%;
+	text-decoration: none;
+	transition: color .15s linear, background-color .15s linear;
+}
+
+%style-color-brand-fill {
+	background-color: var(--social-media-btn-background-color) !important;
+	color: var(--social-media-btn-color) !important;
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, var(--social-media-btn-background-color), #ffffff 8%) !important;
+		color: var(--social-media-btn-color) !important;
+	}
+}
+
+%style-color-monochrome-fill {
+	background-color: color-mix(in srgb, var(--style-icon-color) 12%, transparent) !important;
+	color: var(--style-icon-color) !important;
+
+	&:hover,
+	&:focus {
+		background-color: color-mix(in srgb, var(--style-icon-color) 20%, transparent) !important;
+		color: var(--style-icon-color) !important;
+	}
+}
+
 .social-media-btn {
 	display: inline-flex;
 	justify-content: center;
@@ -217,6 +251,17 @@ $social-media-sizes: (
 
 	&:last-child {
 		margin-right: auto;
+	}
+
+	// Icons inherit button color (overrides global .svg-icon theme color)
+	.svg-icon {
+		color: inherit !important;
+
+		&.svg-icon-fill path,
+		path {
+			fill: currentColor !important;
+			stroke: currentColor;
+		}
 	}
 
 	@each $name, $data in $social-medias {
@@ -249,10 +294,33 @@ $social-media-sizes: (
 				@extend %style-minimal;
 			}
 		}
-    }
+
+	}
+
+	&.social-media-btn-style-squared {
+		@extend %style-squared;
+	}
+
+	&.social-media-btn-style-rounded {
+		@extend %style-rounded;
+	}
+
+	&.social-media-btn-color-brand {
+		&.social-media-btn-style-squared,
+		&.social-media-btn-style-rounded {
+			@extend %style-color-brand-fill;
+		}
+	}
+
+	&.social-media-btn-color-monochrome {
+		&.social-media-btn-style-squared,
+		&.social-media-btn-style-rounded {
+			@extend %style-color-monochrome-fill;
+		}
+	}
 
 	@each $name, $data in $social-media-sizes {
-		
+
 		&.social-media-btn-size-#{$name} {
 			width: map-get($data, 'width');
 			height: map-get($data, 'height');
@@ -260,6 +328,12 @@ $social-media-sizes: (
 				@include font-size(map-get($data, 'font-size'));
 			} @else {
 				font-size: inherit;
+			}
+
+			&.social-media-btn-style-text,
+			&.social-media-btn-style-minimal {
+				width: auto;
+				height: auto;
 			}
 		}
 	}
@@ -271,10 +345,11 @@ $social-media-sizes: (
 	justify-content: start;
 	align-items: start;
 	height: 100%;
-	column-gap: 1.4rem;
-	row-gap: 1.4rem;
+	column-gap: var(--social-media-buttons-gap, 1.4rem);
+	row-gap: var(--social-media-buttons-gap, 1.4rem);
 
-	&:has(.social-media-btn-style-minimal) {
+	&:has(.social-media-btn-style-minimal),
+	&:has(.social-media-btn-style-text) {
 		height: auto;
 		row-gap: 0;
 	}
@@ -284,6 +359,19 @@ $social-media-sizes: (
 		& + .social-media-btn,
 		& + .social-media-btn.social-media-btn-style-minimal {
 			margin-left: 0;
+		}
+	}
+}
+
+@if $style-elevation == 'hard' {
+	.social-media-btn[class*="social-media-btn-style-"] {
+		border: $elevation-border-width solid $elevation-rule-color !important;
+		border-radius: var(--style-btn-border-radius) !important;
+		box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+		@include elevation-press-in($elevation-accent-shadow-color);
+
+		&:focus-visible {
+			@include elevation-focus;
 		}
 	}
 }

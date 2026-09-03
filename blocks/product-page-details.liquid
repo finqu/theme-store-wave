@@ -1,0 +1,1127 @@
+{%- assign showDescription = block.settings.showDescription -%}
+{%- assign showReviews = block.settings.showReviews -%}
+{%- assign showSku = block.settings.showSku -%}
+{%- assign showShippingAndReturn = block.settings.showShippingAndReturn -%}
+{%- assign showPayment = block.settings.showPayment -%}
+{%- assign detailsShippingAndReturnRichtext = block.settings.detailsShippingAndReturnRichtext -%}
+{%- assign detailsPaymentRichtext = block.settings.detailsPaymentRichtext -%}
+{%- assign openProductDescriptionByDefault = block.settings.openProductDescriptionByDefault -%}
+{%- assign product_page_layout = product_page_layout | default: section.settings.productPageLayout | default: 'swiper' -%}
+{%- assign usePanels = false -%}
+{%- if product_page_layout == 'sticky' -%}
+    {%- assign usePanels = true -%}
+{%- endif -%}
+
+{%- if usePanels -%}
+
+    {% if showDescription and product.description %}
+
+        <div class="col mt-4 mt-md-g">
+
+            <div class="section-highlight-item product-description" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                {%- assign descriptionTitle = 'product.description' | t -%}
+
+                {% render 'section-header', sectionTitle: descriptionTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                <div class="mt-4 text-richtext">
+                    {{- product.description -}}
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    {% if product.default_or_selected_variant.in_preview == false %}
+
+        {% if product.attachments.size %}
+
+            <div class="col mt-4 mt-md-g">
+
+                <div class="section-highlight-item product-attachments" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                    {%- assign attachmentsTitle = 'product.attachments' | t -%}
+
+                    {% render 'section-header', sectionTitle: attachmentsTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                    <div class="mt-4">
+
+                        {% for attachment in product.attachments %}
+
+                            <div{% unless forloop.last == true %} class="mb-3"{% endunless %}>
+
+                                <a href="{{ attachment.href }}" class="inline-flex align-items-center">
+
+                                    {%- render 'icon', icon: 'download', class: 'svg-icon-fw' -%}
+
+                                    <span>{{ attachment.name }}</span>
+
+                                </a>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if showReviews and product.reviews_are_enabled %}
+
+            <div class="col mt-4 mt-md-g">
+
+                <div class="section-highlight-item product-reviews" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                    {%- assign reviewsTitle = 'product.reviews' | t -%}
+
+                    {% render 'section-header', sectionTitle: reviewsTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                    <div class="d-flex align-items-center mt-1">
+
+                        <div class="product-review-icons">
+
+                            {% for rating in (1..product.max_rating) %}
+
+                                <div class="product-review-icon">
+
+                                    {% if product.rating >= rating %}
+
+                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                    {% else %}
+
+                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                        <span class="ms-2">
+                            {%- if product.review_count == 1 -%}
+                                {{- 'product.review_count_dynamic' | t: amount: product.review_count -}}
+                            {%- else -%}
+                                {{- 'product.review_count_plural_dynamic' | t: amount: product.review_count -}}
+                            {%- endif -%}
+                        </span>
+
+                    </div>
+
+                    <div class="col mt-4 mt-md-g">
+
+                        {% if product.customer_can_review %}
+
+                            <button id="product-review-create" class="btn btn-sm btn-primary btn-outline{% if submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endif %}">
+                                {{- 'product.write_review' | t -}}
+                            </button>
+
+                            <div class="product-review-form{% unless submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endunless %}">
+
+                                {% form 'review', product id: 'product-review-form' %}
+
+                                    <div class="mb-4 form-floating">
+
+                                        <input
+                                            name="name"
+                                            type="text"
+                                            id="product-review-name"
+                                            class="form-control"
+                                            placeholder="{{ 'general.name' | t }}"
+                                            value="{{ form.submitted.name | escape }}"
+                                            required>
+
+                                        <label for="product-review-name">
+                                            {{- 'general.name' | t -}}
+                                        </label>
+
+                                    </div>
+
+                                    <div class="mb-4 form-floating">
+
+                                        <input
+                                            name="title"
+                                            type="text"
+                                            id="product-review-title"
+                                            class="form-control"
+                                            placeholder="{{ 'general.title' | t }}"
+                                            value="{{ form.submitted.title | escape }}"
+                                            required>
+
+                                        <label for="product-review-title">
+                                            {{- 'general.title' | t -}}
+                                        </label>
+
+                                    </div>
+
+                                    <div class="mb-4 form-floating">
+
+                                        <textarea
+                                            id="product-review-comment"
+                                            name="comment"
+                                            class="form-control"
+                                            placeholder="{{ 'product.write_review' | t }}"
+                                            value="{{ form.submitted.comment | escape }}"
+                                            required></textarea>
+
+                                        <label for="product-review-comment">
+                                            {{- 'product.write_review' | t -}}
+                                        </label>
+
+                                    </div>
+
+                                    <div class="mb-4 d-flex justify-content-between align-items-center">
+
+                                        <span class="h5 mb-0 text-title">
+                                            {{- 'product.review_grade' | t -}}
+                                        </span>
+
+                                        <fieldset class="product-review-rating ms-2">
+
+                                            <input
+                                                type="radio"
+                                                id="product-review-rating-5"
+                                                name="rating"
+                                                value="5"
+                                                {% if form.submitted.rating | escape == '5' %}checked{% endif %}>
+                                            <label for="product-review-rating-5" title="5">
+                                                {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                            </label>
+
+                                            <input
+                                                type="radio"
+                                                id="product-review-rating-4"
+                                                name="rating"
+                                                value="4"
+                                                {% if form.submitted.rating | escape == '4' %}checked{% endif %}>
+                                            <label for="product-review-rating-4" title="4">
+                                                {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                            </label>
+
+                                            <input
+                                                type="radio"
+                                                id="product-review-rating-3"
+                                                name="rating"
+                                                value="3"
+                                                {% if form.submitted.rating | escape == '3' %}checked{% endif %}>
+                                            <label for="product-review-rating-3" title="3">
+                                                {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                            </label>
+
+                                            <input
+                                                type="radio"
+                                                id="product-review-rating-2"
+                                                name="rating"
+                                                value="2"
+                                                {% if form.submitted.rating | escape == '2' %}checked{% endif %}>
+                                            <label for="product-review-rating-2" title="2">
+                                                {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                            </label>
+
+                                            <input
+                                                type="radio"
+                                                id="product-review-rating-1"
+                                                name="rating"
+                                                value="1"
+                                                {% if form.submitted.rating | escape == '1' %}checked{% endif %}>
+                                            <label for="product-review-rating-1" title="1">
+                                                {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                            </label>
+
+                                        </fieldset>
+
+                                    </div>
+
+                                    {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                                    <div class="mb-4 text-end">
+
+                                        <button
+                                            type="button"
+                                            id="product-review-cancel"
+                                            class="btn btn-primary btn-outline">{{ 'general.cancel' | t }}</button>
+
+                                        <button type="submit" class="btn btn-primary">{{ 'general.submit' | t }}</button>
+
+                                    </div>
+
+                                {% endform %}
+
+                            </div>
+
+                        {% elsif session.logged_in == false and product.reviews_require_account %}
+
+                            {%- capture loginLink -%}<a href="{{ 'login' | link }}" class="fw-bold text-underline-indicator">
+                                {{- 'product.review_account_required_link_text' | t -}}
+                            </a>{%- endcapture -%}
+
+                            <span>
+                                {{- 'product.review_account_required' | t: link: loginLink -}}
+                            </span>
+
+                        {% elsif product.default_or_selected_variant.customer_has_purchased == false and product.reviews_require_purchase %}
+
+                            <span>
+                                {{- 'product.review_purchase_required' | t -}}
+                            </span>
+
+                        {% elsif product.default_or_selected_variant.customer_has_reviewed %}
+
+                            {% if product.reviews_require_approval %}
+
+                                <span>
+                                    {{- 'product.review_publish_pending' | t -}}
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    {{- 'product.review_already_given' | t -}}
+                                </span>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="product-reviews-content{% if product.reviews.size > 0 %} has-content{% endif %}">
+
+                        {% for review in product.reviews %}
+
+                            <div class="product-review">
+
+                                <div class="product-review-title mb-0">
+
+                                    <span class="product-review-title">
+                                        {{ review.name }}
+                                    </span>
+
+                                </div>
+
+                                <div class="product-review-date">
+
+                                    {%- assign dateFormat = 'general.date_format' | t -%}
+
+                                    <i>
+                                        <time datetime="{{ review.created_at | date: "%F" }}">{{ review.created_at | date: dateFormat }}</time>
+                                    </i>
+
+                                </div>
+
+                                <div class="product-review-rating">
+
+                                    <div class="product-review-icons">
+
+                                        {% for rating in (1..product.max_rating) %}
+
+                                            <div class="product-review-icon">
+
+                                                {% if review.rating >= rating %}
+
+                                                    {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                                {% else %}
+
+                                                    {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                                {% endif %}
+
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                </div>
+
+                                {%- if review.title or review.review -%}
+
+                                    <div class="product-review-content">
+
+                                        {% if review.title %}
+
+                                            <p class="mb-0 fw-medium">
+                                                {{ review.title }}
+                                            </p>
+
+                                        {% endif %}
+
+                                        {{ review.review }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+    {% if showSku or product.default_or_selected_variant.product_number or product.default_or_selected_variant.gtin %}
+
+        <div class="col mt-4 mt-md-g">
+
+            <div class="section-highlight-item product-additional-information" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                {%- assign additionalInformationTitle = 'product.additional_information' | t -%}
+
+                {% render 'section-header', sectionTitle: additionalInformationTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                <div class="mt-4 d-grid gap-1">
+
+                    {% if showSku %}
+
+                        <div class="d-flex">
+
+                            <span>
+                                {{- 'product.sku_number' | t -}}:
+                            </span>
+
+                            <span class="ms-2">
+                                {{- product.default_or_selected_variant.sku -}}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if product.default_or_selected_variant.product_number %}
+
+                        <div class="d-flex">
+
+                            <span>
+                                {{- 'product.model_number' | t -}}:
+                            </span>
+
+                            <span class="ms-2">
+                                {{- product.default_or_selected_variant.product_number -}}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                    {% if product.default_or_selected_variant.gtin %}
+
+                        <div class="d-flex">
+
+                            <span>
+                                {{- 'product.product_identifier' | t -}}:
+                            </span>
+
+                            <span class="ms-2">
+                                {{- product.default_or_selected_variant.gtin -}}
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    {% if showShippingAndReturn and detailsShippingAndReturnRichtext %}
+
+        <div class="col mt-4 mt-md-g">
+
+            <div class="section-highlight-item product-shipping-and-return" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                {%- assign shippingAndReturnTitle = 'product.shipping_and_return' | t -%}
+
+                {% render 'section-header', sectionTitle: shippingAndReturnTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                <div class="mt-4 text-richtext">
+                    {{- detailsShippingAndReturnRichtext -}}
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+    {% if showPayment and detailsPaymentRichtext %}
+
+        <div class="col mt-4 mt-md-g">
+
+            <div class="section-highlight-item product-payment" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}">
+
+                {%- assign paymentTitle = 'product.payment' | t -%}
+
+                {% render 'section-header', sectionTitle: paymentTitle, sectionHeaderContainer: 'none', sectionAnimation: false %}
+
+                <div class="mt-4 text-richtext">
+                    {{- detailsPaymentRichtext -}}
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+{%- else -%}
+
+    <div id="accordion-product-details" class="product-details mt-4 accordion accordion-flush">
+
+        {% if showDescription and product.description %}
+
+            <div class="accordion-item">
+
+                <div id="accordion-product-description-header" class="accordion-header">
+
+                    <button
+                        class="btn d-block w-100 btn-text d-flex align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-product-description"
+                        aria-controls="accordion-product-description"
+                        {% if openProductDescriptionByDefault %}aria-expanded="true"{% endif %}>
+
+                        <span class="fw-bold fs-4 my-3 text-title">
+                            {{- 'product.description' | t -}}
+                        </span>
+
+                        <span class="accordion-indicator"></span>
+
+                    </button>
+
+                </div>
+
+                <div id="accordion-product-description" class="collapse{% if openProductDescriptionByDefault %} show{% endif %}" aria-labelledby="accordion-product-description-header" data-bs-parent="#accordion-product-details">
+
+                    <div class="product-description accordion-body text-richtext">
+                        {{- product.description -}}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if product.default_or_selected_variant.in_preview == false %}
+
+            {% if product.attachments.size %}
+
+                <div class="accordion-item">
+
+                    <div id="accordion-product-attachments-header" class="accordion-header">
+
+                        <button
+                            class="btn d-block w-100 btn-text d-flex align-items-center"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#accordion-product-attachments"
+                            aria-controls="accordion-product-attachments">
+
+                            <span class="fw-bold fs-4 my-3 text-title">
+                                {{- 'product.attachments' | t -}}
+                            </span>
+
+                            <span class="accordion-indicator"></span>
+
+                        </button>
+
+                    </div>
+
+                    <div id="accordion-product-attachments" class="collapse" aria-labelledby="accordion-product-attachments-header" data-bs-parent="#accordion-product-details">
+
+                        <div class="product-attachments accordion-body">
+
+                            {% for attachment in product.attachments %}
+
+                                <div{% unless forloop.last == true %} class="mb-3"{% endunless %}>
+
+                                    <a href="{{ attachment.href }}" class="inline-flex align-items-center">
+
+                                        {%- render 'icon', icon: 'download', class: 'svg-icon-fw' -%}
+
+                                        <span>{{ attachment.name }}</span>
+
+                                    </a>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            {% if showReviews and product.reviews_are_enabled %}
+
+                <div class="accordion-item">
+
+                    <div id="accordion-product-reviews-header" class="accordion-header">
+
+                        <button
+                            class="btn d-block w-100 btn-text d-flex align-items-center"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#accordion-product-reviews"
+                            aria-controls="accordion-product-reviews">
+
+                            <span class="fw-bold fs-4 my-3 me-2 text-title">{{ 'product.reviews' | t }} ({{ product.review_count }})</span>
+
+                            {% if product.review_count > 0 %}
+
+                                <div class="product-review-icons">
+
+                                    {% for rating in (1..product.max_rating) %}
+
+                                        <div class="product-review-icon">
+
+                                            {% if product.rating >= rating %}
+
+                                                {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                            {% else %}
+
+                                                {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                            <span class="accordion-indicator"></span>
+
+                        </button>
+
+                    </div>
+
+                    <div id="accordion-product-reviews" class="collapse{% if submitted_form.id == 'product-review-form'%} show{% endif %}" aria-labelledby="accordion-product-reviews-header" data-bs-parent="#accordion-product-details">
+
+                        <div class="product-reviews accordion-body">
+
+                            <div class="mb-4">
+
+                                {% if product.customer_can_review %}
+
+                                    <button id="product-review-create" class="btn btn-sm btn-primary btn-outline{% if submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endif %}">
+                                        {{- 'product.write_review' | t -}}
+                                    </button>
+
+                                    <div class="product-review-form{% unless submitted_form.id == 'product-review-form' and submitted_form.error %} d-none{% endunless %}">
+
+                                        {% form 'review', product id: 'product-review-form' %}
+
+                                            <div class="mb-4 form-floating">
+
+                                                <input
+                                                    name="name"
+                                                    type="text"
+                                                    id="product-review-name"
+                                                    class="form-control"
+                                                    placeholder="{{ 'general.name' | t }}"
+                                                    value="{{ form.submitted.name | escape }}"
+                                                    required>
+
+                                                <label for="product-review-name">
+                                                    {{- 'general.name' | t -}}
+                                                </label>
+
+                                            </div>
+
+                                            <div class="mb-4 form-floating">
+
+                                                <input
+                                                    name="title"
+                                                    type="text"
+                                                    id="product-review-title"
+                                                    class="form-control"
+                                                    placeholder="{{ 'general.title' | t }}"
+                                                    value="{{ form.submitted.title | escape }}"
+                                                    required>
+
+                                                <label for="product-review-title">
+                                                    {{- 'general.title' | t -}}
+                                                </label>
+
+                                            </div>
+
+                                            <div class="mb-4 form-floating">
+
+                                                <textarea
+                                                    id="product-review-comment"
+                                                    name="comment"
+                                                    class="form-control"
+                                                    placeholder="{{ 'product.write_review' | t }}"
+                                                    value="{{ form.submitted.comment | escape }}"
+                                                    required></textarea>
+
+                                                <label for="product-review-comment">
+                                                    {{- 'product.write_review' | t -}}
+                                                </label>
+
+                                            </div>
+
+                                            <div class="mb-4 d-flex justify-content-between align-items-center">
+
+                                                <span class="h5 mb-0 text-title">
+                                                    {{- 'product.review_grade' | t -}}
+                                                </span>
+
+                                                <fieldset class="product-review-rating ms-2">
+
+                                                    <input
+                                                        type="radio"
+                                                        id="product-review-rating-5"
+                                                        name="rating"
+                                                        value="5"
+                                                        {% if form.submitted.rating | escape == '5' %}checked{% endif %}>
+                                                    <label for="product-review-rating-5" title="5">
+                                                        {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        id="product-review-rating-4"
+                                                        name="rating"
+                                                        value="4"
+                                                        {% if form.submitted.rating | escape == '4' %}checked{% endif %}>
+                                                    <label for="product-review-rating-4" title="4">
+                                                        {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        id="product-review-rating-3"
+                                                        name="rating"
+                                                        value="3"
+                                                        {% if form.submitted.rating | escape == '3' %}checked{% endif %}>
+                                                    <label for="product-review-rating-3" title="3">
+                                                        {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        id="product-review-rating-2"
+                                                        name="rating"
+                                                        value="2"
+                                                        {% if form.submitted.rating | escape == '2' %}checked{% endif %}>
+                                                    <label for="product-review-rating-2" title="2">
+                                                        {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        id="product-review-rating-1"
+                                                        name="rating"
+                                                        value="1"
+                                                        {% if form.submitted.rating | escape == '1' %}checked{% endif %}>
+                                                    <label for="product-review-rating-1" title="1">
+                                                        {%- render 'icon', icon: 'rating', class: 'svg-icon-fill' -%}
+                                                    </label>
+
+                                                </fieldset>
+
+                                            </div>
+
+                                            {% render 'form-error', error: form.error, class: 'mb-4' %}
+
+                                            <div class="mb-4 text-end">
+
+                                                <button
+                                                    type="button"
+                                                    id="product-review-cancel"
+                                                    class="btn btn-primary btn-outline">{{ 'general.cancel' | t }}</button>
+
+                                                <button type="submit" class="btn btn-primary">{{ 'general.submit' | t }}</button>
+
+                                            </div>
+
+                                        {% endform %}
+
+                                    </div>
+
+                                {% elsif session.logged_in == false and product.reviews_require_account %}
+
+                                    {%- capture loginLink -%}<a href="{{ 'login' | link }}" class="fw-bold text-underline-indicator">
+                                        {{- 'product.review_account_required_link_text' | t -}}
+                                    </a>{%- endcapture -%}
+
+                                    <span>
+                                        {{- 'product.review_account_required' | t: link: loginLink -}}
+                                    </span>
+
+                                {% elsif product.default_or_selected_variant.customer_has_purchased == false and product.reviews_require_purchase %}
+
+                                    <span>
+                                        {{- 'product.review_purchase_required' | t -}}
+                                    </span>
+
+                                {% elsif product.default_or_selected_variant.customer_has_reviewed %}
+
+                                    {% if product.reviews_require_approval %}
+
+                                        <span>
+                                            {{- 'product.review_publish_pending' | t -}}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span>
+                                            {{- 'product.review_already_given' | t -}}
+                                        </span>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                            {% for review in product.reviews %}
+
+                                <div class="product-review">
+
+                                    <div class="product-review-title mb-0">
+
+                                        <span class="product-review-title">
+                                            {{ review.name }}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="product-review-date">
+
+                                        {%- assign dateFormat = 'general.date_format' | t -%}
+
+                                        <i>
+                                            <time datetime="{{ review.created_at | date: "%F" }}">{{ review.created_at | date: dateFormat }}</time>
+                                        </i>
+
+                                    </div>
+
+                                    <div class="product-review-rating">
+
+                                        <div class="product-review-icons">
+
+                                            {% for rating in (1..product.max_rating) %}
+
+                                                <div class="product-review-icon">
+
+                                                    {% if review.rating >= rating %}
+
+                                                        {%- render 'icon', icon: 'rating', class: 'text-review-icon' -%}
+
+                                                    {% else %}
+
+                                                        {%- render 'icon', icon: 'rating-empty', class: 'text-muted' -%}
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                    </div>
+
+                                    {%- if review.title or review.review -%}
+
+                                        <div class="product-review-content">
+
+                                            {% if review.title %}
+
+                                                <p class="mb-0 fw-medium">
+                                                    {{ review.title }}
+                                                </p>
+
+                                            {% endif %}
+
+                                            {{ review.review }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+        {% if showSku or product.default_or_selected_variant.product_number or product.default_or_selected_variant.gtin %}
+
+            <div class="accordion-item">
+
+                <div id="accordion-product-additional-information-header" class="accordion-header">
+
+                    <button
+                        class="btn d-block w-100 btn-text d-flex align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-product-additional-information"
+                        aria-controls="accordion-product-additional-information">
+
+                        <span class="fw-bold fs-4 my-3 text-title">
+                            {{- 'product.additional_information' | t -}}
+                        </span>
+
+                        <span class="accordion-indicator"></span>
+
+                    </button>
+
+                </div>
+
+                <div id="accordion-product-additional-information" class="collapse" aria-labelledby="accordion-product-additional-information-header" data-bs-parent="#accordion-product-details">
+
+                    <div class="product-additional-information accordion-body d-grid gap-1">
+
+                        {% if showSku %}
+
+                            <div class="d-flex">
+
+                                <span>
+                                    {{- 'product.sku_number' | t -}}:
+                                </span>
+
+                                <span class="ms-2">
+                                    {{- product.default_or_selected_variant.sku -}}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if product.default_or_selected_variant.product_number %}
+
+                            <div class="d-flex">
+
+                                <span>
+                                    {{- 'product.model_number' | t -}}:
+                                </span>
+
+                                <span class="ms-2">
+                                    {{- product.default_or_selected_variant.product_number -}}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                        {% if product.default_or_selected_variant.gtin %}
+
+                            <div class="d-flex">
+
+                                <span>
+                                    {{- 'product.product_identifier' | t -}}:
+                                </span>
+
+                                <span class="ms-2">
+                                    {{- product.default_or_selected_variant.gtin -}}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if showShippingAndReturn and detailsShippingAndReturnRichtext %}
+
+            <div class="accordion-item">
+
+                <div id="accordion-product-shipping-and-return-header" class="accordion-header">
+
+                    <button
+                        class="btn d-block w-100 btn-text d-flex align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-product-shipping-and-return"
+                        aria-controls="accordion-product-shipping-and-return">
+
+                        <span class="fw-bold fs-4 my-3 text-title">
+                            {{- 'product.shipping_and_return' | t -}}
+                        </span>
+
+                        <span class="accordion-indicator"></span>
+
+                    </button>
+
+                </div>
+
+                <div id="accordion-product-shipping-and-return" class="collapse" aria-labelledby="accordion-product-shipping-and-return-header" data-bs-parent="#accordion-product-details">
+
+                    <div class="product-shipping-and-return accordion-body text-richtext">
+                        {{- detailsShippingAndReturnRichtext -}}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {% if showPayment and detailsPaymentRichtext %}
+
+            <div class="accordion-item">
+
+                <div id="accordion-product-payment-header" class="accordion-header">
+
+                    <button
+                        class="btn d-block w-100 btn-text d-flex align-items-center"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#accordion-product-payment"
+                        aria-controls="accordion-product-payment">
+
+                        <span class="fw-bold fs-4 my-3 text-title">
+                            {{- 'product.payment' | t -}}
+                        </span>
+
+                        <span class="accordion-indicator"></span>
+
+                    </button>
+
+                </div>
+
+                <div id="accordion-product-payment" class="collapse" aria-labelledby="accordion-product-payment-header" data-bs-parent="#accordion-product-details">
+
+                    <div class="product-payment accordion-body text-richtext">
+                        {{- detailsPaymentRichtext -}}
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-details.name",
+    "tag": "div",
+    "class": "block block-product-page-details",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {
+        "list_type": "list",
+        "groups": [
+            {
+                "title": "t:blocks.product-page-details.groups.details.title",
+                "settings": [
+                    {
+                        "id": "showDescription",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.showDescription.label",
+                        "default": true
+                    },
+                    {
+                        "id": "openProductDescriptionByDefault",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.openProductDescriptionByDefault.label",
+                        "default": true,
+                        "conditions": [
+                            "showDescription eq true"
+                        ]
+                    },
+                    {
+                        "id": "showReviews",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.showReviews.label",
+                        "default": true
+                    },
+                    {
+                        "id": "showSku",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.showSku.label",
+                        "default": true
+                    }
+                ],
+                "id": "details"
+            },
+            {
+                "title": "t:blocks.product-page-details.groups.shipping.title",
+                "settings": [
+                    {
+                        "id": "showShippingAndReturn",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.showShippingAndReturn.label",
+                        "default": true
+                    },
+                    {
+                        "id": "detailsShippingAndReturnRichtext",
+                        "type": "richtext",
+                        "label": "t:blocks.product-page-details.settings.detailsShippingAndReturnRichtext.label",
+                        "conditions": [
+                            "showShippingAndReturn eq true"
+                        ]
+                    }
+                ],
+                "id": "shipping"
+            },
+            {
+                "title": "t:blocks.product-page-details.groups.payment.title",
+                "settings": [
+                    {
+                        "id": "showPayment",
+                        "type": "checkbox",
+                        "label": "t:blocks.product-page-details.settings.showPayment.label",
+                        "default": true
+                    },
+                    {
+                        "id": "detailsPaymentRichtext",
+                        "type": "richtext",
+                        "label": "t:blocks.product-page-details.settings.detailsPaymentRichtext.label",
+                        "conditions": [
+                            "showPayment eq true"
+                        ]
+                    }
+                ],
+                "id": "payment"
+            }
+        ]
+    }
+}
+{% endschema %}

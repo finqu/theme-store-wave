@@ -1,0 +1,99 @@
+// Product page
+// -----------------------------------------------------------------------------------------
+
+.section-product {
+
+	// Product page content is composed of blocks, each wrapped in a
+	// `.finqu-block` element that the platform floats by default. Floated
+	// children collapse their parent's height, which would break the sticky
+	// info column. Neutralize the float and let the columns keep their
+	// intrinsic height in normal flow.
+	//
+	// Platform float styles also set overflow that clips SVG icon strokes on
+	// flush-left product form actions (ask / delivery / return). Keep content
+	// visible once the float is cleared.
+	//
+	// `display: flow-root` gives the columns a block formatting context so they
+	// still contain their children once the floats are cleared.
+	.finqu-block {
+		float: none;
+		width: 100%;
+		overflow: visible;
+	}
+
+	.product-info,
+	.product-info-container,
+	.product-media-container {
+		display: flow-root;
+	}
+
+	// Rating lives inside `.finqu-block`, so variant layout rules that used a
+	// direct-child selector never reached the icons — keep stars in a row.
+	.product-review-rating {
+
+		#product-show-reviews {
+			display: inline-flex;
+			align-items: center;
+		}
+
+		.product-review-icons {
+			display: inline-flex;
+
+			.product-review-icon {
+				line-height: 0;
+			}
+		}
+	}
+
+	// Labeled price rows (sticky form details) — kill form-label margin so the
+	// value sits on the same baseline as "Price:".
+	.product-pricing {
+
+		> .form-label {
+			margin-bottom: 0;
+		}
+
+		@include media-breakpoint-up(md) {
+
+			&.d-md-flex {
+				align-items: center;
+			}
+		}
+	}
+
+	.product-stock-balance {
+
+		> .form-label {
+			margin-bottom: 0;
+		}
+	}
+
+	[data-dynamic-partial="additional"],
+	[data-dynamic-partial="info-additional"] {
+		clear: both;
+		width: 100%;
+	}
+
+	// Similar / compatible product carousels render product-list-item blocks,
+	// also wrapped in floated `.finqu-block` elements.
+	.product-carousel,
+	.product-bundle-contents {
+
+		.finqu-block {
+			float: none;
+			width: 100%;
+			overflow: visible;
+		}
+	}
+
+	.product-bundle-contents {
+
+		.swiper-slide {
+
+			.product-name-text,
+			.text-product-title {
+				overflow-wrap: anywhere;
+			}
+		}
+	}
+}

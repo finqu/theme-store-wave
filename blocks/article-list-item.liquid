@@ -1,0 +1,91 @@
+{%- assign articleCardLinkToArticle = block.settings.linkToArticle -%}
+
+{%- capture articleListMediaBlockId -%}{{ block.id }}-media{%- endcapture -%}
+
+<div class="article-list-item-media">
+
+	{% block 'article-media' id:articleListMediaBlockId %}
+
+</div>
+
+<div class="article-body{% if block.settings.contentAlign == 'center' %} text-center{% endif %}"{% if block.settings.contentGap %} style="--article-card-content-gap: {{ block.settings.contentGap }}rem;"{% endif %}>
+
+	{% container 'content' %}
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.article-list-item.name",
+    "tag": "div",
+    "class": "block block-article-list-item",
+    "category": "basic",
+    "containers": [
+        {
+            "id": "content",
+            "title": "t:blocks.article-list-item.containers.content.title",
+            "allowed_blocks": [
+                "article-title",
+                "article-meta",
+                "article-excerpt"
+            ],
+            "preset": {
+                "blocks": [
+                    "article-title",
+                    "article-meta",
+                    "article-excerpt"
+                ]
+            }
+        }
+    ],
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.layout.title",
+                "id": "layout",
+                "settings": [
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "start",
+                        "options": [
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "contentGap",
+                        "type": "range",
+                        "label": "t:blocks.article-list-item.settings.contentGap.label",
+                        "min": 0,
+                        "max": 4,
+                        "step": 0.5,
+                        "default": "0.5",
+                        "unit": "rem"
+                    }
+                ]
+            },
+            {
+                "title": "t:blocks.article-list-item.groups.cardBehavior.title",
+                "id": "cardBehavior",
+                "settings": [
+                    {
+                        "id": "linkToArticle",
+                        "type": "checkbox",
+                        "label": "t:blocks.article-list-item.settings.linkToArticle.label",
+                        "default": true
+                    }
+                ]
+            }
+        ]
+    }
+}
+{% endschema %}

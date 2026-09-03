@@ -1,0 +1,86 @@
+// Footer bars
+// -----------------------------------------------------------------------------------------
+
+.section-footer-bar {
+    width: 100%;
+
+    .footer-bar-links,
+    .footer-bar-localization,
+    .footer-bar-social {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: var(--section-text-align, center);
+        gap: spacer(4);
+        min-height: var(--style-announcement-height);
+        width: 100%;
+
+        @include media-breakpoint-down(lg) {
+            justify-content: center;
+        }
+    }
+
+    .footer-bar-link {
+        color: var(--style-link-color);
+        text-decoration: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: var(--style-link-color);
+            text-decoration: underline;
+        }
+    }
+
+    .footer-bar-localization {
+        .site-localization-locale-select,
+        .site-localization-currency-select {
+            appearance: none;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            width: auto;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            outline: none;
+            color: var(--style-text-color);
+            cursor: pointer;
+
+            & + .svg-icon {
+                color: var(--style-text-color);
+            }
+
+            &:hover {
+                color: var(--style-link-color);
+
+                & + .svg-icon {
+                    color: var(--style-link-color);
+                }
+            }
+
+            option {
+                color: initial;
+            }
+        }
+    }
+}
+
+@if $style-elevation == 'hard' {
+    .section-footer-bar {
+        border-top: $elevation-border-width solid $elevation-rule-color;
+
+        .footer-bar-link {
+            font-weight: $font-weight-bold;
+        }
+
+        .site-localization-locale-select,
+        .site-localization-currency-select {
+
+            &:focus-visible {
+                @include elevation-focus;
+            }
+        }
+    }
+}

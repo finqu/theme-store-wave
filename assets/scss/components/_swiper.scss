@@ -459,3 +459,51 @@
 .swiper-pagination-lock {
 	display: none;
 }
+
+@if $style-elevation == 'hard' {
+    .swiper-button-prev,
+    .swiper-button-next {
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-component-border-radius);
+        background-color: var(--style-bg-color);
+        box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-accent-shadow-color;
+        opacity: 1;
+        @include elevation-press-in($elevation-accent-shadow-color);
+
+        &.swiper-button-disabled {
+            @include elevation-disabled;
+        }
+    }
+
+    .swiper-pagination-bullet {
+        width: spacer(3);
+        height: spacer(2);
+        border: $elevation-border-width solid $elevation-rule-color;
+        border-radius: var(--style-component-border-radius);
+        background-color: var(--style-bg-color);
+        opacity: 1;
+        transition:
+            transform $elevation-motion-duration ease,
+            box-shadow $elevation-motion-duration ease,
+            background-color $elevation-motion-duration ease;
+    }
+
+    button.swiper-pagination-bullet {
+        border: $elevation-border-width solid $elevation-rule-color;
+
+        &:focus-visible {
+            @include elevation-focus;
+        }
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: var(--style-btn-bg-color);
+        box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+        transform: translate($elevation-lift, $elevation-lift);
+    }
+
+    .swiper-horizontal > .swiper-pagination-bullets.swiper-pagination-relative {
+        margin-top: spacer(4);
+        padding-bottom: $elevation-offset-pressed;
+    }
+}

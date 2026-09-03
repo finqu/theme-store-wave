@@ -1,0 +1,23 @@
+{% if product.short_description %}
+
+    <div class="product-short-description mt-4">
+
+        <span>{{ product.short_description }}</span>
+
+    </div>
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "t:blocks.product-page-short-description.name",
+    "tag": "div",
+    "class": "block block-product-page-short-description",
+    "category": "commerce",
+    "private": true,
+    "templates": [
+        "product"
+    ],
+    "settings": {}
+}
+{% endschema %}

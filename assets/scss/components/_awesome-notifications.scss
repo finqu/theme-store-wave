@@ -406,3 +406,41 @@
 .awn-toast-progress-bar {
 	display: none;
 }
+
+@if $style-elevation == 'hard' {
+	#awn-popup-wrapper {
+
+		.awn-popup-body:not(.awn-popup-async-block) {
+			@include elevation-overlay;
+			background-color: var(--style-bg-color);
+			color: var(--style-text-color);
+		}
+
+		.awn-popup-title {
+			font-family: $headings-font-family;
+			letter-spacing: -0.035em;
+		}
+
+		.awn-buttons .awn-btn {
+			border: $elevation-border-width solid $elevation-rule-color;
+			border-radius: var(--style-btn-border-radius);
+			box-shadow: $elevation-offset-pressed $elevation-offset-pressed 0 $elevation-shadow-color;
+			@include elevation-press-in;
+
+			&:focus-visible {
+				@include elevation-focus;
+			}
+		}
+	}
+
+	.awn-toast {
+		border-radius: var(--style-component-border-radius);
+		box-shadow: $elevation-offset $elevation-offset 0 $elevation-accent-shadow-color;
+
+		.awn-toast-wrapper {
+			border-width: $elevation-border-width;
+			border-color: $elevation-rule-color;
+			border-radius: var(--style-component-border-radius);
+		}
+	}
+}

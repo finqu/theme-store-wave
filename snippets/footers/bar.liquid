@@ -1,0 +1,17 @@
+{% comment %}
+    Compact footer-group section chrome.
+
+    Accepts:
+    - section: {Object}
+    - sectionContent: {String}
+    - sectionClasses: {String}
+{% endcomment %}
+
+{% render 'section',
+    section: section,
+    sectionContent: sectionContent,
+    sectionHeader: false,
+    sectionAnimation: false,
+    sectionClasses: sectionClasses
+%}
+{% render 'html-overscroll-bg', section: section %}

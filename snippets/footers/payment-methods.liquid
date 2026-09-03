@@ -1,0 +1,58 @@
+{% comment %}
+    Payment method logos.
+
+    Accepts:
+    - section: {Object}
+    - class: {String}
+{% endcomment %}
+
+{%- if section.settings.footerPaymentMethodsStatus -%}
+
+    <div class="site-footer-payment-methods-container{% if class %} {{ class }}{% endif %}">
+
+        {% if section.settings.footerPaymentMethodsImg %}
+
+            {%- assign imgSize = '540,190' -%}
+
+            <picture>
+                <img
+                    alt=""
+                    data-src="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }}"
+                    data-srcset="{{ section.settings.footerPaymentMethodsImg | thumb: imgSize }} 1x, {{ section.settings.footerPaymentMethodsImg | thumb: imgSize | thumb:'@2x' }} 2x"
+                    class="lazy d-block mx-auto img-fluid">
+            </picture>
+
+        {% elsif footer_payment_options_banners %}
+
+            <div class="site-footer-payment-method-banners">
+
+                {{- content_for_footer_payment_options_banners -}}
+
+            </div>
+
+        {% else %}
+
+            {% for payment_method in store.payment_methods %}
+
+                {% if payment_method.logo %}
+
+                    <div class="site-footer-payment-method">
+
+                        <picture>
+                            <img
+                                alt="{{ payment_method.title }}"
+                                src="{{ payment_method.logo }}"
+                                class="d-block mx-auto img-fluid">
+                        </picture>
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+{%- endif -%}

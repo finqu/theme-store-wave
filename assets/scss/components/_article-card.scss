@@ -8,11 +8,41 @@
 	color: var(--style-text-color);
 	background-color: var(--style-bg-color);
 
+	// Static article-media is a nested `.finqu-block` with editor float styles.
+	// Contain it so title/meta/excerpt stack below the image in normal flow.
+	.article-list-item-media,
 	.article-body {
+		display: flow-root;
+		width: 100%;
+	}
+
+	.article-list-item-media {
+
+		.finqu-block {
+			float: none;
+			width: 100%;
+		}
+	}
+
+	> .block-article-list-item {
+		display: flex;
+		flex-direction: column;
+		float: none;
+		width: 100%;
+	}
+
+	.article-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--article-card-content-gap, #{spacer(2)});
 		padding-top: spacer(3);
 		border-bottom-left-radius: var(--style-image-border-radius);
 		border-bottom-right-radius: var(--style-image-border-radius);
-		overflow: hidden;
+
+		.finqu-block {
+			float: none;
+			width: 100%;
+		}
 
 		.article-title {
 
@@ -28,17 +58,6 @@
                 margin: 0;
                 letter-spacing: 0;
 			}
-
-			& + .article-content {
-				padding-top: spacer(2);
-			}
-		}
-
-		.article-info {
-
-			& + .article-content {
-				padding-top: spacer(2);
-			}
 		}
 
 		.article-content {
@@ -50,6 +69,24 @@
 			    overflow: hidden;
 			    text-overflow: ellipsis;
 			}
+		}
+	}
+}
+
+@if $style-elevation == 'hard' {
+	.article-card-grid-item {
+
+		&.section-highlight-item:has(a) {
+			@include elevation-lift;
+		}
+
+		.article-list-item-media .aspect-ratio-container {
+			@include elevation-media-frame;
+		}
+
+		.article-title-text {
+			font-family: $headings-font-family;
+			text-transform: uppercase;
 		}
 	}
 }

@@ -1,0 +1,298 @@
+{%- assign buttonGap = block.settings.buttonGap -%}
+{%- if buttonGap == 'nil' -%}
+    {%- assign buttonGap = '1rem' -%}
+{%- endif -%}
+
+{%- capture blockStyle -%}
+    #finqu-block-{{ block.id }} .block-inner {
+        display: flex;
+        justify-content: {%- if block.settings.contentAlign == 'nil' -%}var(--section-text-align){%- else -%}{{ block.settings.contentAlign }}{%- endif -%};
+    }
+    #finqu-block-{{ block.id }} .button-group-items {
+        display: flex;
+        flex-flow: column wrap;
+        gap: {{ buttonGap }};
+        justify-content: inherit;
+        width: 100%;
+    }
+    @media screen and (min-width: {{ settings.styleGridBreakpointMd }}) {
+        #finqu-block-{{ block.id }} .button-group-items {
+            flex-direction: row;
+            align-items: center;
+        }
+    }
+{%- endcapture -%}
+
+<style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+<div class="block-inner">
+
+    <div class="button-group-items">
+
+        {%- for button in block.settings.setting_blocks.buttons -%}
+
+            {%- assign btnLabel = button.settings.btnLink.text -%}
+            {%- if btnLabel == blank and request.design_mode == 'edit' -%}
+                {%- assign btnLabel = 'placeholder.label' | t -%}
+            {%- endif -%}
+
+            {%- render 'section-quick-link', theme: button.settings.btnTheme, variant: button.settings.btnVariant, size: button.settings.btnSize, text: btnLabel, url: button.settings.btnLink.url, target: button.settings.btnLink.target  -%}
+
+        {%- endfor -%}
+
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "t:blocks.button-group.name",
+    "tag": "div",
+    "class": "block block-button-group",
+    "category": "basic",
+    "settings": {
+        "list_type": "tabs",
+        "groups": [
+            {
+                "title": "t:all.groups.content.title",
+                "id": "buttons",
+                "call_to_action": "t:blocks.button-group.groups.buttons.call_to_action",
+                "is_sortable": true,
+                "setting_blocks": [
+                    {
+                        "type": "button",
+                        "title": "t:blocks.button-group.setting_blocks.button.title",
+                        "settings": [
+                            {
+                                "id": "btnLink",
+                                "type": "url",
+                                "label": "t:all.settings.btnLink.label",
+                                "include_target": true,
+                                "include_text": true
+                            },
+                            {
+                                "id": "btnTheme",
+                                "type": "select",
+                                "label": "t:all.settings.btnTheme.label",
+                                "default": "nil",
+                                "options": [
+                                    {
+                                        "value": "nil",
+                                        "label": "t:all.settings.btnTheme.options.nil.label"
+                                    },
+                                    {
+                                        "value": "primary",
+                                        "label": "t:all.settings.btnTheme.options.primary.label"
+                                    },
+                                    {
+                                        "value": "secondary",
+                                        "label": "t:all.settings.btnTheme.options.secondary.label"
+                                    },
+                                    {
+                                        "value": "contrast",
+                                        "label": "t:all.settings.btnTheme.options.contrast.label"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "btnVariant",
+                                "type": "select",
+                                "label": "t:all.settings.btnVariant.label",
+                                "default": "nil",
+                                "options": [
+                                    {
+                                        "value": "nil",
+                                        "label": "t:all.settings.btnVariant.options.nil.label"
+                                    },
+                                    {
+                                        "value": "filled",
+                                        "label": "t:all.settings.btnVariant.options.filled.label"
+                                    },
+                                    {
+                                        "value": "outline",
+                                        "label": "t:all.settings.btnVariant.options.outline.label"
+                                    },
+                                    {
+                                        "value": "ghost",
+                                        "label": "t:all.settings.btnVariant.options.ghost.label"
+                                    },
+                                    {
+                                        "value": "text",
+                                        "label": "t:all.settings.btnVariant.options.text.label"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "btnSize",
+                                "type": "select",
+                                "label": "t:all.settings.btnSize.label",
+                                "default": "sm",
+                                "options": [
+                                    {
+                                        "value": "xs",
+                                        "label": "t:all.settings.btnSize.options.xs.label"
+                                    },
+                                    {
+                                        "value": "sm",
+                                        "label": "t:all.settings.btnSize.options.sm.label"
+                                    },
+                                    {
+                                        "value": "md",
+                                        "label": "t:all.settings.btnSize.options.md.label"
+                                    },
+                                    {
+                                        "value": "lg",
+                                        "label": "t:all.settings.btnSize.options.lg.label"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "t:all.groups.style.title",
+                "settings": [
+                    {
+                        "id": "buttonGap",
+                        "type": "radio-pill",
+                        "label": "t:blocks.button-group.settings.buttonGap.label",
+                        "default": "1rem",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:blocks.button-group.settings.buttonGap.options.nil.label"
+                            },
+                            {
+                                "value": "0.5rem",
+                                "label": "t:blocks.button-group.settings.buttonGap.options.0_5rem.label"
+                            },
+                            {
+                                "value": "1rem",
+                                "label": "t:blocks.button-group.settings.buttonGap.options.1rem.label"
+                            },
+                            {
+                                "value": "1.5rem",
+                                "label": "t:blocks.button-group.settings.buttonGap.options.1_5rem.label"
+                            },
+                            {
+                                "value": "2rem",
+                                "label": "t:blocks.button-group.settings.buttonGap.options.2rem.label"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "contentAlign",
+                        "type": "radio-pill",
+                        "label": "t:all.settings.contentAlign.label",
+                        "default": "nil",
+                        "options": [
+                            {
+                                "value": "nil",
+                                "label": "t:all.settings.contentAlign.options.nil.label"
+                            },
+                            {
+                                "value": "start",
+                                "label": "t:all.settings.contentAlign.options.start.label"
+                            },
+                            {
+                                "value": "center",
+                                "label": "t:all.settings.contentAlign.options.center.label"
+                            },
+                            {
+                                "value": "end",
+                                "label": "t:all.settings.contentAlign.options.end.label"
+                            }
+                        ]
+                    }
+                ],
+                "id": "style"
+            }
+        ]
+    },
+    "presets": {
+        "default": [
+            {
+                "settings": {
+                    "setting_blocks": {
+                        "buttons": [
+                            {
+                                "type": "button",
+                                "settings": {
+                                    "btnLink": {
+                                        "type": "url",
+                                        "record_id": "",
+                                        "text": "Button 1",
+                                        "url": "",
+                                        "target": "_self"
+                                    },
+                                    "btnVariant": "filled",
+                                    "btnTheme": "primary",
+                                    "btnSize": "sm"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "settings": {
+                                    "btnLink": {
+                                        "type": "url",
+                                        "record_id": "",
+                                        "text": "Button 2",
+                                        "url": "",
+                                        "target": "_self"
+                                    },
+                                    "btnVariant": "outline",
+                                    "btnTheme": "primary",
+                                    "btnSize": "sm"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "default"
+            }
+        ],
+        "fi": [
+            {
+                "settings": {
+                    "setting_blocks": {
+                        "buttons": [
+                            {
+                                "type": "button",
+                                "settings": {
+                                    "btnLink": {
+                                        "type": "url",
+                                        "record_id": "",
+                                        "text": "Painike 1",
+                                        "url": "",
+                                        "target": "_self"
+                                    },
+                                    "btnVariant": "filled",
+                                    "btnTheme": "primary",
+                                    "btnSize": "sm"
+                                }
+                            },
+                            {
+                                "type": "button",
+                                "settings": {
+                                    "btnLink": {
+                                        "type": "url",
+                                        "record_id": "",
+                                        "text": "Painike 2",
+                                        "url": "",
+                                        "target": "_self"
+                                    },
+                                    "btnVariant": "outline",
+                                    "btnTheme": "primary",
+                                    "btnSize": "sm"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "id": "default"
+            }
+        ]
+    }
+}
+{% endschema %}

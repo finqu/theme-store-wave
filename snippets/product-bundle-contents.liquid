@@ -1,25 +1,28 @@
 {% comment %}
-	Renders a product bundle contents
+	Renders a product bundle contents carousel.
 
 	Accepts:
 	- items: {Array} Bundle contents to show (Required)
+	- section: {Object} Section Liquid object (required — `render` uses an isolated context; needed for `{% block %}` config lookup)
     - productPerView: {Number} Number of products to show per view (Optional)
     - productPerViewMobile: {Number} Number of products to show per view on mobile (Optional)
     - slidesGap: {Number} Gap between slides (Optional)
     - sectionHandle: {String} Section handle
+    - bundleListBlockId: {String} Block id for product-bundle-list-item (default: section-product-bundle-list-card)
 
 	Usage:
-	{% render 'product-bundle-contents', items: items, sectionHandle: '#finqu-section-product-template' %}
+	{% render 'product-bundle-contents', items: items, sectionHandle: '#finqu-section-product-template', section: section %}
 {% endcomment %}
 
+{%- assign bundleListBlockId = bundleListBlockId | default: 'section-product-bundle-list-card' -%}
 {%- assign carouselProducts = items -%}
-{%- assign carouselProductPerView = productPerView | default: 5 -%}
-{%- assign carouselProductPerViewMobile = productPerViewMobile | default: 4 -%}
+{%- assign carouselProductPerView = productPerView | default: 2 -%}
+{%- assign carouselProductPerViewMobile = productPerViewMobile | default: 2 -%}
 {%- assign carouselSlidesPerView = carouselProductPerView -%}
 {%- assign carouselFreemode = false -%}
 {%- assign carouselPagination = false -%}
 {%- assign carouselNavigation = 'on' -%}
-{%- assign carouselSlidesGap = slidesGap | default: 40 -%}
+{%- assign carouselSlidesGap = slidesGap | default: 16 -%}
 
 {%- if carouselProducts -%}
     {%- assign carouselProductAmount = carouselProducts.size -%}
@@ -53,27 +56,6 @@
 
 {%- endif -%}
 
-{%- if sectionHandle and carouselFreemode == true -%}
-
-    {%- assign carouselSlidesPerView = 'auto' -%}
-
-    {%- capture sectionStyle -%}
-        {{ sectionHandle }} .swiper-slide {
-            --swiper-slide-width: 50;
-            --swiper-slide-width-sm: 25;
-            --swiper-slide-width-md: 33.333333;
-            --swiper-slide-width-lg: {{ 100 | divided_by: carouselProductPerView }};
-        }
-    {%- endcapture -%}
-
-    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
-{%- elsif carouselFreemode == true and sectionHandle == false -%}
-
-    {%- assign carouselFreemode = false -%}
-
-{%- endif -%}
-
 {%- capture carouselSlides -%}
 
     {%- if carouselProducts.size > 0 -%}
@@ -84,13 +66,23 @@
 
                 <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-                    {%- render 'product-card-grid', product: item.product, productPerRow: carouselProductPerView, wishlist: false, productTruncateName: false, showProductName: showProductName, showManufacturer: false, showPricing: false, showRating: false, showNewBadge: false, showDiscountBadge: false, showPromotionBadge: false, showOutOfStockBadge: false, showBackorderBadge: false, showAddToCart: false, showStockBalance: false, showVariants: true, showOnlySelectedOptions: true -%}
+                    {%- assign product = item.product -%}
+
+                    {%- capture productCardShellClass -%}
+                        {%- render 'product-card-shell-class', product: product -%}
+                    {%- endcapture -%}
+
+                    <div class="product-card-grid-item section-highlight-item {{ productCardShellClass | strip }}">
+
+                        {% block 'product-bundle-list-item' id:bundleListBlockId %}
+
+                    </div>
 
                     {% unless forloop.last %}
                         <span class="bundle-combo-indicator">
                             {%- render 'icon', icon: 'add' -%}
                         </span>
-                    {% endunless %} 
+                    {% endunless %}
 
                 </div>
 
@@ -106,7 +98,17 @@
 
                 <div class="swiper-slide-inner" data-aos="{{ settings.sectionAnimation }}"{% if sectionHandle %} data-aos-anchor="{{ sectionHandle }}"{% endif %} data-aos-delay style="--aos-order: {{ forloop.index }}">
 
-                    {%- render 'product-card-grid', productPerRow: carouselProductPerView, wishlist: false,  productTruncateName: false, showProductName: showProductName, showManufacturer: false, showPricing: false, showRating: false, showNewBadge: false, showDiscountBadge: false, showPromotionBadge: false, showOutOfStockBadge: false, showBackorderBadge: false, showAddToCart: false, showStockBalance: false, showVariants: false, showOnlySelectedOptions: true -%}
+                    {%- assign product = nil -%}
+
+                    {%- capture productCardShellClass -%}
+                        {%- render 'product-card-shell-class', product: product -%}
+                    {%- endcapture -%}
+
+                    <div class="product-card-grid-item section-highlight-item {{ productCardShellClass | strip }}">
+
+                        {% block 'product-bundle-list-item' id:bundleListBlockId %}
+
+                    </div>
 
                 </div>
 

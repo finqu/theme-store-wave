@@ -1,6 +1,6 @@
 {%- capture sectionContent -%}
 
-    {% if request.uri contains 'create_review=true' and product.default_or_selected_variant.customer_has_reviewed == false and product.reviews_are_enabled %}
+    {% if request.uri contains 'create_review=true' and product.customer_has_reviewed == false and product.reviews_are_enabled %}
 
         <div class="product-create-review-layout">
 
@@ -47,8 +47,7 @@
                         name="comment"
                         class="form-control"
                         placeholder="{{ 'product.write_review' | t }}"
-                        value="{{ form.submitted.comment | escape }}"
-                        required></textarea>
+                        required>{{ form.submitted.comment | escape }}</textarea>
 
                     <label for="product-review-comment">
                         {{- 'product.write_review' | t -}}
@@ -241,7 +240,7 @@
 
 {%- else -%}
 
-    {% if request.uri contains 'create_review=true' and product.default_or_selected_variant.customer_has_reviewed == false and product.reviews_are_enabled %}
+    {% if request.uri contains 'create_review=true' and product.customer_has_reviewed == false and product.reviews_are_enabled %}
 
         {%- assign sectionTitle = 'product.write_product_review' | t -%}
         {%- assign sectionSubtitle = product.title -%}

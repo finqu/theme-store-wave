@@ -37,12 +37,23 @@
 
 <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
+{%- capture sectionImageBlock -%}
+    {% block 'image' id:'section-image' %}
+{%- endcapture -%}
+
+{%- comment -%}The block wrapper is always emitted, so only a real <img> counts as an image on the live storefront.{%- endcomment -%}
+{%- if request.design_mode or sectionImageBlock contains '<img' -%}
+    {%- assign hasSectionImage = true -%}
+{%- else -%}
+    {%- assign hasSectionImage = false -%}
+{%- endif -%}
+
 {%- capture imgColContent -%}
 
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
     <div class="section-media" data-aos="{% if section.settings.imgPosition == 'start' %}animation-fadeInLeft{% else %}animation-fadeInRight{% endif %}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-        {% block 'image' id:'section-image' %}
+        {{ sectionImageBlock }}
     </div>
 
 {%- endcapture -%}
@@ -97,7 +108,13 @@
 
     <div class="row gy-5">
 
-        {%- if section.settings.imgPosition == 'start' -%}
+        {%- if hasSectionImage == false -%}
+
+            <div class="col-12 d-flex flex-column justify-content-center align-items-center">
+                {{- textColContent -}}
+            </div>
+
+        {%- elsif section.settings.imgPosition == 'start' -%}
 
             <div class="col-12 col-md-6 col-xxl-{{ leftColSize }} d-flex flex-column align-self-center">
                 {{- imgColContent -}}

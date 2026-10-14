@@ -22,7 +22,7 @@
         #finqu-section-{{ section.id }} .site-footer-bottom{% unless section.settings.footerBottomBorderFluid %} > .container{% endunless %}:before {
             content: '';
             display: block;
-            border-top: {% if settings.styleElevation == 'hard' %}2px{% else %}1px{% endif %} solid var(--style-border-color);
+            border-top: {% if settings.styleElevation == 'hard' %}2px{% else %}1px{% endif %} solid var(--footer-border-color, var(--style-border-color));
             position: absolute;
             top: 0;
             left: {% if section.settings.footerBottomBorderFluid %}0{% else %}var(--style-grid-container-padding-x){% endif %};
@@ -122,7 +122,8 @@
                             "settings": [
                                 {
                                     "id": "footerLogoImg",
-                                    "type": "image-picker"
+                                    "type": "image-picker",
+                                    "label": "t:sections.footer.settings.footerLogoImg.label"
                                 }
                             ],
                             "id": "brand"

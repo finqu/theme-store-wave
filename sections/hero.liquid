@@ -72,7 +72,10 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionCustomContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: 'auto', sectionHeightMobile: 'auto', sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionContainerPaddingX: sectionContainerPaddingX, sectionContainerPaddingY: sectionContainerPaddingX %}
+{%- comment -%}Blocks are wrapped in #finqu-block-* elements, so this detects a hero with no blocks on the live storefront.{%- endcomment -%}
+{%- if request.design_mode or section.settings.sectionBgImg or sectionContent contains 'finqu-block-' -%}
+    {% render 'section', section: section, sectionCustomContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionHeight: 'auto', sectionHeightMobile: 'auto', sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionContainerPaddingX: sectionContainerPaddingX, sectionContainerPaddingY: sectionContainerPaddingX %}
+{%- endif -%}
 
 {% schema %}
 {

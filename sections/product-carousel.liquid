@@ -21,8 +21,6 @@
     }
 {%- endcapture -%}
 
-<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
 {%- capture sectionContent -%}
 
     {% container 'intro' %}
@@ -182,7 +180,11 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false, sectionHeader: false %}
+{%- if carouselProducts.size > 0 or section.settings.showPromotionSlide or request.design_mode -%}
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+    {% render 'section', section: section, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {

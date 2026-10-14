@@ -45,8 +45,6 @@
     {%- endif -%}
 {%- endcapture -%}
 
-<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
 {%- capture sectionContent -%}
 
     {%- capture carouselSlides -%}
@@ -63,17 +61,20 @@
 
                     {%- if item.settings.img -%}
                         {% if section.settings.imgDimming > 0 %}linear-gradient(0deg, rgb(0,0,0, {{- section.settings.imgDimming > 0 -}}%), rgb(0,0,0, {{- section.settings.imgDimming > 0 -}}%)) | {% endif %}url('{{- item.settings.img | thumb: '1920,1080' -}}') 1x, url('{{- item.settings.img | thumb: '1920,1080' | thumb: '@2x' -}}') 2x
-                    {%- else -%}
+                    {%- elsif request.design_mode -%}
                         {% if section.settings.imgDimming > 0 %}linear-gradient(0deg, rgb(0,0,0, {{- section.settings.imgDimming > 0 -}}%), rgb(0,0,0, {{- section.settings.imgDimming > 0 -}}%)) | {% endif %}url('{{ placeholderSvg | strip }}') 1x
                     {%- endif -%}
 
                 {%- endcapture -%}
+                {%- assign imgSrc = imgSrc | strip -%}
 
                 <div class="swiper-slide">
 
                    <div class="swiper-slide-inner position-relative min-h" style="--min-height: {{ sectionMinHeightMobileValue }}vh; --min-height-lg: {{ sectionMinHeightValue }}vh">
 
-                        <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if item.settings.img %} bg-size-cover{% endif %}" data-bg-set="{{- imgSrc | strip -}}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--bg-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}></div>
+                        {%- if imgSrc != blank -%}
+                            <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if item.settings.img %} bg-size-cover{% endif %}" data-bg-set="{{- imgSrc -}}"{% if item.settings.img.offset_left or item.settings.img.offset_top %} style="--bg-position: {{ item.settings.img.offset_left }}% {{ item.settings.img.offset_top }}%"{% endif %}></div>
+                        {%- endif -%}
 
                         <div class="d-flex position-absolute top-0 start-0 w-100 h-100">
 
@@ -139,7 +140,11 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile %}
+{%- if section.settings.setting_blocks.items.size > 0 or request.design_mode -%}
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+    {% render 'section', section: section, sectionAction: sectionAction, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile %}
+{%- endif -%}
 
 {% schema %}
 {

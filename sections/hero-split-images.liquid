@@ -61,13 +61,17 @@
 
     <div class="flex-grow-1 position-relative overflow-hidden min-h{% if section.settings.imgMobile %} d-none d-md-block{% endif %}" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
-        <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgStart %} bg-size-cover{% endif %}" data-bg-set="{{- imgStartSrc | strip -}}"{% if section.settings.imgStart.offset_left or section.settings.imgStart.offset_top %} style="--bg-position: {{ section.settings.imgStart.offset_left }}% {{ section.settings.imgStart.offset_top }}%"{% endif %}></div>
+        {%- if section.settings.imgStart or request.design_mode -%}
+            <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgStart %} bg-size-cover{% endif %}" data-bg-set="{{- imgStartSrc | strip -}}"{% if section.settings.imgStart.offset_left or section.settings.imgStart.offset_top %} style="--bg-position: {{ section.settings.imgStart.offset_left }}% {{ section.settings.imgStart.offset_top }}%"{% endif %}></div>
+        {%- endif -%}
 
     </div>
 
     <div class="flex-grow-1 position-relative overflow-hidden min-h d-none d-md-block" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
-        <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgEnd %} bg-size-cover{% endif %}" data-bg-set="{{- imgEndSrc | strip -}}"{% if section.settings.imgEnd.offset_left or section.settings.imgEnd.offset_top %} style="--bg-position: {{ section.settings.imgEnd.offset_left }}% {{ section.settings.imgEnd.offset_top }}%"{% endif %}></div>
+        {%- if section.settings.imgEnd or request.design_mode -%}
+            <div class="lazy position-absolute top-0 start-0 w-100 h-100{% if section.settings.imgEnd %} bg-size-cover{% endif %}" data-bg-set="{{- imgEndSrc | strip -}}"{% if section.settings.imgEnd.offset_left or section.settings.imgEnd.offset_top %} style="--bg-position: {{ section.settings.imgEnd.offset_left }}% {{ section.settings.imgEnd.offset_top }}%"{% endif %}></div>
+        {%- endif -%}
 
     </div>
 
@@ -115,7 +119,10 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingX: sectionContainerPaddingX, sectionContainerPaddingY: sectionContainerPaddingX %}
+{%- comment -%}Blocks are wrapped in #finqu-block-* elements, so this detects a hero with no blocks on the live storefront.{%- endcomment -%}
+{%- if request.design_mode or section.settings.imgStart or section.settings.imgEnd or section.settings.imgMobile or sectionContent contains 'finqu-block-' -%}
+    {% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainer: 'none', sectionPaddingMode: 'custom', sectionPaddingTop: 0, sectionPaddingBottom: 0, sectionContainerPaddingX: sectionContainerPaddingX, sectionContainerPaddingY: sectionContainerPaddingX %}
+{%- endif -%}
 
 {% schema %}
 {

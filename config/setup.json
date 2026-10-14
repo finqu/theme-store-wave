@@ -1,0 +1,1719 @@
+{
+    "contractVersion": 1,
+    "theme": "wave",
+    "generatedBy": "scripts/build-blueprint-presets.js",
+    "profile": {
+        "label": {
+            "en": "Wave",
+            "fi": "Wave"
+        },
+        "summary": {
+            "en": "Natural home-and-interior theme with forest green tones and soft pill shapes.",
+            "fi": "Luonnollinen koti- ja sisustusteema metsänvihrein sävyin ja pehmein muodoin."
+        },
+        "previewImage": "https://media.finqu.com/9f788bd38e2ac21221da7e14877417c832af023f1bd8a8aa5c5eb983776e91b4/wave-theme-preview.jpg",
+        "previewImageMobile": null,
+        "demoUrl": "https://wave.finqushop.com",
+        "mood": [
+            "natural",
+            "homely",
+            "relaxed",
+            "organic"
+        ],
+        "suitedCategories": [
+            "FURNITURE",
+            "DIVERSIFIED_HOME_AND_GARDEN_PRODUCTS",
+            "DECORATION_AND_ART",
+            "KITCHENWARE",
+            "PLANTS_AND_FLOWERS",
+            "SPORTS_GEAR_AND_OUTDOOR",
+            "CLEANING_AND_SANITARY",
+            "FOOD_AND_BEVERAGE"
+        ],
+        "imageryStyle": "Warm natural interiors, furniture in context and outdoor lifestyle; wide-aspect hero images.",
+        "onboarding": true,
+        "order": 4
+    },
+    "fallbackPresetId": "default",
+    "blueprints": [
+        {
+            "id": "products-first",
+            "presetId": "products-first",
+            "name": {
+                "en": "Products first",
+                "fi": "Tuotteet edellä"
+            },
+            "description": {
+                "en": "Highlights your product range directly",
+                "fi": "Korostaa suoraan valikoimaa"
+            },
+            "storyLed": false,
+            "contentNeeds": [
+                "products",
+                "categories"
+            ],
+            "purposes": {
+                "hero": "Browse hero — theme-curated background photograph, kicker, headline, supporting message, and one primary CTA.",
+                "product-list": "Catalog grid — recent products so the range is visible immediately.",
+                "category-list": "Category cards from the live catalog (categories.root when items are empty). Heading only — no extra button.",
+                "icons-with-text": "Shopping-help strip — easy exploration, finding the right fit, guidance, and confident choice. Icon items, no section title, no imagery.",
+                "buttons": "Contact closer — heading, short ask, and one empty-URL contact button."
+            },
+            "previewImage": null
+        },
+        {
+            "id": "categories-centered",
+            "presetId": "categories-centered",
+            "name": {
+                "en": "Categories centered",
+                "fi": "Kategoriat keskiössä"
+            },
+            "description": {
+                "en": "Guides visitors to browse departments",
+                "fi": "Ohjaa selaamaan osastoja"
+            },
+            "storyLed": false,
+            "contentNeeds": [
+                "products",
+                "categories"
+            ],
+            "purposes": {
+                "hero": "Compact overview hero — theme-curated background photograph, kicker, headline, and a category CTA.",
+                "category-list": "Category cards from the live catalog (categories.root when items are empty).",
+                "product-list": "Picks from every group — recent products already visible on the homepage.",
+                "icons-with-text": "Shopping guidance — start by category, compare the options, and choose a favorite."
+            },
+            "previewImage": null
+        },
+        {
+            "id": "storytelling",
+            "presetId": "storytelling",
+            "name": {
+                "en": "Storytelling",
+                "fi": "Tarinallinen"
+            },
+            "description": {
+                "en": "Builds your brand narrative",
+                "fi": "Brändin rakentamiseen"
+            },
+            "storyLed": true,
+            "contentNeeds": [
+                "products"
+            ],
+            "purposes": {
+                "hero": "Belief hero — why the store exists and two CTAs, over a background photograph (color band only if the theme has no hero image).",
+                "product-list": "The whole range, not a single hero product.",
+                "text-colums-with-image": "Editorial brand story — a portrait image, concise manifesto, and three supporting principles beside it. Button back to products."
+            },
+            "previewImage": null
+        },
+        {
+            "id": "collection-launch",
+            "presetId": "collection-launch",
+            "name": {
+                "en": "Collection launch",
+                "fi": "Malliston julkaisu"
+            },
+            "description": {
+                "en": "Showcases new arrivals effectively",
+                "fi": "Uutuuksien tehokkaaseen esittelyyn"
+            },
+            "storyLed": false,
+            "contentNeeds": [
+                "products"
+            ],
+            "purposes": {
+                "hero": "Launch hero — collection badge, headline and a collection CTA over a background photograph (color band only if the theme has no hero image).",
+                "product-list-with-tabs": "Full release on one page — tabbed product grid (all / new / sale).",
+                "image-gallery": "Lookbook — three portrait frames for collection mood. The first image is the personalization slot."
+            },
+            "previewImage": null
+        }
+    ],
+    "sectionTypes": {
+        "buttons": {
+            "title": "Buttons",
+            "purpose": "Closing call to action: a short heading, one ask, and a button.",
+            "dependsOn": null,
+            "themeProfile": "section.blocks",
+            "containers": [
+                {
+                    "id": "content",
+                    "allowedBlocks": null
+                },
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "button",
+                    "target": {
+                        "block": "button",
+                        "container": "content",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Button label",
+                    "required": true
+                }
+            ],
+            "images": [
+                {
+                    "key": "background",
+                    "target": {
+                        "path": "sectionBgImg"
+                    },
+                    "kind": "content-image",
+                    "aspect": "16:9",
+                    "purpose": "Optional section background",
+                    "required": false,
+                    "note": "Most presets leave this empty on purpose; only replace an existing image."
+                }
+            ],
+            "items": []
+        },
+        "category-list": {
+            "title": "Product group list",
+            "purpose": "Category cards from the live catalog under a short heading.",
+            "dependsOn": "categories",
+            "themeProfile": "section.settings",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "quickLink",
+                    "target": {
+                        "path": "sectionQuickLinkResource.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Link label next to the section title (for example \"View all\")",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": []
+        },
+        "hero": {
+            "title": "Hero",
+            "purpose": "Opening statement: headline, supporting line and call to action over the theme photograph.",
+            "dependsOn": null,
+            "themeProfile": "full",
+            "containers": [
+                {
+                    "id": "hero-title",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "countdown",
+                        "spacer",
+                        "separator"
+                    ]
+                },
+                {
+                    "id": "hero-actions",
+                    "allowedBlocks": [
+                        "button",
+                        "button-group"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "badge",
+                    "target": {
+                        "block": "badge",
+                        "container": "hero-title",
+                        "path": "setting_blocks.badges[].settings.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Short launch or collection badge",
+                    "required": false
+                },
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Headline",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "text",
+                    "target": {
+                        "block": "text",
+                        "container": "hero-title",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Short supporting paragraph",
+                    "required": false
+                },
+                {
+                    "key": "cta",
+                    "target": {
+                        "block": "button-group",
+                        "container": "hero-actions",
+                        "path": "setting_blocks.buttons[].settings.btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label; the first button is the primary action",
+                    "required": true
+                },
+                {
+                    "key": "button",
+                    "target": {
+                        "block": "button",
+                        "container": "hero-actions",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label",
+                    "required": true
+                }
+            ],
+            "images": [
+                {
+                    "key": "background",
+                    "target": {
+                        "path": "sectionBgImg"
+                    },
+                    "kind": "hero-background",
+                    "aspect": "16:9",
+                    "purpose": "Full-bleed hero photograph behind the headline",
+                    "required": true,
+                    "note": "Keep the configured dimming and color scheme so the heading stays readable."
+                }
+            ],
+            "items": []
+        },
+        "hero-carousel": {
+            "title": "Hero carousel",
+            "purpose": "Rotating hero slides, each with its own photograph, headline and link.",
+            "dependsOn": null,
+            "themeProfile": "section.settings",
+            "containers": [],
+            "copy": [],
+            "images": [],
+            "items": [
+                {
+                    "group": "items",
+                    "path": "setting_blocks.items",
+                    "minItems": 1,
+                    "maxItems": 5,
+                    "fields": [
+                        {
+                            "key": "overline",
+                            "target": {
+                                "path": "overline"
+                            },
+                            "format": "text",
+                            "maxLength": 40,
+                            "purpose": "Short kicker above the slide headline",
+                            "required": false
+                        },
+                        {
+                            "key": "title",
+                            "target": {
+                                "path": "title"
+                            },
+                            "format": "text",
+                            "maxLength": 60,
+                            "purpose": "Slide headline",
+                            "required": true
+                        },
+                        {
+                            "key": "subtitle",
+                            "target": {
+                                "path": "subtitle"
+                            },
+                            "format": "text",
+                            "maxLength": 160,
+                            "purpose": "One supporting sentence",
+                            "required": false
+                        },
+                        {
+                            "key": "cta",
+                            "target": {
+                                "path": "btnLink.text"
+                            },
+                            "format": "text",
+                            "maxLength": 24,
+                            "purpose": "Slide call-to-action label",
+                            "required": false
+                        }
+                    ],
+                    "images": [
+                        {
+                            "key": "image",
+                            "target": {
+                                "path": "img"
+                            },
+                            "kind": "hero-background",
+                            "aspect": "16:9",
+                            "purpose": "Slide photograph",
+                            "required": true,
+                            "note": null
+                        }
+                    ]
+                }
+            ]
+        },
+        "hero-split-images": {
+            "title": "Hero split images",
+            "purpose": "Hero with two side-by-side photographs and a centered headline and call to action.",
+            "dependsOn": null,
+            "themeProfile": "full",
+            "containers": [
+                {
+                    "id": "hero-title",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "countdown",
+                        "spacer",
+                        "separator"
+                    ]
+                },
+                {
+                    "id": "hero-actions",
+                    "allowedBlocks": [
+                        "button",
+                        "button-group"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "badge",
+                    "target": {
+                        "block": "badge",
+                        "container": "hero-title",
+                        "path": "setting_blocks.badges[].settings.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Short launch or collection badge",
+                    "required": false
+                },
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Headline",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "text",
+                    "target": {
+                        "block": "text",
+                        "container": "hero-title",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Short supporting paragraph",
+                    "required": false
+                },
+                {
+                    "key": "cta",
+                    "target": {
+                        "block": "button-group",
+                        "container": "hero-actions",
+                        "path": "setting_blocks.buttons[].settings.btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label; the first button is the primary action",
+                    "required": true
+                },
+                {
+                    "key": "button",
+                    "target": {
+                        "block": "button",
+                        "container": "hero-actions",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label",
+                    "required": true
+                }
+            ],
+            "images": [
+                {
+                    "key": "imageStart",
+                    "target": {
+                        "path": "imgStart"
+                    },
+                    "kind": "content-image",
+                    "aspect": "3:4",
+                    "purpose": "Left photograph of the pair",
+                    "required": true,
+                    "note": "Generate both images as a coordinated pair."
+                },
+                {
+                    "key": "imageEnd",
+                    "target": {
+                        "path": "imgEnd"
+                    },
+                    "kind": "content-image",
+                    "aspect": "3:4",
+                    "purpose": "Right photograph of the pair",
+                    "required": true,
+                    "note": "Generate both images as a coordinated pair."
+                },
+                {
+                    "key": "imageMobile",
+                    "target": {
+                        "path": "imgMobile"
+                    },
+                    "kind": "content-image",
+                    "aspect": "9:13",
+                    "purpose": "Optional single mobile photograph",
+                    "required": false,
+                    "note": null
+                }
+            ],
+            "items": []
+        },
+        "hero-with-image": {
+            "title": "Hero with image",
+            "purpose": "Hero with headline and call to action beside a single photograph.",
+            "dependsOn": null,
+            "themeProfile": "full",
+            "containers": [
+                {
+                    "id": "hero-title",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "countdown",
+                        "spacer",
+                        "separator"
+                    ]
+                },
+                {
+                    "id": "hero-actions",
+                    "allowedBlocks": [
+                        "button",
+                        "button-group"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "badge",
+                    "target": {
+                        "block": "badge",
+                        "container": "hero-title",
+                        "path": "setting_blocks.badges[].settings.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Short launch or collection badge",
+                    "required": false
+                },
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Headline",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "hero-title",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "text",
+                    "target": {
+                        "block": "text",
+                        "container": "hero-title",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Short supporting paragraph",
+                    "required": false
+                },
+                {
+                    "key": "cta",
+                    "target": {
+                        "block": "button-group",
+                        "container": "hero-actions",
+                        "path": "setting_blocks.buttons[].settings.btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label; the first button is the primary action",
+                    "required": true
+                },
+                {
+                    "key": "button",
+                    "target": {
+                        "block": "button",
+                        "container": "hero-actions",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Call-to-action label",
+                    "required": true
+                }
+            ],
+            "images": [
+                {
+                    "key": "image",
+                    "target": {
+                        "path": "img"
+                    },
+                    "kind": "content-image",
+                    "aspect": "1:1",
+                    "purpose": "Hero photograph beside the headline",
+                    "required": true,
+                    "note": "Match the section imgAspectRatio setting."
+                }
+            ],
+            "items": []
+        },
+        "icons-with-text": {
+            "title": "Icons with text",
+            "purpose": "Short reassurance or how-to items, each with a title and one sentence.",
+            "dependsOn": null,
+            "themeProfile": "section.settings",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": [
+                {
+                    "group": "items",
+                    "path": "setting_blocks.items",
+                    "minItems": 3,
+                    "maxItems": 4,
+                    "fields": [
+                        {
+                            "key": "title",
+                            "target": {
+                                "path": "title"
+                            },
+                            "format": "text",
+                            "maxLength": 40,
+                            "purpose": "Item title",
+                            "required": true
+                        },
+                        {
+                            "key": "text",
+                            "target": {
+                                "path": "richtext"
+                            },
+                            "format": "richtext",
+                            "maxLength": 160,
+                            "purpose": "One-sentence explanation",
+                            "required": true
+                        }
+                    ],
+                    "images": []
+                }
+            ]
+        },
+        "image-gallery": {
+            "title": "Image gallery",
+            "purpose": "Lookbook gallery of portrait frames under a short heading.",
+            "dependsOn": null,
+            "themeProfile": "section.settings",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "headerButton",
+                    "target": {
+                        "block": "button",
+                        "container": "header",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Text link under the section title",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": [
+                {
+                    "group": "items",
+                    "path": "setting_blocks.items",
+                    "minItems": 3,
+                    "maxItems": 8,
+                    "fields": [],
+                    "images": [
+                        {
+                            "key": "image",
+                            "target": {
+                                "path": "img"
+                            },
+                            "kind": "item-image",
+                            "aspect": "9:13",
+                            "purpose": "Gallery frame",
+                            "required": true,
+                            "note": "Replace frames as a coherent set or keep the curated images."
+                        }
+                    ]
+                }
+            ]
+        },
+        "newsletter": {
+            "title": "Newsletter",
+            "purpose": "Newsletter sign-up: invitation heading, one sentence and the subscribe form.",
+            "dependsOn": null,
+            "themeProfile": "section.blocks",
+            "containers": [
+                {
+                    "id": "intro",
+                    "allowedBlocks": [
+                        "heading",
+                        "text",
+                        "badge",
+                        "spacer",
+                        "separator"
+                    ]
+                },
+                {
+                    "id": "social",
+                    "allowedBlocks": [
+                        "social-media-buttons",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "intro",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "intro",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Invitation to subscribe",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "intro",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "text",
+                    "target": {
+                        "block": "text",
+                        "container": "intro",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "What subscribers get, one or two sentences",
+                    "required": false
+                },
+                {
+                    "key": "placeholder",
+                    "target": {
+                        "block": "newsletter",
+                        "blockId": "section-newsletter",
+                        "path": "placeholder"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Email field placeholder",
+                    "required": false
+                },
+                {
+                    "key": "submit",
+                    "target": {
+                        "block": "newsletter",
+                        "blockId": "section-newsletter",
+                        "path": "btnLabel"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Subscribe button label",
+                    "required": false
+                }
+            ],
+            "images": [
+                {
+                    "key": "background",
+                    "target": {
+                        "path": "sectionBgImg"
+                    },
+                    "kind": "content-image",
+                    "aspect": "16:9",
+                    "purpose": "Optional section background",
+                    "required": false,
+                    "note": "Most presets leave this empty on purpose; only replace an existing image."
+                }
+            ],
+            "items": []
+        },
+        "product-list": {
+            "title": "Product list",
+            "purpose": "Product grid from the live catalog under a short heading.",
+            "dependsOn": "products",
+            "themeProfile": "section.blocks",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "quickLink",
+                    "target": {
+                        "path": "sectionQuickLinkResource.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Link label next to the section title (for example \"View all\")",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": []
+        },
+        "product-list-with-tabs": {
+            "title": "Product list with tabs",
+            "purpose": "Tabbed product grid (for example all, new, sale) under a short heading.",
+            "dependsOn": "products",
+            "themeProfile": "section.blocks",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "quickLink",
+                    "target": {
+                        "path": "sectionQuickLinkResource.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Link label next to the section title (for example \"View all\")",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": [
+                {
+                    "group": "items",
+                    "path": "setting_blocks.items",
+                    "minItems": 2,
+                    "maxItems": 4,
+                    "fields": [
+                        {
+                            "key": "title",
+                            "target": {
+                                "path": "title"
+                            },
+                            "format": "text",
+                            "maxLength": 20,
+                            "purpose": "Tab label",
+                            "required": true
+                        }
+                    ],
+                    "images": []
+                }
+            ]
+        },
+        "promotion-banner": {
+            "title": "Promotion banner",
+            "purpose": "Slim promotion bar with one message and an optional button.",
+            "dependsOn": null,
+            "themeProfile": "section.blocks",
+            "containers": [],
+            "copy": [
+                {
+                    "key": "text",
+                    "target": {
+                        "block": "text",
+                        "blockId": "section-promotion-banner-text",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 120,
+                    "purpose": "Promotion message",
+                    "required": true
+                },
+                {
+                    "key": "button",
+                    "target": {
+                        "block": "button",
+                        "blockId": "section-promotion-banner-button",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Button label",
+                    "required": false
+                }
+            ],
+            "images": [
+                {
+                    "key": "background",
+                    "target": {
+                        "path": "sectionBgImg"
+                    },
+                    "kind": "content-image",
+                    "aspect": "16:9",
+                    "purpose": "Optional section background",
+                    "required": false,
+                    "note": "Most presets leave this empty on purpose; only replace an existing image."
+                }
+            ],
+            "items": []
+        },
+        "promotion-collage": {
+            "title": "Promotion collage",
+            "purpose": "Collage of promotion tiles, each with a photograph, short title and link.",
+            "dependsOn": null,
+            "themeProfile": "full",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                }
+            ],
+            "images": [],
+            "items": [
+                {
+                    "group": "items",
+                    "path": "setting_blocks.items",
+                    "minItems": 3,
+                    "maxItems": 5,
+                    "fields": [
+                        {
+                            "key": "overline",
+                            "target": {
+                                "path": "overline"
+                            },
+                            "format": "text",
+                            "maxLength": 24,
+                            "purpose": "Tile kicker",
+                            "required": false
+                        },
+                        {
+                            "key": "title",
+                            "target": {
+                                "path": "title"
+                            },
+                            "format": "text",
+                            "maxLength": 40,
+                            "purpose": "Tile title",
+                            "required": true
+                        },
+                        {
+                            "key": "subtitle",
+                            "target": {
+                                "path": "subtitle"
+                            },
+                            "format": "text",
+                            "maxLength": 40,
+                            "purpose": "Tile tagline",
+                            "required": false
+                        },
+                        {
+                            "key": "cta",
+                            "target": {
+                                "path": "btnLink.text"
+                            },
+                            "format": "text",
+                            "maxLength": 24,
+                            "purpose": "Tile link label",
+                            "required": false
+                        }
+                    ],
+                    "images": [
+                        {
+                            "key": "image",
+                            "target": {
+                                "path": "img"
+                            },
+                            "kind": "item-image",
+                            "aspect": "1:1",
+                            "purpose": "Tile photograph",
+                            "required": true,
+                            "note": "Match the section imgAspectRatio setting."
+                        }
+                    ]
+                }
+            ]
+        },
+        "text-colums-with-image": {
+            "title": "Text columns with image",
+            "purpose": "Editorial story: an image beside a short manifesto and supporting text columns.",
+            "dependsOn": null,
+            "themeProfile": "full",
+            "containers": [
+                {
+                    "id": "header",
+                    "allowedBlocks": [
+                        "badge",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator"
+                    ]
+                },
+                {
+                    "id": "column-1",
+                    "allowedBlocks": [
+                        "image",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator",
+                        "badge"
+                    ]
+                },
+                {
+                    "id": "column-2",
+                    "allowedBlocks": [
+                        "image",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator",
+                        "badge"
+                    ]
+                },
+                {
+                    "id": "column-3",
+                    "allowedBlocks": [
+                        "image",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator",
+                        "badge"
+                    ]
+                },
+                {
+                    "id": "column-4",
+                    "allowedBlocks": [
+                        "image",
+                        "heading",
+                        "text",
+                        "button",
+                        "button-group",
+                        "spacer",
+                        "separator",
+                        "badge"
+                    ]
+                }
+            ],
+            "copy": [
+                {
+                    "key": "overline",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "overline"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Short kicker above the title",
+                    "required": false
+                },
+                {
+                    "key": "title",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 60,
+                    "purpose": "Section title",
+                    "required": true
+                },
+                {
+                    "key": "subtitle",
+                    "target": {
+                        "block": "heading",
+                        "container": "header",
+                        "path": "subtitle"
+                    },
+                    "format": "text",
+                    "maxLength": 160,
+                    "purpose": "One supporting sentence under the title",
+                    "required": false
+                },
+                {
+                    "key": "headerButton",
+                    "target": {
+                        "block": "button",
+                        "container": "header",
+                        "path": "btnLink.text"
+                    },
+                    "format": "text",
+                    "maxLength": 24,
+                    "purpose": "Text link under the section title",
+                    "required": false
+                },
+                {
+                    "key": "column-1-title",
+                    "target": {
+                        "block": "heading",
+                        "container": "column-1",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Column title (one principle or point)",
+                    "required": true
+                },
+                {
+                    "key": "column-1-text",
+                    "target": {
+                        "block": "text",
+                        "container": "column-1",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Column text, one or two sentences",
+                    "required": true
+                },
+                {
+                    "key": "column-2-title",
+                    "target": {
+                        "block": "heading",
+                        "container": "column-2",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Column title (one principle or point)",
+                    "required": true
+                },
+                {
+                    "key": "column-2-text",
+                    "target": {
+                        "block": "text",
+                        "container": "column-2",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Column text, one or two sentences",
+                    "required": true
+                },
+                {
+                    "key": "column-3-title",
+                    "target": {
+                        "block": "heading",
+                        "container": "column-3",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Column title (one principle or point)",
+                    "required": true
+                },
+                {
+                    "key": "column-3-text",
+                    "target": {
+                        "block": "text",
+                        "container": "column-3",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Column text, one or two sentences",
+                    "required": true
+                },
+                {
+                    "key": "column-4-title",
+                    "target": {
+                        "block": "heading",
+                        "container": "column-4",
+                        "path": "title"
+                    },
+                    "format": "text",
+                    "maxLength": 40,
+                    "purpose": "Column title (one principle or point)",
+                    "required": true
+                },
+                {
+                    "key": "column-4-text",
+                    "target": {
+                        "block": "text",
+                        "container": "column-4",
+                        "path": "richtext"
+                    },
+                    "format": "richtext",
+                    "maxLength": 240,
+                    "purpose": "Column text, one or two sentences",
+                    "required": true
+                }
+            ],
+            "images": [
+                {
+                    "key": "image",
+                    "target": {
+                        "block": "image",
+                        "blockId": "section-image",
+                        "path": "img"
+                    },
+                    "kind": "content-image",
+                    "aspect": "9:13",
+                    "purpose": "Story image beside the text",
+                    "required": true,
+                    "note": "Portrait crop; keep imgFit."
+                }
+            ],
+            "items": []
+        }
+    },
+    "brandTokens": {
+        "colors": {
+            "primary": [
+                "style_brand_color",
+                "style_link_color",
+                "style_btn_bg_color",
+                "style_header_accent_color",
+                "style_announcement_bg_color",
+                "style_new_badge_bg_color"
+            ],
+            "accent": [
+                "style_accent_color",
+                "style_sale_price_color",
+                "style_discount_badge_bg_color",
+                "style_promotion_badge_bg_color"
+            ],
+            "on-accent": [
+                "style_discount_badge_text_color",
+                "style_promotion_badge_text_color"
+            ],
+            "canvas": [
+                "style_bg_color",
+                "style_header_bg_color",
+                "style_form_bg_color",
+                "style_table_bg_color"
+            ],
+            "surface-soft": [
+                "style_secondary_bg_color"
+            ],
+            "surface-strong": [
+                "style_btn_secondary_bg_color",
+                "style_badge_bg_color"
+            ],
+            "ink": [
+                "style_heading_color",
+                "style_icon_color",
+                "style_btn_secondary_text_color",
+                "style_header_text_color",
+                "style_product_title_color",
+                "style_price_color",
+                "style_badge_text_color",
+                "style_form_text_color",
+                "style_table_text_color"
+            ],
+            "body": [
+                "style_text_color"
+            ],
+            "muted": [
+                "style_subheading_color",
+                "style_overline_color"
+            ],
+            "hairline": [
+                "style_border_color",
+                "style_form_border_color",
+                "style_table_border_color"
+            ],
+            "on-primary": [
+                "style_btn_text_color",
+                "style_announcement_text_color",
+                "style_new_badge_text_color"
+            ],
+            "star-rating": [
+                "style_review_icon_color"
+            ]
+        },
+        "fonts": {
+            "fontFamily": [
+                "bodyTextFont",
+                "overlineFont",
+                "accentFont",
+                "navigationFont",
+                "buttonFont"
+            ],
+            "headingFontFamily": [
+                "headingFont",
+                "h1Font",
+                "h2Font",
+                "h3Font",
+                "displayFont",
+                "subheadingFont"
+            ]
+        },
+        "shape": {
+            "radius": {
+                "rule": "radius-preset",
+                "presetSetting": "styleBorderRadiusPreset",
+                "valueSetting": "styleBorderRadius",
+                "max": 50,
+                "pillAt": 100
+            }
+        }
+    }
+}

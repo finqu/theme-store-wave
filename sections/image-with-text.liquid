@@ -10,7 +10,22 @@
 {%- assign textVerticalAlign = section.settings.textVerticalAlign | default: 'center' -%}
 {%- assign imgVerticalAlign = section.settings.imgVerticalAlign | default: 'center' -%}
 
-{%- if sectionHighlightItems and section.settings.imgEffect -%}
+{%- capture sectionImageBlock -%}
+    {% block 'image' id:'section-image' %}
+{%- endcapture -%}
+
+{%- capture sectionContentBlocks -%}
+    {% container 'content' %}
+{%- endcapture -%}
+
+{%- comment -%}The block wrapper is always emitted, so only a real <img> counts as an image on the live storefront.{%- endcomment -%}
+{%- if request.design_mode or sectionImageBlock contains '<img' -%}
+    {%- assign hasSectionImage = true -%}
+{%- else -%}
+    {%- assign hasSectionImage = false -%}
+{%- endif -%}
+
+{%- if sectionHighlightItems and section.settings.imgEffect and hasSectionImage -%}
 
     {%- capture sectionStyle -%}
         #finqu-section-{{ section.id }} .text-container {
@@ -34,7 +49,7 @@
     {%- assign sectionAnimationOrder = sectionAnimationOrder | plus: 1 -%}
 
     <div class="section-media" data-aos="{% if section.settings.imgPosition == 'start' %}animation-fadeInLeft{% else %}animation-fadeInRight{% endif %}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-        {% block 'image' id:'section-image' %}
+        {{ sectionImageBlock }}
     </div>
 
 {%- endcapture -%}
@@ -50,7 +65,7 @@
     {%- endif -%}
 
     <div class="section-highlight-item section-highlight-item-md text-{{ textHorizontalAlign }}" data-aos="{{ settings.sectionAnimation }}" data-aos-anchor="#finqu-section-{{ section.id }}" data-aos-delay style="--aos-order: {{ sectionAnimationOrder }}">
-        {% container 'content' %}
+        {{ sectionContentBlocks }}
     </div>
 
 {%- endcapture -%}
@@ -59,7 +74,13 @@
 
     <div class="row gy-5 gx-lg-10">
 
-        {%- if section.settings.imgPosition == 'start' -%}
+        {%- if hasSectionImage == false -%}
+
+            <div class="text-container col-12 align-self-{{ textVerticalAlign }}">
+                {{- textColContent -}}
+            </div>
+
+        {%- elsif section.settings.imgPosition == 'start' -%}
 
             <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ imgVerticalAlign }}">
                 {{- imgColContent -}}
@@ -85,7 +106,11 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- assign sectionContentBlocks = sectionContentBlocks | strip -%}
+
+{%- if hasSectionImage or sectionContentBlocks != blank -%}
+    {% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {

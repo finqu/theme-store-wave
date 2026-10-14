@@ -42,6 +42,8 @@
     {%- endif -%}
 {%- endcapture -%}
 
+{%- assign galleryItemCount = 0 -%}
+
 {%- capture sectionContent -%}
 
      <div class="row gy-g masonry gallery">
@@ -109,6 +111,12 @@
 
             {%- endif -%}
 
+            {%- unless item.settings.img or request.design_mode -%}
+                {%- continue -%}
+            {%- endunless -%}
+
+            {%- assign galleryItemCount = galleryItemCount | plus: 1 -%}
+
             <div class="col-6 col-md-4 gallery-item">
 
                 <div class="aspect-ratio-{{ aspectRatio }}">
@@ -162,7 +170,9 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- if galleryItemCount > 0 or request.design_mode -%}
+    {% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {

@@ -49,6 +49,8 @@
     }
 {%- endcapture -%}
 
+{%- if block.settings.img or request.design_mode -%}
+
 <style>{{ blockStyle | strip | replace: '  ', '' | strip_newlines }}</style>
 
 <div class="block-inner">
@@ -90,6 +92,8 @@
     </div>
 
 </div>
+
+{%- endif -%}
 
 {% schema %}
 {

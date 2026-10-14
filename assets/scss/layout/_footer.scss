@@ -1,6 +1,11 @@
 // Footer
 // -----------------------------------------------------------------------------------------
 
+.section-site-footer,
+#finqu-section-group-footer {
+    --footer-border-color: color-mix(in srgb, var(--style-border-color), transparent 50%);
+}
+
 .section-site-footer {
     width: 100%;
 
@@ -143,6 +148,11 @@
                 display: flex;
                 flex-direction: column;
                 gap: spacer(4);
+
+                &::before,
+                > .container::before {
+                    border-top-color: var(--footer-border-color);
+                }
             }
 
             .site-footer-localization {
@@ -213,7 +223,7 @@ body[class*='design-mode'] .section-site-footer .site-footer-blocks {
 
     // Full-bleed top border
     &:has(.footer-top-border-fluid) {
-        border-top: 1px solid var(--style-border-color);
+        border-top: 1px solid var(--footer-border-color);
 
         .site-footer-top,
         .site-footer > .container:first-child {
@@ -231,7 +241,7 @@ body[class*='design-mode'] .section-site-footer .site-footer-blocks {
             &:before {
                 content: '';
                 display: block;
-                border-top: 1px solid var(--style-border-color);
+                border-top: 1px solid var(--footer-border-color);
                 position: absolute;
                 top: 0;
                 left: var(--style-grid-container-padding-x);
@@ -243,6 +253,11 @@ body[class*='design-mode'] .section-site-footer .site-footer-blocks {
 }
 
 @if $style-elevation == 'hard' {
+    .section-site-footer,
+    #finqu-section-group-footer {
+        --footer-border-color: #{$elevation-rule-color};
+    }
+
     .section-site-footer:has(.footer-has-top-border),
     #finqu-section-group-footer > .section:has(.footer-has-top-border) {
 

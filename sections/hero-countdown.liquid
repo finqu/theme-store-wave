@@ -101,11 +101,15 @@
 
             </div>
 
-            <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
+            {%- if section.settings.img or request.design_mode -%}
 
-                {{- imgContent -}}
+                <div class="flex-grow-1 position-relative overflow-hidden min-h" style="--min-height: {{ section.settings.sectionMinHeightMobile }}vh; --min-height-lg: {{ section.settings.sectionMinHeight }}vh">
 
-            </div>
+                    {{- imgContent -}}
+
+                </div>
+
+            {%- endif -%}
 
         </div>
 
@@ -113,7 +117,10 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur, sectionContainer: sectionContainer, sectionContainerPaddingX: sectionContainerPaddingX %}
+{%- comment -%}Blocks are wrapped in #finqu-block-* elements, so this detects a hero with no blocks on the live storefront.{%- endcomment -%}
+{%- if request.design_mode or section.settings.img or sectionContent contains 'finqu-block-' -%}
+    {% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionBgImg: sectionBgImg, sectionBgImgDimming: sectionBgImgDimming, sectionBgImgBlur: sectionBgImgBlur, sectionContainer: sectionContainer, sectionContainerPaddingX: sectionContainerPaddingX %}
+{%- endif -%}
 
 {% schema %}
 {

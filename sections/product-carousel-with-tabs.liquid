@@ -23,8 +23,6 @@
     {%- endfor %}
 {%- endcapture -%}
 
-<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
 {%- capture sectionHeaderBlocks -%}
     {% container 'intro' %}
 {%- endcapture -%}
@@ -39,42 +37,47 @@
     {%- endif -%}
 {%- endcapture -%}
 
-{%- capture sectionTabs -%}
-
-    {% if section.settings.setting_blocks.items.size > 1 %}
-
-        {%- for tab in section.settings.setting_blocks.items -%}
-            {%- render 'section-tab', sectionTab: tab.settings.title -%}
-        {%- endfor -%}
-
-    {% endif %}
-
-{%- endcapture -%}
+{%- assign visibleTabCount = 0 -%}
+{%- assign visibleTabButtons = '' -%}
 
 {%- capture sectionContent -%}
 
     {%- for tab in section.settings.setting_blocks.items -%}
 
+        {%- assign items = nil -%}
+
+        {%- case tab.settings.listType -%}
+            {% when 'discounted' %}
+                {%- assign items = products.discounted -%}
+            {% when 'new' %}
+                {%- assign items = products.new_products -%}
+            {% when 'recent' %}
+                {%- assign items = products.recent -%}
+            {% when 'tag' %}
+                {%- assign items = products.tags[tab.settings.tagId] -%}
+            {% when 'category' %}
+                {%- assign items = categories[tab.settings.category.id].products -%}
+            {% when 'manufacturer' %}
+                {%- assign items = manufacturers[tab.settings.manufacturer.id].products -%}
+        {%- endcase -%}
+
+        {%- assign carouselProducts = items | slice: 0, section.settings.productAmount -%}
+
+        {%- comment -%}Tab buttons and panels pair by index, so an empty tab drops both on the live storefront.{%- endcomment -%}
+        {%- unless carouselProducts.size > 0 or tab.settings.showPromotionSlide or request.design_mode -%}
+            {%- continue -%}
+        {%- endunless -%}
+
+        {%- assign visibleTabCount = visibleTabCount | plus: 1 -%}
+
+        {%- capture visibleTabButton -%}
+            {%- render 'section-tab', sectionTab: tab.settings.title -%}
+        {%- endcapture -%}
+        {%- assign visibleTabButtons = visibleTabButtons | append: visibleTabButton -%}
+
         {%- capture sectionTabContent -%}
 
             <div data-tab="{{ forloop.index }}">
-
-                {%- case tab.settings.listType -%}
-                    {% when 'discounted' %}
-                        {%- assign items = products.discounted -%}
-                    {% when 'new' %}
-                        {%- assign items = products.new_products -%}
-                    {% when 'recent' %}
-                        {%- assign items = products.recent -%}
-                    {% when 'tag' %}
-                        {%- assign items = products.tags[tab.settings.tagId] -%}
-                    {% when 'category' %}
-                        {%- assign items = categories[tab.settings.category.id].products -%}
-                    {% when 'manufacturer' %}
-                        {%- assign items = manufacturers[tab.settings.manufacturer.id].products -%}
-                {%- endcase -%}
-
-                {%- assign carouselProducts = items | slice: 0, section.settings.productAmount -%}
 
                 {%- capture carouselSlides -%}
                 
@@ -200,7 +203,19 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionTabs: sectionTabs, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false, sectionHeader: false %}
+{%- capture sectionTabs -%}
+
+    {% if visibleTabCount > 1 %}
+        {{- visibleTabButtons -}}
+    {% endif %}
+
+{%- endcapture -%}
+
+{%- if visibleTabCount > 0 or request.design_mode -%}
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+    {% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionTabs: sectionTabs, sectionContent: sectionContent, sectionContentOverflow: 'hidden', sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {

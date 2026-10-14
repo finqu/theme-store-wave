@@ -47,8 +47,6 @@
     {%- endif -%}
 {%- endcapture -%}
 
-<style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
-
 {%- capture sectionAction -%}
     {% render 'section-quick-link', section: section %}
 {%- endcapture -%}
@@ -372,7 +370,11 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- if items.size > 0 or request.design_mode -%}
+    <style>{{ sectionStyle | strip | replace: '  ', '' | strip_newlines }}</style>
+
+    {% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {

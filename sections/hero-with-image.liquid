@@ -188,11 +188,22 @@
 
 {%- endcapture -%}
 
+{%- assign hasHeroImage = false -%}
+{%- if section.settings.img or request.design_mode -%}
+    {%- assign hasHeroImage = true -%}
+{%- endif -%}
+
 {%- capture sectionContent -%}
 
     <div class="row gy-5">
 
-        {%- if section.settings.imgPosition == 'start' -%}
+        {%- if hasHeroImage == false -%}
+
+            <div class="text-container col-12 align-self-{{ section.settings.textVerticalAlign }}">
+                {{- textColContent -}}
+            </div>
+
+        {%- elsif section.settings.imgPosition == 'start' -%}
 
             <div class="img-container col-12 col-md-6 col-lg-{{ leftColSize }} align-self-{{ section.settings.imgVerticalAlign }} order-2 order-md-1">
                 {{- imgColContent -}}
@@ -218,7 +229,10 @@
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainerPaddingX: sectionContainerPaddingX %}
+{%- comment -%}Blocks are wrapped in #finqu-block-* elements, so this detects a hero with no blocks on the live storefront.{%- endcomment -%}
+{%- if hasHeroImage or sectionContent contains 'finqu-block-' -%}
+    {% render 'section', section: section, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false, sectionTextAlign: textHorizontalAlign, sectionHeaderTextAlign: textHorizontalAlign, sectionMinHeight: sectionMinHeight, sectionMinHeightMobile: sectionMinHeightMobile, sectionContainerPaddingX: sectionContainerPaddingX %}
+{%- endif -%}
 
 {% schema %}
 {

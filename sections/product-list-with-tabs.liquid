@@ -27,53 +27,69 @@
     {%- endif -%}
 {%- endcapture -%}
 
-{%- capture sectionTabs -%}
-
-    {% if section.settings.setting_blocks.items.size > 1 %}
-
-        {%- for tab in section.settings.setting_blocks.items -%}
-            {%- render 'section-tab', sectionTab: tab.settings.title -%}
-        {%- endfor -%}
-
-    {% endif %}
-
-{%- endcapture -%}
+{%- assign visibleTabCount = 0 -%}
+{%- assign visibleTabButtons = '' -%}
 
 {%- capture sectionContent -%}
 
     {%- for tab in section.settings.setting_blocks.items -%}
 
-        {%- capture sectionTabContent -%}
+        {%- assign items = nil -%}
 
-            {%- case tab.settings.listType -%}
-                {% when 'discounted' %}
-                    {%- assign items = products.discounted -%}
-                {% when 'new' %}
-                    {%- assign items = products.new_products -%}
-                {% when 'recent' %}
-                    {%- assign items = products.recent -%}
-                {% when 'tag' %}
-                    {%- assign items = products.tags[tab.settings.tagId] -%}
-                {% when 'category' %}
-                    {%- assign items = categories[tab.settings.category.id].products -%}
-                {% when 'manufacturer' %}
-                    {%- assign items = manufacturers[tab.settings.manufacturer.id].products -%}
-            {%- endcase -%}
+        {%- case tab.settings.listType -%}
+            {% when 'discounted' %}
+                {%- assign items = products.discounted -%}
+            {% when 'new' %}
+                {%- assign items = products.new_products -%}
+            {% when 'recent' %}
+                {%- assign items = products.recent -%}
+            {% when 'tag' %}
+                {%- assign items = products.tags[tab.settings.tagId] -%}
+            {% when 'category' %}
+                {%- assign items = categories[tab.settings.category.id].products -%}
+            {% when 'manufacturer' %}
+                {%- assign items = manufacturers[tab.settings.manufacturer.id].products -%}
+        {%- endcase -%}
 
-            {%- assign items = items | slice: 0, section.settings.productAmount -%}
-            {%- assign productPerRow = section.settings.productPerRow -%}
+        {%- assign items = items | slice: 0, section.settings.productAmount -%}
 
-            {% render 'product-list-grid', items: items, product_amount: section.settings.productAmount, product_per_row: productPerRow, section_id: section.id, section: section %}
+        {%- comment -%}Tab buttons and panels pair by index, so an empty tab drops both on the live storefront.{%- endcomment -%}
+        {%- if items.size > 0 or request.design_mode -%}
 
-        {%- endcapture -%}
+            {%- assign visibleTabCount = visibleTabCount | plus: 1 -%}
 
-        {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+            {%- capture visibleTabButton -%}
+                {%- render 'section-tab', sectionTab: tab.settings.title -%}
+            {%- endcapture -%}
+            {%- assign visibleTabButtons = visibleTabButtons | append: visibleTabButton -%}
+
+            {%- capture sectionTabContent -%}
+
+                {%- assign productPerRow = section.settings.productPerRow -%}
+
+                {% render 'product-list-grid', items: items, product_amount: section.settings.productAmount, product_per_row: productPerRow, section_id: section.id, section: section %}
+
+            {%- endcapture -%}
+
+            {%- render 'section-tab-content', sectionTabContent: sectionTabContent -%}
+
+        {%- endif -%}
 
     {%- endfor -%}
 
 {%- endcapture -%}
 
-{% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionTabs: sectionTabs, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- capture sectionTabs -%}
+
+    {% if visibleTabCount > 1 %}
+        {{- visibleTabButtons -}}
+    {% endif %}
+
+{%- endcapture -%}
+
+{%- if visibleTabCount > 0 or request.design_mode -%}
+    {% render 'section', section: section, sectionHeaderContent: sectionHeaderContent, sectionTabs: sectionTabs, sectionContent: sectionContent, sectionContentAnimation: false, sectionHeader: false %}
+{%- endif -%}
 
 {% schema %}
 {
